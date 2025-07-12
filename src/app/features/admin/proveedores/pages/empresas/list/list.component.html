@@ -1,0 +1,55 @@
+<div class="container-empresas">
+    <div class="card-rutas">
+        Admin > Proveedores > Empresas
+    </div>
+    <div class="card-principal">
+        <div class="card--title">
+            Convenios Empresas
+        </div>
+        <hr>
+        <div class="card--filters">
+            <div class="options">
+                <select name="" id="">
+                    <option value=""></option>
+                    <option value="">.....</option>
+                </select>
+                <select name="" id="">
+                    <option value=""></option>
+                    <option value="">.....</option>
+                </select>
+                <select name="" id="">
+                    <option value=""></option>
+                    <option value="">.....</option>
+                </select>
+                <select name="" id="">
+                    <option value=""></option>
+                    <option value="">.....</option>
+                </select>
+                <select name="" id="">
+                    <option value=""></option>
+                    <option value="">.....</option>
+                </select>
+            </div>
+            <div class="buttons">
+                <button class="btn-find">
+                
+                </button>
+                <button class="btn-add">
+
+                </button>
+                <button class="btn-update">
+
+                </button>
+                <button class="btn-delete">
+
+                </button>
+            </div>
+        </div>
+        <div class="card--table">
+            <app-table-list [data]="datasource" [columns]="columnas" (onSelectRow)="imprimir($event)"/>
+        </div>
+    </div>
+</div>
+
+
+

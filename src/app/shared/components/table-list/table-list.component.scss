@@ -1,0 +1,29 @@
+table{
+    background-color: #FFFFFF;
+    border-color: #E9EDF3;
+}
+
+
+.table-header{
+    background-color: #E9EDF3;
+    height: 35px;
+    color: rgb(28, 28, 243);
+    font-weight: 500;
+}
+th{
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+
+.table-row{
+    height: 25px;
+}
+td{
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    border-right: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+
+.mat-paginator{
+    background-color: #FFFFFF;
+}

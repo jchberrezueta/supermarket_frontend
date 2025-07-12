@@ -47,17 +47,3 @@ export class TableListComponent implements OnInit, AfterViewInit {
     this.onSelectRow.emit(row);
   }
 }
-
-
-/*
-@Component({
-  selector: 'app-table-list',
-  standalone: true,
-  imports: [MatTableModule],
-  templateUrl: './table-list.component.html',
-  styleUrl: './table-list.component.scss'
-})
-export class TableListComponent {
-
-}
-*/
