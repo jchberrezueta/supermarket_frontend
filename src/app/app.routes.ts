@@ -17,5 +17,4 @@ export const routes: Routes = [
         loadComponent: () => import('./layout/layouts/admin/admin.component'),
         loadChildren: () => import('./features/admin/admin.routes')
     }
-    
 ];

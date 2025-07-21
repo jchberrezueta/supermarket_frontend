@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { Empresa } from '@models/proveedores';
 import { TableListComponent } from '@shared/components/index';
 
 @Component({
@@ -9,6 +10,11 @@ import { TableListComponent } from '@shared/components/index';
   styleUrl: './list.component.scss'
 })
 export default class ListComponent {
+
+  @Input() empresas: Empresa;
+
+
+
   datasource = [
     {primero: "uno", segundo: "dos", tercero: "tres"},
     {primero: "cuatro", segundo: "cinco", tercero: "seis"},
@@ -29,5 +35,6 @@ export default class ListComponent {
 
   imprimir(event: any): void{
     console.log(event);
+    console.log(this.empresas.email);
   }
 }

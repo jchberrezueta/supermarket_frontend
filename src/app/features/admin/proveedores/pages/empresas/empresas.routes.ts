@@ -8,15 +8,15 @@ export const empresasRoutes: Routes = [
     },
     {
         path: 'list',
-        loadComponent: () => import('./list/list.component')
+        loadComponent: () => import('./list/list.component'),
     },
     {
         path: 'edit',
-        loadComponent: () => import('./edit/edit.component')
+        loadComponent: () => import('./edit/edit.component'),
     },
     {
         path: 'details',
-        loadComponent: () => import('./details/details.component')
+        loadComponent: () => import('./details/details.component'),
     }
 ];
 
