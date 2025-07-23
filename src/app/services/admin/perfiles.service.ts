@@ -1,12 +1,10 @@
 import { inject, Injectable } from '@angular/core';
 import { RestService } from '@core/services/rest.service';
-import { Empresa } from '@models/proveedores';
-import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class EmpresaService {
+export class PerfilesService {
 
   private _restService = inject(RestService);
 
@@ -14,8 +12,8 @@ export class EmpresaService {
 
   
 
-  getEmpresas(): Observable<Empresa> {
+  /*getEmpresas(): Observable<Empresa> {
     return this._restService.get<Empresa>('empresas');
-  }
+  }*/
 
 }

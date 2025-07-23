@@ -1,6 +1,3 @@
-
-
-// src/app/services/auth.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
@@ -9,7 +6,7 @@ import { Router } from '@angular/router';
   providedIn: 'root'
 })
 export class AuthService {
-  private baseUrl = 'http://localhost:3001/api'; // Ajusta esto a tu API
+  private baseUrl = 'http://localhost:3001/api';
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -48,8 +45,6 @@ export class AuthService {
     return permisoRuta ? permisoRuta[permiso] === true && permisoRuta.activo === true : false;
   }
 
-
-  // auth.service.ts
   getUserRoles(): string[] {
     const token = localStorage.getItem('access_token');
     if (!token) return [];
@@ -59,4 +54,3 @@ export class AuthService {
 
 
 }
-

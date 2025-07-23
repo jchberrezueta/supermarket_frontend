@@ -1,13 +1,6 @@
-import { inject } from '@angular/core';
 import { Routes } from '@angular/router';
-import { EmpresaService } from '@services/index';
 
 export const proveedoresRoutes: Routes = [
-    {
-        path: '',
-        pathMatch: 'full',
-        redirectTo: 'empresas',  
-    },
     {
         path: 'empresas',
         title: 'Empresas',

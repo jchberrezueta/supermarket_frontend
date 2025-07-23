@@ -5,7 +5,8 @@ import { AuthService } from '@core/services/auth.service';
 import { MenuItem } from '@shared/models/menu_item.model';
 
 export const MENU_ITEMS: MenuItem[] = [
-  { label: 'Home', route: 'admin/home', permission: 'todos' },
+  { label: 'Home', route: '/admin/home', permission: 'todos' },
+
   { label: 'Empresas', route: '/admin/proveedores/empresas/list', permission: 'bodega' },
   { label: 'Proveedores', route: '/admin/proveedores/proveedores/list', permission: 'bodega' },
 
@@ -21,7 +22,7 @@ export const MENU_ITEMS: MenuItem[] = [
   { label: 'Roles', route: '/admin/nomina/roles/list', permission: 'nomina' },
 
   { label: 'Clientes', route: '/admin/ventas/clientes/list', permission: 'ventas' },
-  { label: 'Facturas', route: '/admin/ventas/facturas/list', permission: 'ventas' },
+  { label: 'Ventas', route: '/admin/ventas/ventas/list', permission: 'ventas' },
 
   { label: 'Opciones', route: '/admin/seguridad/opciones/list', permission: 'seguridad' },
   { label: 'Perfiles', route: '/admin/seguridad/perfiles/list', permission: 'seguridad' },
@@ -57,6 +58,7 @@ export class SidebarComponent {
   userPermissions: MenuItem[] = [];
 
   constructor(private authService: AuthService) {}
+
   ngOnInit() {
     const userPermissions: Usuario | null = localStorage.getItem('user') 
       ? JSON.parse(localStorage.getItem('user')!) 
