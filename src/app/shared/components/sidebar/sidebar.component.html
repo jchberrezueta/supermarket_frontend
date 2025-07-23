@@ -1,0 +1,9 @@
+<nav class="sidebar">
+  @for (perm of permisos; track perm.RUTA_OPCI) {
+    @if (perm.ACTIVO_OPCI === 'SI') {
+      <!--<button [routerLink]="perm.RUTA_OPCI">
+        {{ perm.NOMBRE_OPCI }}
+      </button>-->
+    }
+  }
+</nav>

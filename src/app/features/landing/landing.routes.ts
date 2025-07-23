@@ -16,7 +16,15 @@ const landingRoutes: Routes = [
         title: 'About',
         loadComponent: () => import('./pages/about/about.component')
     },
-    
+    {
+        path: 'inexistente',
+        title: 'Pagina No encontrada',
+        loadComponent: () => import('./pages/inexistente/inexistente.component')
+    },
+    {
+        path: '**',
+        redirectTo: 'inexistente',  
+    },
 ];
 
 export default landingRoutes;

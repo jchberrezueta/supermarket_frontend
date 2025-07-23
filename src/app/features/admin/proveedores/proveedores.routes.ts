@@ -12,9 +12,9 @@ export const proveedoresRoutes: Routes = [
         path: 'empresas',
         title: 'Empresas',
         loadChildren: () => import('./pages/empresas/empresas.routes'),
-        resolve: {
+        /*resolve: {
             empresas: () => inject(EmpresaService).getEmpresas(),
-        },
+        },*/
     },
     {
         path: 'proveedores',

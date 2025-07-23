@@ -11,7 +11,7 @@ import { TableListComponent } from '@shared/components/index';
 })
 export default class ListComponent {
 
-  @Input() empresas: Empresa;
+  //@Input() empresas: Empresa;
 
 
 
@@ -35,6 +35,6 @@ export default class ListComponent {
 
   imprimir(event: any): void{
     console.log(event);
-    console.log(this.empresas.email);
+    //console.log(this.empresas.email);
   }
 }
