@@ -1,9 +1,11 @@
-<nav class="sidebar">
-  @for (perm of permisos; track perm.RUTA_OPCI) {
-    @if (perm.ACTIVO_OPCI === 'SI') {
-      <!--<button [routerLink]="perm.RUTA_OPCI">
-        {{ perm.NOMBRE_OPCI }}
-      </button>-->
-    }
-  }
-</nav>
+<aside class="sidebar">
+  <nav>
+    <ul class="menu">
+      <li *ngFor="let item of userPermissions">
+        <a [routerLink]="item.route" class="menu-button">
+          {{ item.label }}
+        </a>
+      </li>
+    </ul>
+  </nav>
+</aside>

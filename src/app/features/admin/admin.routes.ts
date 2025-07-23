@@ -4,7 +4,7 @@ export const adminRoutes: Routes = [
     {
         path: '',
         pathMatch: 'full',
-        redirectTo: 'proveedores',  
+        redirectTo: 'home',  
     },
     {
         path: 'home',

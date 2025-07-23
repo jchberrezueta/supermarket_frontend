@@ -1,15 +1,4 @@
-/*import { Injectable } from '@angular/core';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class AuthService {
-
-  constructor() { }
-  
-
-
-}*/
 
 // src/app/services/auth.service.ts
 import { Injectable } from '@angular/core';
@@ -62,11 +51,12 @@ export class AuthService {
 
   // auth.service.ts
   getUserRoles(): string[] {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('access_token');
     if (!token) return [];
     const payload = JSON.parse(atob(token.split('.')[1]));
     return payload.roles || [];
   }
+
 
 }
 

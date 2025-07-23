@@ -13,14 +13,27 @@ export class AuthInterceptor implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const token = this.authService.getToken();
+    const user = this.authService.getUser(); // Esto lo decodifica del token
 
-    if (token) {
+    /*if (token) {
       const cloned = req.clone({
         headers: req.headers.set('Authorization', `Bearer ${token}`)
       });
       return next.handle(cloned);
     }
 
-    return next.handle(req);
+    return next.handle(req);*/
+    let headers = req.headers;
+
+    if (token) {
+      headers = headers.set('Authorization', `Bearer ${token}`);
+    }
+
+    if (user && user.perfil) {
+      headers = headers.set('X-User-Perfil', user.perfil); // ← header personalizado
+    }
+
+    const cloned = req.clone({ headers });
+    return next.handle(cloned);
   }
 }
