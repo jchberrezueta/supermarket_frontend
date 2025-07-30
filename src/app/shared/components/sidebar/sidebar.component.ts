@@ -63,6 +63,7 @@ export class SidebarComponent {
     const userPermissions: Usuario | null = localStorage.getItem('user') 
       ? JSON.parse(localStorage.getItem('user')!) 
       : null;
+      console.log(userPermissions?.perfil);
     if (userPermissions && userPermissions.permisos) {
       const allowedRoutes = userPermissions.permisos
         .filter(p => p.listar && p.activo)
@@ -70,7 +71,12 @@ export class SidebarComponent {
       console.log(allowedRoutes);
       this.userPermissions = this.menuItems.filter(item => allowedRoutes.includes(item.route));
     }
+    if(userPermissions?.perfil == 'administrador'){
+      console.log('soy admin :)');
+      this.userPermissions = MENU_ITEMS;
+    }
     console.log(this.userPermissions);
+
   }
 
 }
