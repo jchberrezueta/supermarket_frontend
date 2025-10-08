@@ -13,8 +13,6 @@ export default class ListComponent {
 
   //@Input() empresas: Empresa;
 
-
-
   datasource = [
     {primero: "uno", segundo: "dos", tercero: "tres"},
     {primero: "cuatro", segundo: "cinco", tercero: "seis"},

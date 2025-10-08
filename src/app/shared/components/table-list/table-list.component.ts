@@ -20,6 +20,7 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
   imports: [MatPaginatorModule, MatTableModule, MatSortModule, CommonModule],
 })
 export class TableListComponent implements OnInit, AfterViewInit {
+  
   @Input() data: any[] = [];
   @Input() columns: { def: string; header: string; cell: (row: any) => string }[] = [];
   @Output() onSelectRow = new EventEmitter<any>();
