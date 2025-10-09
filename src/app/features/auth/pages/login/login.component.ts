@@ -16,14 +16,14 @@ export  default class LoginComponent {
   loginForm: FormGroup;
   errorMessage = '';
 
-   constructor(private fb: FormBuilder, private authService: AuthService, private router:Router) {
+  constructor(private fb: FormBuilder, private authService: AuthService, private router:Router) {
     this.loginForm = this.fb.group({
       usuario: ['', [Validators.required]],
       clave: ['', [Validators.required]],
     });
   }
 
-   onSubmit() {
+  onSubmit() {
     if (this.loginForm.valid) {
       const credentials = this.loginForm.value;
       console.log('Login con:', credentials);

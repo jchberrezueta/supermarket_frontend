@@ -3,7 +3,7 @@
     <h2>Iniciar sesión</h2>
 
     <label>Usuario</label>
-    <input type="text" formControlName="usuario" />
+    <input type="text" formControlName="usuario"/>
     <div class="error" *ngIf="loginForm.get('usuario')?.invalid && loginForm.get('usuario')?.touched">
       Email inválido o requerido.
     </div>
@@ -17,4 +17,3 @@
     <button type="submit">Entrar</button>
   </form>
 </div>
-

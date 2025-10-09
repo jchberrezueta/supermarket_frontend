@@ -1,17 +1,22 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { RestService } from './rest.service';
+
+interface ICredencial {
+  usuario: string;
+  clave: string;
+}
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private baseUrl = 'http://localhost:3001/api';
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private restService: RestService, private router: Router) {}
 
-  login(credentials: { usuario: string, clave: string }) {
-    return this.http.post<any>(`${this.baseUrl}/auth/login`, credentials);
+  login(credenciales: ICredencial) {
+    return this.restService.post<any>('auth/login', credenciales);
   }
 
   saveSession(token: string, user: any) {

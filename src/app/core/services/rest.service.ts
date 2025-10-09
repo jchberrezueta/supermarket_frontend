@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 @Injectable({ providedIn: 'root' })
 export class RestService {
 
-  public _apiUrl: string = environment.api_url;
+  private _apiUrl: string = environment.api_url;
   private _httpClient = inject(HttpClient);
 
   constructor(){}
