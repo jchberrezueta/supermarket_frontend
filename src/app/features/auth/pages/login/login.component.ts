@@ -24,11 +24,13 @@ export  default class LoginComponent {
   }
 
   onSubmit() {
+
+
     if (this.loginForm.valid) {
       const credentials = this.loginForm.value;
       console.log('Login con:', credentials);
-
-      this.authService.login(credentials).subscribe({
+      this.router.navigate(['/admin']);
+      /*this.authService.login(credentials).subscribe({
         next: (response) => {
           console.log(response);
           const { access_token, user } = response;
@@ -39,7 +41,7 @@ export  default class LoginComponent {
           console.error('Error de login:', err);
           this.errorMessage = 'Credenciales inválidas'; // puedes mostrarlo en el template
         }
-      });
+      });*/
     } else {
       this.loginForm.markAllAsTouched();
     }

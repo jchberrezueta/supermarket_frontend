@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router'; // <-- Importa esto
 import { AuthService } from '@core/services/auth.service';
 import { MenuItem } from '@shared/models/menu_item.model';
@@ -73,6 +73,11 @@ export class SidebarComponent {
     }
     if(userPermissions?.perfil == 'administrador'){
       console.log('soy admin :)');
+      this.userPermissions = MENU_ITEMS;
+    }
+    //PARA PROBAR JSJS :)
+    if(userPermissions?.perfil == null){
+      console.log('Estamos en pruebas jsjs :) :)');
       this.userPermissions = MENU_ITEMS;
     }
     console.log(this.userPermissions);

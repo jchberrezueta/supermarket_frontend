@@ -8,7 +8,6 @@ export const routes: Routes = [
     },
     { 
       path: 'auth', 
-      title: 'Login',
       loadChildren: () => import('./features/auth/auth.routes')  
     },
     {
@@ -33,29 +32,3 @@ export const routes: Routes = [
       redirectTo: 'inexistente'    
     },
 ];
-
-
-/*
-import { RoleGuard } from './guards/role.guard';
-import LoginComponent from './features/auth/pages/login/login.component';
-
-const routes: Routes = [
-  {
-    path: 'admin',
-    component: AdminComponent,
-    canActivate: [RoleGuard],
-    data: { roles: ['admin'] }
-  },
-  {
-    path: 'vendedor',
-    component: VendedorComponent,
-    canActivate: [RoleGuard],
-    data: { roles: ['vendedor'] }
-  },
-  {
-    path: 'unauthorized',
-    component: UnauthorizedComponent
-  }
-];
-
-*/
