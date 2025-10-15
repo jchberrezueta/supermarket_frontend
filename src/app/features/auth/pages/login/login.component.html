@@ -1,19 +1,42 @@
-<div class="login-container">
-  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-    <h2>Iniciar sesión</h2>
+<div class="container">
+  <div class="login-container">
 
-    <label>Usuario</label>
-    <input type="text" formControlName="usuario"/>
-    <div class="error" *ngIf="loginForm.get('usuario')?.invalid && loginForm.get('usuario')?.touched">
-      Email inválido o requerido.
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="form-login">
+      <h2>Iniciar sesión</h2>
+      <div class="inp-btns">
+        <div class="inputs">
+          <div class="input input-user">
+            <div class="user-input">
+              <label><i class='bx  bx-user'></i></label>
+              <input type="text" placeholder=" Usuario" formControlName="usuario"/>
+            </div>
+            <div class="error" *ngIf="loginForm.get('usuario')?.invalid && loginForm.get('usuario')?.touched">
+              Email inválido o requerido.
+            </div>
+          </div>
+          <div class="input input-password">
+            <label><i class='bx  bx-lock'  ></i></label>
+            <input type="password" placeholder=" Contraseña" formControlName="clave"/>
+            <div class="error" *ngIf="loginForm.get('clave')?.invalid && loginForm.get('clave')?.touched">
+              Mínimo 6 caracteres.
+            </div>
+          </div>
+        </div>
+        <div class="button button-login">
+          <button type="submit"><i class='bx  bx-key-alt'  ></i> Entrar</button>
+        </div>
+      </div>
+      
+    </form>
+
+    <div class="logo">
     </div>
 
-    <label>Contraseña</label>
-    <input type="password" formControlName="clave" />
-    <div class="error" *ngIf="loginForm.get('clave')?.invalid && loginForm.get('clave')?.touched">
-      Mínimo 6 caracteres.
-    </div>
-
-    <button type="submit">Entrar</button>
-  </form>
+  </div>
 </div>
+
+
+
+
+
+
