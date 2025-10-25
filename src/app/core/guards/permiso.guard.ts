@@ -1,44 +1,30 @@
-import { Injectable } from '@angular/core';
+import { inject } from '@angular/core';
 import {
-  CanActivate,
-  ActivatedRouteSnapshot,
-  RouterStateSnapshot,
-  Router
+  Router,
+  CanMatchFn
 } from '@angular/router';
-import { Observable } from 'rxjs';
+import { AuthService } from '@core/services/auth.service';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class PermisoGuard implements CanActivate {
-  constructor(private router: Router) {}
-
-  canActivate(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ): boolean {
-    const userData = localStorage.getItem('user');
-    if (!userData) {
-      this.router.navigate(['/login']);
-      return false;
-    }
-
-    const user = JSON.parse(userData);
-    const permisos = user.permisos || [];
-
-    // Ruta solicitada
-    const rutaSolicitada = state.url;
-
-    // ¿Tiene permiso para acceder?
-    const tienePermiso = permisos.some(
-      (p: any) => p.ruta === rutaSolicitada && p.listar && p.activo
-    );
-
-    if (!tienePermiso) {
-      this.router.navigate(['/no-autorizado']); // o donde prefieras
-      return false;
-    }
-
-    return true;
+export const canMatchPermisoGuard: CanMatchFn  = (route, segments) => {
+  const authService = inject(AuthService);
+  const router = inject(Router);
+  
+  const loginState = authService.isAuthenticated();
+  if (!loginState) {
+    router.createUrlTree(['/login']);
+    return false;
   }
-}
+  let rutaSolicitada, lastSegment;
+  if(segments[segments.length-1].path != ':id') {
+    rutaSolicitada = segments.slice(0, segments.length-1).toString();
+    lastSegment = segments[segments.length-1]?.path;
+  } else {
+    rutaSolicitada = segments.slice(0, segments.length-2).toString();
+    lastSegment = segments[segments.length-2]?.path;
+  }
+
+  if(lastSegment === 'list' || lastSegment === 'details') return authService.canList(rutaSolicitada);
+  if(lastSegment === 'insert') return authService.canInsert(rutaSolicitada);
+  if(lastSegment === 'update') return authService.canUpdate(rutaSolicitada);
+  return false;
+};

@@ -1,10 +1,9 @@
 import { Routes } from '@angular/router';
+import { canMatchAutgGuard } from '@core/guards/auth.guard';
 
 export const routes: Routes = [
     {
-      path: '',
-      pathMatch: 'full', 
-      redirectTo: 'auth'
+      path: '', pathMatch: 'full', redirectTo: 'auth'
     },
     { 
       path: 'auth', 
@@ -13,6 +12,7 @@ export const routes: Routes = [
     {
       path: 'admin',
       title: 'SuperMarket',
+      canMatch: [canMatchAutgGuard],
       loadComponent: () => import('./layout/layouts/admin/admin.component'),
       loadChildren: () => import('./features/admin/admin.routes')
     },
@@ -28,7 +28,6 @@ export const routes: Routes = [
       loadComponent: () => import('./features/landing/pages/inexistente/inexistente.component')
     },
     {
-      path: '**',
-      redirectTo: 'inexistente'    
+      path: '**', redirectTo: 'auth'    
     },
 ];

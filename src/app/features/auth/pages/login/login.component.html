@@ -15,8 +15,11 @@
             </div>
           </div>
           <div class="input input-password">
-            <label><i class='bx  bx-lock'  ></i></label>
-            <input type="password" placeholder=" Contraseña" formControlName="clave"/>
+            <div class="user-passwd">
+              <label><i class='bx  bx-lock'  ></i></label>
+              <input type="password" placeholder=" Contraseña" formControlName="clave"/>
+            </div>
+            
             <div class="error" *ngIf="loginForm.get('clave')?.invalid && loginForm.get('clave')?.touched">
               Mínimo 6 caracteres.
             </div>

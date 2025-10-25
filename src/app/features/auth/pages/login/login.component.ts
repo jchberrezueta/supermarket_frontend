@@ -15,6 +15,7 @@ import { AuthService } from '@core/services/auth.service';
 export  default class LoginComponent {
   loginForm: FormGroup;
   errorMessage = '';
+  contador = 0;
 
   constructor(private fb: FormBuilder, private authService: AuthService, private router:Router) {
     this.loginForm = this.fb.group({
@@ -24,25 +25,26 @@ export  default class LoginComponent {
   }
 
   onSubmit() {
-
-
     if (this.loginForm.valid) {
       const credentials = this.loginForm.value;
-      console.log('Login con:', credentials);
-      this.router.navigate(['/admin']);
-      /*this.authService.login(credentials).subscribe({
+      const credencial = {
+        usuario: credentials.usuario,
+        clave: credentials.clave,
+        numIntentos: this.contador
+      }
+      this.authService.login(credencial).subscribe({
         next: (response) => {
-          console.log(response);
           const { access_token, user } = response;
           this.authService.saveSession(access_token, user);
-          this.router.navigate(['/admin']); // o la ruta que desees al iniciar sesión
+          this.router.navigate(['/admin']);
         },
         error: (err) => {
           console.error('Error de login:', err);
-          this.errorMessage = 'Credenciales inválidas'; // puedes mostrarlo en el template
+          this.errorMessage = 'Credenciales inválidas';
         }
-      });*/
+      });
     } else {
+      this.contador++;
       this.loginForm.markAllAsTouched();
     }
   }

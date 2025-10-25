@@ -1,11 +1,12 @@
 import { Component, Input } from '@angular/core';
 import { Empresa } from '@models/proveedores';
 import { TableListComponent } from '@shared/components/index';
+import { ButtonComponent } from "@shared/components/button/button.component";
 
 @Component({
   selector: 'app-list',
   standalone: true,
-  imports: [TableListComponent],
+  imports: [TableListComponent, ButtonComponent],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss'
 })

@@ -3,7 +3,7 @@ import {
   HttpInterceptor, HttpRequest, HttpHandler, HttpEvent
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { AuthService } from '../services/auth.service';
+import { AuthService } from './auth.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -18,11 +18,9 @@ export class AuthInterceptor implements HttpInterceptor {
     if (token) {
       headers = headers.set('Authorization', `Bearer ${token}`);
     }
-
-    if (user && user.perfil) {
-      headers = headers.set('X-User-Perfil', user.perfil);
+    if (user.perfil) {
+      headers = headers.set('perfil', user.perfil);
     }
-
     const cloned = req.clone({ headers });
     return next.handle(cloned);
   }

@@ -4,8 +4,9 @@ import { HttpOptions } from '@core/models';
 import { environment } from '@envs/environment';
 import { Observable } from 'rxjs';
 
-
-@Injectable({ providedIn: 'root' })
+@Injectable({ 
+  providedIn: 'root' 
+})
 export class RestService {
 
   private _apiUrl: string = environment.api_url;
@@ -14,7 +15,7 @@ export class RestService {
   constructor(){}
 
   get<T>(url: string, options?: HttpOptions): Observable<T> {
-      return this._httpClient.get<T>(this.getUrl(url), options);
+    return this._httpClient.get<T>(this.getUrl(url), options);
   }
 
   post<T>(url: string, body: any, options?: HttpOptions): Observable<T> {
@@ -34,11 +35,6 @@ export class RestService {
   }
 
 
-   /**
-   * Verifica si la url realiza la petición a una api local o de terceros
-   * @param url
-   * @returns
-   */
   private getUrl(url: string) {
     if (url.includes('http') || url.includes('https')) return url;
     return this._apiUrl ? `${this._apiUrl}/${url}` : url;

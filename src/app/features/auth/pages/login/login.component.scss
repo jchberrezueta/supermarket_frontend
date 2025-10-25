@@ -36,7 +36,10 @@
     .inputs{
       display: flex;
       flex-direction: column;
+      align-items: center;
       gap: 10px;
+
+
       input {
         width: 200px;
         height: 25px;

@@ -57,37 +57,17 @@ export class SidebarComponent {
   menuItems: MenuItem[] = MENU_ITEMS;
   userPermissions: MenuItem[] = [];
 
-  constructor(private authService: AuthService) {}
+  constructor(private _authService: AuthService) {}
 
   ngOnInit() {
-    const userPermissions: Usuario | null = localStorage.getItem('user') 
-      ? JSON.parse(localStorage.getItem('user')!) 
-      : null;
-      console.log(userPermissions?.perfil);
+    const userPermissions: Usuario | null = this._authService.getUser();
     if (userPermissions && userPermissions.permisos) {
       const allowedRoutes = userPermissions.permisos
         .filter(p => p.listar && p.activo)
         .map(p => p.ruta);
-      console.log(allowedRoutes);
+        console.log(allowedRoutes);
       this.userPermissions = this.menuItems.filter(item => allowedRoutes.includes(item.route));
+      console.log(this.userPermissions);
     }
-    if(userPermissions?.perfil == 'administrador'){
-      console.log('soy admin :)');
-      this.userPermissions = MENU_ITEMS;
-    }
-    //PARA PROBAR JSJS :)
-    if(userPermissions?.perfil == null){
-      console.log('Estamos en pruebas jsjs :) :)');
-      this.userPermissions = MENU_ITEMS;
-    }
-    console.log(this.userPermissions);
-
   }
-
 }
-
-
-
-
-// Ahora puedes acceder:
-

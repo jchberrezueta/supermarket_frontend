@@ -5,18 +5,33 @@ import { RestService } from './rest.service';
 interface ICredencial {
   usuario: string;
   clave: string;
+  numIntentos: number;
 }
-
+interface IRuta {
+  ruta: string;
+  listar: boolean;
+  insertar: boolean;
+  modificar: boolean;
+  eliminar: boolean;
+  activo: boolean;
+}
+interface IUsuario {
+  id: number;
+  username: string;
+  state: string;
+  perfil: string;
+  permisos: IRuta[];
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  constructor(private restService: RestService, private router: Router) {}
+  constructor(private _restService: RestService, private router: Router) {}
 
   login(credenciales: ICredencial) {
-    return this.restService.post<any>('auth/login', credenciales);
+    return this._restService.post<any>('auth/login', credenciales);
   }
 
   saveSession(token: string, user: any) {
@@ -28,34 +43,76 @@ export class AuthService {
     return localStorage.getItem('access_token');
   }
 
-  getUser(): any {
+  getUser(): IUsuario | null {
     const user = localStorage.getItem('user');
     return user ? JSON.parse(user) : null;
   }
 
   logout() {
-    localStorage.clear();
+    this.clearSession();
     this.router.navigate(['/login']);
+  }
+
+  clearSession() {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('user');
   }
 
   isAuthenticated(): boolean {
     return !!this.getToken();
   }
 
-  hasPermission(ruta: string, permiso: keyof any): boolean {
+  hasPermission(ruta: string): boolean {
     const user = this.getUser();
     if (!user || !user.permisos) return false;
-
-    const permisoRuta = user.permisos.find((p: any) => p.ruta === ruta);
-    return permisoRuta ? permisoRuta[permiso] === true && permisoRuta.activo === true : false;
+    const permisoRuta = user.permisos.find((p: IRuta) => p.ruta === ruta);
+    return !!permisoRuta;
   }
 
-  getUserRoles(): string[] {
-    const token = localStorage.getItem('access_token');
-    if (!token) return [];
-    const payload = JSON.parse(atob(token.split('.')[1]));
-    return payload.roles || [];
+  getUserPermisosRutas(): IRuta[] {
+    const user = this.getUser();
+    if (!user || !user.permisos) return [];
+    return user.permisos;
   }
 
+  getUserPerfil(): string | null {
+    const user = this.getUser();
+    if (!user) return null;
+    return user.perfil;
+  }
 
+  canList(ruta: string): boolean {
+    const user = this.getUser();
+    if (!user || !user.permisos) return false;
+    const permisoRuta = user.permisos.find((p: IRuta) => p.ruta === ruta && p.listar && p.activo);
+    return !!permisoRuta;
+  }
+
+  canInsert(ruta: string): boolean {
+    const user = this.getUser();
+    if (!user || !user.permisos) return false;
+    const permisoRuta = user.permisos.find((p: IRuta) => p.ruta === ruta && p.insertar && p.activo);
+    return !!permisoRuta;
+  }
+
+  canUpdate(ruta: string): boolean {
+    const user = this.getUser();
+    if (!user || !user.permisos) return false;
+    const permisoRuta = user.permisos.find((p: IRuta) => p.ruta === ruta && p.modificar && p.activo);
+    return !!permisoRuta;
+  }
+  
+  canDelete(ruta: string): boolean {
+    const user = this.getUser();
+    if (!user || !user.permisos) return false;
+    const permisoRuta = user.permisos.find((p: IRuta) => p.ruta === ruta && p.eliminar && p.activo);
+    return !!permisoRuta;
+  }
+
+  isActiveRuta(ruta: string): boolean {
+    const user = this.getUser();
+    if (!user || !user.permisos) return false;
+    const permisoRuta = user.permisos.find((p: IRuta) => p.ruta === ruta && p.activo);
+    return !!permisoRuta;
+  }
 }
