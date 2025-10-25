@@ -1,26 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { RestService } from './rest.service';
+import { IUsuario } from '@core/models/usuarios.model';
+import { IRuta } from '@core/models/rutas.model';
 
 interface ICredencial {
   usuario: string;
   clave: string;
   numIntentos: number;
-}
-interface IRuta {
-  ruta: string;
-  listar: boolean;
-  insertar: boolean;
-  modificar: boolean;
-  eliminar: boolean;
-  activo: boolean;
-}
-interface IUsuario {
-  id: number;
-  username: string;
-  state: string;
-  perfil: string;
-  permisos: IRuta[];
 }
 
 @Injectable({

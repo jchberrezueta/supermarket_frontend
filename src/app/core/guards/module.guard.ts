@@ -14,7 +14,20 @@ export const canMatchModuleGuard: CanMatchFn  = (route, segments) => {
     router.createUrlTree(['/login']);
     return false;
   }
-  const rutaSolitada = route.path;
-  if(!rutaSolitada) return false;
-  return authService.hasPermission(rutaSolitada);
+
+  const nav = router.getCurrentNavigation();
+  const allSegments = nav?.initialUrl.root.children['primary']?.segments ?? [];
+
+  const faltantes = segments.map(s => s.path);
+
+  const rutaActual = '/' + allSegments
+    .slice(0, allSegments.length - faltantes.length)
+    .map(s => s.path)
+    .join('/') + '/' + route.path;
+
+  console.log('canMatchModuleGuard');
+  console.log(rutaActual);
+  if(!rutaActual) return false;
+
+  return authService.hasPermission(rutaActual);
 };

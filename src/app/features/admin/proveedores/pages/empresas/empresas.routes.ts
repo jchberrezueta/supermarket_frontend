@@ -7,6 +7,9 @@ export const empresasRoutes: Routes = [
         loadComponent: () => import('./root/root.component'),
         children: [
             {
+                path: '', pathMatch: 'full', redirectTo: 'list'
+            },
+            {
                 path: 'list',
                 canMatch: [canMatchPermisoGuard],
                 loadComponent: () => import('./list/list.component')

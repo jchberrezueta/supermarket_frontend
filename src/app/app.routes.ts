@@ -28,6 +28,6 @@ export const routes: Routes = [
       loadComponent: () => import('./features/landing/pages/inexistente/inexistente.component')
     },
     {
-      path: '**', redirectTo: 'auth'    
+      path: '**', redirectTo: 'inexistente'    
     },
 ];
