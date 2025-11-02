@@ -1,32 +1,5 @@
-<mat-nav-list>
-  <ng-container *ngFor="let item of menus">
-    <!-- Si tiene submenús -->
-    <ng-container *ngIf="item.children; else singleItem">
-      <mat-expansion-panel class="menu-panel">
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            <mat-icon>{{ item.icon }}</mat-icon>
-            <span>{{ item.title }}</span>
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-
-        <a
-          mat-list-item
-          *ngFor="let child of item.children"
-          [routerLink]="child.link"
-        >
-          <mat-icon>{{ child.icon }}</mat-icon>
-          <span>{{ child.title }}</span>
-        </a>
-      </mat-expansion-panel>
-    </ng-container>
-
-    <!-- Si NO tiene submenús -->
-    <ng-template #singleItem>
-      <a mat-list-item [routerLink]="item.link">
-        <mat-icon>{{ item.icon }}</mat-icon>
-        <span>{{ item.title }}</span>
-      </a>
-    </ng-template>
-  </ng-container>
-</mat-nav-list>
+<ul>
+  @for (item of opciones; track $index) {
+    <menu-item [item]="item"></menu-item>
+  }
+</ul>

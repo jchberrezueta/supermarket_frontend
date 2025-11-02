@@ -1,0 +1,12 @@
+<li>
+    @if (item.ruta) {
+        <a (click)="navegar(item.ruta)">{{ item.titulo }}</a>
+    } @else {
+        <span>{{ item.titulo }}</span>
+    }
+    @if (item.hijas) {
+        @for (child of item.hijas; track $index) {
+            <menu-item [item]="child"></menu-item>
+        }
+    }
+</li>

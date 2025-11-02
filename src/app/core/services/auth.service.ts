@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { RestService } from './rest.service';
 import { IUsuario } from '@core/models/usuarios.model';
 import { IRuta } from '@core/models/rutas.model';
+import { IOpcionSidebar } from '@core/models/opcion_sidebar.model';
 
 interface ICredencial {
   usuario: string;
@@ -101,5 +102,11 @@ export class AuthService {
     if (!user || !user.permisos) return false;
     const permisoRuta = user.permisos.find((p: IRuta) => p.ruta === ruta && p.activo);
     return !!permisoRuta;
+  }
+
+  getSidebarOptions(): IOpcionSidebar[] {
+    const user = this.getUser();
+    if(!user || !user.rutas_sidebar) return [];
+    return user.rutas_sidebar;
   }
 }
