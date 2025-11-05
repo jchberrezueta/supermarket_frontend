@@ -7,9 +7,8 @@ import { Router, RouterLink } from "@angular/router";
   standalone: true,
   templateUrl: './menu-item.component.html',
   styleUrls: ['./menu-item.component.scss'],
-  imports: [RouterLink]
 })
-export class MenuItemComponent {
+export class UiMenuItemComponent {
   @Input() item!: IOpcionSidebar;
 
   constructor(private router: Router){}

@@ -41,7 +41,7 @@
             </div>
         </div>
         <div class="card--table">
-            <app-table-list [data]="datasource" [columns]="columnas" (onSelectRow)="imprimir($event)"/>
+            <ui-table-list [service]="'empresas'" [columns]="config.columns" (onSelectRow)="imprimir($event)"/>
         </div>
     </div>
 </div>

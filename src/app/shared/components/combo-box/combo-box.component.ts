@@ -8,7 +8,7 @@ import { IComboBoxOption } from '@shared/models/combo_box_option';
   templateUrl: './combo-box.component.html',
   styleUrl: './combo-box.component.scss'
 })
-export class ComboBoxComponent {
+export class UiComboBoxComponent {
   @Input() options:IComboBoxOption[] = [];
 
 }

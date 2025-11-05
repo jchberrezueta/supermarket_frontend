@@ -8,7 +8,7 @@ import { MatButton } from "@angular/material/button";
   templateUrl: './button.component.html',
   styleUrl: './button.component.scss'
 })
-export class ButtonComponent {
+export class UiButtonComponent {
   @Input() colorPrimary = 'green';
   @Input() colorSecondary = 'blue';
   @Input() textColor = 'white';

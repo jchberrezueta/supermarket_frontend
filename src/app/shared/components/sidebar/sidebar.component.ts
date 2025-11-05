@@ -6,15 +6,22 @@ import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { IOpcionSidebar } from '@core/models/opcion_sidebar.model';
-import { MenuItemComponent } from "../menu-item/menu-item.component";
+import { UiMenuItemComponent } from "../menu-item/menu-item.component";
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [RouterModule, CommonModule, MatListModule, MatIconModule, MatExpansionModule, MenuItemComponent],
+  imports: [
+    RouterModule, 
+    CommonModule, 
+    MatListModule, 
+    MatIconModule, 
+    MatExpansionModule, 
+    UiMenuItemComponent
+  ],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss'
 })
-export class SidebarComponent {
+export class UiSidebarComponent {
   opciones: IOpcionSidebar[] = [];
   
   constructor(private _authService: AuthService) {}
