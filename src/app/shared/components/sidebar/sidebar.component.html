@@ -1,5 +1,11 @@
-<ul>
-  @for (item of opciones; track $index) {
-    <menu-item [item]="item"></menu-item>
-  }
-</ul>
+<div class="div_container">
+  <mat-sidenav-container class="sidenav-container">
+    <mat-sidenav #drawer mode="side" opened class="sidenav">
+      <mat-nav-list>
+        @for (item of opciones; track $index) {
+          <ui-menu-item [item]="item" class="item"/>
+        }
+      </mat-nav-list>
+    </mat-sidenav>
+  </mat-sidenav-container>
+</div>

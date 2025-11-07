@@ -7,17 +7,38 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { IOpcionSidebar } from '@core/models/opcion_sidebar.model';
 import { UiMenuItemComponent } from "../menu-item/menu-item.component";
+import { MatButtonModule } from '@angular/material/button';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatToolbarModule } from '@angular/material/toolbar';
+
+const MODULOS_MATERIAL = [
+  MatSidenavModule,
+  MatToolbarModule,
+  MatListModule,
+  MatIconModule,
+  MatButtonModule,
+  MatExpansionModule,
+];
+
+const COMPONENTES = [
+  UiMenuItemComponent,
+]
+
+const IMPORTACIONES = [
+    RouterModule, 
+    CommonModule,
+    COMPONENTES,
+    MODULOS_MATERIAL,
+];
+
+
+
+
+
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [
-    RouterModule, 
-    CommonModule, 
-    MatListModule, 
-    MatIconModule, 
-    MatExpansionModule, 
-    UiMenuItemComponent
-  ],
+  imports: IMPORTACIONES,
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss'
 })
@@ -30,6 +51,7 @@ export class UiSidebarComponent {
     const rutas: IOpcionSidebar[] = this._authService.getSidebarOptions();
     if (rutas) {
       this.opciones = rutas;
+      console.log('SIDEBAR');
       console.log(this.opciones);
     }
   }

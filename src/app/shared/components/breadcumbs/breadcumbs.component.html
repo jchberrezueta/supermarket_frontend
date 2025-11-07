@@ -1,8 +1,10 @@
 <div class="div_container">
     <div class="breadcumbs_container">
-        @for(item of breadcumbs(); track $index){
+        @for(item of breadcumbs(); track $index; let isFirst = $first;){
             <div class="breadcumb_item">
-                <mat-icon [svgIcon]="'heroicons_mini:chevron-right'"></mat-icon>
+                @if(!isFirst){
+                    <mat-icon>chevron_right</mat-icon>
+                }
                 <a (click)="navigateToUrl(item.url)">{{item.label}}</a>
             </div>
         }

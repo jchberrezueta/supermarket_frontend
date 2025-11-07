@@ -1,24 +1,13 @@
-:host {
-  display: block;
-  width: 250px;
+.sidenav-container {
   height: 100vh;
-  background: #fafafa;
-  border-right: 1px solid #e0e0e0;
 }
 
-mat-icon {
-  margin-right: 8px;
+.sidenav {
+  width: 100%;
 }
 
-.menu-panel {
-  background: transparent;
-  box-shadow: none;
-}
-
-mat-expansion-panel-header {
-  padding-left: 8px;
-}
-
-a[mat-list-item] {
-  padding-left: 40px;
+mat-nav-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }

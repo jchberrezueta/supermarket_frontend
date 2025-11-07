@@ -1,12 +1,21 @@
-<li>
-    @if (item.ruta) {
-        <a (click)="navegar(item.ruta)">{{ item.titulo }}</a>
-    } @else {
-        <span>{{ item.titulo }}</span>
-    }
-    @if (item.hijas) {
-        @for (child of item.hijas; track $index) {
-            <menu-item [item]="child"></menu-item>
+@if (elem.hijas.length > 0) {
+    <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <mat-icon>home</mat-icon>
+            {{elem.titulo}}
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+    @for (child of elem.hijas; track $index) {
+        @if(child.hijas.length > 0) {
+            <ui-menu-item [item]="child"/>
+        }
+        @else {
+            <a mat-list-item (click)="navigateToUrl(child.ruta)">{{ child.titulo }}</a>
         }
     }
-</li>
+    </mat-expansion-panel>
+}
+@else {
+    <a mat-list-item (click)="navigateToUrl(elem.ruta)">{{ elem.titulo }}</a>
+}
