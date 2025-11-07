@@ -2,8 +2,6 @@ import { CommonModule } from '@angular/common';
 import {
   Component,
   EventEmitter,
-  ViewChild,
-  AfterViewInit,
   OnInit,
   input,
   signal,
@@ -15,13 +13,13 @@ import {
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
-import { MatTable, MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { RestService } from '@core/services/rest.service';
 import { IQueryParams } from '@shared/models/query_param.model';
 import { ITableColumn } from '@shared/models/table_column.model';
 import { SelectionModel } from '@angular/cdk/collections';
 import { HttpParams } from '@angular/common/http';
-import { catchError, map, merge, of, startWith, switchMap } from 'rxjs';
+import {DashIfEmptyPipe} from '@shared/pipes/dashIfEmpty.pipe'
 
 @Component({
   selector: 'ui-table-list',
@@ -31,21 +29,21 @@ import { catchError, map, merge, of, startWith, switchMap } from 'rxjs';
     MatTableModule, 
     MatSortModule, 
     MatCheckboxModule,
-    CommonModule 
+    CommonModule,
+    DashIfEmptyPipe
   ],
   templateUrl: './table-list.component.html',
   styleUrls: ['./table-list.component.scss']
 })
 export class UiTableListComponent implements OnInit {
   
-  public data = signal<any[]>([]);
-  public datasource = new MatTableDataSource<any>();
+  private data = signal<any[]>([]);
+  public matDatasource = new MatTableDataSource<any>();
   public columns = input.required<ITableColumn[]>();
   public service = input.required<string>();
   public message = input<string>('!No tiene registros generados¡');
   public getInputs = input<any>();
   public queryParams = input<IQueryParams[]>();
-  private _queryParams!: IQueryParams[];
   public isSelection = input<boolean>(false);
   public selection!: SelectionModel<any>;
 
@@ -58,37 +56,37 @@ export class UiTableListComponent implements OnInit {
 
 
   private readonly _restService = inject(RestService);
-  @ViewChild(MatPaginator) _matPaginator!: MatPaginator;
-  @ViewChild(MatSort) _matSort!: MatSort;
+  private readonly _matSort = viewChild(MatSort);
+  private readonly _matPaginator = viewChild(MatPaginator);
   private _reloadEmit!: EventEmitter<any>;
-  @ViewChild(MatTable) tabla1!: MatTable<any>;
 
   constructor() {
-    //console.log('constructor');
+    console.log('constructor');
   }
 
-  /*ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges) {
     console.log('ngOnChanges');
     if (changes['getInputs']) {
-      if (this._matPaginator) {
-        this._matPaginator.pageIndex = 0;
+      if (this._matPaginator()) {
+        //this._matPaginator.pageIndex? = 0;
       }
       if (this.selection) this.selection.clear();
-      this._reloadEmit.emit();
+      this._reloadEmit.emit(true);
     }
     if(changes['service'] && !changes['service'].firstChange){
-      this._reloadEmit.next(true);
+      this._reloadEmit.emit(true);
     }
-  }*/
+  }
 
   ngOnInit() {
     console.log('ngOnInit');
-    //this.selection = new SelectionModel<any>(this.isSelection(), []);
+    this.selection = new SelectionModel<any>(this.isSelection(), []);
+    this._reloadEmit = new EventEmitter<any>();
     this.loadColumns();
     this._restService.get<any>(this.service()).subscribe(
       (res) => {
         this.data.set(res.data);
-        console.log(this.data());
+        this.matDatasource.data = this.data();
       }
     );
   }
@@ -99,57 +97,22 @@ export class UiTableListComponent implements OnInit {
         .filter((column) => !column.visible)
         .map((column) => column.property),
     );
-    //if (this.isSelection()) this.displayedColumns().unshift('check');
-    console.log(this.displayedColumns());
+    if (this.isSelection()) this.displayedColumns().unshift('check');
   }
 
-  /*ngAfterViewInit() {
-    console.log('ngAfterViewInit');
-    this.datasource.paginator = this._matPaginator;
-    this.datasource.sort = this._matSort;
-    console.log(this.tabla1.dataSource);
-    this.selection.changed.subscribe(() =>
-      this.onSelectRow.emit(this.selection.selected),
-    );
-    merge(this._reloadEmit)
-      .pipe(
-        startWith({}),
-        switchMap(() => {
-          this.isLoading.set(true);
-          return this._restService
-            .get(this.service(), { params: this._getParams() })
-            .pipe(catchError(() => of(null)));
-        }),
-        map((data: any) => {
-          this.isLoading.set(false);
-          this.resultsLength.set(data?.totalItems || data?.length || 0);
-          return data?.items || data;
-        }),
-      )
-      .subscribe((data: any[]) => {
-        this.data.set(data);
-        if (data && !this.isSelection()) {
-          this.selection.select(data[0]);
-          this.onSelectRow.emit(data[0]);
-        }
-      });
-      console.log(this.data());
-  }*/
-
-
-  /*public emitClickAction(action: string, row: any): void {
+  public emitClickAction(action: string, row: any): void {
     this.rowClickAction.emit({ action, row });
-  }*/
+  }
 
-  /*public selectItem(item: any): void {
+  public selectItem(item: any): void {
     if (!this.selection.isSelected(item)) {
       this.selection.select(item);
       this.onSelectRow.emit(item);
     }
-  }*/
+  }
 
 
-  /*private _getParams(): HttpParams {
+  private _getParams(): HttpParams {
     const paginator = {
       pageIndex: (this._matPaginator()?.pageIndex ?? 0) + 1,
       pageSize: (this._matPaginator()?.pageSize || 10)
@@ -167,38 +130,32 @@ export class UiTableListComponent implements OnInit {
       );
     }
     return params;
-  }*/
+  }
 
-  
-
-  /*public toggleAllRows() {
+  public toggleAllRows() {
     if (!this.isAllSelected()) {
-      this.selection.select(...this.datasource.data);
+      this.selection.select(...this.matDatasource.data);
     } else {
       this.selection.clear();
     }
-  }*/
+  }
 
-  /*public isAllSelected(): boolean {
+  public isAllSelected(): boolean {
     const numSelected = this.selection.selected.length;
-    const numRows = this.datasource.data.length;
+    const numRows = this.matDatasource.data.length;
     return numSelected === numRows;
-  }*/
+  }
 
-  /*public checkBoxLabel(row?: any): string {
+  public checkBoxLabel(row?: any): string {
     if (!row) {
       return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
     }
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
-  }*/
+  }
 
-
-
-  /*public setQueryParams(queryParams: IQueryParams[]) {
-    this._queryParams = queryParams;
-  }*/
-
-  /*private update() {
+  public update() {
+    console.log('vamos');
     this._reloadEmit.emit();
-  }*/
+    console.log('emitido');
+  }
 }

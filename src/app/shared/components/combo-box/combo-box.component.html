@@ -1,3 +1,19 @@
-<option value="">
-    
-</option>
+<mat-form-field>
+  @if (titulo) {
+    <mat-label>{{titulo}}</mat-label>
+  }
+  <mat-select placeholder="--Seleccione--">
+    @if (options()){
+        <mat-option>--</mat-option>
+        @for (op of options(); track $index) {
+            <mat-option [value]="op.id">{{op.value}}</mat-option>
+        }
+        @empty {
+            <mat-option disabled>No tiene registros</mat-option>
+        }
+    }
+    @else{
+        <mat-option disabled>No tiene registros</mat-option>
+    }
+  </mat-select>
+</mat-form-field>

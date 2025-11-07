@@ -1,0 +1,10 @@
+<div class="div_container">
+    <div class="breadcumbs_container">
+        @for(item of breadcumbs(); track $index){
+            <div class="breadcumb_item">
+                <mat-icon [svgIcon]="'heroicons_mini:chevron-right'"></mat-icon>
+                <a (click)="navigateToUrl(item.url)">{{item.label}}</a>
+            </div>
+        }
+    </div>
+</div>

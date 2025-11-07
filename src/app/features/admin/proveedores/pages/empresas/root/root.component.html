@@ -1,4 +1,8 @@
-<div class="card-rutas">
-    Admin > Proveedores > Empresas
+<div class="div_container">
+    <div class="div_breadcumbs">
+        <ui-breadcumbs [breadcumbs]="breadcumbs"></ui-breadcumbs>
+    </div>
+    <div class="main">
+        <router-outlet/>
+    </div>
 </div>
-<router-outlet/>

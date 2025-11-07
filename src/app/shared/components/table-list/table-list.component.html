@@ -1,30 +1,46 @@
-<div>
-    <div class="div_tabla">
-        <table mat-table matSort [dataSource]="data()" class="mat-elevation-z8">
-            @for (column of columns(); track $index) {
-                <ng-container [matColumnDef]="column.property">
-                    
+<div class="div_container">
+    <div class="div_table">
+        <table mat-table matSort [dataSource]="matDatasource" class="mat-elevation-z8">
+            @if(isSelection()){
+                <ng-container matColumnDef="check">
                     <th mat-header-cell *matHeaderCellDef>
-                        {{column.label}} 
+                        <mat-checkbox (change)="$event ? toggleAllRows() : null" [checked]="selection.hasValue() && isAllSelected()" [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkBoxLabel()" color="primary"/>
                     </th>
-                    
+                    <td mat-cell *matCellDef="let element">
+                        <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(element) : null" [checked]="selection.isSelected(element)" [aria-label]="checkBoxLabel(element)" color="primary"/>
+                    </td>
+                </ng-container>
+            }
+            @for(column of columns(); track $index){
+                <ng-container [matColumnDef]="column.property">
+                    @if(column.sortable){
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> 
+                            {{column.label}} 
+                        </th>
+                    }
+                    @else{
+                        <th mat-header-cell *matHeaderCellDef>
+                            {{column.label}} 
+                        </th>
+                    }
                     <td mat-cell *matCellDef="let element">
                         <div>
-                            {{ (element[column.property])? element[column.property] : '-' }}
+                            {{ (element[column.property]) | dashIfEmpty }}
                         </div>
                     </td>
-                    
                 </ng-container>
-
-                
             }
             <tr mat-header-row *matHeaderRowDef="displayedColumns()"></tr>
-        
-            <tr mat-row *matRowDef="let row; columns: displayedColumns();"></tr>
+            @if(isSelection()){
+                <tr mat-row *matRowDef="let row; columns: displayedColumns();" [class.selectable-row]="selection.isSelected(row)" (click)="selection.toggle(row)" class="table_row">
+            }
+            @else{
+                <tr mat-row *matRowDef="let row; columns: displayedColumns();" (click)="selectItem(row)" (dblclick)="emitClickAction('edit', row )" [class.selectable-row]="selection.isSelected(row)" class="table_row">
+                </tr>
+            }
         </table>
     </div>
-
-    
-    <mat-paginator [showFirstLastButtons]="true" [hidePageSize]="true" [length]="resultsLength()" [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10" />
-        
+    <div class="div_paginator">
+        <mat-paginator [showFirstLastButtons]="true" [hidePageSize]="true" [length]="resultsLength()" [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10" class="mat-elevation-z8"/>
+    </div>
 </div>

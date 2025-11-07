@@ -1,31 +1,11 @@
 <div class="container-empresas">
     <div class="card-principal">
-        <div class="card--title">
-            Convenios Empresas
-        </div>
-        <hr>
+        <ui-title [title]="title"/> 
         <div class="card--filters">
             <div class="options">
-                <select name="" id="">
-                    <option value=""></option>
-                    <option value="">.....</option>
-                </select>
-                <select name="" id="">
-                    <option value=""></option>
-                    <option value="">.....</option>
-                </select>
-                <select name="" id="">
-                    <option value=""></option>
-                    <option value="">.....</option>
-                </select>
-                <select name="" id="">
-                    <option value=""></option>
-                    <option value="">.....</option>
-                </select>
-                <select name="" id="">
-                    <option value=""></option>
-                    <option value="">.....</option>
-                </select>
+                <ui-combo-box [options]="[{id:1, value: 'uno'},{id:2, value: 'dos'},{id:3, value: 'tres'}]" [title]="'Id'"/>
+                <ui-combo-box [options]="[{id:1, value: 'uno'},{id:2, value: 'dos'},{id:3, value: 'tres'}]" [title]="'Nombres'"/>
+                <ui-combo-box [options]="[{id:1, value: 'uno'},{id:2, value: 'dos'},{id:3, value: 'tres'}]" [title]="'Apellidos'"/>
             </div>
             <div class="buttons">
                 <app-button />
@@ -41,7 +21,7 @@
             </div>
         </div>
         <div class="card--table">
-            <ui-table-list [service]="'empresas'" [columns]="config.columns" (onSelectRow)="imprimir($event)"/>
+            <ui-table-list #tableList [service]="'empresas'" [columns]="config.columns" (onSelectRow)="imprimir($event)" (rowClickAction)="imprimir($event)" [isSelection]="false"/>
         </div>
     </div>
 </div>
