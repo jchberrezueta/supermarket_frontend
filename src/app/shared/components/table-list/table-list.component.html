@@ -23,11 +23,29 @@
                             {{column.label}} 
                         </th>
                     }
-                    <td mat-cell *matCellDef="let element">
-                        <div>
-                            {{ (element[column.property]) | dashIfEmpty }}
-                        </div>
-                    </td>
+                    @switch (column.type) {
+                        @case('buttonGroup') {
+                            <td mat-cell *matCellDef="let element">
+                                <div class="td_button_group">
+                                    @for (btn of column.buttonItems; track $index) {
+                                        @if(btn.router){
+                                            <ui-button [routerLink]="[element[btn.key]]" (dblclick)="$event.stopPropagation()" [icon]="btn.icon" [color]="btn.color" [width]="'5px'"/>
+                                        }
+                                        @else {
+                                            <ui-button (click)="rowClickAction.emit({ action: btn.action,  row: element })" (dblclick)="$event.stopPropagation()" [icon]="btn.icon" [color]="btn.color"/>
+                                        }
+                                    }
+                                </div>
+                            </td>
+                        }
+                        @default {
+                            <td mat-cell *matCellDef="let element">
+                                <div>
+                                    {{ (element[column.property]) | dashIfEmpty }}
+                                </div>
+                            </td>
+                        }
+                    }
                 </ng-container>
             }
             <tr mat-header-row *matHeaderRowDef="displayedColumns()"></tr>

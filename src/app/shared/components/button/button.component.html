@@ -1,3 +1,10 @@
-<button mat-button>
-
-</button>
+<div class="div_container">
+    <button mat-flat-button  [ngStyle]="{'background-color': color(), 'width': width()}" class="div_button">
+        @if(icon()) {
+            <mat-icon>{{icon()}}</mat-icon>
+        }
+        @if(label()){
+            <span>{{label()}}</span>
+        }
+    </button>
+</div>

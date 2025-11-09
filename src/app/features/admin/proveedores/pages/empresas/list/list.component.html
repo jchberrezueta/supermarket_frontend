@@ -1,27 +1,21 @@
-<div class="container-empresas">
-    <div class="card-principal">
-        <ui-title [title]="title"/> 
-        <div class="card--filters">
-            <div class="options">
+<div class="div_container">
+    <div class="div_card">
+        <div class="card_title">
+            <ui-title [title]="title"/> 
+        </div>
+        <hr class="linea">
+        <div class="card_filters">
+            <div class="selects">
                 <ui-combo-box [options]="[{id:1, value: 'uno'},{id:2, value: 'dos'},{id:3, value: 'tres'}]" [title]="'Id'"/>
-                <ui-combo-box [options]="[{id:1, value: 'uno'},{id:2, value: 'dos'},{id:3, value: 'tres'}]" [title]="'Nombres'"/>
-                <ui-combo-box [options]="[{id:1, value: 'uno'},{id:2, value: 'dos'},{id:3, value: 'tres'}]" [title]="'Apellidos'"/>
+                <ui-combo-box [options]="[{id:1, value: 'Jonathan'},{id:2, value: 'Carlos'},{id:3, value: 'Juan'}]" [title]="'Nombres'"/>
+                <ui-combo-box [options]="[{id:1, value: 'Berrezueta'},{id:2, value: 'Velez'},{id:3, value: 'Perez'}]" [title]="'Apellidos'"/>
             </div>
-            <div class="buttons">
-                <app-button />
-                <button class="btn-add">
-
-                </button>
-                <button class="btn-update">
-
-                </button>
-                <button class="btn-delete">
-
-                </button>
+            <div class="filter_btn">
+                <ui-button [label]="'Filtrar'" icon="filter_alt"></ui-button>
             </div>
         </div>
-        <div class="card--table">
-            <ui-table-list #tableList [service]="'empresas'" [columns]="config.columns" (onSelectRow)="imprimir($event)" (rowClickAction)="imprimir($event)" [isSelection]="false"/>
+        <div class="card_table">
+            <ui-table-list #tableList [service]="'empresas'" [columns]="config.columns" (onSelectRow)="imprimir($event)" (rowClickAction)="imprimir($event)" [isSelection]="true"/>
         </div>
     </div>
 </div>

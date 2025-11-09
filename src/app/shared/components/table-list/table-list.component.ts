@@ -20,18 +20,22 @@ import { ITableColumn } from '@shared/models/table_column.model';
 import { SelectionModel } from '@angular/cdk/collections';
 import { HttpParams } from '@angular/common/http';
 import {DashIfEmptyPipe} from '@shared/pipes/dashIfEmpty.pipe'
+import { UiButtonComponent } from "../button/button.component";
+import { RouterLink } from "@angular/router";
 
 @Component({
   selector: 'ui-table-list',
   standalone: true,
   imports: [
-    MatPaginatorModule, 
-    MatTableModule, 
-    MatSortModule, 
+    MatPaginatorModule,
+    MatTableModule,
+    MatSortModule,
     MatCheckboxModule,
     CommonModule,
-    DashIfEmptyPipe
-  ],
+    DashIfEmptyPipe,
+    UiButtonComponent,
+    RouterLink
+],
   templateUrl: './table-list.component.html',
   styleUrls: ['./table-list.component.scss']
 })

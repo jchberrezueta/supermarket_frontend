@@ -1,9 +1,10 @@
 import { Component, input } from '@angular/core';
+import { UiButtonComponent } from "../button/button.component";
 
 @Component({
   selector: 'ui-title',
   standalone: true,
-  imports: [],
+  imports: [UiButtonComponent],
   templateUrl: './title.component.html',
   styleUrl: './title.component.scss'
 })

@@ -13,7 +13,7 @@ import { UiComboBoxComponent } from '@shared/components/combo-box/combo-box.comp
     UiTableListComponent,
     UiButtonComponent,
     UiTitleComponent,
-    UiComboBoxComponent
+    UiComboBoxComponent,
 ],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss'

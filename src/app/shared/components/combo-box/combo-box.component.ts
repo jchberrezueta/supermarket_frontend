@@ -2,7 +2,7 @@ import { Component, input, Input } from '@angular/core';
 import { IComboBoxOption } from '@shared/models/combo_box_option';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
-
+  
 const IMPORTS = [
   MatFormFieldModule,
   MatSelectModule,
@@ -13,7 +13,7 @@ const IMPORTS = [
   standalone: true,
   imports: IMPORTS,
   templateUrl: './combo-box.component.html',
-  styleUrl: './combo-box.component.scss'
+  styleUrl: './combo-box.component.scss',
 })
 export class UiComboBoxComponent {
   public options = input.required<IComboBoxOption[]>();
@@ -24,3 +24,8 @@ export class UiComboBoxComponent {
     return this.title();
   }
 }
+
+
+
+
+ 
