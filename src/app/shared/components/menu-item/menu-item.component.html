@@ -2,8 +2,8 @@
     <mat-expansion-panel>
         <mat-expansion-panel-header>
           <mat-panel-title>
-            <mat-icon>home</mat-icon>
-            {{elem.titulo}}
+            <mat-icon>{{elem.icono}}</mat-icon>
+            &nbsp;&nbsp;&nbsp;{{elem.titulo}}
           </mat-panel-title>
         </mat-expansion-panel-header>
     @for (child of elem.hijas; track $index) {

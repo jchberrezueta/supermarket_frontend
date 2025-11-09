@@ -1,11 +1,20 @@
 import { Component } from '@angular/core';
-import { HeaderComponent, FooterComponent, UiSidebarComponent} from '@shared/components/index';
 import { RouterOutlet } from '@angular/router';
+import { 
+  UiHeaderComponent, 
+  UiSidebarComponent
+} from '@shared/components/index';
+
+const IMPORTS = [
+  UiHeaderComponent, 
+  UiSidebarComponent, 
+  RouterOutlet,
+]
 
 @Component({
   selector: 'app-layout-admin',
   standalone: true,
-  imports: [HeaderComponent, FooterComponent, UiSidebarComponent, RouterOutlet],
+  imports: IMPORTS,
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.scss'
 })

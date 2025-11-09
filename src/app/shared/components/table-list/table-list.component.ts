@@ -87,6 +87,7 @@ export class UiTableListComponent implements OnInit {
       (res) => {
         this.data.set(res.data);
         this.matDatasource.data = this.data();
+        this.resultsLength.set(this.matDatasource.data.length);
       }
     );
   }

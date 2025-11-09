@@ -36,7 +36,7 @@ const IMPORTACIONES = [
 
 
 @Component({
-  selector: 'app-sidebar',
+  selector: 'ui-sidebar',
   standalone: true,
   imports: IMPORTACIONES,
   templateUrl: './sidebar.component.html',

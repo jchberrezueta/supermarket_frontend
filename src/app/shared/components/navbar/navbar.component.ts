@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
+import { UiUserComponent } from "../user/user.component";
 
 @Component({
-  selector: 'app-navbar',
+  selector: 'ui-navbar',
   standalone: true,
-  imports: [],
+  imports: [UiUserComponent],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss'
 })
-export class NavbarComponent {
+export class UiNavbarComponent {
 
 }

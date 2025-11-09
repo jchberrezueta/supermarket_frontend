@@ -1,0 +1,20 @@
+<div class="div_container">
+    <header class="header">
+
+        <div class="sidebar_options">
+            <div class="div_toggle">
+                <button mat-icon-button (click)="toggleSidebar()" class="toggle_btn">
+                    <mat-icon>{{ sidebarOpen ? 'close' : 'menu' }}</mat-icon>
+                </button>
+            </div>
+            <div class="logo">
+                <img src="imgs/logo_supermarket.png" alt="Logo - SuperMarket">
+            </div>
+        </div>
+        
+        <div class="navbar_options">
+            <ui-navbar/>
+        </div>
+
+    </header>
+</div>

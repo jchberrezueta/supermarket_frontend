@@ -1,16 +1,23 @@
 import { Component, inject, input, Input } from '@angular/core';
 import { IOpcionSidebar } from '@core/models/opcion_sidebar.model';
-import { Router, RouterLink } from "@angular/router";
+import { Router } from "@angular/router";
 import { MatExpansionModule } from "@angular/material/expansion";
-import { MatIcon } from "@angular/material/icon";
+import { MatIconModule } from "@angular/material/icon";
 import { MatListModule } from '@angular/material/list';
+
+const IMPORTS = [
+  MatExpansionModule, 
+  MatIconModule, 
+  MatListModule
+];
+
 
 @Component({
   selector: 'ui-menu-item',
   standalone: true,
   templateUrl: './menu-item.component.html',
   styleUrls: ['./menu-item.component.scss'],
-  imports: [MatExpansionModule, MatIcon, MatListModule],
+  imports: IMPORTS,
 })
 export class UiMenuItemComponent {
   public item = input.required<IOpcionSidebar>();

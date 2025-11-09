@@ -1,14 +1,30 @@
 import { Component } from '@angular/core';
+import { UiNavbarComponent } from "../navbar/navbar.component";
+import { MatIconModule } from "@angular/material/icon";
+import { MatButtonModule } from '@angular/material/button';
+
+const IMPORTS = [
+  UiNavbarComponent, 
+  MatButtonModule, 
+  MatIconModule
+];
 
 @Component({
-  selector: 'app-header',
+  selector: 'ui-header',
   standalone: true,
-  imports: [],
+  imports: IMPORTS,
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
-export class HeaderComponent {
-    constructor(){
-      console.log('INICIAMOS :)')
-    }
+export class UiHeaderComponent {
+
+  public sidebarOpen: boolean = false;
+
+  constructor(){
+    console.log('INICIAMOS :)')
+  }
+
+  toggleSidebar() {
+    this.sidebarOpen = !this.sidebarOpen;
+  }
 }
