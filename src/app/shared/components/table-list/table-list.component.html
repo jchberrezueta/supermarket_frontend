@@ -29,7 +29,7 @@
                                 <div class="td_button_group">
                                     @for (btn of column.buttonItems; track $index) {
                                         @if(btn.router){
-                                            <ui-button [routerLink]="[element[btn.key]]" (dblclick)="$event.stopPropagation()" [icon]="btn.icon" [color]="btn.color" [width]="'5px'"/>
+                                            <ui-button [routerLink]="[element[btn.key]]" (dblclick)="$event.stopPropagation()" [icon]="btn.icon" [color]="btn.color"/>
                                         }
                                         @else {
                                             <ui-button (click)="rowClickAction.emit({ action: btn.action,  row: element })" (dblclick)="$event.stopPropagation()" [icon]="btn.icon" [color]="btn.color"/>

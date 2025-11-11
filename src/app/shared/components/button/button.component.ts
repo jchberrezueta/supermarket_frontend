@@ -16,6 +16,7 @@ export class UiButtonComponent {
   public icon = input<string>();
   public color = input<string>('primary');
   public width = input<string>();
+  
   constructor() {
 
   }
