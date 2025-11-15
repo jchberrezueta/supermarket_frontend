@@ -5,6 +5,7 @@ import { UiButtonComponent } from "@shared/components/button/button.component";
 import { ListEmpresasConfig } from './list_empresas.config';
 import { UiTitleComponent } from "@shared/components/title/title.component";
 import { UiComboBoxComponent } from '@shared/components/combo-box/combo-box.component';
+import { UiDatetimePickerComponent } from "@shared/components/datetime-picker/datetime-picker.component";
 
 @Component({
   selector: 'app-list',
@@ -14,6 +15,7 @@ import { UiComboBoxComponent } from '@shared/components/combo-box/combo-box.comp
     UiButtonComponent,
     UiTitleComponent,
     UiComboBoxComponent,
+    UiDatetimePickerComponent
 ],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss'
