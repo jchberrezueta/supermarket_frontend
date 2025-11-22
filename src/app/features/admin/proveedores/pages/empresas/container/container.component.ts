@@ -20,13 +20,13 @@ const datos = [
     ];
 
 @Component({
-  selector: 'app-root',
+  selector: 'app-container',
   standalone: true,
   imports: [RouterOutlet, UiBreadcumbsComponent],
-  templateUrl: './root.component.html',
-  styleUrl: './root.component.scss'
+  templateUrl: './container.component.html',
+  styleUrl: './container.component.scss'
 })
-export default class RootComponent {
+export default class containerComponent {
   
   public breadcumbs: IBreadcumb[] = datos;
   

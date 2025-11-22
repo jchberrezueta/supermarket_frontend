@@ -15,7 +15,7 @@ export const ListEmpresasConfig: ITableListConfig = {
             label: '',
             property: 'menu',
             type: 'buttonGroup',
-            width: 15,
+            /*width: 15,*/
             buttonItems: [
                 {
                     action: '',

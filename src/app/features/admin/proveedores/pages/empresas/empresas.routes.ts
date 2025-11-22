@@ -4,7 +4,7 @@ import { canMatchPermisoGuard } from '@core/guards/permiso.guard';
 export const empresasRoutes: Routes = [
     {
         path: '',
-        loadComponent: () => import('./root/root.component'),
+        loadComponent: () => import('./container/container.component'),
         children: [
             {
                 path: '', pathMatch: 'full', redirectTo: 'list'

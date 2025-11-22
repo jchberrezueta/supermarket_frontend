@@ -12,17 +12,25 @@ html {
   height: 100vh;
   overflow: hidden;
   
-
   body {
     width: 100%;
     height: 100%;
     font-family: $font-family-base;
     font-size: $font-size-base;
 
-    app-root, app-login, app-layout-admin, app-list, app-edit, app-details {
+    app-root, app-login, app-layout-admin, app-container, app-list, app-details, app-form {
       display: block;
       width: 100%;
       height: 100%;
+    }
+
+    /*.div_container {
+      width: 100%;
+      height: 100%;
+    }*/
+
+    mat-icon {
+      margin: 0 !important;
     }
   }
 }

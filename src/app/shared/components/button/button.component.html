@@ -4,6 +4,9 @@
             <mat-icon>{{icon()}}</mat-icon>
         }
         @if(label()){
+            @if(icon()){
+                &nbsp;
+            }
             <span>{{label()}}</span>
         }
     </button>

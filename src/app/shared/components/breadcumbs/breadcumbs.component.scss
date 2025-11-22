@@ -1,17 +1,21 @@
+:host {
+    width: 100%;
+    height: 100%;
+}
+
 .div_container {
     width: 100%;
     height: 100%;
-}
 
-.breadcumbs_container {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: row;
-}
+    .breadcumbs_container {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: row;
 
-.breadcumb_item {
-    display: flex;
-    align-items: center;
+        .breadcumb_item {
+            display: flex;
+            align-items: center;
+        }
+    }
 }
-
