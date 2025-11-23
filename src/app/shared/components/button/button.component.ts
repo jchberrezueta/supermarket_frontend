@@ -16,15 +16,15 @@ export class UiButtonComponent {
   public icon = input<string>();
   public color = input<string>('primary');
   public width = input<string>('auto');
-  
-  public onClick = output<any>();
+
+  public onClick = output<string>();
 
   constructor() {
 
   }
 
   protected emitClick(event:any){
-    this.onClick.emit(event);
+    this.onClick.emit(this.getAction);
   }
 
   public get getLabel() {
@@ -32,6 +32,9 @@ export class UiButtonComponent {
   }
   public get getIcon() {
     return this.icon();
+  }
+  public get getAction() {
+    return this.action();
   }
 
 }

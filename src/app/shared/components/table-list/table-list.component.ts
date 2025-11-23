@@ -23,7 +23,10 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { HttpParams } from '@angular/common/http';
 import {DashIfEmptyPipe} from '@shared/pipes/dashIfEmpty.pipe'
 import { UiButtonComponent } from "../button/button.component";
-import { RouterLink } from "@angular/router";
+import { Router, RouterLink } from "@angular/router";
+import { AuthService } from '@core/services/auth.service';
+
+import Swal from 'sweetalert2'
 
 @Component({
   selector: 'ui-table-list',
@@ -65,6 +68,14 @@ export class UiTableListComponent implements OnInit {
   private _matPaginator = viewChild(MatPaginator);
   private _reloadEmit!: EventEmitter<any>;
 
+
+  private _router = inject(Router);
+  private _authService = inject(AuthService);
+  private rutaActual: string = '';
+  private rutaUpdate: string = '';
+  protected canUpdate: boolean = false;
+  protected canDelete: boolean = false;
+
   constructor() {
     console.log('constructor');
   }
@@ -100,6 +111,7 @@ export class UiTableListComponent implements OnInit {
         if (p) this.matDatasource.paginator = p;
       }
     );
+    this.hasPermissionsUD();
   }
 
   private loadColumns() {
@@ -168,5 +180,55 @@ export class UiTableListComponent implements OnInit {
     console.log('vamos');
     this._reloadEmit.emit();
     console.log('emitido');
+  }
+
+  protected hasPermissionsUD() {
+      this.rutaActual = this.getSegmentsRoute().map(p => p).join('/');
+      this.canUpdate = this._authService.canUpdate(this.rutaActual);
+      this.canDelete = this._authService.canDelete(this.rutaActual);
+  }
+
+  protected redirectUpdate(clickAction: string, listaIds:number[]) {
+    if(clickAction === 'update'){
+      this.generateUpdateRoute(this.getSegmentsRoute(), listaIds[0]);
+      console.log(this.rutaUpdate);
+      this._router.navigate([this.rutaUpdate]);
+    }
+    else if(clickAction === 'delete'){
+      Swal.fire({
+        title: "Esta seguro de eliminar este elemento?",
+        text: "No se podra revertir esta accion!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Si, eliminar!"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          console.log('ELIMINAR: ' + listaIds[0]);
+          Swal.fire({
+            title: "Eliminado Exitosamente!",
+            text: "El elemento ha sido eliminado",
+            icon: "success"
+          });
+        }
+      });
+    }
+    
+  }
+
+  private generateUpdateRoute(segments: string[], id: number) {
+    segments.push('update');
+    segments.push(id+'');
+    this.rutaUpdate = segments.map(p => p).join('/');
+  }
+
+  private getSegmentsRoute(): string[] {
+    const segments = this._router.url.split('/');
+    const posFinal = segments.length-1;
+    if(segments[posFinal] === 'list'){
+      segments.pop();
+    }
+    return segments;
   }
 }

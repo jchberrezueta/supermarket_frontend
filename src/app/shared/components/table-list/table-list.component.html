@@ -24,15 +24,17 @@
                         </th>
                     }
                     @switch (column.type) {
-                        @case('buttonGroup') {
+                        @case('crud') {
                             <td mat-cell *matCellDef="let element">
-                                <div class="td_button_group">
+                                <div class="td_crud">
                                     @for (btn of column.buttonItems; track $index) {
-                                        @if(btn.router){
-                                            <ui-button [routerLink]="[element[btn.key]]" (dblclick)="$event.stopPropagation()" [icon]="btn.icon" [color]="btn.color"/>
-                                        }
-                                        @else {
-                                            <ui-button (click)="rowClickAction.emit({ action: btn.action,  row: element })" (dblclick)="$event.stopPropagation()" [icon]="btn.icon" [color]="btn.color"/>
+                                        @if((btn.action === 'update' && canUpdate) || (btn.action === 'delete' && canDelete)){
+                                            @if(btn.router){
+                                                <ui-button (dblclick)="$event.stopPropagation()" [icon]="btn.icon" [color]="btn.color" [action]="btn.action" (onClick)="redirectUpdate($event, [element[btn.key]])"/>
+                                            }
+                                            @else {
+                                                <ui-button (click)="rowClickAction.emit({ action: btn.action,  row: element })" (dblclick)="$event.stopPropagation()" [icon]="btn.icon" [color]="btn.color" [action]="btn.action"/>
+                                            }
                                         }
                                     }
                                 </div>

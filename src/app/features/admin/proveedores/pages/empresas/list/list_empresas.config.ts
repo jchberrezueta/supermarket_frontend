@@ -14,11 +14,11 @@ export const ListEmpresasConfig: ITableListConfig = {
         {
             label: '',
             property: 'menu',
-            type: 'buttonGroup',
+            type: 'crud',
             /*width: 15,*/
             buttonItems: [
                 {
-                    action: '',
+                    action: 'update',
                     label: 'Editar',
                     icon: 'edit',
                     router: true,
@@ -26,7 +26,7 @@ export const ListEmpresasConfig: ITableListConfig = {
                     color: 'primary'
                 },
                 {
-                    action: '',
+                    action: 'delete',
                     label: 'Eliminar',
                     icon: 'delete',
                     router: true,
