@@ -1,9 +1,9 @@
 <div class="div_container">
   <mat-form-field appearance="outline" class="mat_form_field">
-    <mat-label class="mat_label">{{titulo}}</mat-label>
-    <mat-select placeholder="--Seleccione--" class="mat_select">
+    <mat-label class="mat_label">{{getTitulo}}</mat-label>
+    <mat-select placeholder="--Seleccione--" (selectionChange)="emitValue($event)" class="mat_select">
       <mat-option class="mat_option">--</mat-option>
-      @for (op of options(); track $index) {
+      @for (op of getOptions; track $index) {
           <mat-option [value]="op.id" class="mat_option">{{op.value}}</mat-option>
       }
       @empty {

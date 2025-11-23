@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 
@@ -15,5 +15,23 @@ const IMPORTS = [
   styleUrl: './text-area.component.scss'
 })
 export class UiTextAreaComponent {
-  public placeholder = input<string>('...');
+
+  public label = input.required<string>();
+  protected placeholder = input<string>('...');
+  public onChange = output<string>();
+
+  constructor() {
+    console.log('ui-text-area listo :)');
+  }
+
+  protected emitValue(event:any) {
+    this.onChange.emit(event.target.value);
+  }
+
+  public get getLabel(): string {
+    return this.label();
+  }
+  public get getPlaceholder(): string {
+    return this.placeholder();
+  }
 }

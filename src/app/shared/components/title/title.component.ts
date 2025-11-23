@@ -11,7 +11,7 @@ import { UiButtonComponent } from "../button/button.component";
 export class UiTitleComponent {
   public title = input.required<string>();
 
-  public get titulo(): string {
+  public get getTitle(): string {
     return this.title();
   }
 }

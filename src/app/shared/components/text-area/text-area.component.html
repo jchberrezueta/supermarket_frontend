@@ -1,6 +1,6 @@
 <div class="div_container">
     <mat-form-field>
-        <mat-label>Favorite food</mat-label>
-        <textarea matInput placeholder="placeholder()"></textarea>
+        <mat-label>{{getLabel}}</mat-label>
+        <textarea matInput [placeholder]="getPlaceholder" (change)="emitValue($event)"></textarea>
     </mat-form-field>
 </div>

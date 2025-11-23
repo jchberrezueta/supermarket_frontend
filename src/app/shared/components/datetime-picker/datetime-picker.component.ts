@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -24,4 +24,12 @@ const PROVIDERS = [
 })
 export class UiDatetimePickerComponent {
   public label = input<string>('Fecha');
+  public onDateChange = output<Date>();
+
+  protected emitValue(event:any){
+    this.onDateChange.emit(event.value);
+  }
+  public get getLabel(): string {
+    return this.label();
+  }
 }

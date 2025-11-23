@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { CommonModule } from '@angular/common';
@@ -17,9 +17,21 @@ export class UiButtonComponent {
   public color = input<string>('primary');
   public width = input<string>('auto');
   
+  public onClick = output<any>();
+
   constructor() {
 
   }
 
+  protected emitClick(event:any){
+    this.onClick.emit(event);
+  }
+
+  public get getLabel() {
+    return this.label();
+  }
+  public get getIcon() {
+    return this.icon();
+  }
 
 }

@@ -61,8 +61,8 @@ export class UiTableListComponent implements OnInit {
   public displayedColumns = signal<string[]>([])
 
   private readonly _restService = inject(RestService);
-    _matSort = viewChild(MatSort);
-    _matPaginator = viewChild(MatPaginator);
+  private _matSort = viewChild(MatSort);
+  private _matPaginator = viewChild(MatPaginator);
   private _reloadEmit!: EventEmitter<any>;
 
   constructor() {

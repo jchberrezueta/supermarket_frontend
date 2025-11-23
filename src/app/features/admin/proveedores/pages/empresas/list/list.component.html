@@ -1,18 +1,15 @@
 <div class="div_container">
     <div class="div_card">
-        <div class="card_title">
-            <ui-title [title]="title"/> 
-        </div>
-        <hr class="linea">
         <div class="card_filters">
             <div class="selects">
-                <ui-combo-box [options]="[{id:1, value: 'uno'},{id:2, value: 'dos'},{id:3, value: 'tres'}]" [title]="'Id'"/>
-                <ui-combo-box [options]="[{id:1, value: 'Jonathan'},{id:2, value: 'Carlos'},{id:3, value: 'Juan'}]" [title]="'Nombres'"/>
-                <ui-combo-box [options]="[{id:1, value: 'Berrezueta'},{id:2, value: 'Velez'},{id:3, value: 'Perez'}]" [title]="'Apellidos'"/>
-                <ui-datetime-picker/>
+                <ui-text-field [label]="'ID'" (onChange)="setId($event)"/>
+                <ui-text-field [label]="'Empresa'" (onChange)="setEmpresa($event)"/>
+                <ui-text-field [label]="'Responsable'" (onChange)="setResponsable($event)"/>
+                <ui-combo-box [options]="estados" (onSelectOption)="setEstado($event)" title="Estados"/>
+                <ui-datetime-picker (onDateChange)="setFechaContrato($event)"/>
             </div>
             <div class="filter_btn">
-                <ui-button [label]="'Filtrar'" icon="filter_alt"></ui-button>
+                <ui-button [label]="'Filtrar'" icon="filter_alt" (onClick)="search()"></ui-button>
             </div>
         </div>
         <div class="card_table">
