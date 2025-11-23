@@ -32,9 +32,6 @@ const IMPORTACIONES = [
 ];
 
 
-
-
-
 @Component({
   selector: 'ui-sidebar',
   standalone: true,
@@ -50,6 +47,14 @@ export class UiSidebarComponent {
   ngOnInit() {
     const rutas: IOpcionSidebar[] = this._authService.getSidebarOptions();
     if (rutas) {
+      rutas.unshift({
+        id: 0,
+        titulo: 'DashBoard',
+        ruta: 'admin/home',
+        icono: 'dashboard',
+        activo: 'si',
+        hijas: []
+      });
       this.opciones = rutas;
       console.log('SIDEBAR');
       console.log(this.opciones);

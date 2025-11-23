@@ -9,6 +9,8 @@ import {
   SimpleChanges,
   viewChild,
   inject,
+  ViewChild,
+  effect,
 } from '@angular/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
@@ -58,10 +60,9 @@ export class UiTableListComponent implements OnInit {
   public resultsLength = signal(0);
   public displayedColumns = signal<string[]>([])
 
-
   private readonly _restService = inject(RestService);
-  private readonly _matSort = viewChild(MatSort);
-  private readonly _matPaginator = viewChild(MatPaginator);
+    _matSort = viewChild(MatSort);
+    _matPaginator = viewChild(MatPaginator);
   private _reloadEmit!: EventEmitter<any>;
 
   constructor() {
@@ -92,6 +93,11 @@ export class UiTableListComponent implements OnInit {
         this.data.set(res.data);
         this.matDatasource.data = this.data();
         this.resultsLength.set(this.matDatasource.data.length);
+
+        const s = this._matSort();
+        const p = this._matPaginator();
+        if (s) this.matDatasource.sort = s;
+        if (p) this.matDatasource.paginator = p;
       }
     );
   }

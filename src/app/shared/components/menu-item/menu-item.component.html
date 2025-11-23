@@ -11,11 +11,21 @@
             <ui-menu-item [item]="child"/>
         }
         @else {
-            <a mat-list-item (click)="navigateToUrl(child.ruta)">{{ child.titulo }}</a>
+            <a mat-list-item (click)="navigateToUrl(child.ruta)">
+                <div class="div_item">
+                    <mat-icon>{{child.icono}}</mat-icon>
+                    &nbsp;&nbsp;&nbsp;{{ child.titulo }}
+                </div>
+            </a>
         }
     }
     </mat-expansion-panel>
 }
 @else {
-    <a mat-list-item (click)="navigateToUrl(elem.ruta)">{{ elem.titulo }}</a>
+    <a mat-list-item (click)="navigateToUrl(elem.ruta)">
+        <div class="div_item">
+            <mat-icon>{{elem.icono}}</mat-icon>
+            &nbsp;&nbsp;&nbsp;{{ elem.titulo }}
+        </div>
+    </a>
 }
