@@ -24,10 +24,10 @@ const PROVIDERS = [
 })
 export class UiDatetimePickerComponent {
   public label = input<string>('Fecha');
-  public onDateChange = output<Date>();
+  public evntDateChange = output<Date>();
 
   protected emitValue(event:any){
-    this.onDateChange.emit(event.value);
+    this.evntDateChange.emit(event.value);
   }
   public get getLabel(): string {
     return this.label();

@@ -1,40 +1,50 @@
 import { Component, input, output } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
-import { CommonModule } from '@angular/common';
+
+const IMPORTS = [
+  MatButtonModule, 
+  MatIconModule, 
+  CommonModule
+];
 
 @Component({
   selector: 'ui-button',
   standalone: true,
-  imports: [MatButtonModule, MatIconModule, CommonModule],
+  imports: IMPORTS,
   templateUrl: './button.component.html',
   styleUrl: './button.component.scss',
 })
 export class UiButtonComponent {
+
   public label = input<string>();
   public action = input<string>('crud');
   public icon = input<string>();
   public color = input<string>('primary');
   public width = input<string>('auto');
 
-  public onClick = output<string>();
+  public evntClick = output<string>();
 
-  constructor() {
-
-  }
+  constructor() {}
 
   protected emitClick(event:any){
-    this.onClick.emit(this.getAction);
+    this.evntClick.emit(this.getAction);
   }
 
   public get getLabel() {
     return this.label();
   }
-  public get getIcon() {
-    return this.icon();
-  }
   public get getAction() {
     return this.action();
   }
-
+  public get getIcon() {
+    return this.icon();
+  }
+  public get getColor() {
+    return this.color();
+  }
+  public get getWidth() {
+    return this.width();
+  }
 }

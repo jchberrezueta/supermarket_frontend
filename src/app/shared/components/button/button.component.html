@@ -1,5 +1,7 @@
 <div class="div_container">
-    <button mat-flat-button  [ngStyle]="{'background-color': color(), 'width': width()}" class="div_button" (click)="emitClick($event)">
+    <button mat-flat-button class="div_button" 
+        [ngStyle]="{'background-color': getColor, 'width': getWidth}"
+        (click)="emitClick($event)">
         @if(getIcon) {
             <mat-icon>{{getIcon}}</mat-icon>
         }

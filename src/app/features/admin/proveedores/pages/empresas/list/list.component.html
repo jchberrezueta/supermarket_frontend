@@ -2,14 +2,14 @@
     <div class="div_card">
         <div class="card_filters">
             <div class="selects">
-                <ui-text-field [label]="'ID'" (onChange)="setId($event)"/>
-                <ui-text-field [label]="'Empresa'" (onChange)="setEmpresa($event)"/>
-                <ui-text-field [label]="'Responsable'" (onChange)="setResponsable($event)"/>
-                <ui-combo-box [options]="estados" (onSelectOption)="setEstado($event)" title="Estados"/>
-                <ui-datetime-picker (onDateChange)="setFechaContrato($event)"/>
+                <ui-text-field [label]="'ID'" (evntChange)="setId($event)"/>
+                <ui-text-field [label]="'Empresa'" (evntChange)="setEmpresa($event)"/>
+                <ui-text-field [label]="'Responsable'" (evntChange)="setResponsable($event)"/>
+                <ui-combo-box [options]="estados" (evntSelectOption)="setEstado($event)" title="Estados"/>
+                <ui-datetime-picker (evntDateChange)="setFechaContrato($event)"/>
             </div>
             <div class="filter_btn">
-                <ui-button [label]="'Filtrar'" icon="filter_alt" (onClick)="search()"></ui-button>
+                <ui-button [label]="'Filtrar'" icon="filter_alt" (evntClick)="search()"></ui-button>
             </div>
         </div>
         <div class="card_table">

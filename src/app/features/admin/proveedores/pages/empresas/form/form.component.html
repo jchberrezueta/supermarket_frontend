@@ -1,5 +1,8 @@
 <div class="div_container">
     <div class="div_card">
-        
+        <form [formGroup]="formData" (ngSubmit)="guardar()">
+            <ui-text-field label="Nombre" formControlName="nombre"/>
+            <ui-button label="Guardar"/>
+        </form>
     </div>
 </div>

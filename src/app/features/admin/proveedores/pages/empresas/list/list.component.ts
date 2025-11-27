@@ -2,12 +2,10 @@ import { Component, viewChild } from '@angular/core';
 import { UiTableListComponent } from '@shared/components/index';
 import { UiButtonComponent } from "@shared/components/button/button.component";
 import { ListEmpresasConfig } from './list_empresas.config';
-import { UiTitleComponent } from "@shared/components/title/title.component";
 import { UiComboBoxComponent } from '@shared/components/combo-box/combo-box.component';
 import { UiDatetimePickerComponent } from "@shared/components/datetime-picker/datetime-picker.component";
 import { UiTextFieldComponent } from "@shared/components/text-field/text-field.component";
 import { IComboBoxOption } from '@shared/models/combo_box_option';
-import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 
@@ -22,19 +20,18 @@ const estadosList = [
   },
 ]
 
-
+const IMPORTS = [
+  UiTableListComponent,
+  UiButtonComponent,
+  UiComboBoxComponent,
+  UiDatetimePickerComponent,
+  UiTextFieldComponent,
+  FormsModule
+];
 @Component({
   selector: 'app-list',
   standalone: true,
-  imports: [
-    UiTableListComponent,
-    UiButtonComponent,
-    UiTitleComponent,
-    UiComboBoxComponent,
-    UiDatetimePickerComponent,
-    UiTextFieldComponent,
-    FormsModule
-],
+  imports: IMPORTS,
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss'
 })

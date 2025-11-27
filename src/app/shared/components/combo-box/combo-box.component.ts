@@ -18,7 +18,7 @@ const IMPORTS = [
 export class UiComboBoxComponent {
   public options = input.required<IComboBoxOption[]>();
   public title = input.required<string>();
-  public onSelectOption = output<number>();
+  public evntSelectOption = output<number>();
   public value = '';
 
   constructor() {
@@ -26,7 +26,7 @@ export class UiComboBoxComponent {
   }
 
   protected emitValue(option:any) {
-    this.onSelectOption.emit(option.value);
+    this.evntSelectOption.emit(option.value);
   }
 
   public get getTitulo(): string {

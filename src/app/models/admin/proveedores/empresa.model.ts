@@ -1,4 +1,4 @@
-export interface Empresa {
+export interface IEmpresa {
     ide_empr: number;
     nombre: string;
     responsable: string;

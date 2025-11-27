@@ -30,7 +30,7 @@
                                     @for (btn of column.buttonItems; track $index) {
                                         @if((btn.action === 'update' && canUpdate) || (btn.action === 'delete' && canDelete)){
                                             @if(btn.router){
-                                                <ui-button (dblclick)="$event.stopPropagation()" [icon]="btn.icon" [color]="btn.color" [action]="btn.action" (onClick)="redirectUpdate($event, [element[btn.key]])"/>
+                                                <ui-button (dblclick)="$event.stopPropagation()" [icon]="btn.icon" [color]="btn.color" [action]="btn.action" (evntClick)="redirectUpdate($event, [element[btn.key]])"/>
                                             }
                                             @else {
                                                 <ui-button (click)="rowClickAction.emit({ action: btn.action,  row: element })" (dblclick)="$event.stopPropagation()" [icon]="btn.icon" [color]="btn.color" [action]="btn.action"/>
