@@ -2,13 +2,17 @@
     <div class="div_card">
         <div class="panel_1">
             <form [formGroup]="formData" (ngSubmit)="guardar()" class="form">
-                <div class="form_div form_div_1">
-                    <ui-text-field label="Nombre" formControlName="nombre"/>
-                    <ui-text-field label="Nombre" formControlName="nombre"/>
-                </div>
-                <div class="form_div form_div_2">
-                    <ui-text-field label="Nombre" formControlName="nombre"/>
-                    <ui-text-field label="Nombre" formControlName="nombre"/>
+                <div class="form_info">
+                    <div class="form_div form_div_1">
+                        <ui-text-field label="Nombre" formControlName="nombre"/>
+                        <ui-datetime-picker label="Fecha Contrato" formControlName="fecha_contrato"/>
+                        <ui-text-field label="Direccion" formControlName="direccion"/>
+                    </div>
+                    <div class="form_div form_div_2">
+                        <ui-text-field label="Responsable" formControlName="responsable"/>
+                        <ui-text-field label="Telefono" formControlName="telefono"/>
+                        <ui-text-field label="Email" formControlName="email"/>
+                    </div>
                 </div>
                 <div class="form_buttons">
                     <ui-button label="Guardar"/>
@@ -17,7 +21,7 @@
             </form>
         </div>
         <div class="panel_2">
-            <ui-text-field label="Nombre" />
+            <div class="panel_2_img"></div>
         </div>
     </div>
 </div>

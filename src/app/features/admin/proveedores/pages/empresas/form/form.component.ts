@@ -3,11 +3,12 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { UiTextFieldComponent } from "@shared/components/text-field/text-field.component";
 import { UiButtonComponent } from "@shared/components/button/button.component";
 import { ActivatedRoute } from '@angular/router';
+import { UiDatetimePickerComponent } from "@shared/components/datetime-picker/datetime-picker.component";
 
 @Component({
   selector: 'app-form',
   standalone: true,
-  imports: [UiTextFieldComponent, ReactiveFormsModule, UiButtonComponent],
+  imports: [UiTextFieldComponent, ReactiveFormsModule, UiButtonComponent, UiDatetimePickerComponent],
   templateUrl: './form.component.html',
   styleUrl: './form.component.scss'
 })
@@ -19,7 +20,7 @@ export default class FormComponent {
   private isAdd: boolean = true;
   private id: number = -1;
 
-  ngOnInit() {
+  constructor() {
     this.configForm();
   }
 
@@ -38,14 +39,15 @@ export default class FormComponent {
       this.id = value;
       this.isAdd = false;
       this.formData = this.formBuilder.group({
-        nombre: ['', [Validators.required], []],
-        responsable: ['', [Validators.required], []],
-        direccion: ['', [Validators.required], []],
-        telefono: ['', [Validators.required], []],
-        email: ['', [Validators.required], []],
-        fecha_contrato: ['', [Validators.required], []],
+        nombre: ['empPrueba', [Validators.required], []],
+        responsable: ['userPrueba', [Validators.required], []],
+        direccion: ['Machala bonita :)', [Validators.required], []],
+        telefono: ['0981347564', [Validators.required], []],
+        email: ['prueba@gmail.com', [Validators.required], []],
+        fecha_contrato: ['30/11/2025', [Validators.required], []],
       });
     }
+    console.log(this.formData);
   }
 
   protected guardar(): void {
@@ -55,6 +57,6 @@ export default class FormComponent {
 
     }
     console.table(this.formData.value);
-    this.formData.reset();
+    //this.formData.reset();
   }
 }
