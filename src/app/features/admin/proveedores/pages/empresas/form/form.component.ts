@@ -4,11 +4,12 @@ import { UiTextFieldComponent } from "@shared/components/text-field/text-field.c
 import { UiButtonComponent } from "@shared/components/button/button.component";
 import { ActivatedRoute } from '@angular/router';
 import { UiDatetimePickerComponent } from "@shared/components/datetime-picker/datetime-picker.component";
+import { UiTextAreaComponent } from '@shared/components/text-area/text-area.component';
 
 @Component({
   selector: 'app-form',
   standalone: true,
-  imports: [UiTextFieldComponent, ReactiveFormsModule, UiButtonComponent, UiDatetimePickerComponent],
+  imports: [UiTextFieldComponent, UiTextAreaComponent, ReactiveFormsModule, UiButtonComponent, UiDatetimePickerComponent],
   templateUrl: './form.component.html',
   styleUrl: './form.component.scss'
 })

@@ -11,12 +11,12 @@ import { FormsModule } from '@angular/forms';
 
 const estadosList = [
   {
-    id: 1,
-    value: 'activo'
+    value: 1,
+    label: 'activo'
   },
   {
-    id: 2,
-    value: 'inactivo'
+    value: 2,
+    label: 'inactivo'
   },
 ]
 

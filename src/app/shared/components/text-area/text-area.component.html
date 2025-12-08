@@ -1,5 +1,5 @@
 <div class="div_container">
-    <mat-form-field>
+    <!--app-login>
         <mat-label>{{getLabel}}</mat-label>
         <textarea matInput [placeholder]="getPlaceholder" 
             (change)="emitValue($event)"
@@ -9,5 +9,15 @@
             (blur)="onTouched()"
         >
         </textarea>
-    </mat-form-field>
+    </mat-form-field>-->
+    <div class="div_input">
+        <textarea type="text" [placeholder]="getPlaceholder" required
+            (change)="emitValue($event)"
+            [disabled]="disabled"
+            [value]="value"
+            (input)="updateValue($event)"
+            (blur)="onTouched()"
+            ></textarea>
+        <label>{{getLabel}}</label>
+    </div>
 </div>

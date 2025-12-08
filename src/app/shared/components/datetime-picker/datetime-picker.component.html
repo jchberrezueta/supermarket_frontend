@@ -1,5 +1,5 @@
 <div class="div_container">
-    <mat-form-field appearance="outline">
+    <!--<mat-form-field appearance="outline">
         <mat-label>{{getLabel}}</mat-label>
         <input matInput [matDatepicker]="picker"
             (dateChange)="emitValue($event)"
@@ -13,5 +13,11 @@
         }
         <mat-datepicker-toggle matIconSuffix [for]="picker"/>
         <mat-datepicker #picker/>
-    </mat-form-field>
+    </mat-form-field>-->
+
+    <div class="cool-input">
+  <input type="datetime-local" required>
+  <label>Fecha y hora</label>
+</div>
+
 </div>

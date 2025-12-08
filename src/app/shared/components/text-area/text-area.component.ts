@@ -62,7 +62,7 @@ export class UiTextAreaComponent implements ControlValueAccessor {
 
   // Se ejecuta cuando el usuario escribe
   public updateValue(event: any) {
-    this.onChange(this.value);   // notifica al formulario
+    this.onChange(event.target.value);   // notifica al formulario
   }
 
 

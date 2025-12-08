@@ -1,12 +1,12 @@
 <div class="div_container">
-    <mat-form-field>
-        <mat-label>{{getLabel}}</mat-label>
-        <input matInput [placeholder]="getPlaceholder" 
+    <div class="div_input">
+        <input type="text" [placeholder]="getPlaceholder" required
             (change)="emitValue($event)"
             [disabled]="disabled"
             [value]="value"
             (input)="updateValue($event)"
             (blur)="onTouched()"
-        >
-    </mat-form-field>
+            >
+        <label>{{getLabel}}</label>
+    </div>
 </div>
