@@ -36,7 +36,7 @@ export class UiDatetimePickerComponent implements ControlValueAccessor {
 
   public onChange = (value: any) => {};
   public onTouched = () => {};
-  public value!: Date;
+  public value: string = '';
   public disabled = false;
 
   constructor() {
@@ -44,23 +44,12 @@ export class UiDatetimePickerComponent implements ControlValueAccessor {
   }
 
   protected emitValue(event:any){
-    this.evntDateChange.emit(event.value);
-    this.value = event.value;
-    this.onChange(this.value.toLocaleDateString());   // notifica al formulario
-  }
-
-  private convertirFecha(value: string): Date {
-    const dateParts: string[] = value.split('/');
-    const day = parseInt(dateParts[0], 10);
-    const month = parseInt(dateParts[1], 10) -1;
-    const year = parseInt(dateParts[2], 10);
-    return new Date(year, month, day);
+    this.evntDateChange.emit(event.target.value);
   }
 
   // Método llamado por el formulario cuando cambia el valor
   public writeValue(value: any): void {
-    this.value = this.convertirFecha(value);
-    console.log(this.value.toLocaleDateString());
+    this.value = value;
   }
 
   // Angular llama a este método y tú guardas el callback
@@ -80,7 +69,7 @@ export class UiDatetimePickerComponent implements ControlValueAccessor {
 
   // Se ejecuta cuando el usuario escribe
   public updateValue(event: any) {
-    
+    this.onChange(event.target.value);   // notifica al formulario
   }
   public get getLabel(): string {
     return this.label();

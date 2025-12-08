@@ -29,7 +29,7 @@ export default class FormComponent {
     const value = this._route.snapshot.params['id'];
     if(!value){
       this.formData = this.formBuilder.group({
-        nombre: ['', [Validators.required], []],
+        nombre: [null, [Validators.required], []],
         responsable: ['', [Validators.required], []],
         direccion: ['', [Validators.required], []],
         telefono: ['', [Validators.required], []],
