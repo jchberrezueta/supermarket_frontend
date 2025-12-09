@@ -25,6 +25,7 @@
         color: #777;
         font-size: 16px;
         /*background: white;*/
+        background: white;
         padding: 0 4px;
         /*no rebiras clicks, eres transparente en eso, lo recibira el elemento de abajo que se ve visualmente*/
         pointer-events: none;
@@ -59,6 +60,7 @@
         top: -8px;
         font-size: 12px;
         color:#7b4bff;
+        background: none;
       }
     }
   }

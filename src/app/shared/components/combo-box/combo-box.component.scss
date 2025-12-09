@@ -1,62 +1,67 @@
-.div_container {
-    width: 100%;
-    height: 100%;
-}
-
-
-.custom-select {
-  position: relative;
-  width: 250px;
-  font-family: sans-serif;
-  /*z-index: 100;*/
-}
-
-.custom-select .selected {
-  padding: 14px 12px;
-  border: 2px solid #ccc;
-  border-radius: 10px;
-  background: white;
-  cursor: pointer;
-  transition: border-color .3s, box-shadow .3s;
-}
-
-.custom-select .selected:hover {
-  border-color: #7b4bff;
-}
-
-.custom-select.active .selected {
-  border-color: #7b4bff;
-  box-shadow: 0 0 6px rgba(123, 75, 255, 0.4);
-}
-
-/* Lista de opciones */
-.custom-select .options {
-  position: absolute;
-  top: 110%;
-  left: 0;
+:host {
   width: 100%;
-  background: white;
-  border: 2px solid #ccc;
-  border-radius: 10px;
-  list-style: none;
-  padding: 5px 0;
-  margin: 0;
-  display: none;
-  max-height: 180px;
-  overflow-y: auto;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+  height: 100%;
 }
 
-.custom-select.active .options {
-  display: block;
-}
+.div_container {
+  width: 100%;
+  height: 100%;
 
-.custom-select .options li {
-  padding: 12px;
-  cursor: pointer;
-  transition: background .2s;
-}
+  .div_select {
+    position: relative;
+    width: 250px;
+    font-family: sans-serif;
+    z-index: 1;
 
-.custom-select .options li:hover {
-  background: #f2f2ff;
+    &:hover {
+      border-color: #7b4bff;
+    }
+
+    &.active {
+      .selected {
+        border-color: #7b4bff;
+        box-shadow: 0 0 6px rgba(123, 75, 255, 0.4);
+      }
+      .options {
+        display: block;
+      }
+    }
+
+    .selected {
+      padding: 14px 12px;
+      border: 2px solid #ccc;
+      /*color: #777;*/
+      border-radius: 10px;
+      background: white;
+      cursor: pointer;
+      transition: border-color .3s, box-shadow .3s;
+    }
+
+    .options {
+      position: absolute;
+      top: 110%;
+      left: 0;
+      width: 100%;
+      background: white;
+      border: 2px solid #ccc;
+      border-radius: 10px;
+      list-style: none;
+      padding: 5px 0;
+      margin: 0;
+      display: none;
+      max-height: 180px;
+      overflow-y: auto;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+
+      li {
+        padding: 12px;
+        cursor: pointer;
+        transition: background .2s;
+
+        &:hover {
+          background: #f2f2ff;
+        }
+      }
+    }
+  }
 }

@@ -1,19 +1,5 @@
 <div class="div_container">
-  <!--<mat-form-field appearance="outline" class="mat_form_field">
-    <mat-label class="mat_label">{{getTitulo}}</mat-label>
-    <mat-select placeholder="--Seleccione--" (selectionChange)="emitValue($event)" class="mat_select">
-      <mat-option class="mat_option">--</mat-option>
-      @for (op of getOptions; track $index) {
-          <mat-option [value]="op.id" class="mat_option">{{op.value}}</mat-option>
-      }
-      @empty {
-          <mat-option disabled class="mat_option">No tiene registros</mat-option>
-      }
-    </mat-select>
-  </mat-form-field>-->
-
-  <div class="custom-select" [class.active]="open" (click)="toggle()">
-
+  <div class="div_select" [class.active]="open" (click)="toggle()">
     <div class="selected">
       {{ selectedLabel || getTitulo }}
     </div>

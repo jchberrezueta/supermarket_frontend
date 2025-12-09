@@ -9,10 +9,7 @@ const IMPORTS = [
   MatSelectModule,
   CommonModule
 ];
-interface SelectOption {
-  label: string;
-  value: any;
-}
+
 @Component({
   selector: 'ui-combo-box',
   standalone: true,
@@ -35,6 +32,7 @@ export class UiComboBoxComponent {
 
   protected toggle() {
     this.open = !this.open;
+    console.log(this.open);
   }
 
   protected selectOption(opt: IComboBoxOption, event: MouseEvent) {
