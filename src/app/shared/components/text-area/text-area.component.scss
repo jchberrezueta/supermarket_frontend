@@ -45,7 +45,7 @@
       background: white;
       /*para cuando ocurra algun cambio en estas propiedades, el border-color durara o.3seg y movmiento ease, asi mismo por lo del box-shadow*/
       transition: border-color 0.3s ease, box-shadow 0.3s ease;
-
+      font-family: sans-serif;
       /*cuando tengas el foco, haz esto*/
       &:focus {
         border-color: #7b4bff;

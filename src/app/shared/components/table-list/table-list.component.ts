@@ -136,7 +136,7 @@ export class UiTableListComponent implements OnInit {
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
   }
 
-  public filterData(params: any[]) {
+  public filterData(params: URLSearchParams) {
     this.requestData(this.serviceApi()+`/filtrar?${params.toString()}`);
   }
 

@@ -4,13 +4,21 @@ import { UiTextFieldComponent } from "@shared/components/text-field/text-field.c
 import { UiButtonComponent } from "@shared/components/button/button.component";
 import { ActivatedRoute } from '@angular/router';
 import { UiDatetimePickerComponent } from "@shared/components/datetime-picker/datetime-picker.component";
+import { IEmpresa, IEmpresaResult } from '@models/proveedores';
+import { FormGroupOf } from '@core/utils/utilities';
+import { RestService } from '@core/services/rest.service';
+import { UiTextAreaComponent } from "@shared/components/text-area/text-area.component";
+import { Empresa } from '@shared/entities/empresa.class';
 
 const IMPORTS = [
   UiTextFieldComponent, 
+  UiTextAreaComponent,
   ReactiveFormsModule, 
   UiButtonComponent, 
   UiDatetimePickerComponent
 ];
+
+type EmpresaFormGroup = FormGroupOf<IEmpresa>;
 
 @Component({
   selector: 'app-form',
@@ -22,8 +30,9 @@ const IMPORTS = [
 export default class FormComponent {
   
   private _route = inject(ActivatedRoute);
+  private _restService = inject(RestService);
   private formBuilder= inject(FormBuilder);
-  protected formData!: FormGroup;
+  protected formData!: EmpresaFormGroup;
   private isAdd: boolean = true;
   private id: number = -1;
 
@@ -32,34 +41,65 @@ export default class FormComponent {
   }
 
   protected configForm(): void {
-    const value = this._route.snapshot.params['id'];
-    if(!value){
-      this.formData = this.formBuilder.group({
-        nombre: [null, [Validators.required], []],
-        responsable: ['', [Validators.required], []],
-        direccion: ['', [Validators.required], []],
-        telefono: ['', [Validators.required], []],
-        email: ['', [Validators.required], []],
-        fecha_contrato: ['', [Validators.required], []],
-      });
-    }else{
-      this.id = value;
-      this.isAdd = false;
-      this.formData = this.formBuilder.group({
-        nombre: ['empPrueba', [Validators.required], []],
-        responsable: ['userPrueba', [Validators.required], []],
-        direccion: ['Machala bonita :)', [Validators.required], []],
-        telefono: ['0981347564', [Validators.required], []],
-        email: ['prueba@gmail.com', [Validators.required], []],
-        fecha_contrato: ['30/11/2025', [Validators.required], []],
-      });
+    const idEmp = this._route.snapshot.params['id'];
+    this.formData = this.formBuilder.group({
+        nombreEmp: ['', [Validators.required], []],
+        responsableEmp: ['', [Validators.required], []],
+        fechaContratoEmp: ['', [Validators.required], []],
+        direccionEmp: ['', [Validators.required], []],
+        telefonoEmp: ['', [Validators.required], []],
+        emailEmp: ['', [Validators.required], []],
+        estadoEmp: ['activo', [Validators.required], []],
+        descripcionEmp: ['jsjjsjs', [Validators.required], []]
+      }) as EmpresaFormGroup;
+    if(idEmp){
+      this._restService.get<any>(`empresas/buscar/${idEmp}`).subscribe(
+        (res) => {
+          const empresa = res.data[0] as IEmpresaResult;
+          this.id = idEmp;
+          this.isAdd = false;
+          this.formData.patchValue({
+            nombreEmp: empresa.nombre_empr,
+            responsableEmp: empresa.responsable_empr,
+            fechaContratoEmp: empresa.fecha_contrato_empr,
+            direccionEmp: empresa.direccion_empr,
+            telefonoEmp: empresa.telefono_empr,
+            emailEmp: empresa.email_empr,
+            estadoEmp: empresa.estado_empr,
+            descripcionEmp: empresa.descripcion_empr
+          });
+        }
+      )
     }
-    console.log(this.formData);
   }
 
   protected guardar(): void {
     if(!this.formData.invalid){
-
+      const {...data} = this.formData.value;
+      /*const empresa: IEmpresa = {
+        nombreEmp: data.nombreEmp,
+        responsableEmp: data.responsableEmp,
+        fechaContratoEmp: data.fechaContratoEmp,
+        direccionEmp: data.direccionEmp,
+        telefonoEmp: data.telefonoEmp,
+        emailEmp: data.emailEmp,
+        estadoEmp: data.estadoEmp,
+        descripcionEmp: data.descripcionEmp
+      }*/
+      const objEmpresa = new Empresa(null, data.nombreEmp, data.responsableEmp, data.fechaContratoEmp, data.direccionEmp, data.telefonoEmp, data.emailEmp, data.estadoEmp, data.descripcionEmp);
+      console.log(objEmpresa);
+      if(this.isAdd){
+        console.log('Insertar :)');
+        this._restService.post<any>('empresas/insertar', objEmpresa).subscribe(
+          (res) => {
+            console.log(res);
+          }
+        );
+      }else{
+        objEmpresa.ideEmp = this.id;
+        console.log('Actualizar :) ', this.id);
+        this._restService.put<any>('empresas/actualizar', objEmpresa);
+      }
     }else{
 
     }
