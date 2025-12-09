@@ -1,4 +1,4 @@
 export interface IComboBoxOption {
-    value: number;
+    value: any;
     label: string;
 }

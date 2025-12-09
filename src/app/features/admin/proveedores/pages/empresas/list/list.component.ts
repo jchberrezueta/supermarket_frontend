@@ -1,4 +1,4 @@
-import { Component, viewChild } from '@angular/core';
+import { Component, inject, viewChild } from '@angular/core';
 import { UiTableListComponent } from '@shared/components/index';
 import { UiButtonComponent } from "@shared/components/button/button.component";
 import { ListEmpresasConfig } from './list_empresas.config';
@@ -6,16 +6,19 @@ import { UiComboBoxComponent } from '@shared/components/combo-box/combo-box.comp
 import { UiDatetimePickerComponent } from "@shared/components/datetime-picker/datetime-picker.component";
 import { UiTextFieldComponent } from "@shared/components/text-field/text-field.component";
 import { IComboBoxOption } from '@shared/models/combo_box_option';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { quitarVaciosObjeto } from '@core/utils/utilities';
+import { IFiltroEmpresa } from '@models/proveedores';
+import { isValidStringValue } from '../../../../../../core/utils/utilities';
 
 
 const estadosList = [
   {
-    value: 1,
+    value: 'activo',
     label: 'activo'
   },
   {
-    value: 2,
+    value: 'inactivo',
     label: 'inactivo'
   },
 ]
@@ -24,10 +27,10 @@ const IMPORTS = [
   UiTableListComponent,
   UiButtonComponent,
   UiComboBoxComponent,
-  UiDatetimePickerComponent,
   UiTextFieldComponent,
-  FormsModule
+  ReactiveFormsModule
 ];
+
 @Component({
   selector: 'app-list',
   standalone: true,
@@ -36,62 +39,39 @@ const IMPORTS = [
   styleUrl: './list.component.scss'
 })
 export default class ListComponent {
-
-  protected readonly title: string = 'Convenios Empresas';
   protected readonly estados: IComboBoxOption[] = estadosList;
+  protected readonly title: string = 'Convenios Empresas';
   protected readonly config = ListEmpresasConfig;
   private readonly _tableList = viewChild.required<UiTableListComponent>(UiTableListComponent);
+  private formBuilder= inject(FormBuilder);
+  protected formData!: FormGroup;
 
-  public id!: number;
-  public empresa!: string;
-  public responsable!: string;
-  public estado!: number;
-  public fechaContrato!: Date;
-
-  imprimir(event: any): void{
-    console.log(event);
-    console.log('tipo');
-    console.log(typeof(event));
+  constructor() {
+    this.configForm();
   }
 
-  public getParams(): any[] {
-    let params = [];
-    if(this.id) params.push(this.id);
-    if(this.empresa) params.push(this.empresa);
-    if(this.responsable) params.push(this.responsable);
-    if(this.estado) params.push(this.estado);
-    if(this.fechaContrato) params.push(this.fechaContrato.toLocaleDateString());
-
-    return params;
+  protected configForm() {
+    this.formData = this.formBuilder.group({
+      nombreEmp: ['', [Validators.required], []],
+      responsableEmp: ['', [Validators.required], []],
+      estadoEmp: ['', [Validators.required], []],
+    });
   }
 
-
-
-  search() {
+  protected buscar() {
     console.log('VAMOS :)');
-    const params = this.getParams();
-    console.log(params);
-    /*const tableListInstance = this._tableList();
-    console.log(tableListInstance.update());*/
+    console.log(this.formData.value);
+    console.log(this.getParams());
+    const tableListInstance = this._tableList();
+    tableListInstance.filterData(this.getParams());
   }
 
-  protected setId(value:string){
-    if(!isNaN(+value)){
-      this.id = +value;
-    }else{
-      //validar que debe ingresar numeros porfavor :)
-    }
-  }
-  protected setEmpresa(value:string){
-    this.empresa = value;
-  }
-  protected setResponsable(value:string){
-    this.responsable = value;
-  }
-  protected setEstado(value:number){
-    this.estado = value;
-  }
-  protected setFechaContrato(value:Date){
-    this.fechaContrato = value;
+  protected getParams(): any {
+    const params = new URLSearchParams();
+    const filtro = this.formData.value as IFiltroEmpresa;
+    if (isValidStringValue(filtro.nombreEmp)) params.append('nombreEmp', filtro.nombreEmp );
+    if (isValidStringValue(filtro.estadoEmp)) params.append('estadoEmp', filtro.estadoEmp );
+    if (isValidStringValue(filtro.responsableEmp)) params.append('responsableEmp', filtro.responsableEmp );
+    return params;
   }
 }

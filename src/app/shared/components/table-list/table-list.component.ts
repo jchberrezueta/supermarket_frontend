@@ -8,9 +8,7 @@ import {
   output,
   SimpleChanges,
   viewChild,
-  inject,
-  ViewChild,
-  effect,
+  inject
 } from '@angular/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
@@ -39,7 +37,6 @@ import Swal from 'sweetalert2'
     CommonModule,
     DashIfEmptyPipe,
     UiButtonComponent,
-    RouterLink
 ],
   templateUrl: './table-list.component.html',
   styleUrls: ['./table-list.component.scss']
@@ -47,59 +44,44 @@ import Swal from 'sweetalert2'
 export class UiTableListComponent implements OnInit {
   
   private data = signal<any[]>([]);
-  public matDatasource = new MatTableDataSource<any>();
+  protected matDatasource = new MatTableDataSource<any>();
   public columns = input.required<ITableColumn[]>();
-  public service = input.required<string>();
+  public serviceApi = input.required<string>();
   public message = input<string>('!No tiene registros generados¡');
-  public getInputs = input<any>();
-  public queryParams = input<IQueryParams[]>();
   public isSelection = input<boolean>(false);
   public selection!: SelectionModel<any>;
 
   public onSelectRow = output<any>();
   public rowClickAction = output<any>();
 
-  public isLoading = signal(false);
   public resultsLength = signal(0);
   public displayedColumns = signal<string[]>([])
 
   private readonly _restService = inject(RestService);
-  private _matSort = viewChild(MatSort);
-  private _matPaginator = viewChild(MatPaginator);
-  private _reloadEmit!: EventEmitter<any>;
+  private readonly _authService = inject(AuthService);
+  private readonly _router = inject(Router);
+  
+  private readonly _matSort = viewChild(MatSort);
+  private readonly _matPaginator = viewChild(MatPaginator);
 
-
-  private _router = inject(Router);
-  private _authService = inject(AuthService);
   private rutaActual: string = '';
   private rutaUpdate: string = '';
   protected canUpdate: boolean = false;
   protected canDelete: boolean = false;
 
-  constructor() {
-    console.log('constructor');
-  }
-
   ngOnChanges(changes: SimpleChanges) {
-    console.log('ngOnChanges');
-    if (changes['getInputs']) {
-      if (this._matPaginator()) {
-        //this._matPaginator.pageIndex? = 0;
-      }
-      if (this.selection) this.selection.clear();
-      this._reloadEmit.emit(true);
-    }
-    if(changes['service'] && !changes['service'].firstChange){
-      this._reloadEmit.emit(true);
-    }
+
   }
 
   ngOnInit() {
-    console.log('ngOnInit');
     this.selection = new SelectionModel<any>(this.isSelection(), []);
-    this._reloadEmit = new EventEmitter<any>();
     this.loadColumns();
-    this._restService.get<any>(this.service()).subscribe(
+    this.requestData(this.serviceApi())
+    this.hasPermissionsUD();
+  }
+
+  private requestData(ruta: string) {
+    this._restService.get<any>(ruta).subscribe(
       (res) => {
         this.data.set(res.data);
         this.matDatasource.data = this.data();
@@ -111,7 +93,6 @@ export class UiTableListComponent implements OnInit {
         if (p) this.matDatasource.paginator = p;
       }
     );
-    this.hasPermissionsUD();
   }
 
   private loadColumns() {
@@ -132,27 +113,6 @@ export class UiTableListComponent implements OnInit {
       this.selection.select(item);
       this.onSelectRow.emit(item);
     }
-  }
-
-
-  private _getParams(): HttpParams {
-    const paginator = {
-      pageIndex: (this._matPaginator()?.pageIndex ?? 0) + 1,
-      pageSize: (this._matPaginator()?.pageSize || 10)
-    };
-
-    let params = new HttpParams()
-      .append('page', paginator.pageIndex)
-      .append('limit', paginator.pageSize);
-
-    if (this.queryParams?.length > 0) {
-      this.queryParams()?.forEach(
-        (item) => {
-          if (item) params = params.append(item.param, item.value);
-        }
-      );
-    }
-    return params;
   }
 
   public toggleAllRows() {
@@ -176,10 +136,8 @@ export class UiTableListComponent implements OnInit {
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
   }
 
-  public update() {
-    console.log('vamos');
-    this._reloadEmit.emit();
-    console.log('emitido');
+  public filterData(params: any[]) {
+    this.requestData(this.serviceApi()+`/filtrar?${params.toString()}`);
   }
 
   protected hasPermissionsUD() {
@@ -188,10 +146,9 @@ export class UiTableListComponent implements OnInit {
       this.canDelete = this._authService.canDelete(this.rutaActual);
   }
 
-  protected redirectUpdate(clickAction: string, listaIds:number[]) {
+  protected redirectUD(clickAction: string, listaIds:number[]) {
     if(clickAction === 'update'){
       this.generateUpdateRoute(this.getSegmentsRoute(), listaIds[0]);
-      console.log(this.rutaUpdate);
       this._router.navigate([this.rutaUpdate]);
     }
     else if(clickAction === 'delete'){
@@ -205,7 +162,6 @@ export class UiTableListComponent implements OnInit {
         confirmButtonText: "Si, eliminar!"
       }).then((result) => {
         if (result.isConfirmed) {
-          console.log('ELIMINAR: ' + listaIds[0]);
           Swal.fire({
             title: "Eliminado Exitosamente!",
             text: "El elemento ha sido eliminado",
@@ -214,7 +170,6 @@ export class UiTableListComponent implements OnInit {
         }
       });
     }
-    
   }
 
   private generateUpdateRoute(segments: string[], id: number) {
@@ -231,4 +186,6 @@ export class UiTableListComponent implements OnInit {
     }
     return segments;
   }
+
+  
 }

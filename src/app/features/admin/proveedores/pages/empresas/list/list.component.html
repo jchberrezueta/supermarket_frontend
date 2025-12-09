@@ -1,19 +1,20 @@
 <div class="div_container">
     <div class="div_card">
-        <div class="card_filters">
-            <div class="selects">
-                <ui-text-field [label]="'ID'" (evntChange)="setId($event)"/>
-                <ui-text-field [label]="'Empresa'" (evntChange)="setEmpresa($event)"/>
-                <ui-text-field [label]="'Responsable'" (evntChange)="setResponsable($event)"/>
-                <ui-combo-box [options]="estados" (evntSelectOption)="setEstado($event)" title="Estados"/>
-                <ui-datetime-picker (evntDateChange)="setFechaContrato($event)"/>
+        <form [formGroup]="formData" (ngSubmit)="buscar()">
+            <div class="card_filters">
+                <div class="selects">
+                    <ui-text-field [label]="'Empresa'" formControlName="nombreEmp"/>
+                    <ui-text-field [label]="'Responsable'" formControlName="responsableEmp"/>
+                    <ui-combo-box [label]="'Estados'" [options]="estados"  formControlName="estadoEmp"/>
+                </div>
+                <div class="filter_btn">
+                    <ui-button [label]="'Filtrar'" [icon]="'filter_alt'"/>
+                </div>
             </div>
-            <div class="filter_btn">
-                <ui-button [label]="'Filtrar'" icon="filter_alt" (evntClick)="search()"></ui-button>
-            </div>
-        </div>
+        </form>
+        
         <div class="card_table">
-            <ui-table-list #tableList [service]="'empresas'" [columns]="config.columns" (onSelectRow)="imprimir($event)" (rowClickAction)="imprimir($event)" [isSelection]="true"/>
+            <ui-table-list #tableList [serviceApi]="'empresas'" [columns]="config.columns" [isSelection]="true"/>
         </div>
     </div>
 </div>

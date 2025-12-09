@@ -1,15 +1,17 @@
 
-export const quitarVaciosObjeto = (obj: any) => {
+export const quitarVaciosObjeto = (obj: object): object => {
     
-    const newObj = Object.entries(obj).reduce<any>((acc, [key, value]) => {
-        if (value !== null && value !== undefined && value !== '') {
-            acc[key] = value;
-        }
-        return acc;
-    }, {});
-    console.log(newObj);
+    const newObj = Object.entries(obj).reduce<any>(
+        (acc, [key, value]) => {
+            if ((value != null) && (value.trim() !== '')) {
+                acc[key] = value;
+            }
+            return acc;
+        }, 
+    {});
+    return newObj;
 }
 
-/*export const quitarVaciosArray = (arr: any[]) => {
-   return arr.filter(item => (item !== null && item !== undefined && item !== ''));
-}*/
+export const isValidStringValue = (value: string): boolean => {
+    return (value !== null && value !== undefined && value.trim() !== '');
+}

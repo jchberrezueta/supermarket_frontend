@@ -1,12 +1,12 @@
 <div class="div_container">
   <div class="div_select" [class.active]="open" (click)="toggle()">
     <div class="selected">
-      {{ selectedLabel || getTitulo }}
+      {{ selectedLabel || getLabel }}
     </div>
     @if(open){
       <ul class="options">
         @for(opt of getOptions; track $index) {
-          <li (click)="selectOption(opt, $event)">{{ opt.label }}</li>
+          <li (click)="emitValue(opt, $event)">{{ opt.label }}</li>
         }
       </ul>
     }

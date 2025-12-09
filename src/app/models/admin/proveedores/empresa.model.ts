@@ -1,9 +1,17 @@
+import { EnumEstadosEmpresa } from "./estado_empresa.enum";
+
 export interface IEmpresa {
-    ide_empr: number;
-    nombre: string;
-    responsable: string;
-    direccion: string;
-    telefono: string;
-    email: string;
-    fecha_contrato: string;
+    ideEmp: number;
+    nombreEmp: string;
+    responsableEmp: string;
+    direccionEmp: string;
+    telefonoEmp: string;
+    emailEmp: string;
+    fechaContratoEmp: string;
+}
+
+export interface IFiltroEmpresa {
+    nombreEmp: string;
+    estadoEmp: EnumEstadosEmpresa;
+    responsableEmp: string;
 }
