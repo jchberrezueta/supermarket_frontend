@@ -162,11 +162,17 @@ export class UiTableListComponent implements OnInit {
         confirmButtonText: "Si, eliminar!"
       }).then((result) => {
         if (result.isConfirmed) {
-          Swal.fire({
-            title: "Eliminado Exitosamente!",
-            text: "El elemento ha sido eliminado",
-            icon: "success"
-          });
+          this._restService.delete<any>(this.serviceApi()+`/eliminar/${listaIds[0]}`).subscribe(
+            (res) => {
+              Swal.fire({
+                title: "Eliminado Exitosamente!",
+                text: "El elemento ha sido eliminado",
+                icon: "success"
+              });
+              this.requestData(this.serviceApi());
+            }
+          );
+          
         }
       });
     }

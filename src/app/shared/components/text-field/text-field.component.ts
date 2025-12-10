@@ -27,12 +27,13 @@ export class UiTextFieldComponent implements ControlValueAccessor {
   
   public label = input.required<string>();
   public placeholder = input<string>('...');
+  public disableState = input<boolean>(false);
   public evntChange = output<string>();
 
   public onChange = (value: any) => {};
   public onTouched = () => {};
   public value: string = '';
-  public disabled = false;
+  public disabled: boolean = false;
 
   constructor() {
     console.log('ui-text-field listo :)');
@@ -72,5 +73,8 @@ export class UiTextFieldComponent implements ControlValueAccessor {
   }
   protected get getPlaceholder(): string {
     return this.placeholder();
+  }
+  protected get getDisabledState(): boolean {
+    return this.disableState();
   }
 }

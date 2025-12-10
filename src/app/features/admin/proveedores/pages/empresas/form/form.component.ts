@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UiTextFieldComponent } from "@shared/components/text-field/text-field.component";
 import { UiButtonComponent } from "@shared/components/button/button.component";
 import { ActivatedRoute } from '@angular/router';
@@ -7,9 +7,11 @@ import { UiDatetimePickerComponent } from "@shared/components/datetime-picker/da
 import { FormGroupOf } from '@core/utils/utilities';
 import { RestService } from '@core/services/rest.service';
 import { UiTextAreaComponent } from "@shared/components/text-area/text-area.component";
-import { CEmpresa, IEmpresa, IEmpresaResult, ListEstadosEmpresa } from '@models';
+import { IEmpresa, IEmpresaResult, ListEstadosEmpresa } from '@models';
 import { UiComboBoxComponent } from '@shared/components/combo-box/combo-box.component';
 import { IComboBoxOption } from '@shared/models/combo_box_option';
+import Swal from 'sweetalert2'
+import { Location } from '@angular/common'; // 1. Importar Location
 
 const IMPORTS = [
   UiTextFieldComponent, 
@@ -34,7 +36,8 @@ export default class FormComponent {
   protected readonly estadosEmpresa: IComboBoxOption[] = ListEstadosEmpresa;
   private readonly _route = inject(ActivatedRoute);
   private readonly _restService = inject(RestService);
-  private readonly formBuilder= inject(FormBuilder);
+  private readonly formBuilder = inject(FormBuilder);
+  public location = inject(Location);
   protected formData!: EmpresaFormGroup;
   private isAdd: boolean = true;
   private idParam: number = -1;
@@ -85,18 +88,48 @@ export default class FormComponent {
         this._restService.post<any>('empresas/insertar', data).subscribe(
           (res) => {
             console.log(res);
+            Swal.fire({
+              title: "Empresa registrada :)",
+              text: "La empresa fue guardada correctamente",
+              icon: "success"
+            });
           }
         );
       }else{
-        this._restService.put<any>(`empresas/actualizar/${this.idParam}`, data).subscribe(
-          (res) => {
-            console.log(res);
+        Swal.fire({
+          title: "Esta seguro de modificar esta empresa?",
+          text: "Los cambios realizados se registraran!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Si, de acuerdo"
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this._restService.put<any>(`empresas/actualizar/${this.idParam}`, data).subscribe(
+              (res) => {
+                Swal.fire({
+                  title: "Empresa actualizada :)",
+                  text: "La empresa fue modificada correctamente",
+                  icon: "success"
+                });
+              }
+            );
           }
-        );
+        });
+        
       }
     }else{
-
+      Swal.fire({
+        icon: "info",
+        title: "Oops... Faltan datos",
+        text: "Revise porfavor la información ingresada"
+      });
     }
-    //this.formData.reset();
+    this.formData.reset();
+  }
+
+  protected cancelar(): void {
+    this.location.back();
   }
 }

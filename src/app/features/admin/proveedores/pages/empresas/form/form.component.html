@@ -2,10 +2,10 @@
     <div class="div_card">
         <div class="panel_1">
             <div class="card_form">
-                <form [formGroup]="formData" (ngSubmit)="guardar()" class="form">
+                <form [formGroup]="formData" class="form">
                     <div class="form_info">
                         <div class="form_div form_div_1">
-                            <ui-text-field [label]="'ID'" formControlName="ideEmp"/>
+                            <ui-text-field [label]="'ID'" [disableState]="true" formControlName="ideEmp"/>
                             <ui-text-field [label]="'Empresa'" formControlName="nombreEmp"/>
                             <ui-datetime-picker [label]="'Fecha Contrato'" formControlName="fechaContratoEmp"/>
                             <ui-text-field [label]="'Telefono'" formControlName="telefonoEmp"/>
@@ -19,8 +19,8 @@
                         </div>
                     </div>
                     <div class="form_buttons">
-                        <ui-button [label]="'Guardar'"/>
-                        <ui-button [label]="'Cancelar'" [color]="'red'"/>
+                        <ui-button [label]="'Guardar'" (evntClick)="guardar()"/>
+                        <ui-button [label]="'Cancelar'" (evntClick)="cancelar()" [color]="'red'"/>
                     </div>
                 </form>
             </div>
