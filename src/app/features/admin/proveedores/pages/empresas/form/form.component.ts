@@ -87,12 +87,13 @@ export default class FormComponent {
       if(this.isAdd){
         this._restService.post<any>('empresas/insertar', data).subscribe(
           (res) => {
-            console.log(res);
             Swal.fire({
               title: "Empresa registrada :)",
               text: "La empresa fue guardada correctamente",
               icon: "success"
             });
+            this.location.back();
+            this.formData.reset();
           }
         );
       }else{
@@ -113,6 +114,8 @@ export default class FormComponent {
                   text: "La empresa fue modificada correctamente",
                   icon: "success"
                 });
+                this.location.back();
+                this.formData.reset();
               }
             );
           }
@@ -126,10 +129,23 @@ export default class FormComponent {
         text: "Revise porfavor la información ingresada"
       });
     }
-    this.formData.reset();
   }
 
   protected cancelar(): void {
-    this.location.back();
+    Swal.fire({
+      title: "Esta Seguro de Cancelar?",
+      text: "Los cambios realizados no se guardaran!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Si, Cancelar!"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.formData.reset();
+        this.location.back();
+      }
+    });
+    
   }
 }
