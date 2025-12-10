@@ -6,19 +6,9 @@ import { IComboBoxOption } from '@shared/models/combo_box_option';
 import { UiComboBoxComponent } from '@shared/components/combo-box/combo-box.component';
 import { UiTextFieldComponent } from "@shared/components/text-field/text-field.component";
 import { isValidStringValue, FormGroupOf } from '@core/utils/utilities';
-import { IFiltroEmpresa } from '@models/proveedores';
+import { IFiltroEmpresa, ListEstadosEmpresa } from 'app/models';
 import { ListEmpresasConfig } from './list_empresas.config';
 
-const estadosList = [
-  {
-    value: 'activo',
-    label: 'activo'
-  },
-  {
-    value: 'inactivo',
-    label: 'inactivo'
-  },
-]
 
 const IMPORTS = [
   UiTableListComponent,
@@ -38,7 +28,7 @@ type filterEmpresaFormGroup = FormGroupOf<IFiltroEmpresa>;
   styleUrl: './list.component.scss'
 })
 export default class ListComponent {
-  protected readonly estados: IComboBoxOption[] = estadosList;
+  protected readonly estadosEmpresa: IComboBoxOption[] = ListEstadosEmpresa;
   protected readonly title: string = 'Convenios Empresas';
   protected readonly config = ListEmpresasConfig;
   private readonly _tableList = viewChild.required<UiTableListComponent>(UiTableListComponent);
@@ -51,9 +41,9 @@ export default class ListComponent {
 
   protected configForm() {
     this.formData = this.formBuilder.group({
-      nombreEmp: ['', [Validators.required], []],
-      estadoEmp: ['', [Validators.required], []],
-      responsableEmp: ['', [Validators.required], []],
+      nombreEmp: ['', [], []],
+      estadoEmp: ['', [], []],
+      responsableEmp: ['', [], []],
     }) as filterEmpresaFormGroup;
   }
 

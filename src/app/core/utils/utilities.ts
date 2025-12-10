@@ -22,5 +22,5 @@ export const isValidStringValue = (value: any): boolean => {
 
 // Tipo utilitario para convertir una interfaz en un FormGroup tipado
 export type FormGroupOf<T> = FormGroup<{
-  [K in keyof T]: FormControl<T[K] | null>;
+  [K in keyof T]: FormControl<T[K]>;
 }>;

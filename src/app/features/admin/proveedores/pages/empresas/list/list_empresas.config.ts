@@ -15,7 +15,6 @@ export const ListEmpresasConfig: ITableListConfig = {
             label: '',
             property: 'menu',
             type: 'crud',
-            /*width: 15,*/
             buttonItems: [
                 {
                     action: 'update',

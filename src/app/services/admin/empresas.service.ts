@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { RestService } from '@core/services/rest.service';
-import { IEmpresa } from '@models/proveedores';
+import { IEmpresa } from 'app/models';
 
 @Injectable({
   providedIn: 'root'

@@ -4,18 +4,20 @@ import { UiTextFieldComponent } from "@shared/components/text-field/text-field.c
 import { UiButtonComponent } from "@shared/components/button/button.component";
 import { ActivatedRoute } from '@angular/router';
 import { UiDatetimePickerComponent } from "@shared/components/datetime-picker/datetime-picker.component";
-import { IEmpresa, IEmpresaResult } from '@models/proveedores';
 import { FormGroupOf } from '@core/utils/utilities';
 import { RestService } from '@core/services/rest.service';
 import { UiTextAreaComponent } from "@shared/components/text-area/text-area.component";
-import { Empresa } from '@shared/entities/empresa.class';
+import { CEmpresa, IEmpresa, IEmpresaResult, ListEstadosEmpresa } from '@models';
+import { UiComboBoxComponent } from '@shared/components/combo-box/combo-box.component';
+import { IComboBoxOption } from '@shared/models/combo_box_option';
 
 const IMPORTS = [
   UiTextFieldComponent, 
   UiTextAreaComponent,
+  UiDatetimePickerComponent,
+  UiComboBoxComponent,
+  UiButtonComponent,
   ReactiveFormsModule, 
-  UiButtonComponent, 
-  UiDatetimePickerComponent
 ];
 
 type EmpresaFormGroup = FormGroupOf<IEmpresa>;
@@ -29,36 +31,39 @@ type EmpresaFormGroup = FormGroupOf<IEmpresa>;
 })
 export default class FormComponent {
   
-  private _route = inject(ActivatedRoute);
-  private _restService = inject(RestService);
-  private formBuilder= inject(FormBuilder);
+  protected readonly estadosEmpresa: IComboBoxOption[] = ListEstadosEmpresa;
+  private readonly _route = inject(ActivatedRoute);
+  private readonly _restService = inject(RestService);
+  private readonly formBuilder= inject(FormBuilder);
   protected formData!: EmpresaFormGroup;
   private isAdd: boolean = true;
-  private id: number = -1;
+  private idParam: number = -1;
 
   constructor() {
     this.configForm();
   }
 
   protected configForm(): void {
-    const idEmp = this._route.snapshot.params['id'];
+    const idParam = this._route.snapshot.params['id'];
     this.formData = this.formBuilder.group({
+        ideEmp: [-1, [], []],
         nombreEmp: ['', [Validators.required], []],
         responsableEmp: ['', [Validators.required], []],
         fechaContratoEmp: ['', [Validators.required], []],
         direccionEmp: ['', [Validators.required], []],
         telefonoEmp: ['', [Validators.required], []],
         emailEmp: ['', [Validators.required], []],
-        estadoEmp: ['activo', [Validators.required], []],
-        descripcionEmp: ['jsjjsjs', [Validators.required], []]
+        estadoEmp: ['', [Validators.required], []],
+        descripcionEmp: ['', [Validators.required], []]
       }) as EmpresaFormGroup;
-    if(idEmp){
-      this._restService.get<any>(`empresas/buscar/${idEmp}`).subscribe(
+    if(idParam){
+      this._restService.get<any>(`empresas/buscar/${idParam}`).subscribe(
         (res) => {
           const empresa = res.data[0] as IEmpresaResult;
-          this.id = idEmp;
+          this.idParam = empresa.ide_empr;
           this.isAdd = false;
           this.formData.patchValue({
+            ideEmp: empresa.ide_empr,
             nombreEmp: empresa.nombre_empr,
             responsableEmp: empresa.responsable_empr,
             fechaContratoEmp: empresa.fecha_contrato_empr,
@@ -75,35 +80,23 @@ export default class FormComponent {
 
   protected guardar(): void {
     if(!this.formData.invalid){
-      const {...data} = this.formData.value;
-      /*const empresa: IEmpresa = {
-        nombreEmp: data.nombreEmp,
-        responsableEmp: data.responsableEmp,
-        fechaContratoEmp: data.fechaContratoEmp,
-        direccionEmp: data.direccionEmp,
-        telefonoEmp: data.telefonoEmp,
-        emailEmp: data.emailEmp,
-        estadoEmp: data.estadoEmp,
-        descripcionEmp: data.descripcionEmp
-      }*/
-      const objEmpresa = new Empresa(null, data.nombreEmp, data.responsableEmp, data.fechaContratoEmp, data.direccionEmp, data.telefonoEmp, data.emailEmp, data.estadoEmp, data.descripcionEmp);
-      console.log(objEmpresa);
+      const data = this.formData.value;
       if(this.isAdd){
-        console.log('Insertar :)');
-        this._restService.post<any>('empresas/insertar', objEmpresa).subscribe(
+        this._restService.post<any>('empresas/insertar', data).subscribe(
           (res) => {
             console.log(res);
           }
         );
       }else{
-        objEmpresa.ideEmp = this.id;
-        console.log('Actualizar :) ', this.id);
-        this._restService.put<any>('empresas/actualizar', objEmpresa);
+        this._restService.put<any>(`empresas/actualizar/${this.idParam}`, data).subscribe(
+          (res) => {
+            console.log(res);
+          }
+        );
       }
     }else{
 
     }
-    console.table(this.formData.value);
     //this.formData.reset();
   }
 }
