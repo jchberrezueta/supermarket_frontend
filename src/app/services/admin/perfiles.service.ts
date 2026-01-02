@@ -1,19 +1,33 @@
 import { inject, Injectable } from '@angular/core';
+import { IResultData } from '@core/models';
 import { RestService } from '@core/services/rest.service';
+import { IPerfil } from '@models';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PerfilesService {
+  private readonly _restService = inject(RestService);
+  private readonly apiUrl = 'perfiles';
 
-  private _restService = inject(RestService);
+  public listar(): Observable<IResultData> {
+    return this._restService.get<IResultData>(`${this.apiUrl}`);
+  }
 
-  constructor() { }
+  public buscar(id: number): Observable<IResultData> {
+    return this._restService.get<IResultData>(`${this.apiUrl}/buscar/${id}`);
+  }
 
-  
+  public insertar(body: IPerfil) {
+    return this._restService.post<any>(`${this.apiUrl}/insertar`, body);
+  }
 
-  /*getEmpresas(): Observable<Empresa> {
-    return this._restService.get<Empresa>('empresas');
-  }*/
+  public actualizar(id: number, body: IPerfil) {
+    return this._restService.post<any>(`${this.apiUrl}/actualizar/${id}`, body);
+  }
 
+  public eliminar(id: number) {
+    return this._restService.delete<any>(`${this.apiUrl}/eliminar/${id}`);
+  }
 }

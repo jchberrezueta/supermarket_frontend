@@ -6,8 +6,9 @@ import { IComboBoxOption } from '@shared/models/combo_box_option';
 import { UiComboBoxComponent } from '@shared/components/combo-box/combo-box.component';
 import { UiTextFieldComponent } from "@shared/components/text-field/text-field.component";
 import { isValidStringValue, FormGroupOf } from '@core/utils/utilities';
-import { IFiltroEmpresa, ListEstadosEmpresa } from 'app/models';
+import { IFiltroEmpresa } from 'app/models';
 import { ListEmpresasConfig } from './list_empresas.config';
+import { EmpresasService } from '../../../../../../services/admin/empresas.service';
 
 const IMPORTS = [
   UiTableListComponent,
@@ -27,14 +28,15 @@ type filterEmpresaFormGroup = FormGroupOf<IFiltroEmpresa>;
   styleUrl: './list.component.scss'
 })
 export default class ListComponent {
-  protected readonly title: string = 'Convenios Empresas';
-  protected readonly estadosEmpresa: IComboBoxOption[] = ListEstadosEmpresa;
-  protected readonly config = ListEmpresasConfig;
   private readonly _tableList = viewChild.required<UiTableListComponent>(UiTableListComponent);
+  protected readonly config = ListEmpresasConfig;
+  private readonly _empresasService = inject(EmpresasService);
   private formBuilder= inject(FormBuilder);
+  protected estadosEmpresa!: IComboBoxOption[];
   protected formData!: filterEmpresaFormGroup;
 
   constructor() {
+    this.loadEstadosEmpresa();
     this.configForm();
   }
 
@@ -44,6 +46,14 @@ export default class ListComponent {
       estadoEmp: ['', [], []],
       responsableEmp: ['', [], []],
     }) as filterEmpresaFormGroup;
+  }
+
+  private loadEstadosEmpresa() {
+    this._empresasService.listarEstados().subscribe(
+      (res) => {
+        this.estadosEmpresa = res;
+      }
+    );
   }
 
   protected filtrar() {

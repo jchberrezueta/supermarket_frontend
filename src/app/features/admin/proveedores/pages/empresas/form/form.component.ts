@@ -13,6 +13,7 @@ import { IComboBoxOption } from '@shared/models/combo_box_option';
 import Swal from 'sweetalert2'
 import { Location } from '@angular/common'; // 1. Importar Location
 import { IResultData } from '@core/models';
+import { EmpresasService } from '@services/empresas.service';
 
 const IMPORTS = [
   UiTextFieldComponent, 
@@ -38,7 +39,7 @@ export default class FormComponent {
   
   protected readonly estadosEmpresa: IComboBoxOption[] = ListEstadosEmpresa;
   private readonly _route = inject(ActivatedRoute);
-  private readonly _restService = inject(RestService);
+  private readonly _empresasService = inject(EmpresasService);
   private readonly formBuilder = inject(FormBuilder);
   public location = inject(Location);
   protected formData!: EmpresaFormGroup;
@@ -63,7 +64,7 @@ export default class FormComponent {
         descripcionEmp: ['', [Validators.required], []]
       }) as EmpresaFormGroup;
     if(idParam){
-      this._restService.get<IResultData>(`empresas/buscar/${idParam}`).subscribe(
+      this._empresasService.buscar(idParam).subscribe(
         (res) => {
           const empresa = res.data[0] as IEmpresaResult;
           this.idParam = empresa.ide_empr;
@@ -86,9 +87,9 @@ export default class FormComponent {
 
   protected guardar(): void {
     if(!this.formData.invalid){
-      const data = this.formData.value;
+      const data = this.formData.value as IEmpresa;
       if(this.isAdd){
-        this._restService.post<any>('empresas/insertar', data).subscribe(
+        this._empresasService.insertar(data).subscribe(
           (res) => {
             Swal.fire({
               title: "Empresa registrada :)",
@@ -110,7 +111,7 @@ export default class FormComponent {
           confirmButtonText: "Si, de acuerdo"
         }).then((result) => {
           if (result.isConfirmed) {
-            this._restService.put<any>(`empresas/actualizar/${this.idParam}`, data).subscribe(
+            this._empresasService.actualizar(this.idParam, data).subscribe(
               (res) => {
                 Swal.fire({
                   title: "Empresa actualizada :)",

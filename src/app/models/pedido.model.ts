@@ -1,3 +1,5 @@
+import { IDetallePedido } from "./detalle_pedido.model";
+
 export enum EnumEstadosPedido {
     PROGRESO = 'progreso',
     COMPLETADO = 'completado',
@@ -126,4 +128,9 @@ export interface IFiltroPedido {
     totalPediMax: number;
     estadoPedi: EnumEstadosPedido;
     motivoPedi: EnumMotivosPedido;
+}
+
+export interface IPedidoCompleto {
+    cabeceraPedido: IPedido;
+    detallePedido: IDetallePedido;
 }

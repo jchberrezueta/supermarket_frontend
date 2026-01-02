@@ -1,3 +1,5 @@
+import { IDetalleEntrega } from "./detalle_entrega.model";
+
 export enum EnumEstadoEntrega {
     COMPLETO = 'completo',
     INCOMPLETO = 'incompleto'
@@ -108,4 +110,9 @@ export interface IFiltroEntrega {
     totalEntrMin: number;
     totalEntrMax: number;
     estadoEntr: EnumEstadoEntrega;
+}
+
+export interface IEntregaCompleta {
+    cabeceraEntrega: IEntrega;
+    detalleEntrega: IDetalleEntrega[];
 }

@@ -5,20 +5,20 @@ import { IBreadcumb } from '@shared/models/breadcumb.model';
 import { UiTitleComponent } from "@shared/components/title/title.component";
 
 
-const datos = [
-      {
-        label: 'Dashboard',
-        url: ''
-      },
-      {
-        label: 'Proveedores',
-        url: ''
-      },
-      {
-        label: 'Empresas',
-        url: ''
-      }
-    ];
+const breadcumbs = [
+  {
+    label: 'Dashboard',
+    url: ''
+  },
+  {
+    label: 'Proveedores',
+    url: ''
+  },
+  {
+    label: 'Empresas',
+    url: ''
+  }
+];
 
 @Component({
   selector: 'app-container',
@@ -29,7 +29,7 @@ const datos = [
 })
 export default class containerComponent {
   protected readonly title: string = 'Convenios Empresas';
-  public breadcumbs: IBreadcumb[] = datos;
+  public breadcumbs: IBreadcumb[] = breadcumbs;
   
   constructor() {
     
