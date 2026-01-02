@@ -1,3 +1,8 @@
+export enum EnumEstadoEntrega {
+    COMPLETO = 'completo',
+    INCOMPLETO = 'incompleto'
+}
+
 export interface IEntrega {
     ideEntr: number;
     idePedi: number;
@@ -5,7 +10,7 @@ export interface IEntrega {
     fechaEntr: string;
     cantidadTotalEntr: number;
     totalEntr: number;
-    estadoEntr: string;
+    estadoEntr: EnumEstadoEntrega;
     observacionEntr: string;
 }
 
@@ -18,7 +23,7 @@ export class CEntrega implements IEntrega {
         private _fechaEntr: string,
         private _cantidadTotalEntr: number,
         private _totalEntr: number,
-        private _estadoEntr: string,
+        private _estadoEntr: EnumEstadoEntrega,
         private _observacionEntr: string
     ) {}
 
@@ -69,7 +74,7 @@ export class CEntrega implements IEntrega {
     get estadoEntr() {
         return this._estadoEntr;
     }
-    set estadoEntr(value: string) {
+    set estadoEntr(value: EnumEstadoEntrega) {
         this._estadoEntr = value;
     }
 
@@ -88,7 +93,7 @@ export interface IEntregaResult {
     fecha_entr: string;
     cantidad_total_entr: number;
     total_entr: number;
-    estado_entr: string;
+    estado_entr: EnumEstadoEntrega;
     observacion_entr: string;
 }
 
@@ -102,5 +107,5 @@ export interface IFiltroEntrega {
     cantidadTotalEntrMax?: number;
     totalEntrMin?: number;
     totalEntrMax?: number;
-    estadoEntr?: string;
+    estadoEntr?: EnumEstadoEntrega;
 }

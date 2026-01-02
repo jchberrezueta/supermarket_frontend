@@ -1,5 +1,5 @@
 import { Component, inject, viewChild } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { UiTableListComponent } from '@shared/components/index';
 import { UiButtonComponent } from "@shared/components/button/button.component";
 import { IComboBoxOption } from '@shared/models/combo_box_option';
@@ -8,7 +8,6 @@ import { UiTextFieldComponent } from "@shared/components/text-field/text-field.c
 import { isValidStringValue, FormGroupOf } from '@core/utils/utilities';
 import { IFiltroEmpresa, ListEstadosEmpresa } from 'app/models';
 import { ListEmpresasConfig } from './list_empresas.config';
-
 
 const IMPORTS = [
   UiTableListComponent,

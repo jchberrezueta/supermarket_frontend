@@ -1,3 +1,9 @@
+export enum EnumEstadoVenta {
+    COMPLETADO = 'completado',
+    CANCELADO = 'cancelado',
+    DEVUELTO = 'devuelto'
+}
+
 export interface IVenta {
     ideVent: number;
     ideEmpl: number;
@@ -7,8 +13,9 @@ export interface IVenta {
     cantidadVent: number;
     subTotalVent: number;
     totalVent: number;
-    dctoVent: number;
-    estadoVent: string;
+    dctoSocioVent: number;
+    dctoEdadVent: number;
+    estadoVent: EnumEstadoVenta;
 }
 
 export class CVenta implements IVenta {
@@ -22,8 +29,9 @@ export class CVenta implements IVenta {
         private _cantidadVent: number,
         private _subTotalVent: number,
         private _totalVent: number,
-        private _dctoVent: number,
-        private _estadoVent: string
+        private _dctoSocioVent: number,
+        private _estadoVent: EnumEstadoVenta,
+        private _dctoEdadVent: number
     ) {}
 
     // --- Getters / Setters ---
@@ -84,18 +92,25 @@ export class CVenta implements IVenta {
         this._totalVent = value;
     }
 
-    get dctoVent() {
-        return this._dctoVent;
+    get dctoSocioVent() {
+        return this._dctoSocioVent;
     }
-    set dctoVent(value: number) {
-        this._dctoVent = value;
+    set dctoSocioVent(value: number) {
+        this._dctoSocioVent = value;
     }
 
     get estadoVent() {
         return this._estadoVent;
     }
-    set estadoVent(value: string) {
+    set estadoVent(value: EnumEstadoVenta) {
         this._estadoVent = value;
+    }
+
+    get dctoEdadVent() {
+        return this._dctoEdadVent;
+    }
+    set dctoEdadVent(value: number) {
+        this._dctoEdadVent = value;
     }
 }
 
@@ -108,8 +123,9 @@ export interface IVentaResult {
     cantidad_vent: number;
     sub_total_vent: number;
     total_vent: number;
-    dcto_vent: number;
-    estado_vent: string;
+    dcto_socio_vent: number;
+    estado_vent: EnumEstadoVenta;
+    dcto_edad_vent: number;
 }
 
 export interface IFiltroVenta {
@@ -125,5 +141,5 @@ export interface IFiltroVenta {
     subTotalVentMax?: number;
     totalVentMin?: number;
     totalVentMax?: number;
-    estadoVent?: string;
+    estadoVent?: EnumEstadoVenta;
 }

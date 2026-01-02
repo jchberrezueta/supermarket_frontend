@@ -1,11 +1,10 @@
-import { IComboBoxOption } from "@shared/models/combo_box_option";
 
 export enum EnumEstadosEmpresa {
     ACTIVO = 'activo',
     INACTIVO = 'inactivo'
 }
 
-export const ListEstadosEmpresa: IComboBoxOption[] = [
+export const ListEstadosEmpresa = [
   {
     value: EnumEstadosEmpresa.ACTIVO,
     label: 'activo'
@@ -121,7 +120,7 @@ export interface IEmpresaResult {
 }
 
 export interface IFiltroEmpresa {
-    nombreEmp: string;
-    estadoEmp: EnumEstadosEmpresa;
-    responsableEmp: string;
+    nombreEmp?: string;
+    estadoEmp?: EnumEstadosEmpresa;
+    responsableEmp?: string;
 }
