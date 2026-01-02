@@ -8,32 +8,30 @@ import { Observable } from 'rxjs';
   providedIn: 'root' 
 })
 export class RestService {
-
-  private _apiUrl: string = environment.api_url;
-  private _httpClient = inject(HttpClient);
+  private readonly _httpClient = inject(HttpClient);
+  private readonly _apiUrl: string = environment.api_url;
 
   constructor(){}
 
-  get<T>(url: string, options?: HttpOptions): Observable<T> {
+  public get<T>(url: string, options?: HttpOptions): Observable<T> {
     return this._httpClient.get<T>(this.getUrl(url), options);
   }
 
-  post<T>(url: string, body: any, options?: HttpOptions): Observable<T> {
+  public post<T>(url: string, body: any, options?: HttpOptions): Observable<T> {
     return this._httpClient.post<T>(this.getUrl(url), body, options);
   }
 
-  patch<T>(url: string, body: any, options?: HttpOptions): Observable<T> {
+  public patch<T>(url: string, body: any, options?: HttpOptions): Observable<T> {
     return this._httpClient.patch<T>(this.getUrl(url), body, options);
   }
 
-  put<T>(url: string, body: any, options?: HttpOptions): Observable<T> {
+  public put<T>(url: string, body: any, options?: HttpOptions): Observable<T> {
     return this._httpClient.put<T>(this.getUrl(url), body, options);
   }
 
-  delete<T>(url: string, options?: HttpOptions): Observable<T> {
+  public delete<T>(url: string, options?: HttpOptions): Observable<T> {
     return this._httpClient.delete<T>(this.getUrl(url), options);
   }
-
 
   private getUrl(url: string) {
     if (url.includes('http') || url.includes('https')) return url;

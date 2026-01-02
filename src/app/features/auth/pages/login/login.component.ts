@@ -1,9 +1,8 @@
-import { Component } from '@angular/core';
-import { FormBuilder , FormGroup , Validators , ReactiveFormsModule } from  '@angular/forms' ; 
-import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { Component, inject } from '@angular/core';
+import { Router } from '@angular/router';
+import { FormBuilder , FormGroup , Validators , ReactiveFormsModule } from  '@angular/forms'; 
 import { AuthService } from '@core/services/auth.service';
-
 
 @Component({
   selector: 'app-login',
@@ -15,13 +14,20 @@ import { AuthService } from '@core/services/auth.service';
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
-export  default class LoginComponent {
-  loginForm: FormGroup;
-  errorMessage = '';
-  contador = 0;
+export default class LoginComponent {
+  private readonly _router = inject(Router);
+  private readonly _authService = inject(AuthService);
+  private readonly formBuilder = inject(FormBuilder);
+  protected loginForm!: FormGroup;
+  protected contador = 0;
+  protected errorMessage: string = '';
+  
+  constructor() {
+    this.configForm();
+  }
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private router:Router) {
-    this.loginForm = this.fb.group({
+  configForm() {
+    this.loginForm = this.formBuilder.group({
       usuario: ['', [Validators.required]],
       clave: ['', [Validators.required]],
     });
@@ -35,19 +41,19 @@ export  default class LoginComponent {
         clave: credentials.clave,
         numIntentos: this.contador
       }
-      this.authService.login(credencial).subscribe({
-        next: (response) => {
-          const { access_token, user } = response;
-          this.authService.saveSession(access_token, user);
-          this.router.navigate(['/admin']);
-        },
-        error: (err) => {
-          console.error('Error de login:', err);
-          this.errorMessage = 'Credenciales inválidas';
-        }
-      });
+      this._authService.login(credencial).subscribe({
+              next: (response) => {
+                const { access_token, user } = response;
+                this._authService.saveSession(access_token, user);
+                this._router.navigate(['/admin']);
+              },
+              error: (err) => {
+                this.contador++;
+                console.error('Error de login:', err);
+                this.errorMessage = 'Credenciales inválidas';
+              }
+            });;;
     } else {
-      this.contador++;
       this.loginForm.markAllAsTouched();
     }
   }

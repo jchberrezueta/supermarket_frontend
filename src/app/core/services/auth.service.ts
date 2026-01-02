@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
+
 import { RestService } from './rest.service';
-import { IUsuario } from '@core/models/usuarios.model';
-import { IRuta } from '@core/models/rutas.model';
-import { IOpcionSidebar } from '@core/models/opcion_sidebar.model';
+import { IUsuario, IRuta, IOpcionSidebar, IResultLogin } from '@core/models';
+
 
 interface ICredencial {
   usuario: string;
@@ -16,95 +17,95 @@ interface ICredencial {
 })
 export class AuthService {
 
-  constructor(private _restService: RestService, private router: Router) {}
+  constructor(private _restService: RestService, private _router: Router) {}
 
-  login(credenciales: ICredencial) {
-    return this._restService.post<any>('auth/login', credenciales);
+  public login(credenciales: ICredencial): Observable<IResultLogin> {
+    return this._restService.post<IResultLogin>('auth/login', credenciales);
   }
 
-  saveSession(token: string, user: any) {
+  public saveSession(token: string, user: IUsuario): void {
     localStorage.setItem('access_token', token);
     localStorage.setItem('user', JSON.stringify(user));
   }
 
-  getToken(): string | null {
+  public getToken(): string | null {
     return localStorage.getItem('access_token');
   }
 
-  getUser(): IUsuario | null {
+  private getUser(): IUsuario | null {
     const user = localStorage.getItem('user');
     return user ? JSON.parse(user) : null;
   }
 
-  logout() {
+  public logout(): void {
     this.clearSession();
-    this.router.navigate(['/login']);
+    this._router.navigate(['/login']);
   }
 
-  clearSession() {
+  private clearSession(): void {
     localStorage.removeItem('access_token');
     localStorage.removeItem('user');
   }
 
-  isAuthenticated(): boolean {
+  public isAuthenticated(): boolean {
     return !!this.getToken();
   }
 
-  hasPermission(ruta: string): boolean {
+  public hasPermission(ruta: string): boolean {
     const user = this.getUser();
     if (!user || !user.permisos) return false;
     const permisoRuta = user.permisos.find((p: IRuta) => p.ruta === ruta);
     return !!permisoRuta;
   }
 
-  getUserPermisosRutas(): IRuta[] {
+  public getUserPermisosRutas(): IRuta[] {
     const user = this.getUser();
     if (!user || !user.permisos) return [];
     return user.permisos;
   }
 
-  getUserPerfil(): string | null {
+  public getUserPerfil(): string | null {
     const user = this.getUser();
     if (!user) return null;
     return user.perfil;
   }
 
-  canList(ruta: string): boolean {
+  public canList(ruta: string): boolean {
     const user = this.getUser();
     if (!user || !user.permisos) return false;
     const permisoRuta = user.permisos.find((p: IRuta) => p.ruta === ruta && p.listar && p.activo);
     return !!permisoRuta;
   }
 
-  canInsert(ruta: string): boolean {
+  public canInsert(ruta: string): boolean {
     const user = this.getUser();
     if (!user || !user.permisos) return false;
     const permisoRuta = user.permisos.find((p: IRuta) => p.ruta === ruta && p.insertar && p.activo);
     return !!permisoRuta;
   }
 
-  canUpdate(ruta: string): boolean {
+  public canUpdate(ruta: string): boolean {
     const user = this.getUser();
     if (!user || !user.permisos) return false;
     const permisoRuta = user.permisos.find((p: IRuta) => p.ruta === ruta && p.modificar && p.activo);
     return !!permisoRuta;
   }
   
-  canDelete(ruta: string): boolean {
+  public canDelete(ruta: string): boolean {
     const user = this.getUser();
     if (!user || !user.permisos) return false;
     const permisoRuta = user.permisos.find((p: IRuta) => p.ruta === ruta && p.eliminar && p.activo);
     return !!permisoRuta;
   }
 
-  isActiveRuta(ruta: string): boolean {
+  public isActiveRuta(ruta: string): boolean {
     const user = this.getUser();
     if (!user || !user.permisos) return false;
     const permisoRuta = user.permisos.find((p: IRuta) => p.ruta === ruta && p.activo);
     return !!permisoRuta;
   }
 
-  getSidebarOptions(): IOpcionSidebar[] {
+  public getSidebarOptions(): IOpcionSidebar[] {
     const user = this.getUser();
     if(!user || !user.rutas_sidebar) return [];
     return user.rutas_sidebar;

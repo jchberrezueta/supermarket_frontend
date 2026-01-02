@@ -17,7 +17,6 @@ export const canMatchModuleGuard: CanMatchFn  = (route, segments) => {
 
   const nav = router.getCurrentNavigation();
   const allSegments = nav?.initialUrl.root.children['primary']?.segments ?? [];
-
   const faltantes = segments.map(s => s.path);
 
   const rutaActual = '/' + allSegments
