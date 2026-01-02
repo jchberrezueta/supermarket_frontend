@@ -120,7 +120,7 @@ export interface IEmpresaResult {
 }
 
 export interface IFiltroEmpresa {
-    nombreEmp?: string;
-    estadoEmp?: EnumEstadosEmpresa;
-    responsableEmp?: string;
+    nombreEmp: string;
+    estadoEmp: EnumEstadosEmpresa;
+    responsableEmp: string;
 }

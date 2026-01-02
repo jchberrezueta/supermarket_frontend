@@ -27,8 +27,8 @@ type filterEmpresaFormGroup = FormGroupOf<IFiltroEmpresa>;
   styleUrl: './list.component.scss'
 })
 export default class ListComponent {
-  protected readonly estadosEmpresa: IComboBoxOption[] = ListEstadosEmpresa;
   protected readonly title: string = 'Convenios Empresas';
+  protected readonly estadosEmpresa: IComboBoxOption[] = ListEstadosEmpresa;
   protected readonly config = ListEmpresasConfig;
   private readonly _tableList = viewChild.required<UiTableListComponent>(UiTableListComponent);
   private formBuilder= inject(FormBuilder);
@@ -47,7 +47,6 @@ export default class ListComponent {
   }
 
   protected filtrar() {
-    console.log('VAMOS :)');
     const tableListInstance = this._tableList();
     tableListInstance.filterData(this.getParams());
   }
