@@ -114,16 +114,16 @@ export interface IPedidoResult {
 }
 
 export interface IFiltroPedido {
-    idePedi?: number;
-    ideEmpr?: number;
-    fechaPediDesde?: string;
-    fechaPediHasta?: string;
-    fechaEntrPediDesde?: string;
-    fechaEntrPediHasta?: string;
-    cantidadTotalPediMin?: number;
-    cantidadTotalPediMax?: number;
-    totalPediMin?: number;
-    totalPediMax?: number;
-    estadoPedi?: EnumEstadosPedido;
-    motivoPedi?: EnumMotivosPedido;
+    idePedi: number;
+    ideEmpr: number;
+    fechaPediDesde: string;
+    fechaPediHasta: string;
+    fechaEntrPediDesde: string;
+    fechaEntrPediHasta: string;
+    cantidadTotalPediMin: number;
+    cantidadTotalPediMax: number;
+    totalPediMin: number;
+    totalPediMax: number;
+    estadoPedi: EnumEstadosPedido;
+    motivoPedi: EnumMotivosPedido;
 }

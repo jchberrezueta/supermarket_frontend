@@ -63,11 +63,11 @@ export interface ILoteResult {
 }
 
 export interface IFiltroLote {
-    ideLote?: number;
-    ideProd?: number;
-    fechaCaducidadLoteDesde?: string;
-    fechaCaducidadLoteHasta?: string;
-    stockLoteMin?: number;
-    stockLoteMax?: number;
-    estadoLote?: string;
+    ideLote: number;
+    ideProd: number;
+    fechaCaducidadLoteDesde: string;
+    fechaCaducidadLoteHasta: string;
+    stockLoteMin: number;
+    stockLoteMax: number;
+    estadoLote: string;
 }

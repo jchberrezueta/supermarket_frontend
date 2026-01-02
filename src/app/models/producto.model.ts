@@ -179,11 +179,11 @@ export interface IProductoResult {
 }
 
 export interface IFiltroProducto {
-    ideProd?: number;
-    ideCate?: number;
-    ideMarc?: number;
-    codigoBarraProd?: string;
-    nombreProd?: string;
-    disponibleProd?: string;
-    estadoProd?: EnumEstadosProducto;
+    ideProd: number;
+    ideCate: number;
+    ideMarc: number;
+    codigoBarraProd: string;
+    nombreProd: string;
+    disponibleProd: string;
+    estadoProd: EnumEstadosProducto;
 }

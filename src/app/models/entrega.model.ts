@@ -98,14 +98,14 @@ export interface IEntregaResult {
 }
 
 export interface IFiltroEntrega {
-    ideEntr?: number;
-    idePedi?: number;
-    ideProv?: number;
-    fechaEntrDesde?: string;
-    fechaEntrHasta?: string;
-    cantidadTotalEntrMin?: number;
-    cantidadTotalEntrMax?: number;
-    totalEntrMin?: number;
-    totalEntrMax?: number;
-    estadoEntr?: EnumEstadoEntrega;
+    ideEntr: number;
+    idePedi: number;
+    ideProv: number;
+    fechaEntrDesde: string;
+    fechaEntrHasta: string;
+    cantidadTotalEntrMin: number;
+    cantidadTotalEntrMax: number;
+    totalEntrMin: number;
+    totalEntrMax: number;
+    estadoEntr: EnumEstadoEntrega;
 }

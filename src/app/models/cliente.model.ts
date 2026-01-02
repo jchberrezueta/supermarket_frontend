@@ -105,14 +105,14 @@ export class CCliente implements ICliente {
     get segundoNombreClie() {
         return this._segundoNombreClie;
     }
-    set segundoNombreClie(value: string | null) {
+    set segundoNombreClie(value: string | null | undefined) {
         this._segundoNombreClie = value;
     }
 
     get apellidoMaternoClie() {
         return this._apellidoMaternoClie;
     }
-    set apellidoMaternoClie(value: string | null) {
+    set apellidoMaternoClie(value: string | null | undefined) {
         this._apellidoMaternoClie = value;
     }
 }
@@ -133,10 +133,10 @@ export interface IClienteResult {
 }
 
 export interface IFiltroCliente {
-    cedulaClie?: string;
-    primerNombreClie?: string;
-    apellidoPaternoClie?: string;
-    emailClie?: string;
-    esSocio?: 'si' | 'no';
-    esTerceraEdad?: 'si' | 'no';
+    cedulaClie: string;
+    primerNombreClie: string;
+    apellidoPaternoClie: string;
+    emailClie: string;
+    esSocio: 'si' | 'no';
+    esTerceraEdad: 'si' | 'no';
 }

@@ -83,11 +83,11 @@ export interface IEmpresaPreciosResult {
 }
 
 export interface IFiltroEmpresaPrecios {
-    ideEmprProd?: number;
-    ideEmpr?: number;
-    ideProd?: number;
-    precioCompraProdMin?: number;
-    precioCompraProdMax?: number;
-    dctoCompraProdMin?: number;
-    dctoCompraProdMax?: number;
+    ideEmprProd: number;
+    ideEmpr: number;
+    ideProd: number;
+    precioCompraProdMin: number;
+    precioCompraProdMax: number;
+    dctoCompraProdMin: number;
+    dctoCompraProdMax: number;
 }

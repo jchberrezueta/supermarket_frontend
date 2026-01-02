@@ -83,11 +83,11 @@ export interface IPerfilOpcionesResult {
 }
 
 export interface IFiltroPerfilOpciones {
-    idePerfOpci?: number;
-    idePerf?: number;
-    ideOpci?: number;
-    listar?: string;
-    insertar?: string;
-    modificar?: string;
-    eliminar?: string;
+    idePerfOpci: number;
+    idePerf: number;
+    ideOpci: number;
+    listar: string;
+    insertar: string;
+    modificar: string;
+    eliminar: string;
 }

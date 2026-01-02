@@ -67,21 +67,21 @@ export class COpciones implements IOpciones {
     get nivelOpci() {
         return this._nivelOpci;
     }
-    set nivelOpci(value: number | null) {
+    set nivelOpci(value: number) {
         this._nivelOpci = value;
     }
 
     get padreOpci() {
         return this._padreOpci;
     }
-    set padreOpci(value: number | null) {
+    set padreOpci(value: number | null | undefined) {
         this._padreOpci = value;
     }
 
     get iconoOpci() {
         return this._iconoOpci;
     }
-    set iconoOpci(value: string) {
+    set iconoOpci(value: string | null | undefined) {
         this._iconoOpci = value;
     }
 }
@@ -98,11 +98,11 @@ export interface IOpcionesResult {
 }
 
 export interface IFiltroOpciones {
-    ideOpci?: number;
-    nombreOpci?: string;
-    rutaOpci?: string;
-    activoOpci?: EnumEstadosOpcion;
-    nivelOpci?: number;
-    padreOpci?: number;
-    iconoOpci?: string;
+    ideOpci: number;
+    nombreOpci: string;
+    rutaOpci: string;
+    activoOpci: EnumEstadosOpcion;
+    nivelOpci: number;
+    padreOpci: number;
+    iconoOpci: string;
 }

@@ -103,15 +103,15 @@ export interface IDetalleVentaResult {
 }
 
 export interface IFiltroDetalleVenta {
-    ideDetaVent?: number;
-    ideVent?: number;
-    ideProd?: number;
-    cantidadProdMin?: number;
-    cantidadProdMax?: number;
-    precioUnitarioProdMin?: number;
-    precioUnitarioProdMax?: number;
-    subtotalProdMin?: number;
-    subtotalProdMax?: number;
-    totalProdMin?: number;
-    totalProdMax?: number;
+    ideDetaVent: number;
+    ideVent: number;
+    ideProd: number;
+    cantidadProdMin: number;
+    cantidadProdMax: number;
+    precioUnitarioProdMin: number;
+    precioUnitarioProdMax: number;
+    subtotalProdMin: number;
+    subtotalProdMax: number;
+    totalProdMin: number;
+    totalProdMax: number;
 }

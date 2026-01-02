@@ -63,10 +63,10 @@ export interface IMarcaResult {
 }
 
 export interface IFiltroMarca {
-    ideMarc?: number;
-    nombreMarc?: string;
-    paisOrigenMarc?: string;
-    calidadMarcMin?: number;
-    calidadMarcMax?: number;
-    descripcionMarc?: string;
+    ideMarc: number;
+    nombreMarc: string;
+    paisOrigenMarc: string;
+    calidadMarcMin: number;
+    calidadMarcMax: number;
+    descripcionMarc: string;
 }

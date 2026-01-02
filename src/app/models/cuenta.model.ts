@@ -79,9 +79,9 @@ export interface ICuentaResult {
 }
 
 export interface IFiltroCuenta {
-    ideCuen?: number;
-    ideEmpl?: number;
-    idePerf?: number;
-    usuarioCuen?: string;
-    estadoCuen?: EnumEstadosCuenta;
+    ideCuen: number;
+    ideEmpl: number;
+    idePerf: number;
+    usuarioCuen: string;
+    estadoCuen: EnumEstadosCuenta;
 }

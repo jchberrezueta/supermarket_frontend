@@ -129,17 +129,17 @@ export interface IVentaResult {
 }
 
 export interface IFiltroVenta {
-    ideVent?: number;
-    ideEmpl?: number;
-    ideClie?: number;
-    numFacturaVent?: string;
-    fechaVentDesde?: string;
-    fechaVentHasta?: string;
-    cantidadVentMin?: number;
-    cantidadVentMax?: number;
-    subTotalVentMin?: number;
-    subTotalVentMax?: number;
-    totalVentMin?: number;
-    totalVentMax?: number;
-    estadoVent?: EnumEstadoVenta;
+    ideVent: number;
+    ideEmpl: number;
+    ideClie: number;
+    numFacturaVent: string;
+    fechaVentDesde: string;
+    fechaVentHasta: string;
+    cantidadVentMin: number;
+    cantidadVentMax: number;
+    subTotalVentMin: number;
+    subTotalVentMax: number;
+    totalVentMin: number;
+    totalVentMax: number;
+    estadoVent: EnumEstadoVenta;
 }

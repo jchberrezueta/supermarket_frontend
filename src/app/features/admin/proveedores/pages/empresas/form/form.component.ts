@@ -12,6 +12,7 @@ import { UiComboBoxComponent } from '@shared/components/combo-box/combo-box.comp
 import { IComboBoxOption } from '@shared/models/combo_box_option';
 import Swal from 'sweetalert2'
 import { Location } from '@angular/common'; // 1. Importar Location
+import { IResultData } from '@core/models';
 
 const IMPORTS = [
   UiTextFieldComponent, 
@@ -23,6 +24,8 @@ const IMPORTS = [
 ];
 
 type EmpresaFormGroup = FormGroupOf<IEmpresa>;
+
+
 
 @Component({
   selector: 'app-form',
@@ -60,7 +63,7 @@ export default class FormComponent {
         descripcionEmp: ['', [Validators.required], []]
       }) as EmpresaFormGroup;
     if(idParam){
-      this._restService.get<any>(`empresas/buscar/${idParam}`).subscribe(
+      this._restService.get<IResultData>(`empresas/buscar/${idParam}`).subscribe(
         (res) => {
           const empresa = res.data[0] as IEmpresaResult;
           this.idParam = empresa.ide_empr;
