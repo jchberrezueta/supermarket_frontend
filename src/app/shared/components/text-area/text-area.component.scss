@@ -48,7 +48,7 @@
       font-family: sans-serif;
       /*cuando tengas el foco, haz esto*/
       &:focus {
-        border-color: #7b4bff;
+        border-color: #F527E7;
         box-shadow: 0 0 6px rgba(123, 75, 255, 0.4);
       }
 
@@ -58,7 +58,7 @@
       &:not(:placeholder-shown) + label {
         top: -8px;
         font-size: 12px;
-        color:#7b4bff;
+        color:#F527E7;
         background: none;
       }
     }

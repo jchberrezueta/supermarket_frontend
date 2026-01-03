@@ -14,12 +14,12 @@
     z-index: 1;
 
     &:hover {
-      border-color: #7b4bff;
+      border-color: #F527E7;
     }
 
     &.active {
       .selected {
-        border-color: #7b4bff;
+        border-color: #F527E7;
         box-shadow: 0 0 6px rgba(123, 75, 255, 0.4);
       }
       .options {
@@ -30,7 +30,6 @@
     .selected {
       padding: 14px 12px;
       border: 2px solid #ccc;
-      /*color: #777;*/
       border-radius: 10px;
       background: white;
       cursor: pointer;

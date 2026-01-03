@@ -16,6 +16,13 @@
         .breadcumb_item {
             display: flex;
             align-items: center;
+
+            a {
+                &:hover{
+                    cursor: pointer;
+                    text-decoration: underline;
+                }
+            }
         }
     }
 }

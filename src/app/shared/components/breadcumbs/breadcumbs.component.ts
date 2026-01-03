@@ -1,5 +1,5 @@
 import { Component, inject, input } from '@angular/core';
-import { MatIcon, MatIconModule } from '@angular/material/icon';
+import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { IBreadcumb } from '@shared/models/breadcumb.model';
 

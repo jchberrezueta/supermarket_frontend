@@ -115,7 +115,7 @@ export default class FormComponent {
               (res) => {
                 Swal.fire({
                   title: "Empresa actualizada :)",
-                  text: "La empresa fue modificada correctamente",
+                  text: "La empresa fue actualizada correctamente",
                   icon: "success"
                 });
                 this.location.back();
