@@ -53,17 +53,19 @@ export class UiComboBoxComponent implements ControlValueAccessor {
     this.onTouched();
   }
 
-  public get getLabel(): string {
+  get getLabel(): string {
     return this.label();
   }
-  public get getOptions(): IComboBoxOption[] {
+  get getOptions(): IComboBoxOption[] {
     return this.options();
   }
 
   // Método obligatorio: escribir el valor desde el form
   writeValue(value: any): void {
-    this.selectedValue = value;
-    this.selectedLabel = this.getOptions.find((obj) => value === obj.value)?.label || '';
+    if(value){
+      this.selectedValue = value;
+      this.selectedLabel = this.getOptions.find((obj) => value === obj.value)?.label || null;
+    }
   }
 
   // Registrar función que notifica cambios al formulario
