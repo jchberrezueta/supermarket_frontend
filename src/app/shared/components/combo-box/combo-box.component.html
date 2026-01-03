@@ -1,9 +1,9 @@
 <div class="div_container">
   <div class="div_select" [class.active]="open" (click)="toggle()">
-    <div class="selected"
-      [ngStyle]="{'color': (selectedLabel? '':'#777')}"
-    >
-      {{ selectedLabel || getLabel }}
+    <div class="selected">
+      <label [ngStyle]="{'color': (selectedLabel? '':'#777')}">
+        {{ selectedLabel || getLabel }}
+      </label>
     </div>
     @if(open){
       <ul class="options">

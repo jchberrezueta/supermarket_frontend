@@ -29,22 +29,25 @@ const PROVIDERS = [
   styleUrl: './datetime-picker.component.scss'
 })
 export class UiDatetimePickerComponent implements ControlValueAccessor {
-
-  public label = input<string>('Fecha');
+  public label = input.required<string>();
   public showHint = input<boolean>(false);
   public evntDateChange = output<Date>();
-
   public onChange = (value: any) => {};
   public onTouched = () => {};
   public value: string | null  = '';
   public disabled = false;
 
-  constructor() {
-    console.log('ui-datetime-picker listo :)');
-  }
+  constructor() {}
 
   protected emitValue(event:any){
     this.evntDateChange.emit(event.target.value);
+  }
+
+  get getLabel(): string {
+    return this.label();
+  }
+  get getShowHint(): boolean {
+    return this.showHint();
   }
 
   // Método llamado por el formulario cuando cambia el valor
@@ -86,11 +89,5 @@ export class UiDatetimePickerComponent implements ControlValueAccessor {
   // Se ejecuta cuando el usuario escribe
   public updateValue(event: any) {
     this.onChange(event.target.value);   // notifica al formulario
-  }
-  public get getLabel(): string {
-    return this.label();
-  }
-  public get getShowHint(): boolean {
-    return this.showHint();
   }
 }

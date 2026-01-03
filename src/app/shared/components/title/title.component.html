@@ -4,7 +4,13 @@
     </div>
     <div class="div_button">
         @if(canInsert){
-            <ui-button label="Agregar" icon="add" color="green" action="add" (evntClick)="redirect($event)"></ui-button>
+            <ui-button 
+                [label]="'Agregar'" 
+                [icon]="'add'" 
+                [color]="'green'" 
+                [action]="'add'" 
+                (evntClick)="redirect($event)"
+            />
         }
     </div>
 </div>

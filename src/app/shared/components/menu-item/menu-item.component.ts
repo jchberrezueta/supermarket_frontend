@@ -20,15 +20,14 @@ const IMPORTS = [
   imports: IMPORTS,
 })
 export class UiMenuItemComponent {
+  private readonly _router = inject(Router);
   public item = input.required<IOpcionSidebar>();
-  private _router = inject(Router);
-
-
-  public get elem(): IOpcionSidebar {
+  
+  get elem(): IOpcionSidebar {
     return this.item();
   }
 
-  public navigateToUrl(url: string) {
+  protected navigateToUrl(url: string) {
     this._router.navigate([url]);
   } 
 }

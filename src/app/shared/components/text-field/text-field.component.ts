@@ -9,39 +9,48 @@ const IMPORTS = [
   MatInputModule
 ];
 
+const PROVIDERS =[
+  {
+    provide: NG_VALUE_ACCESSOR,
+    useExisting: forwardRef(() => UiTextFieldComponent),
+    multi: true
+  }
+];
+
 @Component({
   selector: 'ui-text-field',
   standalone: true,
   imports: IMPORTS,
+  providers: PROVIDERS,
   templateUrl: './text-field.component.html',
-  styleUrl: './text-field.component.scss',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => UiTextFieldComponent),
-      multi: true
-    }
-  ]
+  styleUrl: './text-field.component.scss'
 })
 export class UiTextFieldComponent implements ControlValueAccessor {
-  
   public label = input.required<string>();
   public placeholder = input<string>('...');
-  public disableState = input<boolean>(false);
   public evntChange = output<string>();
-
   public onChange = (value: any) => {};
   public onTouched = () => {};
   public value: string = '';
   public disabled: boolean = false;
 
-  constructor() {
-    console.log('ui-text-field listo :)');
-  }
+  constructor() {}
 
   protected emitValue(event:any) {
     this.evntChange.emit(event.target.value);
   }
+
+  get getLabel(): string {
+    return this.label();
+  }
+  get getPlaceholder(): string {
+    return this.placeholder();
+  }
+
+  /* 
+    ControlValueAccesor
+  */
+
   // Método llamado por el formulario cuando cambia el valor
   public writeValue(value: any): void {
     this.value = value;
@@ -65,16 +74,5 @@ export class UiTextFieldComponent implements ControlValueAccessor {
   // Se ejecuta cuando el usuario escribe
   public updateValue(event: any) {
     this.onChange(event.target.value);   // notifica al formulario
-  }
-
-
-  protected get getLabel(): string {
-    return this.label();
-  }
-  protected get getPlaceholder(): string {
-    return this.placeholder();
-  }
-  protected get getDisabledState(): boolean {
-    return this.disableState();
   }
 }

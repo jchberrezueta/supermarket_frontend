@@ -17,14 +17,11 @@ const IMPORTS = [
   styleUrl: './header.component.scss'
 })
 export class UiHeaderComponent {
+  protected sidebarOpen: boolean = false;
 
-  public sidebarOpen: boolean = false;
+  constructor() {}
 
-  constructor(){
-    console.log('INICIAMOS :)')
-  }
-
-  toggleSidebar() {
+  protected toggleSidebar() {
     this.sidebarOpen = !this.sidebarOpen;
   }
 }

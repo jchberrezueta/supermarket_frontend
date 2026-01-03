@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '@core/services/auth.service';
 import { MatListModule } from '@angular/material/list';
@@ -40,9 +40,10 @@ const IMPORTACIONES = [
   styleUrl: './sidebar.component.scss'
 })
 export class UiSidebarComponent {
-  opciones: IOpcionSidebar[] = [];
+  private readonly _authService = inject(AuthService);
+  protected opciones: IOpcionSidebar[] = [];
   
-  constructor(private _authService: AuthService) {}
+  constructor() {}
 
   ngOnInit() {
     const rutas: IOpcionSidebar[] = this._authService.getSidebarOptions();
@@ -56,8 +57,6 @@ export class UiSidebarComponent {
         hijas: []
       });
       this.opciones = rutas;
-      console.log('SIDEBAR');
-      console.log(this.opciones);
     }
   }
 }

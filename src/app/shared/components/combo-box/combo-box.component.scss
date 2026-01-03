@@ -13,16 +13,13 @@
     font-family: sans-serif;
     z-index: 1;
 
-    &:hover {
-      border-color: #F527E7;
-    }
-
     &.active {
       .selected {
         border-color: #F527E7;
         box-shadow: 0 0 6px rgba(123, 75, 255, 0.4);
       }
       .options {
+        //mostrarlas
         display: block;
       }
     }
@@ -34,6 +31,10 @@
       background: white;
       cursor: pointer;
       transition: border-color .3s, box-shadow .3s;
+
+      &:hover {
+        border-color: #F527E7;
+      }
     }
 
     .options {

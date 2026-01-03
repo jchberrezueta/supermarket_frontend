@@ -47,6 +47,10 @@
       /*para cuando ocurra algun cambio en estas propiedades, el border-color durara o.3seg y movmiento ease, asi mismo por lo del box-shadow*/
       transition: border-color 0.3s ease, box-shadow 0.3s ease;
 
+      &:hover {
+        border-color: #F527E7;
+      }
+
       /*cuando tengas el foco, haz esto*/
       &:focus {
         border-color: #F527E7;

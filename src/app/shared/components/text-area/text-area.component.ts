@@ -8,38 +8,45 @@ const IMPORTS = [
   MatInputModule
 ];
 
+const PROVIDERS = [
+  {
+    provide: NG_VALUE_ACCESSOR,
+    useExisting: forwardRef(() => UiTextAreaComponent),
+    multi: true
+  }
+];
+
 @Component({
   selector: 'ui-text-area',
   standalone: true,
   imports: IMPORTS,
+  providers: PROVIDERS,
   templateUrl: './text-area.component.html',
-  styleUrl: './text-area.component.scss',
-  providers: [
-      {
-        provide: NG_VALUE_ACCESSOR,
-        useExisting: forwardRef(() => UiTextAreaComponent),
-        multi: true
-      }
-    ]
+  styleUrl: './text-area.component.scss'
 })
 export class UiTextAreaComponent implements ControlValueAccessor {
-
   public label = input.required<string>();
   public placeholder = input<string>('...');
   public evntChange = output<string>();
-
   public onChange = (value: any) => {};
   public onTouched = () => {};
   public value: string = '';
   public disabled = false;
 
-  constructor() {
-    console.log('ui-text-area listo :)');
-  }
+  constructor() {}
 
   protected emitValue(event:any) {
     this.evntChange.emit(event.target.value);
   }
+
+  get getLabel(): string {
+    return this.label();
+  }
+  get getPlaceholder(): string {
+    return this.placeholder();
+  }
+  
+
   // Método llamado por el formulario cuando cambia el valor
   public writeValue(value: any): void {
     this.value = value;
@@ -63,13 +70,5 @@ export class UiTextAreaComponent implements ControlValueAccessor {
   // Se ejecuta cuando el usuario escribe
   public updateValue(event: any) {
     this.onChange(event.target.value);   // notifica al formulario
-  }
-
-
-  protected get getLabel(): string {
-    return this.label();
-  }
-  protected get getPlaceholder(): string {
-    return this.placeholder();
   }
 }

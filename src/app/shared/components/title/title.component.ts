@@ -1,6 +1,6 @@
 import { Component, inject, input } from '@angular/core';
+import { Router } from '@angular/router';
 import { UiButtonComponent } from "../button/button.component";
-import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '@core/services/auth.service';
 
 @Component({
@@ -11,18 +11,14 @@ import { AuthService } from '@core/services/auth.service';
   styleUrl: './title.component.scss'
 })
 export class UiTitleComponent {
-  private _router = inject(Router);
-  private _authService = inject(AuthService);
-
+  private readonly _router = inject(Router);
+  private readonly _authService = inject(AuthService);
   public title = input.required<string>();
   private rutaActual: string = '';
   private rutaInsert: string = '';
   protected canInsert: boolean = false;
 
-
-  constructor() {
-    console.log('ui-title listo :)');
-  }
+  constructor() {}
 
   ngOnInit(): void {
     this.mostrarBotonAgregar();
@@ -31,11 +27,6 @@ export class UiTitleComponent {
   protected mostrarBotonAgregar() {
     this.rutaActual = this.getSegmentsRoute().map(p => p).join('/');
     this.canInsert = this._authService.canInsert(this.rutaActual);
-  }
-
-  protected generateRouteInsert(segments:string[]) {
-    segments.push('insert');
-    this.rutaInsert = segments.map(p => p).join('/');
   }
 
   protected redirect(event:any){
@@ -48,10 +39,15 @@ export class UiTitleComponent {
   private getSegmentsRoute(): string[] {
     const segments = this._router.url.split('/');
     const posFinal = segments.length-1;
-    if(segments[posFinal] === 'list'){
+    if(segments[posFinal] === 'list' || segments[posFinal] === 'insert'){
       segments.pop(); 
     }
     return segments;
+  }
+
+  protected generateRouteInsert(segments:string[]) {
+    segments.push('insert');
+    this.rutaInsert = segments.map(p => p).join('/');
   }
 
   public get getTitle(): string {

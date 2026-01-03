@@ -17,6 +17,11 @@
         background: white;
         transition: border-color 0.3s ease, box-shadow 0.3s ease;
         font-family: sans-serif;
+
+        &:hover {
+          border-color: #F527E7;
+        }
+        
         &:focus {
           border-color: #F527E7;
           box-shadow: 0 0 6px rgba(123, 75, 255, 0.4);
