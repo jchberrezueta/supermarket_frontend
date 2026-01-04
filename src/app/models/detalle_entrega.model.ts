@@ -127,6 +127,11 @@ export interface IDetalleEntregaResult {
     estado_deta_entr: EnumEstadoDetalleEntrega;
 }
 
+export interface IResultDataDetalleEntrega {
+  data: IDetalleEntregaResult[];
+  response: string;
+}
+
 export interface IFiltroDetalleEntrega {
     ideDetaEntr: number;
     ideEntr: number;

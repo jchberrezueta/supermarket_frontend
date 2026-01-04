@@ -42,6 +42,11 @@ export interface ICategoriaResult {
     descripcion_cate: string;
 }
 
+export interface IResultDataCategoria {
+  data: ICategoriaResult[];
+  response: string;
+}
+
 export interface IFiltroCategoria {
     nombreCate?: string;
     descripcionCate?: string;

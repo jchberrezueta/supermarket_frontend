@@ -178,6 +178,11 @@ export interface IProductoResult {
     url_img_prod: string;
 }
 
+export interface IResultDataProducto {
+  data: IProductoResult[];
+  response: string;
+}
+
 export interface IFiltroProducto {
     ideProd: number;
     ideCate: number;

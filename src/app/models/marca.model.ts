@@ -62,6 +62,11 @@ export interface IMarcaResult {
     descripcion_marc: string;
 }
 
+export interface IResultDataMarca {
+  data: IMarcaResult[];
+  response: string;
+}
+
 export interface IFiltroMarca {
     ideMarc: number;
     nombreMarc: string;

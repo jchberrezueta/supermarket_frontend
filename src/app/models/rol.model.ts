@@ -42,6 +42,11 @@ export interface IRolResult {
     descripcion_rol: string;
 }
 
+export interface IResultDataRol {
+  data: IRolResult[];
+  response: string;
+}
+
 export interface IFiltroRol {
     ideRol: number;
     nombreRol: string;

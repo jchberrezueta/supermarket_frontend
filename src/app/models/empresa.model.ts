@@ -119,6 +119,12 @@ export interface IEmpresaResult {
     estado_empr: EnumEstadosEmpresa;
 }
 
+export interface IResultDataEmpresa {
+  data: IEmpresaResult[];
+  response: string;
+}
+
+
 export interface IFiltroEmpresa {
     nombreEmp: string;
     estadoEmp: EnumEstadosEmpresa;

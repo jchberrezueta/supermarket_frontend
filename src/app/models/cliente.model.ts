@@ -132,6 +132,11 @@ export interface IClienteResult {
     apellido_materno_clie: string | null;
 }
 
+export interface IResultDataCliente {
+  data: IClienteResult[];
+  response: string;
+}
+
 export interface IFiltroCliente {
     cedulaClie: string;
     primerNombreClie: string;

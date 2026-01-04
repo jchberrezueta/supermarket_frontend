@@ -12,8 +12,7 @@ import { UiComboBoxComponent } from '@shared/components/combo-box/combo-box.comp
 import { IComboBoxOption } from '@shared/models/combo_box_option';
 import Swal from 'sweetalert2'
 import { Location } from '@angular/common'; // 1. Importar Location
-import { IResultData } from '@core/models';
-import { EmpresasService } from '@services/empresas.service';
+import { EmpresasService } from '@services/index';
 
 const IMPORTS = [
   UiTextFieldComponent, 

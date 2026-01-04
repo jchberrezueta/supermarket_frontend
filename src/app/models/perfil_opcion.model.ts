@@ -82,6 +82,11 @@ export interface IPerfilOpcionesResult {
     eliminar: string;
 }
 
+export interface IResultDataPerfilOpciones {
+  data: IPerfilOpcionesResult[];
+  response: string;
+}
+
 export interface IFiltroPerfilOpciones {
     idePerfOpci: number;
     idePerf: number;

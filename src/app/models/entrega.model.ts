@@ -99,6 +99,11 @@ export interface IEntregaResult {
     observacion_entr: string;
 }
 
+export interface IResultDataEntrega {
+  data: IEntregaResult[];
+  response: string;
+}
+
 export interface IFiltroEntrega {
     ideEntr: number;
     idePedi: number;

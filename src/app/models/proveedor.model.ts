@@ -122,6 +122,11 @@ export interface IProveedorResult {
     apellido_materno_prov: string | null;
 }
 
+export interface IResultDataProveedor {
+  data: IProveedorResult[];
+  response: string;
+}
+
 export interface IFiltroProveedor {
     ideEmpr: number;
     cedulaProv: string;

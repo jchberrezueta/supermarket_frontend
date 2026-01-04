@@ -92,6 +92,11 @@ export interface IAccesoUsuarioResult {
     longitud_acce: number | null;
 }
 
+export interface IResultDataAccesoUsuario {
+  data: IAccesoUsuarioResult[];
+  response: string;
+}
+
 export interface IFiltroAccesoUsuario {
     ideCuen: number;
     navegadorAcce: string;

@@ -78,6 +78,11 @@ export interface ICuentaResult {
     estado_cuen: EnumEstadosCuenta;
 }
 
+export interface IResultDataCuenta {
+  data: ICuentaResult[];
+  response: string;
+}
+
 export interface IFiltroCuenta {
     ideCuen: number;
     ideEmpl: number;

@@ -97,6 +97,11 @@ export interface IOpcionesResult {
     icono_opci: string | null;
 }
 
+export interface IResultDataOpciones {
+  data: IOpcionesResult[];
+  response: string;
+}
+
 export interface IFiltroOpciones {
     ideOpci: number;
     nombreOpci: string;

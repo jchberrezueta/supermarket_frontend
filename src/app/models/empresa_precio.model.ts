@@ -82,6 +82,12 @@ export interface IEmpresaPreciosResult {
     iva_prod: number;
 }
 
+export interface IResultDataEmpresaPrecios {
+  data: IEmpresaPreciosResult[];
+  response: string;
+}
+
+
 export interface IFiltroEmpresaPrecios {
     ideEmprProd: number;
     ideEmpr: number;

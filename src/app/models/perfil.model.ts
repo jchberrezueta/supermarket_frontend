@@ -52,6 +52,11 @@ export interface IPerfilResult {
     descripcion_perf: string;
 }
 
+export interface IResultDataPerfil {
+  data: IPerfilResult[];
+  response: string;
+}
+
 export interface IFiltroPerfil {
     idePerf: number;
     ideRol: number;

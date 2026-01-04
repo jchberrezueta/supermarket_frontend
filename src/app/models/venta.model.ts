@@ -128,6 +128,11 @@ export interface IVentaResult {
     dcto_edad_vent: number;
 }
 
+export interface IResultDataVenta {
+  data: IVentaResult[];
+  response: string;
+}
+
 export interface IFiltroVenta {
     ideVent: number;
     ideEmpl: number;

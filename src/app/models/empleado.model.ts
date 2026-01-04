@@ -157,6 +157,12 @@ export interface IEmpleadoResult {
     fecha_termino_empl: string | null;
 }
 
+export interface IResultDataEmpleado {
+  data: IEmpleadoResult[];
+  response: string;
+}
+
+
 export interface IFiltroEmpleado {
     ideEmpl: number;
     ideRol: number;

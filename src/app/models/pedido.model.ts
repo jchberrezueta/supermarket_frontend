@@ -115,6 +115,11 @@ export interface IPedidoResult {
     observacion_pedi: string;
 }
 
+export interface IResultDataPedido {
+  data: IPedidoResult[];
+  response: string;
+}
+
 export interface IFiltroPedido {
     idePedi: number;
     ideEmpr: number;

@@ -127,6 +127,11 @@ export interface IDetallePedidoResult {
     estado_deta_pedi: EnumEstadoDetallePedido;
 }
 
+export interface IResultDataDetallePedido {
+  data: IDetallePedidoResult[];
+  response: string;
+}
+
 export interface IFiltroDetallePedido {
     ideDetaPedi: number;
     idePedi: number;

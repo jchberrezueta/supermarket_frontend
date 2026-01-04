@@ -62,6 +62,11 @@ export interface ILoteResult {
     estado_lote: string;
 }
 
+export interface IResultDataLote {
+  data: ILoteResult[];
+  response: string;
+}
+
 export interface IFiltroLote {
     ideLote: number;
     ideProd: number;

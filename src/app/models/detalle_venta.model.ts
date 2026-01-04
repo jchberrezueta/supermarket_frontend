@@ -102,6 +102,11 @@ export interface IDetalleVentaResult {
     total_prod: number;
 }
 
+export interface IResultDataDetalleVenta {
+  data: IDetalleVentaResult[];
+  response: string;
+}
+
 export interface IFiltroDetalleVenta {
     ideDetaVent: number;
     ideVent: number;
