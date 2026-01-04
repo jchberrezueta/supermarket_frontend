@@ -59,8 +59,9 @@ export default class ListComponent {
   }
 
   protected filtrar() {
-    const tableListInstance = this._tableList();
-    tableListInstance.filterData(this.getParams());
+    console.log(this.formData.value);
+    /*const tableListInstance = this._tableList();
+    tableListInstance.filterData(this.getParams());*/
   }
 
   private getParams(): URLSearchParams {

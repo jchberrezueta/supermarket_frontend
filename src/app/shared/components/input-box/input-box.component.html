@@ -1,13 +1,13 @@
 <div class="div_container" clickOutside (clickOutside)="open = false">
-  <div class="div_select" [class.active]="open" (click)="toggle()" [attr.data-estado]="selectedLabel? 'true' : 'false'">
-    <input type="text"
-      [placeholder]="getPlaceholder">
-    <label [ngStyle]="{'color': (selectedLabel? '':'#777')}">
-      {{ selectedLabel || getLabel }}
-    </label>
+  <div class="div_select" [class.active]="open" (click)="toggle()">
+    <input type="text" #inp
+      [placeholder]="getPlaceholder"
+      [value]="selectedLabel" 
+      (input)="optionsFiltered.set(inp.value)">
+    <label>{{ getLabel }}</label>
     @if(open){
       <ul class="options">
-        @for(opt of getOptions; track $index) {
+        @for(opt of filteredItems(); track $index) {
           <li (click)="emitValue(opt, $event)">{{ opt.label }}</li>
         }
       </ul>

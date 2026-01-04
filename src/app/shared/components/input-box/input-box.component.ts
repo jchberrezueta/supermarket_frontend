@@ -1,4 +1,4 @@
-import { Component, forwardRef, input, output } from '@angular/core';
+import { Component, computed, forwardRef, input, output, signal } from '@angular/core';
 import { IComboBoxOption } from '@shared/models/combo_box_option';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
@@ -34,6 +34,7 @@ export class UiInputBoxComponent implements ControlValueAccessor {
   public label = input.required<string>();
   public placeholder = input<string>('...');
   public evntSelectOption = output<number>();
+  protected optionsFiltered = signal('');
   public open: boolean = false;
   public disabled: boolean = false;
   public selectedLabel: string | null = null;
@@ -44,6 +45,14 @@ export class UiInputBoxComponent implements ControlValueAccessor {
   protected toggle() {
     this.open = !this.open;
   }
+
+  protected filteredItems = computed(() => {
+    const term = this.getOptionsFiltered.toLowerCase();
+
+    return this.getOptions.filter(op =>
+      op.label.toLowerCase().includes(term)
+    ) ?? [];
+  });
 
   protected emitValue(opt: IComboBoxOption, event: MouseEvent) {
     event.stopPropagation(); // evita que toggle() se active en el click
@@ -64,6 +73,9 @@ export class UiInputBoxComponent implements ControlValueAccessor {
   }
   get getOptions(): IComboBoxOption[] {
     return this.options();
+  }
+  get getOptionsFiltered(): string {
+    return this.optionsFiltered();
   }
 
   // Método obligatorio: escribir el valor desde el form
