@@ -23,10 +23,12 @@ export interface ITableColumn {
     | 'buttonGroup'
     | 'semaforo'
     | 'crud'
+    | 'ud'
     | 'remove'
     | 'edit'
     | 'redirect'
-    | 'sendMail';
+    | 'sendMail'
+    | 'details';
   label: string;
   buttonItems?: IButtonItem[];
   visible?: boolean;

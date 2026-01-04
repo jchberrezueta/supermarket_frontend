@@ -10,33 +10,33 @@ import {
   inject
 } from '@angular/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { RestService } from '@core/services/rest.service';
-import { IQueryParams } from '@shared/models/query_param.model';
 import { ITableColumn } from '@shared/models/table_column.model';
 import { SelectionModel } from '@angular/cdk/collections';
-import { HttpParams } from '@angular/common/http';
 import {DashIfEmptyPipe} from '@shared/pipes/dashIfEmpty.pipe'
 import { UiButtonComponent } from "../button/button.component";
-import { Router, RouterLink } from "@angular/router";
+import { Router } from "@angular/router";
 import { AuthService } from '@core/services/auth.service';
 
 import Swal from 'sweetalert2'
 
+const IMPORTS = [
+  MatPaginatorModule,
+  MatTableModule,
+  MatSortModule,
+  MatCheckboxModule,
+  UiButtonComponent,
+  DashIfEmptyPipe,
+  CommonModule
+];
+
 @Component({
   selector: 'ui-table-list',
   standalone: true,
-  imports: [
-    MatPaginatorModule,
-    MatTableModule,
-    MatSortModule,
-    MatCheckboxModule,
-    CommonModule,
-    DashIfEmptyPipe,
-    UiButtonComponent,
-],
+  imports: IMPORTS,
   templateUrl: './table-list.component.html',
   styleUrls: ['./table-list.component.scss']
 })
@@ -65,8 +65,12 @@ export class UiTableListComponent implements OnInit {
 
   private rutaActual: string = '';
   private rutaUpdate: string = '';
+  private rutaDetails: string = '';
   protected canUpdate: boolean = false;
   protected canDelete: boolean = false;
+  protected canList: boolean = false;
+
+  constructor() {}
 
   ngOnChanges(changes: SimpleChanges) {
 
@@ -94,6 +98,10 @@ export class UiTableListComponent implements OnInit {
     );
   }
 
+  public filterData(params: URLSearchParams) {
+    this.requestData(this.serviceApi()+`/filtrar?${params.toString()}`);
+  }
+
   private loadColumns() {
     this.displayedColumns.set(
       this.columns()
@@ -107,10 +115,10 @@ export class UiTableListComponent implements OnInit {
     this.rowClickAction.emit({ action, row });
   }
 
-  public selectItem(item: any): void {
-    if (!this.selection.isSelected(item)) {
-      this.selection.select(item);
-      this.onSelectRow.emit(item);
+  public selectItem(row: any): void {
+    if (!this.selection.isSelected(row)) {
+      this.selection.select(row);
+      this.onSelectRow.emit(row);
     }
   }
 
@@ -135,22 +143,19 @@ export class UiTableListComponent implements OnInit {
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
   }
 
-  public filterData(params: URLSearchParams) {
-    this.requestData(this.serviceApi()+`/filtrar?${params.toString()}`);
-  }
-
   protected hasPermissionsUD() {
-      this.rutaActual = this.getSegmentsRoute().map(p => p).join('/');
-      this.canUpdate = this._authService.canUpdate(this.rutaActual);
-      this.canDelete = this._authService.canDelete(this.rutaActual);
+    this.rutaActual = this.getSegmentsRoute().map(p => p).join('/');
+    this.canUpdate = this._authService.canUpdate(this.rutaActual);
+    this.canDelete = this._authService.canDelete(this.rutaActual);
+    this.canList = this._authService.canList(this.rutaActual);
   }
 
-  protected redirectUD(clickAction: string, listaIds:number[]) {
-    if(clickAction === 'update'){
-      this.generateUpdateRoute(this.getSegmentsRoute(), listaIds[0]);
+  protected redirectUD(clickAction: string, id:number) {
+    if(clickAction === 'update' && this.canUpdate){
+      this.generateUpdateRoute(this.getSegmentsRoute(), id);
       this._router.navigate([this.rutaUpdate]);
     }
-    else if(clickAction === 'delete'){
+    else if(clickAction === 'delete' && this.canDelete){
       Swal.fire({
         title: "Esta seguro de eliminar este elemento?",
         text: "No se podra revertir esta accion!",
@@ -161,7 +166,7 @@ export class UiTableListComponent implements OnInit {
         confirmButtonText: "Si, eliminar!"
       }).then((result) => {
         if (result.isConfirmed) {
-          this._restService.delete<any>(this.serviceApi()+`/eliminar/${listaIds[0]}`).subscribe(
+          this._restService.delete<any>(this.serviceApi()+`/eliminar/${id}`).subscribe(
             (res) => {
               Swal.fire({
                 title: "Eliminado Exitosamente!",
@@ -177,10 +182,27 @@ export class UiTableListComponent implements OnInit {
     }
   }
 
+  protected viewDetails(clickAction: string, id:number) {
+    if(clickAction === 'details' && this.canList){
+      this.generateDetailsRoute(this.getSegmentsRoute(), id);
+      this._router.navigate([this.rutaUpdate]);
+    }
+  }
+
+  protected redirectToUrl(clickAction: string, url:string='') {
+    this._router.navigate([url]);
+  }
+
   private generateUpdateRoute(segments: string[], id: number) {
     segments.push('update');
     segments.push(id+'');
     this.rutaUpdate = segments.map(p => p).join('/');
+  }
+
+    private generateDetailsRoute(segments: string[], id: number) {
+    segments.push('details');
+    segments.push(id+'');
+    this.rutaDetails = segments.map(p => p).join('/');
   }
 
   private getSegmentsRoute(): string[] {
@@ -192,5 +214,4 @@ export class UiTableListComponent implements OnInit {
     return segments;
   }
 
-  
 }

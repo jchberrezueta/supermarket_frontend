@@ -3,6 +3,21 @@ import { ITableListConfig } from "@shared/models/table-list.model";
 export const ListEmpresasConfig: ITableListConfig = {
     dataKey: 'ide_empr',
     columns: [
+        { 
+            label: 'Ver Detalles', 
+            property: 'view_details', 
+            type: 'details',
+            buttonItems: [
+                {
+                    action: 'details',
+                    label: 'Ver Detalles',
+                    icon: 'visibility',
+                    router: true,
+                    key: 'ide_empr',
+                    color: 'purple'
+                }
+            ]
+        },
         { label: 'ID', property: 'ide_empr', type: 'text', sortable: true },
         { label: 'Nombre', property: 'nombre_empr', type: 'text', sortable: true },
         { label: 'Responsable', property: 'responsable_empr', type: 'text', sortable: true },
@@ -15,7 +30,7 @@ export const ListEmpresasConfig: ITableListConfig = {
         {
             label: '',
             property: 'menu',
-            type: 'crud',
+            type: 'ud',
             buttonItems: [
                 {
                     action: 'update',
@@ -29,10 +44,9 @@ export const ListEmpresasConfig: ITableListConfig = {
                     action: 'delete',
                     label: 'Eliminar',
                     icon: 'delete',
-                    router: true,
                     key: 'ide_empr',
                     color: 'red'
-                },
+                }
             ],
         }
     ]

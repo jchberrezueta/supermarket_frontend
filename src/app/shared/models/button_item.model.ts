@@ -8,6 +8,7 @@ export interface IButtonItem {
   visible?(event: any): void;
   condition?: string;
   router?: boolean;
+  url?: string;
   key: string;
   cssClasses?: string[];
 }
