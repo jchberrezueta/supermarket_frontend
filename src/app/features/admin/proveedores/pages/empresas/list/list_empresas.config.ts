@@ -4,7 +4,7 @@ export const ListEmpresasConfig: ITableListConfig = {
     dataKey: 'ide_empr',
     columns: [
         { 
-            label: 'Ver Detalles', 
+            label: 'Detalles', 
             property: 'view_details', 
             type: 'details',
             buttonItems: [

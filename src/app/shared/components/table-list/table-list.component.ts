@@ -183,9 +183,10 @@ export class UiTableListComponent implements OnInit {
   }
 
   protected viewDetails(clickAction: string, id:number) {
+    console.log(this.canList);
     if(clickAction === 'details' && this.canList){
       this.generateDetailsRoute(this.getSegmentsRoute(), id);
-      this._router.navigate([this.rutaUpdate]);
+      this._router.navigate([this.rutaDetails]);
     }
   }
 
