@@ -19,23 +19,36 @@
         padding: 10px;
         gap: 25px;
 
-        .card_filters {
+        .card_top {
             display: flex;
-            flex-direction: row;
-            gap: 10px;
-            padding: 10px;
-            width: 100%;
-            height: 75px;
 
-            .selects {
-                display: flex;
-                flex-direction: row;
-                gap: 10px;
-                width: auto;
+            .card_form {
+                width: 90%;
+
+                .card_filters {
+                    display: flex;
+                    flex-direction: row;
+                    gap: 10px;
+                    padding: 10px;
+                    width: 100%;
+                    height: 75px;
+
+                    .selects {
+                        display: flex;
+                        flex-direction: row;
+                        gap: 10px;
+                        width: auto;
+                    }
+
+                    .filter_btn {
+                        flex: 1;
+                    }
+                }
             }
 
-            .filter_btn {
+            .btns_options {
                 flex: 1;
+                
             }
         }
 

@@ -1,10 +1,19 @@
 <div class="div_container">
-    <div class="logo_user">
-        @if (genero === 'masculino') {
-            <img src="icons/avatares/hombre.png" alt="User">
-        } 
-        @else if (genero === 'femenino') {
-            <img src="icons/avatares/mujer.png" alt="User">
+    <div class="div_user">
+        <div class="logo_user" [class.active]="open" (click)="toggle()">
+            @if (genero === 'masculino') {
+                <img src="icons/avatares/hombre.png" alt="User">
+            } 
+            @else if (genero === 'femenino') {
+                <img src="icons/avatares/mujer.png" alt="User">
+            }
+        </div>
+        @if(open){
+            <ul class="options">
+                @for(opt of optionsList; track $index) {
+                    <li (click)="emitValue($event)">{{ opt.label }}</li>
+                }
+            </ul>
         }
     </div>
 </div>

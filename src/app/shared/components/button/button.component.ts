@@ -22,6 +22,7 @@ export class UiButtonComponent {
   public action = input<string>('crud');
   public icon = input<string>();
   public color = input<string>('primary');
+  public textColor = input<string>('white');
   public width = input<string>('auto');
 
   public evntClick = output<string>();
@@ -46,5 +47,8 @@ export class UiButtonComponent {
   }
   public get getWidth() {
     return this.width();
+  }
+  public get getTextColor() {
+    return this.textColor();
   }
 }

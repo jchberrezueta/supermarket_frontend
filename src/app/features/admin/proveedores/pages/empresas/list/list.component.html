@@ -1,18 +1,22 @@
 <div class="div_container">
     <div class="div_card">
-        <form [formGroup]="formData" (ngSubmit)="filtrar()">
-            <div class="card_filters">
-                <div class="selects">
-                    <ui-text-field [label]="'Empresa'" formControlName="nombreEmp"/>
-                    <ui-text-field [label]="'Responsable'" formControlName="responsableEmp"/>
-                    <ui-combo-box [label]="'Estados'" [options]="estadosEmpresa"  formControlName="estadoEmp"/>
+        <div class="card_top">
+            <form [formGroup]="formData" (ngSubmit)="filtrar()" class="card_form">
+                <div class="card_filters">
+                    <div class="selects">
+                        <ui-text-field [label]="'Empresa'" formControlName="nombreEmp"/>
+                        <ui-text-field [label]="'Responsable'" formControlName="responsableEmp"/>
+                        <ui-combo-box [label]="'Estados'" [options]="estadosEmpresa"  formControlName="estadoEmp"/>
+                    </div>
+                    <div class="filter_btn">
+                        <ui-button [label]="'Filtrar'" [icon]="'filter_alt'"/>
+                    </div>
                 </div>
-                <div class="filter_btn">
-                    <ui-button [label]="'Filtrar'" [icon]="'filter_alt'"/>
-                </div>
+            </form>
+            <div class="btns_options">
+                <ui-button [label]="'Precios'" [icon]="'attach_money'" [color]="'yellow'" [textColor]="'black'"/>
             </div>
-        </form>
-        
+        </div>
         <div class="card_table">
             <ui-table-list #tableList [serviceApi]="'empresas'" [columns]="config.columns" [isSelection]="true"/>
         </div>
