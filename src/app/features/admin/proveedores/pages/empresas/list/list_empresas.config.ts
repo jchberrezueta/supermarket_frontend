@@ -1,6 +1,7 @@
 import { ITableListConfig } from "@shared/models/table-list.model";
 
 export const ListEmpresasConfig: ITableListConfig = {
+    dataKey: 'ide_empr',
     columns: [
         { label: 'ID', property: 'ide_empr', type: 'text', sortable: true },
         { label: 'Nombre', property: 'nombre_empr', type: 'text', sortable: true },
@@ -34,7 +35,5 @@ export const ListEmpresasConfig: ITableListConfig = {
                 },
             ],
         }
-    ],
-    dataKey: 'ide_empr',
-    breadCumbs: [{label: 'Proveedores'}, {label: 'Empresas'}]
+    ]
 }

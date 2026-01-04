@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import {
   Component,
-  EventEmitter,
   OnInit,
   input,
   signal,
@@ -42,20 +41,20 @@ import Swal from 'sweetalert2'
   styleUrls: ['./table-list.component.scss']
 })
 export class UiTableListComponent implements OnInit {
-  
-  private data = signal<any[]>([]);
-  protected matDatasource = new MatTableDataSource<any>();
-  public columns = input.required<ITableColumn[]>();
   public serviceApi = input.required<string>();
+  public columns = input.required<ITableColumn[]>();
   public message = input<string>('!No tiene registros generados¡');
   public isSelection = input<boolean>(false);
+  private data = signal<any[]>([]);
+  protected matDatasource = new MatTableDataSource<any>();
+  
   public selection!: SelectionModel<any>;
 
   public onSelectRow = output<any>();
   public rowClickAction = output<any>();
 
   public resultsLength = signal(0);
-  public displayedColumns = signal<string[]>([])
+  public displayedColumns = signal<string[]>([]);
 
   private readonly _restService = inject(RestService);
   private readonly _authService = inject(AuthService);

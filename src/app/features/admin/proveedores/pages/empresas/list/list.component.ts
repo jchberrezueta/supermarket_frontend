@@ -9,11 +9,13 @@ import { isValidStringValue, FormGroupOf } from '@core/utils/utilities';
 import { IFiltroEmpresa } from 'app/models';
 import { ListEmpresasConfig } from './list_empresas.config';
 import { EmpresasService } from '../../../../../../services/admin/empresas.service';
+import { UiInputBoxComponent } from '@shared/components/input-box/input-box.component';
 
 const IMPORTS = [
   UiTableListComponent,
   UiButtonComponent,
   UiComboBoxComponent,
+  UiInputBoxComponent,
   UiTextFieldComponent,
   ReactiveFormsModule
 ];
