@@ -1,14 +1,16 @@
-import { Component, EventEmitter, forwardRef, input, Input, Output, output } from '@angular/core';
+import { Component, forwardRef, input, output } from '@angular/core';
 import { IComboBoxOption } from '@shared/models/combo_box_option';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { CommonModule } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ClickOutsideDirective } from '@shared/directives/clicOutsideDirective.directive';
   
 const IMPORTS = [
   MatFormFieldModule,
   MatSelectModule,
-  CommonModule
+  CommonModule,
+  ClickOutsideDirective
 ];
 
 const PROVIDERS = [
@@ -52,7 +54,7 @@ export class UiComboBoxComponent implements ControlValueAccessor {
     this.onChange(opt.value);
     this.onTouched();
   }
-
+//
   get getLabel(): string {
     return this.label();
   }

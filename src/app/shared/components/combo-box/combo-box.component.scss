@@ -24,6 +24,16 @@
       }
     }
 
+    &.active,
+    &[data-estado="true"] {
+      .label_0 {
+        top: -14px;
+        font-size: 12px;
+        color:#F527E7;
+        background: none;
+      }
+    }
+
     .selected {
       padding: 14px 12px;
       border: 2px solid #ccc;
@@ -34,6 +44,12 @@
 
       &:hover {
         border-color: #F527E7;
+      }
+
+      .label_0 {
+        position: absolute;
+        z-index: -1;
+        transition: 0.25s ease;
       }
     }
 

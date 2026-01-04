@@ -1,8 +1,11 @@
-<div class="div_container">
-  <div class="div_select" [class.active]="open" (click)="toggle()">
+<div class="div_container" clickOutside (clickOutside)="open = false">
+  <div class="div_select" [class.active]="open" (click)="toggle()" [attr.data-estado]="selectedLabel? 'true' : 'false'">
     <div class="selected">
-      <label [ngStyle]="{'color': (selectedLabel? '':'#777')}">
-        {{ selectedLabel || getLabel }}
+      <label class="label_0">{{ getLabel }}</label>
+      <label 
+        [ngStyle]="{'color': (selectedLabel? '':'#777')}" 
+      >
+          {{ selectedLabel || getLabel }}
       </label>
     </div>
     @if(open){
