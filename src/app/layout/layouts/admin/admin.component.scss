@@ -16,6 +16,15 @@
             "sidebar main"   auto /
             275px    auto
         ;
+        transition: grid-template-columns 0.3s ease;
+
+        &.sidebar-closed {
+            grid-template:
+                "header header" 8%
+                "sidebar main" auto /
+                0px auto
+            ;
+        }
 
         .header {
             padding: 10px;

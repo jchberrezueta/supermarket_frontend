@@ -1,5 +1,5 @@
 <div class="div_container">
-    <div class="grid_container">
+    <div class="grid_container" [class.sidebar-closed]="_sidebarService.getCloseStatus">
         <ui-header class="header"></ui-header>
         <ui-sidebar class="sidebar"></ui-sidebar>
         <main class="main">

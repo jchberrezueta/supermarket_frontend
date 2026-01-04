@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { 
   UiHeaderComponent, 
   UiSidebarComponent
 } from '@shared/components/index';
+import { SidebarService } from '@shared/services/sidebar.service';
 
 const IMPORTS = [
   UiHeaderComponent, 
@@ -19,5 +20,7 @@ const IMPORTS = [
   styleUrl: './admin.component.scss'
 })
 export default class AdminComponent {
+  protected readonly _sidebarService = inject(SidebarService);
 
+  constructor() {}
 }
