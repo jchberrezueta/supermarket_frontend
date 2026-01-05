@@ -28,7 +28,15 @@ export const empresasRoutes: Routes = [
                 path: 'details/:id',
                 canMatch: [canMatchPermisoGuard],
                 loadComponent: () => import('./details/details.component'),
-            }
+            },
+            {
+                path: 'precios',
+                canMatch: [canMatchPermisoGuard],
+                loadComponent: () => import('./form/form.component'),
+                data: {
+                    permises: ['total']
+                }
+            },
         ]
     },
 ];

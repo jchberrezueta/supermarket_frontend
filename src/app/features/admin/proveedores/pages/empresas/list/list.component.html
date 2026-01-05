@@ -6,7 +6,7 @@
                     <div class="selects">
                         <ui-text-field [label]="'Empresa'" formControlName="nombreEmp"/>
                         <ui-text-field [label]="'Responsable'" formControlName="responsableEmp"/>
-                        <ui-combo-box [label]="'Estados'" [options]="estadosEmpresa"  formControlName="estadoEmp"/>
+                        <ui-combo-box [label]="'Estados'" [options]="estadosEmpresa" formControlName="estadoEmp"/>
                     </div>
                     <div class="filter_btn">
                         <ui-button [label]="'Filtrar'" [icon]="'filter_alt'"/>
@@ -14,7 +14,8 @@
                 </div>
             </form>
             <div class="btns_options">
-                <ui-button [label]="'Precios'" [icon]="'attach_money'" [color]="'yellow'" [textColor]="'black'"/>
+                <ui-button [label]="'Precios'" [icon]="'attach_money'" [color]="'yellow'" [textColor]="'black'" 
+                    [action]="'redirect'" (evntClick)="redirectToEmpresaPrecios($event)"/>
             </div>
         </div>
         <div class="card_table">

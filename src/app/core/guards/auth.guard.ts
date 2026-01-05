@@ -11,7 +11,7 @@ export const canMatchAutgGuard: CanMatchFn = () => {
 
   const loginState = authService.isAuthenticated();
   if (!loginState) {
-    router.createUrlTree(['/login']);
+    return router.createUrlTree(['/auth/login']);
   }
-  return loginState;
+  return loginState; //true
 };

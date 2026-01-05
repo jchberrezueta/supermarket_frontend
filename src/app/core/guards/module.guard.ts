@@ -11,8 +11,8 @@ export const canMatchModuleGuard: CanMatchFn  = (route, segments) => {
   
   const loginState = authService.isAuthenticated();
   if (!loginState) {
-    router.createUrlTree(['/login']);
-    return false;
+    return router.createUrlTree(['/auth/login']);
+    //return false;
   }
 
   const nav = router.getCurrentNavigation();

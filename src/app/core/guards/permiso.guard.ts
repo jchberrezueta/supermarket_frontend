@@ -12,9 +12,10 @@ export const canMatchPermisoGuard: CanMatchFn  = (route, segments) => {
   
   const loginState = authService.isAuthenticated();
   if (!loginState) {
-    router.createUrlTree(['/login']);
-    return false;
+    return router.createUrlTree(['/auth/login']);
+    //return false;
   }
+  console.log(route.path);
 
   const nav = router.getCurrentNavigation();
   const allSegments = nav?.initialUrl.root.children['primary']?.segments ?? [];
@@ -31,12 +32,16 @@ export const canMatchPermisoGuard: CanMatchFn  = (route, segments) => {
 
   console.log('canMatchPermisoGuard');
   console.log(rutaActual);
-  console.log(route.path);
+  console.log(route.path); 
 
   if (route.path === 'list') return authService.canList(rutaActual);
   if (route.path === 'insert') return authService.canInsert(rutaActual);
   if (route.path === 'details/:id') return authService.canList(rutaActual);
   if (route.path === 'update/:id') return authService.canUpdate(rutaActual);
 
+  if(route.path !== ''){
+    const permises = route.data?.['permises'] as string[];
+    return (permises[0] === 'total')
+  }
   return false;
 };
