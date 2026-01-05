@@ -1,10 +1,11 @@
 import { Component, inject } from '@angular/core';
 import { AuthService } from '@core/services/auth.service';
+import { ClickOutsideDirective } from '@shared/directives/clicOutsideDirective.directive';
 
 @Component({
   selector: 'ui-user',
   standalone: true,
-  imports: [],
+  imports: [ClickOutsideDirective],
   templateUrl: './user.component.html',
   styleUrl: './user.component.scss'
 })

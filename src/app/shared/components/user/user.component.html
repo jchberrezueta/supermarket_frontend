@@ -1,4 +1,4 @@
-<div class="div_container">
+<div class="div_container" clickOutside (clickOutside)="open = false">
     <div class="div_user">
         <div class="logo_user" [class.active]="open" (click)="toggle()">
             @if (genero === 'masculino') {
