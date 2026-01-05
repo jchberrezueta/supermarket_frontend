@@ -22,6 +22,7 @@ import { Router } from "@angular/router";
 import { AuthService } from '@core/services/auth.service';
 
 import Swal from 'sweetalert2'
+import { LoadingService } from '@shared/services/loading.service';
 
 const IMPORTS = [
   MatPaginatorModule,
@@ -59,7 +60,8 @@ export class UiTableListComponent implements OnInit {
   private readonly _restService = inject(RestService);
   private readonly _authService = inject(AuthService);
   private readonly _router = inject(Router);
-  
+  private readonly _loadingService = inject(LoadingService);
+
   private readonly _matSort = viewChild(MatSort);
   private readonly _matPaginator = viewChild(MatPaginator);
 
@@ -89,6 +91,7 @@ export class UiTableListComponent implements OnInit {
   }
 
   private requestData(ruta: string) {
+    this._loadingService.show();
     this._restService.get<any>(ruta).subscribe(
       (res) => {
         this.data.set(res.data);
@@ -99,6 +102,7 @@ export class UiTableListComponent implements OnInit {
         const p = this._matPaginator();
         if (s) this.matDatasource.sort = s;
         if (p) this.matDatasource.paginator = p;
+        this._loadingService.hide();
       }
     );
   }
