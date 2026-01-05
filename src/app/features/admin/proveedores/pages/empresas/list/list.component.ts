@@ -6,7 +6,7 @@ import { IComboBoxOption } from '@shared/models/combo_box_option';
 import { UiComboBoxComponent } from '@shared/components/combo-box/combo-box.component';
 import { UiTextFieldComponent } from "@shared/components/text-field/text-field.component";
 import { isValidStringValue, FormGroupOf } from '@core/utils/utilities';
-import { IFiltroEmpresa } from 'app/models';
+import { IEmpresaResult, IFiltroEmpresa } from 'app/models';
 import { ListEmpresasConfig } from './list_empresas.config';
 import { EmpresasService } from '@services/index';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -37,6 +37,8 @@ export default class ListComponent {
   private formBuilder= inject(FormBuilder);
   protected estadosEmpresa!: IComboBoxOption[];
   protected formData!: filterEmpresaFormGroup;
+
+  private idEmpresa: number = -1;
 
   constructor() {
     this.loadEstadosEmpresa();
@@ -74,8 +76,17 @@ export default class ListComponent {
   }
 
   protected redirectToEmpresaPrecios(clickAction: string) {
+    console.log(this.idEmpresa);
     if(clickAction === 'redirect') {
-      this._router.navigate(['../precios', 1], {relativeTo: this._route});
+      if(this.idEmpresa != -1 && this.idEmpresa){
+        this._router.navigate(['../precios', this.idEmpresa], {relativeTo: this._route});
+      }
+    }
+  }
+
+  protected setIdEmpresa(elem: any) {
+    if(elem && elem.row){
+      this.idEmpresa = elem.row.ide_empr;
     }
   }
 

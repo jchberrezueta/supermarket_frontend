@@ -8,15 +8,14 @@ import { UiTitleComponent } from "@shared/components/title/title.component";
 const breadcumbs = [
   {
     label: 'Dashboard',
-    url: ''
+    url: '/admin'
   },
   {
     label: 'Proveedores',
-    url: ''
   },
   {
     label: 'Empresas',
-    url: ''
+    url: '/admin/proveedores/empresas'
   }
 ];
 

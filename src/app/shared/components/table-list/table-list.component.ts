@@ -124,6 +124,17 @@ export class UiTableListComponent implements OnInit {
     this.rowClickAction.emit({ action, row });
   }
 
+  public selectCheckBox(action: string, row: any) {
+    if(!this.selection.isSelected(row)){
+      this.selection.clear();
+    }
+    this.selection.toggle(row);
+    console.log(this.selection.selected);
+    if(this.selection.isSelected(row)){
+      this.rowClickAction.emit({ action, row})
+    }
+  }
+
   public selectItem(row: any): void {
     if (!this.selection.isSelected(row)) {
       this.selection.select(row);
@@ -132,11 +143,11 @@ export class UiTableListComponent implements OnInit {
   }
 
   public toggleAllRows() {
-    if (!this.isAllSelected()) {
+    /*if (!this.isAllSelected()) {
       this.selection.select(...this.matDatasource.data);
     } else {
       this.selection.clear();
-    }
+    }*/
   }
 
   public isAllSelected(): boolean {
@@ -209,7 +220,7 @@ export class UiTableListComponent implements OnInit {
     this.rutaUpdate = segments.map(p => p).join('/');
   }
 
-    private generateDetailsRoute(segments: string[], id: number) {
+  private generateDetailsRoute(segments: string[], id: number) {
     segments.push('details');
     segments.push(id+'');
     this.rutaDetails = segments.map(p => p).join('/');
