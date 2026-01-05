@@ -10,9 +10,8 @@
         </div>
         @if(open){
             <ul class="options">
-                @for(opt of optionsList; track $index) {
-                    <li (click)="emitValue($event)">{{ opt.label }}</li>
-                }
+                <li (click)="miProfile()">Mi Cuenta</li>
+                <li (click)="logout()">Cerrar Sesión</li>
             </ul>
         }
     </div>

@@ -1,13 +1,5 @@
-import { Component } from '@angular/core';
-
-const options = [
-  {
-    label: 'Mi Cuenta'
-  },
-  {
-    label: 'Cerrar Sesión'
-  }
-];
+import { Component, inject } from '@angular/core';
+import { AuthService } from '@core/services/auth.service';
 
 @Component({
   selector: 'ui-user',
@@ -17,8 +9,8 @@ const options = [
   styleUrl: './user.component.scss'
 })
 export class UiUserComponent {
+  private readonly _authService = inject(AuthService);
   protected genero: string = 'femenino';
-  protected optionsList = options;
   protected open: boolean = false;
    
   constructor() {}
@@ -27,7 +19,11 @@ export class UiUserComponent {
     this.open = !this.open;
   }
 
-  protected emitValue(event: any) {
+  protected miProfile() {
 
+  }
+
+  protected logout() {
+    this._authService.logout();
   }
 }

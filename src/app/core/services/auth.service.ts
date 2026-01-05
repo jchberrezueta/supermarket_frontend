@@ -39,7 +39,7 @@ export class AuthService {
 
   public logout(): void {
     this.clearSession();
-    this._router.navigate(['/login']);
+    this._router.navigate(['/auth/login']);
   }
 
   private clearSession(): void {

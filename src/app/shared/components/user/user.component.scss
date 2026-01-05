@@ -32,7 +32,8 @@
         }
 
         .options {
-            display: none;
+            /*display: none;*/
+            z-index: 2;
             position: absolute;
             top: 110%;
             left: 0;
