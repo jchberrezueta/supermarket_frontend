@@ -131,7 +131,9 @@ export class UiTableListComponent implements OnInit {
     this.selection.toggle(row);
     console.log(this.selection.selected);
     if(this.selection.isSelected(row)){
-      this.rowClickAction.emit({ action, row})
+      this.rowClickAction.emit({ action, row});
+    }else{
+      this.rowClickAction.emit(null);
     }
   }
 

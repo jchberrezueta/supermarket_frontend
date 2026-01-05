@@ -78,7 +78,7 @@ export default class ListComponent {
   protected redirectToEmpresaPrecios(clickAction: string) {
     console.log(this.idEmpresa);
     if(clickAction === 'redirect') {
-      if(this.idEmpresa != -1 && this.idEmpresa){
+      if(this.idEmpresa > -1){
         this._router.navigate(['../precios', this.idEmpresa], {relativeTo: this._route});
       }
     }
@@ -87,6 +87,8 @@ export default class ListComponent {
   protected setIdEmpresa(elem: any) {
     if(elem && elem.row){
       this.idEmpresa = elem.row.ide_empr;
+    }else{
+      this.idEmpresa = -1;
     }
   }
 
