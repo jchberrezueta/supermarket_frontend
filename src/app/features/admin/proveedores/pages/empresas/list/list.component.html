@@ -16,6 +16,7 @@
             <div class="btns_options">
                 <ui-button [label]="'Precios'" [icon]="'attach_money'" [color]="'yellow'" [textColor]="'black'" 
                     [action]="'redirect'" (evntClick)="redirectToEmpresaPrecios($event)"/>
+                <ui-button [icon]="'refresh'" [action]="'refresh'" (evntClick)="refreshData($event)"/>
             </div>
         </div>
         <div class="card_table">

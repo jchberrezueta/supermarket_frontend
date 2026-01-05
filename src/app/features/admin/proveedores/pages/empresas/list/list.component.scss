@@ -23,7 +23,7 @@
             display: flex;
 
             .card_form {
-                width: 90%;
+                width: 85%;
 
                 .card_filters {
                     display: flex;
@@ -48,7 +48,9 @@
 
             .btns_options {
                 flex: 1;
-                
+                display: flex;
+                justify-content: center;
+                gap: 12px;
             }
         }
 

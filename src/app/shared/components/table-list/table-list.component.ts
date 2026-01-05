@@ -83,6 +83,11 @@ export class UiTableListComponent implements OnInit {
     this.hasPermissionsUD();
   }
 
+  public refreshData() {
+    this.requestData(this.serviceApi())
+    this.hasPermissionsUD();
+  }
+
   private requestData(ruta: string) {
     this._restService.get<any>(ruta).subscribe(
       (res) => {

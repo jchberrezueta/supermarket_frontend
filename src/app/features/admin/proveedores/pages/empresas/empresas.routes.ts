@@ -30,9 +30,9 @@ export const empresasRoutes: Routes = [
                 loadComponent: () => import('./details/details.component'),
             },
             {
-                path: 'precios',
+                path: 'precios/:id',
                 canMatch: [canMatchPermisoGuard],
-                loadComponent: () => import('./form/form.component'),
+                loadComponent: () => import('./precios/precios.component'),
                 data: {
                     permises: ['total']
                 }

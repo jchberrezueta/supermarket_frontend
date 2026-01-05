@@ -9,7 +9,7 @@ import { isValidStringValue, FormGroupOf } from '@core/utils/utilities';
 import { IFiltroEmpresa } from 'app/models';
 import { ListEmpresasConfig } from './list_empresas.config';
 import { EmpresasService } from '@services/index';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 const IMPORTS = [
   UiTableListComponent,
@@ -33,6 +33,7 @@ export default class ListComponent {
   protected readonly config = ListEmpresasConfig;
   private readonly _empresasService = inject(EmpresasService);
   private readonly _router = inject(Router);
+  private readonly _route = inject(ActivatedRoute);
   private formBuilder= inject(FormBuilder);
   protected estadosEmpresa!: IComboBoxOption[];
   protected formData!: filterEmpresaFormGroup;
@@ -74,7 +75,14 @@ export default class ListComponent {
 
   protected redirectToEmpresaPrecios(clickAction: string) {
     if(clickAction === 'redirect') {
-      this._router.navigate(['']);
+      this._router.navigate(['../precios', 1], {relativeTo: this._route});
+    }
+  }
+
+  protected refreshData(actionClick: string){
+    if(actionClick === 'refresh'){
+      const tableListInstance = this._tableList();
+      tableListInstance.refreshData();
     }
   }
 }

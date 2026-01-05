@@ -26,11 +26,11 @@ type EmpresaFormGroup = FormGroupOf<IEmpresa>;
 
 
 @Component({
-  selector: 'app-form',
+  selector: 'app-precios',
   standalone: true,
   imports: IMPORTS,
-  templateUrl: './empresas-precios.component.html',
-  styleUrl: './empresas-precios.component.scss'
+  templateUrl: './precios.component.html',
+  styleUrl: './precios.component.scss'
 })
 export default class EmpresasPreciosComponent {
   
