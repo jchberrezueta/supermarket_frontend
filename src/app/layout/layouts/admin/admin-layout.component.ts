@@ -18,10 +18,10 @@ const IMPORTS = [
   selector: 'app-layout-admin',
   standalone: true,
   imports: IMPORTS,
-  templateUrl: './admin.component.html',
-  styleUrl: './admin.component.scss'
+  templateUrl: './admin-layout.component.html',
+  styleUrl: './admin-layout.component.scss'
 })
-export default class AdminComponent {
+export default class AdminLayoutComponent {
   protected readonly _sidebarService = inject(SidebarService);
 
   constructor() {}

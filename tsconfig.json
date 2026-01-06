@@ -8,7 +8,7 @@
       "@shared/*": ["app/shared/*"],
       "@models": ["app/models/index"],
       "@services/*": ["app/services/admin/*"],
-      "@layout/*": ["app/layout/layouts/*"],
+      "@layout/*": ["app/layout/layouts/index"],
       "@guards/*": ["app/core/guards/*"],
       "@envs/*": ["environments/*"]
     },

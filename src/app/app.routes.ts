@@ -13,13 +13,13 @@ export const routes: Routes = [
       path: 'admin',
       title: 'SuperMarket',
       canMatch: [canMatchAutgGuard],
-      loadComponent: () => import('./layout/layouts/admin/admin.component'),
+      loadComponent: () => import('./layout/layouts/admin/admin-layout.component'),
       loadChildren: () => import('./features/admin/admin.routes')
     },
     {
       path: 'landing',
       title: 'Inicio',
-      loadComponent: () => import('./layout/layouts/landing/landing.component'),
+      loadComponent: () => import('./layout/layouts/landing/landing-layout.component'),
       loadChildren: () => import('./features/landing/landing.routes')
     },
     {

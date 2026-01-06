@@ -1,1 +1,30 @@
-<div>Landing Home Trabajando jsjjs</div>
+<section class="home">
+
+  <!-- BANNER -->
+  <div class="banner">
+    <div class="banner__content">
+      <h1>{{ slides[currentSlide()].title }}</h1>
+      <p>{{ slides[currentSlide()].text }}</p>
+      <button (click)="next()">Siguiente</button>
+    </div>
+  </div>
+
+  <!-- INFO -->
+  <section class="info">
+    <div class="info-card">
+      <h3>Variedad</h3>
+      <p>Encuentra productos de alimentación, limpieza, hogar y más.</p>
+    </div>
+
+    <div class="info-card">
+      <h3>Precios justos</h3>
+      <p>Ofertas constantes y precios pensados para tu familia.</p>
+    </div>
+
+    <div class="info-card">
+      <h3>Compra online</h3>
+      <p>Haz tu pedido desde casa y recíbelo de forma segura.</p>
+    </div>
+  </section>
+
+</section>
