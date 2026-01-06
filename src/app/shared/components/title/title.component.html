@@ -3,14 +3,16 @@
         <h2 class="title">{{getTitle}}</h2>
     </div>
     <div class="div_button">
-        @if(canInsert){
-            <ui-button 
-                [label]="'Agregar'" 
-                [icon]="'add'" 
-                [color]="'green'" 
-                [action]="'add'" 
-                (evntClick)="redirect($event)"
-            />
+        @if (showAddButton()) {
+            @if(canInsert){
+                <ui-button 
+                    [label]="'Agregar'" 
+                    [icon]="'add'" 
+                    [color]="'green'" 
+                    [action]="'add'" 
+                    (evntClick)="redirect($event)"
+                />
+            }
         }
     </div>
 </div>

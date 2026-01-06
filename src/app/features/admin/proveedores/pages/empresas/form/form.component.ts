@@ -39,7 +39,7 @@ export default class FormComponent {
   private readonly formBuilder = inject(FormBuilder);
   public location = inject(Location);
   protected formData!: EmpresaFormGroup;
-  private isAdd: boolean = true;
+  protected isAdd: boolean = true;
   private idParam: number = -1;
 
   constructor() {
@@ -47,10 +47,8 @@ export default class FormComponent {
   }
 
   ngOnInit() {
-    
     const idParam = this._route.snapshot.params['id'];
     this.initForm();
-    
     if(idParam){
       this.setData(idParam);
     }
@@ -58,7 +56,7 @@ export default class FormComponent {
 
   protected initForm(): void {
     this.formData = this.formBuilder.group({
-        ideEmp: [-1, [Validators.required], []],
+        ideEmp: [{ value: -1, disabled: true }, [Validators.required]],        
         nombreEmp: ['', [Validators.required], []],
         responsableEmp: ['', [Validators.required], []],
         fechaContratoEmp: ['', [Validators.required], []],
@@ -74,7 +72,6 @@ export default class FormComponent {
     this._empresasService.buscar(idParam).subscribe(
       (res) => {
         const empresa = res.data[0] as IEmpresaResult;
-        console.log(empresa);
         this.idParam = empresa.ide_empr;
         this.isAdd = false;
         this.formData.patchValue({
@@ -95,17 +92,16 @@ export default class FormComponent {
   private loadEstadosEmpresa() {
     this._empresasService.listarEstados().subscribe(
       (res) => {
-        console.log(res);
         this.estadosEmpresa = res;
       }
     );
   }
 
   protected guardar(): void {
-    console.log(this.formData.value)
     if(!this.formData.invalid){
-      const data = this.formData.value as IEmpresa;
+      const data = this.formData.getRawValue() as IEmpresa;
       if(this.isAdd){
+        data.ideEmp = -1;
         this._empresasService.insertar(data).subscribe(
           (res) => {
             Swal.fire({
@@ -128,6 +124,7 @@ export default class FormComponent {
           confirmButtonText: "Si, de acuerdo"
         }).then((result) => {
           if (result.isConfirmed) {
+            data.ideEmp = this.idParam;
             this._empresasService.actualizar(this.idParam, data).subscribe(
               (res) => {
                 Swal.fire({
