@@ -1,4 +1,4 @@
-import { Component, forwardRef, input, output } from '@angular/core';
+import { Component, effect, forwardRef, input, output } from '@angular/core';
 import { IComboBoxOption } from '@shared/models/combo_box_option';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
@@ -40,6 +40,13 @@ export class UiComboBoxComponent implements ControlValueAccessor {
   public onChange = (value: any) => {};
   public onTouched = () => {};
 
+  constructor() {
+    effect(() => {
+      this.options(); // dependencia
+      this.syncSelection();
+    });
+  }
+
   protected toggle() {
     this.open = !this.open;
   }
@@ -64,9 +71,17 @@ export class UiComboBoxComponent implements ControlValueAccessor {
 
   // Método obligatorio: escribir el valor desde el form
   writeValue(value: any): void {
-    if(value){
-      this.selectedValue = value;
-      this.selectedLabel = this.getOptions.find((obj) => value === obj.value)?.label || null;
+    this.selectedValue = value;
+    this.syncSelection();
+  }
+
+  syncSelection() {
+    const options = this.options?.();
+    if (!options || !options.length) return;
+    if (this.selectedValue == null) return;
+    const labelFound = options.find(op => op.value === this.selectedValue)?.label;
+    if (labelFound) {
+      this.selectedLabel = labelFound;
     }
   }
 

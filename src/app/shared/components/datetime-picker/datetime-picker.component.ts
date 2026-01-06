@@ -30,11 +30,12 @@ const PROVIDERS = [
 })
 export class UiDatetimePickerComponent implements ControlValueAccessor {
   public label = input.required<string>();
+  public isTime = input<boolean>(false);
   public showHint = input<boolean>(false);
   public evntDateChange = output<Date>();
   public onChange = (value: any) => {};
   public onTouched = () => {};
-  public value: string | null  = '';
+  public value: string | null  = null;
   public disabled = false;
 
   constructor() {}
@@ -67,7 +68,7 @@ export class UiDatetimePickerComponent implements ControlValueAccessor {
     // Ajuste de timezone para datetime-local
     fecha = new Date(fecha.getTime() - fecha.getTimezoneOffset() * 60000);
     const formatted = fecha.toISOString().slice(0, 16);
-    this.value = formatted;
+    this.value = formatted;    
   }
 
 
@@ -88,6 +89,7 @@ export class UiDatetimePickerComponent implements ControlValueAccessor {
 
   // Se ejecuta cuando el usuario escribe
   public updateValue(event: any) {
+    console.log(event.target.value);
     this.onChange(event.target.value);   // notifica al formulario
   }
 }

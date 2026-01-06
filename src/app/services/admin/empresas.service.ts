@@ -30,7 +30,7 @@ export class EmpresasService {
   }
 
   public actualizar(id: number, body: IEmpresa) {
-    return this._restService.post<any>(`${this.apiUrl}/actualizar/${id}`, body);
+    return this._restService.put<any>(`${this.apiUrl}/actualizar/${id}`, body);
   }
 
   public eliminar(id: number) {

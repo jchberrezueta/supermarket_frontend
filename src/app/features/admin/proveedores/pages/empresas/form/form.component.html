@@ -6,7 +6,7 @@
                     <div class="form_info">
                         <div class="form_div form_div_1">
                             <ui-text-field [label]="'Empresa'" formControlName="nombreEmp"/>
-                            <ui-datetime-picker [label]="'Fecha Contrato'" formControlName="fechaContratoEmp"/>
+                            <ui-datetime-picker [label]="'Fecha Contrato'"  [isTime]="true"  formControlName="fechaContratoEmp"/>
                             <ui-text-field [label]="'Telefono'" formControlName="telefonoEmp"/>
                             <ui-text-area [label]="'Direccion'" formControlName="direccionEmp"/>
                         </div>

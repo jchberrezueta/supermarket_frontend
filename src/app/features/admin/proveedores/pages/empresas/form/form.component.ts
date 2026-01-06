@@ -24,8 +24,6 @@ const IMPORTS = [
 
 type EmpresaFormGroup = FormGroupOf<IEmpresa>;
 
-
-
 @Component({
   selector: 'app-form',
   standalone: true,
@@ -35,7 +33,7 @@ type EmpresaFormGroup = FormGroupOf<IEmpresa>;
 })
 export default class FormComponent {
   
-  protected readonly estadosEmpresa: IComboBoxOption[] = ListEstadosEmpresa;
+  protected estadosEmpresa!: IComboBoxOption[];
   private readonly _route = inject(ActivatedRoute);
   private readonly _empresasService = inject(EmpresasService);
   private readonly formBuilder = inject(FormBuilder);
@@ -45,13 +43,22 @@ export default class FormComponent {
   private idParam: number = -1;
 
   constructor() {
-    this.configForm();
+    this.loadEstadosEmpresa();
   }
 
-  protected configForm(): void {
+  ngOnInit() {
+    
     const idParam = this._route.snapshot.params['id'];
+    this.initForm();
+    
+    if(idParam){
+      this.setData(idParam);
+    }
+  }
+
+  protected initForm(): void {
     this.formData = this.formBuilder.group({
-        ideEmp: [-1, [], []],
+        ideEmp: [-1, [Validators.required], []],
         nombreEmp: ['', [Validators.required], []],
         responsableEmp: ['', [Validators.required], []],
         fechaContratoEmp: ['', [Validators.required], []],
@@ -61,29 +68,41 @@ export default class FormComponent {
         estadoEmp: ['', [Validators.required], []],
         descripcionEmp: ['', [Validators.required], []]
       }) as EmpresaFormGroup;
-    if(idParam){
-      this._empresasService.buscar(idParam).subscribe(
-        (res) => {
-          const empresa = res.data[0] as IEmpresaResult;
-          this.idParam = empresa.ide_empr;
-          this.isAdd = false;
-          this.formData.patchValue({
-            ideEmp: empresa.ide_empr,
-            nombreEmp: empresa.nombre_empr,
-            responsableEmp: empresa.responsable_empr,
-            fechaContratoEmp: empresa.fecha_contrato_empr,
-            direccionEmp: empresa.direccion_empr,
-            telefonoEmp: empresa.telefono_empr,
-            emailEmp: empresa.email_empr,
-            estadoEmp: empresa.estado_empr,
-            descripcionEmp: empresa.descripcion_empr
-          });
-        }
-      )
-    }
+  }
+
+  private setData(idParam: number) {
+    this._empresasService.buscar(idParam).subscribe(
+      (res) => {
+        const empresa = res.data[0] as IEmpresaResult;
+        console.log(empresa);
+        this.idParam = empresa.ide_empr;
+        this.isAdd = false;
+        this.formData.patchValue({
+          ideEmp: empresa.ide_empr,
+          nombreEmp: empresa.nombre_empr,
+          responsableEmp: empresa.responsable_empr,
+          fechaContratoEmp: empresa.fecha_contrato_empr,
+          direccionEmp: empresa.direccion_empr,
+          telefonoEmp: empresa.telefono_empr,
+          emailEmp: empresa.email_empr,
+          estadoEmp: empresa.estado_empr,
+          descripcionEmp: empresa.descripcion_empr
+        });
+      }
+    )
+  }
+
+  private loadEstadosEmpresa() {
+    this._empresasService.listarEstados().subscribe(
+      (res) => {
+        console.log(res);
+        this.estadosEmpresa = res;
+      }
+    );
   }
 
   protected guardar(): void {
+    console.log(this.formData.value)
     if(!this.formData.invalid){
       const data = this.formData.value as IEmpresa;
       if(this.isAdd){

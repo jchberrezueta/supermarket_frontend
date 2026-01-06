@@ -1,11 +1,22 @@
 <div class="div_container">
     <div class="div_datetime">
-        <input type="datetime-local" required
-            (change)="updateValue($event)"
-            [disabled]="disabled"
-            [value]="value"
-            (blur)="onTouched()"
-        >
+        @if(isTime()) {
+            <input type="datetime-local" required #inp_fecha
+                (input)="updateValue($event)"
+                (change)="updateValue($event)"
+                [disabled]="disabled"
+                [value]="value"
+                (blur)="onTouched()"
+            >
+        }@else{
+            <input type="date" required #inp_fecha
+                (input)="updateValue($event)"
+                [disabled]="disabled"
+                [value]="value"
+                (blur)="onTouched()"
+            >
+        }
+       
         <label>{{getLabel}}</label>
     </div>
 </div>
