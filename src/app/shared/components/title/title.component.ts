@@ -14,7 +14,7 @@ export class UiTitleComponent {
   private readonly _router = inject(Router);
   private readonly _authService = inject(AuthService);
   public title = input.required<string>();
-  public showAddButton = input<boolean>(true);
+  public showAddButton = input<boolean>(false);
   private rutaActual: string = '';
   private rutaInsert: string = '';
   protected canInsert: boolean = false;
@@ -40,8 +40,12 @@ export class UiTitleComponent {
   private getSegmentsRoute(): string[] {
     const segments = this._router.url.split('/');
     const posFinal = segments.length-1;
-    if(segments[posFinal] === 'list'){
+    if(segments[posFinal] === 'list' || segments[posFinal] === 'insert'){
       segments.pop(); 
+    }
+    else if(/[0-9]/.test(segments[posFinal])) {
+      segments.pop();
+      segments.pop();  
     }
     return segments;
   }
