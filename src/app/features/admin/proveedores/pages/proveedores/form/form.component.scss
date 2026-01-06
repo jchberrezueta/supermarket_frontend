@@ -1,0 +1,73 @@
+:host {
+    width: 100%;
+    height: 100%;
+}
+
+.div_container {
+    width: 100%;
+    height: 100%;
+
+    .div_card {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        background-color: #FFFFFF;
+        border-radius: 10px;
+
+        .panel_1 {
+            width: 60%;
+            height: 100%;
+            padding: 30px;
+
+            .card_form {
+                background-color: rgba(241, 245, 249);
+                border-radius: 20px;
+                width: 100%;
+                padding: 50px;
+                /*display: flex;
+                justify-content: center;
+                align-items: center;*/
+                .form {
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 30px;
+
+                    .form_info {
+                        display: flex;
+                        gap: 20px;
+                        justify-content: center;
+
+                        .form_div {
+                            display: flex;
+                            flex-direction: column;
+                            gap: 25px;
+                        }
+                    }
+
+                    .form_buttons {
+                        display: flex;
+                        gap: 10px;
+                        justify-content: center;
+                        align-items: center;
+                    }
+                }
+            }
+        }
+        .panel_2 {
+            flex: 1;
+            height: 100%;
+
+            .panel_2_img {
+                width: 100%;
+                height: 100%;
+                background-image: url('/imgs/img_prov_emp.jpg');
+                background-repeat: no-repeat;
+                background-size: cover;
+                background-position: center;
+            }
+        }
+        
+    }
+}

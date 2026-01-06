@@ -1,1 +1,30 @@
-<p>proveedores Accesos works!</p>
+<div class="div_container">
+    <ui-card [showHeader]="true" class="div_card">
+        <div class="card_top" card-header>
+            <form [formGroup]="formData" (ngSubmit)="filtrar()" class="card_form">
+                <div class="card_filters">
+                    <div class="selects">
+                        <ui-text-field [label]="'Empresa'" formControlName="nombreEmp"/>
+                        <ui-text-field [label]="'Responsable'" formControlName="responsableEmp"/>
+                        <ui-combo-box [label]="'Estados'" [options]="estadosEmpresa" formControlName="estadoEmp"/>
+                    </div>
+                    <div class="filter_btn">
+                        <ui-button [label]="'Filtrar'" [icon]="'filter_alt'"/>
+                    </div>
+                </div>
+            </form>
+            <div class="btns_options">
+                <ui-button [label]="'Precios'" [icon]="'attach_money'" [color]="'yellow'" [textColor]="'black'" 
+                    [action]="'redirect'" (evntClick)="redirectToEmpresaPrecios($event)"/>
+                <ui-button [icon]="'refresh'" [action]="'refresh'" (evntClick)="refreshData($event)"/>
+            </div>
+        </div>
+        <div class="card_table">
+            <ui-table-list #tableList [serviceApi]="'proveedores'" [columns]="config.columns" [isSelection]="true"
+                (rowClickAction)="setIdEmpresa($event)"/>
+        </div>
+    </ui-card>
+</div>
+
+
+

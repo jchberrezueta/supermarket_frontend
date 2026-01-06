@@ -82,12 +82,12 @@ export class UiTableListComponent implements OnInit {
   ngOnInit() {
     this.selection = new SelectionModel<any>(this.isSelection(), []);
     this.loadColumns();
-    this.requestData(this.serviceApi())
+    this.requestData(this.serviceApi());
     this.hasPermissionsUD();
   }
 
   public refreshData() {
-    this.requestData(this.serviceApi())
+    this.requestData(this.serviceApi());
     this.hasPermissionsUD();
   }
 
@@ -130,7 +130,6 @@ export class UiTableListComponent implements OnInit {
       this.selection.clear();
     }
     this.selection.toggle(row);
-    console.log(this.selection.selected);
     if(this.selection.isSelected(row)){
       this.rowClickAction.emit({ action, row});
     }else{
@@ -214,7 +213,9 @@ export class UiTableListComponent implements OnInit {
   }
 
   protected redirectToUrl(clickAction: string, url:string='') {
-    this._router.navigate([url]);
+    if(clickAction === 'redirect') {
+      this._router.navigate([url]);
+    }
   }
 
   private generateUpdateRoute(segments: string[], id: number) {
