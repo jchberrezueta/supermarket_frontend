@@ -8,6 +8,11 @@ export const authRoutes: Routes = [
         path: 'login',
         title: 'Login',
         loadComponent: () => import('./pages/login/login.component')
+    },
+    {
+        path: 'change-password',
+        title: 'Actualizar Clave',
+        loadComponent: () => import('./pages/change-password/change-password.component')
     }
 ];
 

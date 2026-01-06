@@ -7,6 +7,7 @@ export const routes: Routes = [
     },
     { 
       path: 'auth', 
+      loadComponent: () => import('./layout/layouts/auth/auth-layout.component'),
       loadChildren: () => import('./features/auth/auth.routes')  
     },
     {
@@ -25,7 +26,12 @@ export const routes: Routes = [
     {
       path: 'inexistente',
       title: 'Pagina no encontrada',
-      loadComponent: () => import('./features/landing/pages/inexistente/inexistente.component')
+      loadComponent: () => import('./shared/components/inexistente/inexistente.component')
+    },
+    {
+      path: 'no-autorizado',
+      title: 'No Autorizado',
+      loadComponent: () => import('./shared/components/no-autorizado/no-autorizado.component')
     },
     {
       path: '**', redirectTo: 'inexistente'    

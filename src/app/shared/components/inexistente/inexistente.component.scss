@@ -1,0 +1,66 @@
+.notfound-container {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+
+  background-color: #f3f4f6;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.notfound-card {
+  background-color: #ffffff;
+  padding: 36px 32px;
+  border-radius: 14px;
+  text-align: center;
+  max-width: 420px;
+  width: 100%;
+
+  box-shadow:
+    0 10px 25px rgba(0, 0, 0, 0.08),
+    0 2px 6px rgba(0, 0, 0, 0.04);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.code {
+  font-size: 88px;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 10px;
+  color: #6366f1; // morado sobrio
+}
+
+h2 {
+  margin: 0 0 12px;
+  font-size: 20px;
+  font-weight: 600;
+  color: #374151;
+}
+
+p {
+  margin: 0 0 24px;
+  font-size: 14.5px;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+.back-btn {
+  text-decoration: none;
+  background-color: #6366f1;
+  color: #ffffff;
+
+  padding: 10px 22px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: #4f46e5;
+  }
+}
