@@ -1,7 +1,6 @@
 import { inject, Injectable } from '@angular/core';
-import { IResultData } from '@core/models';
 import { RestService } from '@core/services/rest.service';
-import { ICuenta } from '@models';
+import { ICuenta, IResultDataCuenta } from '@models';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -11,12 +10,12 @@ export class CuentasService {
   private readonly _restService = inject(RestService);
   private readonly apiUrl = 'cuentas';
 
-  public listar(): Observable<IResultData> {
-    return this._restService.get<IResultData>(`${this.apiUrl}`);
+  public listar(): Observable<IResultDataCuenta> {
+    return this._restService.get<IResultDataCuenta>(`${this.apiUrl}`);
   }
 
-  public buscar(id: number): Observable<IResultData> {
-    return this._restService.get<IResultData>(`${this.apiUrl}/buscar/${id}`);
+  public buscar(id: number): Observable<IResultDataCuenta> {
+    return this._restService.get<IResultDataCuenta>(`${this.apiUrl}/buscar/${id}`);
   }
 
   public insertar(body: ICuenta) {

@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { IResultData } from '@core/models';
 import { RestService } from '@core/services/rest.service';
-import { IEmpleado } from '@models';
+import { IEmpleado, IResultDataEmpleado } from '@models';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -11,12 +11,12 @@ export class EmpleadosService {
 private readonly _restService = inject(RestService);
   private readonly apiUrl = 'empleados';
 
-  public listar(): Observable<IResultData> {
-    return this._restService.get<IResultData>(`${this.apiUrl}`);
+  public listar(): Observable<IResultDataEmpleado> {
+    return this._restService.get<IResultDataEmpleado>(`${this.apiUrl}`);
   }
 
-  public buscar(id: number): Observable<IResultData> {
-    return this._restService.get<IResultData>(`${this.apiUrl}/buscar/${id}`);
+  public buscar(id: number): Observable<IResultDataEmpleado> {
+    return this._restService.get<IResultDataEmpleado>(`${this.apiUrl}/buscar/${id}`);
   }
 
   public insertar(body: IEmpleado) {

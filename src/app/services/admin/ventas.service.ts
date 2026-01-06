@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { IResultData } from '@core/models';
 import { RestService } from '@core/services/rest.service';
-import { IVenta } from '@models';
+import { IResultDataVenta, IVenta } from '@models';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -11,12 +11,12 @@ export class VentasService {
   private readonly _restService = inject(RestService);
   private readonly apiUrl = 'ventas';
 
-  public listar(): Observable<IResultData> {
-    return this._restService.get<IResultData>(`${this.apiUrl}`);
+  public listar(): Observable<IResultDataVenta> {
+    return this._restService.get<IResultDataVenta>(`${this.apiUrl}`);
   }
 
-  public buscar(id: number): Observable<IResultData> {
-    return this._restService.get<IResultData>(`${this.apiUrl}/buscar/${id}`);
+  public buscar(id: number): Observable<IResultDataVenta> {
+    return this._restService.get<IResultDataVenta>(`${this.apiUrl}/buscar/${id}`);
   }
 
   public insertar(body: IVenta) {

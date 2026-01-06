@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { IResultData } from '@core/models';
 import { RestService } from '@core/services/rest.service';
-import { ILote } from '@models';
+import { ILote, IResultDataLote } from '@models';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -11,12 +11,12 @@ export class LotesService {
   private readonly _restService = inject(RestService);
   private readonly apiUrl = 'lotes';
 
-  public listar(): Observable<IResultData> {
-    return this._restService.get<IResultData>(`${this.apiUrl}`);
+  public listar(): Observable<IResultDataLote> {
+    return this._restService.get<IResultDataLote>(`${this.apiUrl}`);
   }
 
-  public buscar(id: number): Observable<IResultData> {
-    return this._restService.get<IResultData>(`${this.apiUrl}/buscar/${id}`);
+  public buscar(id: number): Observable<IResultDataLote> {
+    return this._restService.get<IResultDataLote>(`${this.apiUrl}/buscar/${id}`);
   }
 
   public insertar(body: ILote) {

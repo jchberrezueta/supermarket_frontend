@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { IResultData } from '@core/models';
 import { RestService } from '@core/services/rest.service';
-import { IRol } from '@models';
+import { IResultDataRol, IRol } from '@models';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -11,12 +11,12 @@ export class RolesService {
   private readonly _restService = inject(RestService);
   private readonly apiUrl = 'roles';
 
-  public listar(): Observable<IResultData> {
-    return this._restService.get<IResultData>(`${this.apiUrl}`);
+  public listar(): Observable<IResultDataRol> {
+    return this._restService.get<IResultDataRol>(`${this.apiUrl}`);
   }
 
-  public buscar(id: number): Observable<IResultData> {
-    return this._restService.get<IResultData>(`${this.apiUrl}/buscar/${id}`);
+  public buscar(id: number): Observable<IResultDataRol> {
+    return this._restService.get<IResultDataRol>(`${this.apiUrl}/buscar/${id}`);
   }
 
   public insertar(body: IRol) {

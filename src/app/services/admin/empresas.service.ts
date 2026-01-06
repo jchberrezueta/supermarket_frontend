@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 
 import { IComboBoxOption } from '@shared/models/combo_box_option';
 import { IResultData } from '@core/models';
-import { IEmpresa } from '@models';
+import { IEmpresa, IResultDataEmpresa } from '@models';
 
 @Injectable({
   providedIn: 'root'
@@ -13,12 +13,12 @@ export class EmpresasService {
   private readonly _restService = inject(RestService);
   private readonly apiUrl = 'empresas';
 
-  public listar(): Observable<IResultData> {
-    return this._restService.get<IResultData>(`${this.apiUrl}`);
+  public listar(): Observable<IResultDataEmpresa> {
+    return this._restService.get<IResultDataEmpresa>(`${this.apiUrl}`);
   }
 
-  public buscar(id: number): Observable<IResultData> {
-    return this._restService.get<IResultData>(`${this.apiUrl}/buscar/${id}`);
+  public buscar(id: number): Observable<IResultDataEmpresa> {
+    return this._restService.get<IResultDataEmpresa>(`${this.apiUrl}/buscar/${id}`);
   }
 
   public listarEstados(): Observable<IComboBoxOption[]> {
