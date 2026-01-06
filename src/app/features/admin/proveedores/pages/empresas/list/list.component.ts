@@ -10,12 +10,14 @@ import { IEmpresaResult, IFiltroEmpresa } from 'app/models';
 import { ListEmpresasConfig } from './list_empresas.config';
 import { EmpresasService } from '@services/index';
 import { ActivatedRoute, Router } from '@angular/router';
+import { UiCardComponent } from '@shared/components/card/card.component';
 
 const IMPORTS = [
   UiTableListComponent,
   UiButtonComponent,
   UiComboBoxComponent,
   UiTextFieldComponent,
+  UiCardComponent,
   ReactiveFormsModule
 ];
 

@@ -1,11 +1,10 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { 
   UiHeaderComponent, 
   UiSidebarComponent
 } from '@shared/components/index';
 import { UiLoadingComponent } from '@shared/components/loading/loading.component';
-import { LoadingService } from '@shared/services/loading.service';
 import { SidebarService } from '@shared/services/sidebar.service';
 
 const IMPORTS = [

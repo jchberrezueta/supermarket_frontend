@@ -1,1 +1,21 @@
-<p>card works!</p>
+<div class="div_container">
+  <div class="ui-card">
+
+    @if (header()) {
+      <div class="ui-card__header">
+        <ng-content select="[card-header]"></ng-content>
+      </div>
+    }
+
+    <div class="ui-card__body">
+      <ng-content></ng-content>
+    </div>
+
+    @if (footer()) {
+      <div class="ui-card__footer">
+        <ng-content select="[card-footer]"></ng-content>
+      </div>
+    }
+
+  </div>
+</div>

@@ -1,0 +1,41 @@
+:host {
+  width: 100%;
+  height: 100%;
+}
+
+.div_container {
+  width: 100%;
+  height: 100%;
+
+  .ui-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+
+    padding: 16px;
+    margin-bottom: 16px;
+
+    box-shadow:
+      0 2px 4px rgba(0, 0, 0, 0.04),
+      0 6px 12px rgba(0, 0, 0, 0.06);
+
+    display: flex;
+    flex-direction: column;
+
+    /* HEADER */
+    .ui-card__header {
+      margin-bottom: 12px;
+    }
+
+    /* BODY */
+    .ui-card__body {
+      flex: 1;
+    }
+
+    /* FOOTER */
+    .ui-card__footer {
+      margin-top: 16px;
+      padding-top: 12px;
+      border-top: 1px solid #e5e7eb;
+    }
+  }
+}

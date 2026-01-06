@@ -1,6 +1,6 @@
 <div class="div_container">
-    <div class="div_card">
-        <div class="card_top">
+    <ui-card [showHeader]="true" class="div_card">
+        <div class="card_top" card-header>
             <form [formGroup]="formData" (ngSubmit)="filtrar()" class="card_form">
                 <div class="card_filters">
                     <div class="selects">
@@ -23,7 +23,7 @@
             <ui-table-list #tableList [serviceApi]="'empresas'" [columns]="config.columns" [isSelection]="true"
                 (rowClickAction)="setIdEmpresa($event)"/>
         </div>
-    </div>
+    </ui-card>
 </div>
 
 
