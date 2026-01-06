@@ -18,10 +18,15 @@
             width: 60px;
             height: 60px;
             cursor: pointer;
-
+            
             img {
                 width: 100%;
                 height: 100%;
+                transition: filter 0.2s ease;
+
+                &:hover {
+                    filter: brightness(1.2);
+                }
             }
 
             &.active {
@@ -60,3 +65,4 @@
         }
     }
 }
+
