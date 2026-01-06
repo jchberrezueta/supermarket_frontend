@@ -23,6 +23,7 @@ import { AuthService } from '@core/services/auth.service';
 
 import Swal from 'sweetalert2'
 import { LoadingService } from '@shared/services/loading.service';
+import { IResultData } from '@core/models';
 
 const IMPORTS = [
   MatPaginatorModule,
@@ -92,7 +93,7 @@ export class UiTableListComponent implements OnInit {
 
   private requestData(ruta: string) {
     this._loadingService.show();
-    this._restService.get<any>(ruta).subscribe(
+    this._restService.get<IResultData>(ruta).subscribe(
       (res) => {
         this.data.set(res.data);
         this.matDatasource.data = this.data();
