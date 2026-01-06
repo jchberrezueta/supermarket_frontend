@@ -4,7 +4,3 @@ export interface ITableListConfig {
     columns: ITableColumn[];
     dataKey: string;
 }
-
-interface IBreadCumb {
-    label: string;
-}

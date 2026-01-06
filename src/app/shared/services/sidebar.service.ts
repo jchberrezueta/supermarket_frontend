@@ -5,21 +5,23 @@ import { Injectable, signal } from '@angular/core';
 })
 export class SidebarService {
 
-    public close = signal<boolean>(false);
+    private _close = signal<boolean>(false);
+
+    close = this._close.asReadonly();
 
     get getCloseStatus() {
         return this.close();
     }
 
     toggle() {
-        this.close.update(v => !v);
+        this._close.update(v => !v);
     }
 
     openSidebar() {
-        this.close.set(false);
+        this._close.set(false);
     }
 
     closeSidebar() {
-        this.close.set(true);
+        this._close.set(true);
     }
 }
