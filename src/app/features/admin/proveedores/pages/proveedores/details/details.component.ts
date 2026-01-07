@@ -28,7 +28,7 @@ export default class DetailsComponent {
   private readonly _proveedoresService = inject(ProveedoresService);
   public location = inject(Location);
 
-  protected proveedor!: IProveedorResult;
+  protected proveedor!: any;
   protected idProv = -1;
 
   ngOnInit(): void {
@@ -40,8 +40,8 @@ export default class DetailsComponent {
   }
 
   private loadProveedor(): void {
-    this._proveedoresService.buscar(this.idProv).subscribe(res => {
-      this.proveedor = res.data[0] as IProveedorResult;
+    this._proveedoresService.buscarProveedor(this.idProv).subscribe(res => {
+      this.proveedor = res.data[0];
     });
   }
 

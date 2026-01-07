@@ -4,15 +4,15 @@
             <input type="datetime-local" required #inp_fecha
                 (input)="updateValue($event)"
                 (change)="updateValue($event)"
-                [disabled]="disabled"
-                [value]="value"
+                [disabled]="_isDisabled()"
+                [value]="innerValue()"
                 (blur)="onTouched()"
             >
         }@else{
             <input type="date" required #inp_fecha
                 (input)="updateValue($event)"
-                [disabled]="disabled"
-                [value]="value"
+                [disabled]="_isDisabled()"
+                [value]="innerValue()"
                 (blur)="onTouched()"
             >
         }

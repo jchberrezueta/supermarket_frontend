@@ -30,7 +30,7 @@ const PROVIDERS = [
 })
 export class UiDatetimePickerComponent implements ControlValueAccessor {
   public label = input.required<string>();
-  public value = input<any>('');
+  public value = input<string>('');
   public disabled = input<boolean>(false);
   public isTime = input<boolean>(false);
   public showHint = input<boolean>(false);
@@ -43,7 +43,7 @@ export class UiDatetimePickerComponent implements ControlValueAccessor {
   constructor() {
     effect(() => {
       if (this.value() !== undefined && this.value() !== '') {
-        this.innerValue.set(this.value());
+        this.writeValue(this.value());
       }
     },
     { allowSignalWrites: true });
@@ -77,14 +77,15 @@ export class UiDatetimePickerComponent implements ControlValueAccessor {
     // Validar fecha
     if (isNaN(fecha.getTime())) {
       console.warn("Fecha inválida recibida:", value);
-      this.value = null;
+      this.innerValue.set('');
       return;
     }
     // Ajuste de timezone para datetime-local
     fecha = new Date(fecha.getTime() - fecha.getTimezoneOffset() * 60000);
     const formatted = fecha.toISOString().slice(0, 16);
-    this.value = formatted; 
+    this.innerValue.set(formatted);
     this.onChange(value);  
+    console.log(formatted)
   }
 
 
@@ -100,11 +101,12 @@ export class UiDatetimePickerComponent implements ControlValueAccessor {
 
   // Si el formulario deshabilita el control
   public setDisabledState(isDisabled: boolean) {
-    this.disabled = isDisabled;
+    this._isDisabled.set(isDisabled);
   }
 
   // Se ejecuta cuando el usuario escribe
   public updateValue(event: any) {
+    this.innerValue.set(event.target.value);
     this.onChange(event.target.value);   // notifica al formulario
   }
 }

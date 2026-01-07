@@ -32,6 +32,10 @@ export class ProveedoresService {
     return this._restService.delete<any>(`${this.apiUrl}/eliminar/${id}`);
   }
 
+  public buscarProveedor(id: number): Observable<IResultData> {
+    return this._restService.get<IResultData>(`${this.apiUrl}/buscar/proveedor/${id}`);
+  }
+
 
   public listarComboCedula(): Observable<IComboBoxOption[]> {
     return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/proveedores/combo/cedula`);
