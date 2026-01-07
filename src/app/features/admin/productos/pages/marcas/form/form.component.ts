@@ -78,7 +78,7 @@ export default class FormComponent {
 
   protected guardar() {
     const data = this.formData.getRawValue() as IMarca;
-
+    console.log(data);
     if (!this.formData.valid) {
       Swal.fire('Oops', 'Faltan datos obligatorios', 'info');
       return;
