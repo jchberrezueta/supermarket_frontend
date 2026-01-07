@@ -1,4 +1,4 @@
-import { Component, forwardRef, input, output, signal, effect, ɵINPUT_SIGNAL_BRAND_WRITE_TYPE, SimpleChanges } from '@angular/core';
+import { Component, forwardRef, input, output, signal, effect, SimpleChanges } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';

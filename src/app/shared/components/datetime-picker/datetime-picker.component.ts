@@ -1,4 +1,4 @@
-import { Component, forwardRef, input, output } from '@angular/core';
+import { Component, effect, forwardRef, input, output, signal, SimpleChanges } from '@angular/core';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -30,15 +30,30 @@ const PROVIDERS = [
 })
 export class UiDatetimePickerComponent implements ControlValueAccessor {
   public label = input.required<string>();
+  public value = input<any>('');
+  public disabled = input<boolean>(false);
   public isTime = input<boolean>(false);
   public showHint = input<boolean>(false);
   public evntDateChange = output<Date>();
   public onChange = (value: any) => {};
   public onTouched = () => {};
-  public value: string | null  = null;
-  public disabled = false;
+  protected innerValue = signal<string>('');
+  protected _isDisabled = signal(false);
 
-  constructor() {}
+  constructor() {
+    effect(() => {
+      if (this.value() !== undefined && this.value() !== '') {
+        this.innerValue.set(this.value());
+      }
+    },
+    { allowSignalWrites: true });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['disabled']) {
+      this._isDisabled.set(this.disabled());
+    }
+  }
 
   protected emitValue(event:any){
     this.evntDateChange.emit(event.target.value);
@@ -54,7 +69,7 @@ export class UiDatetimePickerComponent implements ControlValueAccessor {
   // Método llamado por el formulario cuando cambia el valor
   public writeValue(value: string | null ): void {
     if (!value) {
-      this.value = null;
+      this.innerValue.set('');
       return;
     }
     // Convertir a Date

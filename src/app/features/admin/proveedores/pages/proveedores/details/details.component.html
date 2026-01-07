@@ -1,0 +1,47 @@
+<div class="div_container">
+  <ui-card class="div_card">
+
+    <!-- CABECERA -->
+    <div class="card_header">
+      <ui-text-field
+        [label]="'Proveedor'"
+        [value]="
+          proveedor.primer_nombre_prov + ' ' +
+          (proveedor.segundo_nombre_prov ?? '') + ' ' +
+          proveedor.apellido_paterno_prov + ' ' +
+          (proveedor.apellido_materno_prov ?? '')
+        "
+      />
+    </div>
+
+    <!-- CUERPO -->
+    <div class="card_body">
+
+      <div class="info_block">
+        <ui-text-field [label]="'Empresa'" [value]="proveedor.nombre_empr"/>
+        <ui-text-field [label]="'Cédula'" [value]="proveedor.cedula_prov"/>
+        <ui-text-field [label]="'Edad'" [value]="proveedor.edad_prov"/>
+        <ui-datetime-picker
+          [label]="'Fecha Nacimiento'"
+          [value]="proveedor.fecha_nacimiento_prov"
+          [disabled]="true"
+        />
+      </div>
+
+      <div class="info_block">
+        <ui-text-field [label]="'Teléfono'" [value]="proveedor.telefono_prov"/>
+        <ui-text-field [label]="'Email'" [value]="proveedor.email_prov"/>
+      </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <div class="card_footer">
+      <ui-button
+        [label]="'Volver'"
+        (evntClick)="volver()"
+      />
+    </div>
+
+  </ui-card>
+</div>
