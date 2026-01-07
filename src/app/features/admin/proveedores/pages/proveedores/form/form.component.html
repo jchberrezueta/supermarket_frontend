@@ -43,7 +43,7 @@
 
                 <ui-datetime-picker
                   [label]="'Fecha Nacimiento'"
-                  [isTime]="false"
+                  [isTime]="true"
                   formControlName="fechaNacimientoProv"
                 />
               </div>
@@ -71,6 +71,7 @@
 
                 <ui-text-field
                   [label]="'Edad'"
+                  [valueType]="'number'"
                   formControlName="edadProv"
                 />
               </div>

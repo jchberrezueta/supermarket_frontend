@@ -11,7 +11,8 @@ import { UiTextFieldComponent } from '../../../../../../shared/components/text-f
 import { UiComboBoxComponent } from '../../../../../../shared/components/combo-box/combo-box.component';
 import { UiDatetimePickerComponent } from '../../../../../../shared/components/datetime-picker/datetime-picker.component';
 import { UiButtonComponent } from '../../../../../../shared/components/button/button.component';
-import { UiTextAreaComponent } from '../../../../../../shared/components/text-area/text-area.component';
+import Swal from 'sweetalert2'
+
 
 type ProveedorFormGroup = FormGroupOf<IProveedor>;
 
@@ -37,8 +38,9 @@ export default class FormComponent {
   public location = inject(Location);
 
   protected formData!: ProveedorFormGroup;
+  private initialFormValue!: IProveedor;
   protected empresas!: IComboBoxOption[];
-
+  
   protected isAdd = true;
   private idParam = -1;
 
@@ -71,6 +73,8 @@ export default class FormComponent {
       telefonoProv: ['', Validators.required],
       emailProv: ['', Validators.required],
     }) as ProveedorFormGroup;
+    // snapshot inicial
+    this.initialFormValue = this.formData.getRawValue();
   }
 
   private loadEmpresas() {
@@ -100,17 +104,73 @@ export default class FormComponent {
 
   protected guardar() {
     const data = this.formData.getRawValue() as IProveedor;
-
-    if (this.isAdd) {
-      data.ideProv = -1;
-      this._proveedoresService.insertar(data).subscribe();
-    } else {
-      this._proveedoresService.actualizar(this.idParam, data).subscribe();
+    if(this.formData.valid){
+      if (this.isAdd) {
+        data.ideProv = -1;
+        this._proveedoresService.insertar(data).subscribe(
+          (res) => {
+            Swal.fire({
+              title: "Proveedor registrado :)",
+              text: "El Proveedor fue guardado correctamente",
+              icon: "success"
+            });
+            this.location.back();
+            this.resetForm();
+          }
+        );
+      } else {
+        Swal.fire({
+          title: "Esta seguro de modificar este Proveedor?",
+          text: "Los cambios realizados se registraran!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Si, de acuerdo"
+        }).then((result) => {
+          if (result.isConfirmed) {
+            data.ideProv = this.idParam;
+            this._proveedoresService.actualizar(this.idParam, data).subscribe(
+              (res) => {
+                Swal.fire({
+                  title: "Proveedor actualizado :)",
+                  text: "El Proveedor fue actualizado correctamente",
+                  icon: "success"
+                });
+                this.location.back();
+                this.resetForm();
+              }
+            );
+          }
+        });
+    }
+    }else{
+      Swal.fire({
+        icon: "info",
+        title: "Oops... Faltan datos",
+        text: "Revise porfavor la información ingresada"
+      });
     }
   }
 
   protected cancelar() {
-    this.formData.reset();
-    this.location.back();
+    Swal.fire({
+      title: "Esta Seguro de Cancelar?",
+      text: "Los cambios realizados no se guardaran!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Si, Cancelar!"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.resetForm();
+        this.location.back();
+      }
+    });
+  }
+
+  protected resetForm() {
+    this.formData.reset(this.initialFormValue);
   }
 }
