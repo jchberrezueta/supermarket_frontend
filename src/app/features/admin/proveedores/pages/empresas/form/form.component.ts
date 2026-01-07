@@ -6,7 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 import { UiDatetimePickerComponent } from "@shared/components/datetime-picker/datetime-picker.component";
 import { FormGroupOf } from '@core/utils/utilities';
 import { UiTextAreaComponent } from "@shared/components/text-area/text-area.component";
-import { IEmpresa, IEmpresaResult, ListEstadosEmpresa } from '@models';
+import { IEmpresa, IEmpresaResult } from '@models';
 import { UiComboBoxComponent } from '@shared/components/combo-box/combo-box.component';
 import { IComboBoxOption } from '@shared/models/combo_box_option';
 import Swal from 'sweetalert2'
@@ -39,6 +39,7 @@ export default class FormComponent {
   private readonly formBuilder = inject(FormBuilder);
   public location = inject(Location);
   protected formData!: EmpresaFormGroup;
+  private initialFormValue!: IEmpresa;
   protected isAdd: boolean = true;
   private idParam: number = -1;
 
@@ -54,18 +55,21 @@ export default class FormComponent {
     }
   }
 
-  protected initForm(): void {
+  private initForm(): void {
     this.formData = this.formBuilder.group({
-        ideEmp: [{ value: -1, disabled: true }, [Validators.required]],        
-        nombreEmp: ['', [Validators.required], []],
-        responsableEmp: ['', [Validators.required], []],
-        fechaContratoEmp: ['', [Validators.required], []],
-        direccionEmp: ['', [Validators.required], []],
-        telefonoEmp: ['', [Validators.required], []],
-        emailEmp: ['', [Validators.required], []],
-        estadoEmp: ['', [Validators.required], []],
-        descripcionEmp: ['', [Validators.required], []]
-      }) as EmpresaFormGroup;
+      ideEmp: [{ value: -1, disabled: true }, [Validators.required]],        
+      nombreEmp: ['', [Validators.required], []],
+      responsableEmp: ['', [Validators.required], []],
+      fechaContratoEmp: ['', [Validators.required], []],
+      direccionEmp: ['', [Validators.required], []],
+      telefonoEmp: ['', [Validators.required], []],
+      emailEmp: ['', [Validators.required], []],
+      estadoEmp: ['', [Validators.required], []],
+      descripcionEmp: ['', [Validators.required], []]
+    }) as EmpresaFormGroup;
+
+    // snapshot inicial
+    this.initialFormValue = this.formData.getRawValue();
   }
 
   private setData(idParam: number) {
@@ -110,7 +114,7 @@ export default class FormComponent {
               icon: "success"
             });
             this.location.back();
-            this.formData.reset();
+            this.resetForm();
           }
         );
       }else{
@@ -133,7 +137,7 @@ export default class FormComponent {
                   icon: "success"
                 });
                 this.location.back();
-                this.formData.reset();
+                this.resetForm();
               }
             );
           }
@@ -160,10 +164,14 @@ export default class FormComponent {
       confirmButtonText: "Si, Cancelar!"
     }).then((result) => {
       if (result.isConfirmed) {
-        this.formData.reset();
+        this.resetForm();
         this.location.back();
       }
     });
     
+  }
+
+  protected resetForm() {
+    this.formData.reset(this.initialFormValue);
   }
 }

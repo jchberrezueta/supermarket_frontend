@@ -13,6 +13,27 @@ export const quitarVaciosObjeto = (obj: object): object => {
     {});
     return newObj;
 }
+/*
+export const mapNumbers = <T extends Record<string, any>>(
+  source: T,
+  keys: (keyof T)[]
+): T => {
+  const result = { ...source };
+
+  keys.forEach(key => {
+    const value = result[key];
+    result[key] = value !== null && value !== undefined
+      ? Number(value)
+      : value;
+  });
+
+  return result;
+};
+*/
+
+
+
+
 
 // Validar valores string
 export const isValidStringValue = (value: any): boolean => {

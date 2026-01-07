@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { IResultData } from '@core/models';
 import { RestService } from '@core/services/rest.service';
 import { IProducto, IResultDataProducto } from '@models';
+import { IComboBoxOption } from '@shared/models/combo_box_option';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -13,6 +14,10 @@ export class ProductosService {
 
   public listar(): Observable<IResultDataProducto> {
     return this._restService.get<IResultDataProducto>(`${this.apiUrl}`);
+  }
+
+  public listarComboProductos() {
+    return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/combo/productos`);
   }
 
   public buscar(id: number): Observable<IResultDataProducto> {

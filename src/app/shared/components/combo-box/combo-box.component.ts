@@ -71,8 +71,13 @@ export class UiComboBoxComponent implements ControlValueAccessor {
 
   // Método obligatorio: escribir el valor desde el form
   writeValue(value: any): void {
-    this.selectedValue = value;
-    this.syncSelection();
+    if(value === -1){
+      this.selectedValue = null;
+      this.selectedLabel = null;
+    }else{
+      this.selectedValue = value;
+      this.syncSelection();
+    }
   }
 
   syncSelection() {

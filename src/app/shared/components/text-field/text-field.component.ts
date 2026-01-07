@@ -1,4 +1,4 @@
-import { Component, forwardRef, input, output, signal, effect } from '@angular/core';
+import { Component, forwardRef, input, output, signal, effect, ɵINPUT_SIGNAL_BRAND_WRITE_TYPE } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -28,20 +28,23 @@ const PROVIDERS =[
 export class UiTextFieldComponent implements ControlValueAccessor {
   public label = input.required<string>();
   public value = input<string>('');
+  public valueType = input<'string' | 'number'>('string');
+  //public disabled = input<boolean>(false);
   protected innerValue = signal<string>('');
   public placeholder = input<string>('...');
   public evntChange = output<string>();
   public onChange = (value: any) => {};
   public onTouched = () => {};
   public value2: string = '';
-  public disabled: boolean = false;
+  public disabled2: boolean = false;
 
   constructor() {
     effect(() => {
-      if (this.value() !== undefined) {
+      if (this.value() !== undefined && this.value() !== '') {
         this.innerValue.set(this.value());
       }
-    });
+    },
+    { allowSignalWrites: true });
   }
 
   protected emitValue(event:any) {
@@ -76,13 +79,19 @@ export class UiTextFieldComponent implements ControlValueAccessor {
 
   // Si el formulario deshabilita el control
   public setDisabledState(isDisabled: boolean) {
-    this.disabled = isDisabled;
+    this.disabled2 = isDisabled;
+    
   }
 
   // Se ejecuta cuando el usuario escribe
   public updateValue(event: Event) {
-    const v = (event.target as HTMLInputElement).value;
-    this.innerValue.set(v);
-    this.onChange(v);
+    const rawValue = (event.target as HTMLInputElement).value;
+    let parsedValue: any = rawValue;
+
+    if (this.valueType() === 'number') {
+      parsedValue = rawValue === '' ? null : Number(rawValue);
+    }
+    this.innerValue.set(parsedValue);
+    this.onChange(parsedValue);
   }
 }

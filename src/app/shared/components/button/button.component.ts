@@ -1,4 +1,4 @@
-import { Component, input, output } from '@angular/core';
+import { Component, effect, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
@@ -27,7 +27,11 @@ export class UiButtonComponent {
 
   public evntClick = output<string>();
 
-  constructor() {}
+  constructor() {
+    effect(() => {
+      this.color();
+    })
+  }
 
   protected emitClick(event:any){
     this.evntClick.emit(this.getAction);

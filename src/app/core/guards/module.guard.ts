@@ -24,8 +24,6 @@ export const canMatchModuleGuard: CanMatchFn  = (route, segments) => {
     .map(s => s.path)
     .join('/') + '/' + route.path;
 
-  console.log('canMatchModuleGuard');
-  console.log(rutaActual);
   if(!rutaActual) return false;
 
   return authService.hasPermission(rutaActual);

@@ -37,10 +37,7 @@ export const empresasRoutes: Routes = [
                 path: 'precios/:id',
                 canMatch: [canMatchPermisoGuard],
                 loadComponent: () => import('./precios/precios.component'),
-                data: {
-                    permises: ['total'],
-                    showAddButton: false
-                }
+                data: { showAddButton: false }
             },
         ]
     },

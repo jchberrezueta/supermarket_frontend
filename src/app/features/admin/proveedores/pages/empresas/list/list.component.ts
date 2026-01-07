@@ -78,7 +78,6 @@ export default class ListComponent {
   }
 
   protected redirectToEmpresaPrecios(clickAction: string) {
-    console.log(this.idEmpresa);
     if(clickAction === 'redirect') {
       if(this.idEmpresa > -1){
         this._router.navigate(['../precios', this.idEmpresa], {relativeTo: this._route});

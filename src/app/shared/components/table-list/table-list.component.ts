@@ -76,7 +76,10 @@ export class UiTableListComponent implements OnInit {
   constructor() {}
 
   ngOnChanges(changes: SimpleChanges) {
-
+    if(changes['serviceApi'] && !changes['serviceApi'].isFirstChange()) {
+      console.log('ngONChangessss');
+      this.refreshData();
+    }
   }
 
   ngOnInit() {

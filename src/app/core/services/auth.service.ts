@@ -70,6 +70,10 @@ export class AuthService {
     return user.perfil;
   }
 
+  public canAll(ruta: string): boolean {
+    return (this.canList(ruta) && this.canInsert(ruta) && this.canUpdate(ruta) && this.canDelete(ruta));
+  }
+
   public canList(ruta: string): boolean {
     const user = this.getUser();
     if (!user || !user.permisos) return false;

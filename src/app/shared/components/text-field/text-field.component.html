@@ -3,7 +3,7 @@
         <input type="text" required
             [placeholder]="getPlaceholder" 
             (change)="emitValue($event)"
-            [disabled]="disabled"
+            [disabled]="disabled2"
             [value]="innerValue()"
             (input)="updateValue($event)"
             (blur)="onTouched()"
