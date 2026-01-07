@@ -58,6 +58,7 @@ export class UiComboBoxComponent implements ControlValueAccessor {
     this.selectedValue = opt.value;
     this.open = false;
     this.evntSelectOption.emit(opt.value);
+    
     this.onChange(opt.value); //notifica al formulario
     this.onTouched();
   }

@@ -68,10 +68,10 @@ export interface IResultDataMarca {
 }
 
 export interface IFiltroMarca {
-    ideMarc: number;
+    //ideMarc: number;
     nombreMarc: string;
     paisOrigenMarc: string;
-    calidadMarcMin: number;
-    calidadMarcMax: number;
-    descripcionMarc: string;
+    calidadMarc: number;
+    //calidadMarcMax: number;
+    //descripcionMarc: string;
 }

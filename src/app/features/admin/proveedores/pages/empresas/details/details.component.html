@@ -28,17 +28,17 @@
     <div class="card_info">
 
       <div class="info_row">
-        <ui-text-field [label]="'Empresa'" [value]="empresa?.nombreEmp"/>
-        <ui-text-field [label]="'Responsable'" [value]="empresa?.responsableEmp"/>
-        <ui-text-field [label]="'Teléfono'" [value]="empresa?.telefonoEmp"/>
-        <ui-text-field [label]="'Email'" [value]="empresa?.emailEmp"/>
+        <ui-text-field [label]="'Empresa'" [value]="empresa? empresa.nombreEmp:null"/>
+        <ui-text-field [label]="'Responsable'" [value]="empresa? empresa.responsableEmp:null"/>
+        <ui-text-field [label]="'Teléfono'" [value]="empresa? empresa.telefonoEmp:null"/>
+        <ui-text-field [label]="'Email'" [value]="empresa? empresa.emailEmp:null"/>
       </div>
 
       <div class="info_row">
-        <ui-text-field [label]="'Fecha Contrato'" [value]="empresa?.fechaContratoEmp"/>
-        <ui-text-field [label]="'Estado'" [value]="empresa?.estadoEmp"/>
-        <ui-text-field [label]="'Dirección'" [value]="empresa?.direccionEmp"/>
-        <ui-text-field [label]="'Descripción'" [value]="empresa?.descripcionEmp"/>
+        <ui-text-field [label]="'Fecha Contrato'" [value]="empresa? empresa.fechaContratoEmp:null"/>
+        <ui-text-field [label]="'Estado'" [value]="empresa? empresa.estadoEmp:null"/>
+        <ui-text-field [label]="'Dirección'" [value]="empresa? empresa.direccionEmp:null"/>
+        <ui-text-field [label]="'Descripción'" [value]="empresa? empresa.descripcionEmp:null"/>
       </div>
 
     </div>

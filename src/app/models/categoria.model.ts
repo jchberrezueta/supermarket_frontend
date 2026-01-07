@@ -48,6 +48,6 @@ export interface IResultDataCategoria {
 }
 
 export interface IFiltroCategoria {
-    nombreCate?: string;
-    descripcionCate?: string;
+    nombreCate: string;
+    descripcionCate: string;
 }

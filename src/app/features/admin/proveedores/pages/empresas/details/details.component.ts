@@ -7,7 +7,7 @@ import { UiButtonComponent } from '@shared/components/button/button.component';
 import { Location } from '@angular/common';
 import { EmpresasService } from '@services/empresas.service';
 import { IEmpresa } from '@models';
-import { PreciosEmpresaConfig } from '../precios/precios.config';
+import { PreciosEmpresaConfig } from './precios.config';
 import { LoadingService } from '@shared/services/loading.service';
 
 @Component({

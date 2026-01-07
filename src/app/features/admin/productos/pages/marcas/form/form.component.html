@@ -1,0 +1,69 @@
+<div class="div_container">
+  <div class="div_card">
+
+    <div class="panel_1">
+      <div class="card_form">
+        <form [formGroup]="formData" class="form">
+
+          <div class="div_form">
+
+            @if (!isAdd) {
+              <div class="div_id">
+                <ui-text-field
+                  [label]="'ID'"
+                  formControlName="ideMarc"
+                />
+                <div class="input_falso"></div>
+              </div>
+            }
+
+            <div class="form_info">
+              <div class="form_div">
+                <ui-text-field
+                  [label]="'Nombre Marca'"
+                  formControlName="nombreMarc"
+                />
+
+                <ui-text-field
+                  [label]="'País Origen'"
+                  formControlName="paisOrigenMarc"
+                />
+
+                <ui-text-field
+                  [label]="'Calidad (1–10)'"
+                  [valueType]="'number'"
+                  formControlName="calidadMarc"
+                />
+              </div>
+
+              <div class="form_div">
+                <ui-text-area
+                  [label]="'Descripción'"
+                  formControlName="descripcionMarc"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="form_buttons">
+            <ui-button
+              [label]="isAdd ? 'Guardar' : 'Actualizar'"
+              (evntClick)="guardar()"
+            />
+            <ui-button
+              [label]="'Cancelar'"
+              [color]="'red'"
+              (evntClick)="cancelar()"
+            />
+          </div>
+
+        </form>
+      </div>
+    </div>
+
+    <div class="panel_2">
+      <div class="panel_2_img"></div>
+    </div>
+
+  </div>
+</div>
