@@ -32,7 +32,7 @@ export class AuthService {
     return localStorage.getItem('access_token');
   }
 
-  private getUser(): IUsuario | null {
+  public getUser(): IUsuario | null {
     const user = localStorage.getItem('user');
     return user ? JSON.parse(user) : null;
   }
