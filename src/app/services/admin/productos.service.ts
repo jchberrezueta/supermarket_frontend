@@ -16,7 +16,7 @@ export class ProductosService {
     return this._restService.get<IResultDataProducto>(`${this.apiUrl}`);
   }
 
-  public listarComboProductos() {
+  public listarComboProductos(): Observable<IComboBoxOption[]> {
     return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/combo/productos`);
   }
 

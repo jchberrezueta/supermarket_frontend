@@ -1,7 +1,7 @@
 import { ITableListConfig } from "@shared/models/table-list.model";
 
-export const ListEmpresasConfig: ITableListConfig = {
-    dataKey: 'ide_empr',
+export const ListConfig: ITableListConfig = {
+    dataKey: 'ide_prov',
     columns: [
         { 
             label: 'Detalles', 
@@ -13,20 +13,19 @@ export const ListEmpresasConfig: ITableListConfig = {
                     label: 'Ver Detalles',
                     icon: 'visibility',
                     router: true,
-                    key: 'ide_empr',
+                    key: 'ide_prov',
                     color: 'purple'
                 }
             ]
         },
-        { label: 'ID', property: 'ide_empr', type: 'text', sortable: true },
-        { label: 'Nombre', property: 'nombre_empr', type: 'text', sortable: true },
-        { label: 'Responsable', property: 'responsable_empr', type: 'text', sortable: true },
-        { label: 'Fecha/Contrato', property: 'fecha_contrato_empr', type: 'text', sortable: true },
-        { label: 'Direccion', property: 'direccion_empr', type: 'text', sortable: true },
-        { label: 'Telefono', property: 'telefono_empr', type: 'text', sortable: true },
-        { label: 'Email', property: 'email_empr', type: 'text', sortable: true },
-        { label: 'Estado', property: 'estado_empr', type: 'text', sortable: true },
-        { label: 'Descripcion', property: 'descripcion_empr', type: 'text', sortable: true },
+        { label: 'ID', property: 'ide_prov', type: 'text', sortable: true },
+        { label: 'Empresa', property: 'nombre_empr', type: 'text', sortable: true },
+        { label: 'Cedula', property: 'cedula_prov', type: 'text', sortable: true },
+        { label: 'Nombres/Apellidos', property: 'nombre_completo', type: 'text', sortable: true },
+        { label: 'Fecha/Nacimiento', property: 'fecha_nacimiento_prov', type: 'text', sortable: true },
+        { label: 'Edad', property: 'edad_prov', type: 'text', sortable: true },
+        { label: 'Telefono', property: 'telefono_prov', type: 'text', sortable: true },
+        { label: 'Email', property: 'email_prov', type: 'text', sortable: true },
         {
             label: '',
             property: 'menu',
@@ -37,14 +36,14 @@ export const ListEmpresasConfig: ITableListConfig = {
                     label: 'Editar',
                     icon: 'edit',
                     router: true,
-                    key: 'ide_empr',
+                    key: 'ide_prov',
                     color: 'primary'
                 },
                 {
                     action: 'delete',
                     label: 'Eliminar',
                     icon: 'delete',
-                    key: 'ide_empr',
+                    key: 'ide_prov',
                     color: 'red'
                 }
             ],

@@ -44,6 +44,8 @@ const IMPORTS = [
 })
 export class UiTableListComponent implements OnInit {
   public serviceApi = input.required<string>();
+  public serviceApiReal = input<string>('');
+  public serviceApiFilter = input<string>('');
   public columns = input.required<ITableColumn[]>();
   public message = input<string>('!No tiene registros generados¡');
   public isSelection = input<boolean>(false);
@@ -112,7 +114,12 @@ export class UiTableListComponent implements OnInit {
   }
 
   public filterData(params: URLSearchParams) {
-    this.requestData(this.serviceApi()+`/filtrar?${params.toString()}`);
+    if(this.serviceApiFilter() === ''){
+      this.requestData(this.serviceApi()+`/filtrar?${params.toString()}`);
+    }else if(this.serviceApiFilter()){
+      this.requestData(this.serviceApiFilter()+`?${params.toString()}`);
+    }
+    
   }
 
   private loadColumns() {
@@ -191,7 +198,9 @@ export class UiTableListComponent implements OnInit {
         confirmButtonText: "Si, eliminar!"
       }).then((result) => {
         if (result.isConfirmed) {
-          this._restService.delete<any>(this.serviceApi()+`/eliminar/${id}`).subscribe(
+          this._restService.delete<any>( 
+            (this.serviceApiReal() !== '' ?  (this.serviceApiReal())  : (this.serviceApi()) )+`/eliminar/${id}`
+          ).subscribe(
             (res) => {
               Swal.fire({
                 title: "Eliminado Exitosamente!",

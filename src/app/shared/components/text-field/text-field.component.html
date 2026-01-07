@@ -1,5 +1,5 @@
 <div class="div_container">
-    <div class="div_input">
+    <div class="div_input" [ngStyle]="{'width': width()+'px'}">
         <input type="text" required
             [placeholder]="getPlaceholder" 
             (change)="emitValue($event)"

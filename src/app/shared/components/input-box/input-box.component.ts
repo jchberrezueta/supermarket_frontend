@@ -33,6 +33,8 @@ export class UiInputBoxComponent implements ControlValueAccessor {
   public options = input.required<IComboBoxOption[]>();
   public label = input.required<string>();
   public placeholder = input<string>('...');
+  public width = input<string>('');
+  public returnValue = input<string>('');
   public evntSelectOption = output<number>();
   protected optionsFiltered = signal('');
   public open: boolean = false;
@@ -68,7 +70,11 @@ export class UiInputBoxComponent implements ControlValueAccessor {
     this.selectedValue = opt.value;
     this.open = false;
     this.evntSelectOption.emit(opt.value);
-    this.onChange(opt.value);
+    if(this.returnValue() === '' || this.returnValue() === 'value'){
+      this.onChange(opt.value);
+    }else if(this.returnValue() === 'label'){
+      this.onChange(opt.label);
+    }
     this.onTouched();
   }
 //
@@ -87,7 +93,7 @@ export class UiInputBoxComponent implements ControlValueAccessor {
 
   // Método obligatorio: escribir el valor desde el form
   writeValue(value: any): void {
-    if(value === -1){
+    if(value === -1 || value === '') {
       this.selectedValue = null;
       this.selectedLabel = null;
     }else{

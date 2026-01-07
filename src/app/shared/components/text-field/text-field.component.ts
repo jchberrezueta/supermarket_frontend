@@ -2,11 +2,13 @@ import { Component, forwardRef, input, output, signal, effect, ɵINPUT_SIGNAL_BR
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { CommonModule } from '@angular/common';
 
 
 const IMPORTS = [
   MatFormFieldModule, 
-  MatInputModule
+  MatInputModule,
+  CommonModule
 ];
 
 const PROVIDERS =[
@@ -30,6 +32,7 @@ export class UiTextFieldComponent implements ControlValueAccessor {
   public value = input<any>('');
   public valueType = input<'string' | 'number'>('string');
   public disabled = input<boolean>(false);
+  public width = input<string>('auto');
   protected _isDisabled = signal(false);
   protected innerValue = signal<string>('');
   public placeholder = input<string>('...');

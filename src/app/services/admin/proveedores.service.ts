@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { IResultData } from '@core/models';
 import { RestService } from '@core/services/rest.service';
 import { IProveedor, IResultDataProveedor } from '@models';
+import { IComboBoxOption } from '@shared/models/combo_box_option';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -9,7 +10,7 @@ import { Observable } from 'rxjs';
 })
 export class ProveedoresService {
   private readonly _restService = inject(RestService);
-  private readonly apiUrl = 'productos';
+  private readonly apiUrl = 'proveedores';
 
   public listar(): Observable<IResultDataProveedor> {
     return this._restService.get<IResultDataProveedor>(`${this.apiUrl}`);
@@ -29,5 +30,19 @@ export class ProveedoresService {
 
   public eliminar(id: number) {
     return this._restService.delete<any>(`${this.apiUrl}/eliminar/${id}`);
+  }
+
+
+  public listarComboCedula(): Observable<IComboBoxOption[]> {
+    return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/proveedores/combo/cedula`);
+  }
+  public listarComboPrimerNombre(): Observable<IComboBoxOption[]> {
+    return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/proveedores/combo/primer/nombre`);
+  }
+  public listarComboApellidoPaterno(): Observable<IComboBoxOption[]> {
+    return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/proveedores/combo/apellido/paterno`);
+  }
+  public listarComboEmail(): Observable<IComboBoxOption[]> {
+    return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/proveedores/combo/email`);
   }
 }

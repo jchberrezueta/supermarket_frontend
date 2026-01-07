@@ -1,40 +1,102 @@
 <div class="div_container">
-    <div class="div_card">
-        <div class="panel_1">
-            <div class="card_form">
-                <form [formGroup]="formData" class="form">
-                    <div class="div_form">
-                        @if (!isAdd) {
-                            <div class="div_id" >
-                                <ui-text-field [label]="'ID'" formControlName="ideEmp"/>
-                                <div class="input_falso"></div>
-                            </div>
-                        }
-                        <div class="form_info">
-                            <div class="form_div form_div_1">                       
-                                <ui-text-field [label]="'Empresa'" formControlName="nombreEmp"/>
-                                <ui-datetime-picker [label]="'Fecha Contrato'"  [isTime]="true"  formControlName="fechaContratoEmp"/>
-                                <ui-text-field [label]="'Telefono'" formControlName="telefonoEmp"/>
-                                <ui-text-area [label]="'Direccion'" formControlName="direccionEmp"/>
-                            </div>
-                            <div class="form_div form_div_2">
-                                <ui-text-field [label]="'Responsable'" formControlName="responsableEmp"/>
-                                <ui-combo-box [label]="'Estado'" [options]="estadosEmpresa" formControlName="estadoEmp"/>
-                                <ui-text-field [label]="'Email'" formControlName="emailEmp"/>
-                                <ui-text-area [label]="'Descripcion'" formControlName="descripcionEmp"/>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form_buttons">
-                        <ui-button [label]="'Guardar'" (evntClick)="guardar()"/>
-                        <ui-button [label]="'Cancelar'" (evntClick)="cancelar()" [color]="'red'"/>
-                    </div>
-                </form>
+  <div class="div_card">
+
+    <div class="panel_1">
+      <div class="card_form">
+        <form [formGroup]="formData" class="form">
+
+          <div class="div_form">
+
+            @if (!isAdd) {
+              <div class="div_id">
+                <ui-text-field
+                  [label]="'ID'"
+                  formControlName="ideProv"
+                />
+                <div class="input_falso"></div>
+              </div>
+            }
+
+            <div class="form_info">
+
+              <div class="form_div">
+                <ui-combo-box
+                  [label]="'Empresa'"
+                  [options]="empresas"
+                  formControlName="ideEmpr"
+                />
+
+                <ui-text-field
+                  [label]="'Cédula'"
+                  formControlName="cedulaProv"
+                />
+
+                <ui-text-field
+                  [label]="'Primer Nombre'"
+                  formControlName="primerNombreProv"
+                />
+
+                <ui-text-field
+                  [label]="'Segundo Nombre'"
+                  formControlName="segundoNombreProv"
+                />
+
+                <ui-datetime-picker
+                  [label]="'Fecha Nacimiento'"
+                  [isTime]="false"
+                  formControlName="fechaNacimientoProv"
+                />
+              </div>
+
+              <div class="form_div">
+                <ui-text-field
+                  [label]="'Apellido Paterno'"
+                  formControlName="apellidoPaternoProv"
+                />
+
+                <ui-text-field
+                  [label]="'Apellido Materno'"
+                  formControlName="apellidoMaternoProv"
+                />
+
+                <ui-text-field
+                  [label]="'Teléfono'"
+                  formControlName="telefonoProv"
+                />
+
+                <ui-text-field
+                  [label]="'Email'"
+                  formControlName="emailProv"
+                />
+
+                <ui-text-field
+                  [label]="'Edad'"
+                  formControlName="edadProv"
+                />
+              </div>
+
             </div>
-            
-        </div>
-        <div class="panel_2">
-            <div class="panel_2_img"></div>
-        </div>
+          </div>
+
+          <div class="form_buttons">
+            <ui-button
+              [label]="isAdd ? 'Guardar' : 'Actualizar'"
+              (evntClick)="guardar()"
+            />
+            <ui-button
+              [label]="'Cancelar'"
+              [color]="'red'"
+              (evntClick)="cancelar()"
+            />
+          </div>
+
+        </form>
+      </div>
     </div>
+
+    <div class="panel_2">
+      <div class="panel_2_img"></div>
+    </div>
+
+  </div>
 </div>

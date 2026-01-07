@@ -6,22 +6,23 @@ import { IComboBoxOption } from '@shared/models/combo_box_option';
 import { UiComboBoxComponent } from '@shared/components/combo-box/combo-box.component';
 import { UiTextFieldComponent } from "@shared/components/text-field/text-field.component";
 import { isValidStringValue, FormGroupOf } from '@core/utils/utilities';
-import { IEmpresaResult, IFiltroEmpresa } from 'app/models';
-import { ListEmpresasConfig } from './list_empresas.config';
-import { EmpresasService } from '@services/index';
+import { IEmpresaResult, IFiltroEmpresa, IFiltroProveedor } from 'app/models';
+import { ListConfig } from './list_proveedores.config';
+import { EmpresasService, ProveedoresService } from '@services/index';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UiCardComponent } from '@shared/components/card/card.component';
+import { UiInputBoxComponent } from "@shared/components/input-box/input-box.component";
 
 const IMPORTS = [
   UiTableListComponent,
   UiButtonComponent,
-  UiComboBoxComponent,
+  UiInputBoxComponent,
   UiTextFieldComponent,
   UiCardComponent,
   ReactiveFormsModule
 ];
 
-type filterEmpresaFormGroup = FormGroupOf<IFiltroEmpresa>;
+type filterProveedorFormGroup = FormGroupOf<IFiltroProveedor>;
 
 @Component({
   selector: 'app-list',
@@ -32,33 +33,63 @@ type filterEmpresaFormGroup = FormGroupOf<IFiltroEmpresa>;
 })
 export default class ListComponent {
   private readonly _tableList = viewChild.required<UiTableListComponent>(UiTableListComponent);
-  protected readonly config = ListEmpresasConfig;
-  private readonly _empresasService = inject(EmpresasService);
+  protected readonly config = ListConfig;
+  private readonly _proveedoresService = inject(ProveedoresService);
   private readonly _router = inject(Router);
   private readonly _route = inject(ActivatedRoute);
   private formBuilder= inject(FormBuilder);
-  protected estadosEmpresa!: IComboBoxOption[];
-  protected formData!: filterEmpresaFormGroup;
-
-  private idEmpresa: number = -1;
+  protected opcionesCedula!: IComboBoxOption[];
+  protected opcionesPrimerNombre!: IComboBoxOption[];
+  protected opcionesApellidoPaterno!: IComboBoxOption[];
+  protected opcionesEmail!: IComboBoxOption[];
+  protected formData!: filterProveedorFormGroup;
+  private initialFormValue!: IFiltroProveedor;
 
   constructor() {
-    this.loadEstadosEmpresa();
+    this.loadComboCedulas();
+    this.loadComboPrimerNombre();
+    this.loadComboApellidoPaterno();
+    this.loadComboEmail();
     this.configForm();
   }
 
   protected configForm() {
     this.formData = this.formBuilder.group({
-      nombreEmp: ['', [], []],
-      estadoEmp: ['', [], []],
-      responsableEmp: ['', [], []],
-    }) as filterEmpresaFormGroup;
+      ideEmpr: ['', [], []],
+      cedulaProv: ['', [], []],
+      primerNombreProv: ['', [], []],
+      apellidoPaternoProv: ['', [], []],
+      emailProv: ['', [], []],
+    }) as filterProveedorFormGroup;
+    //snapshot inicial
+    this.initialFormValue = this.formData.getRawValue();
   }
 
-  private loadEstadosEmpresa() {
-    this._empresasService.listarEstados().subscribe(
+  private loadComboCedulas() {
+    this._proveedoresService.listarComboCedula().subscribe(
       (res) => {
-        this.estadosEmpresa = res;
+        this.opcionesCedula = res;
+      }
+    );
+  }
+  private loadComboPrimerNombre() {
+    this._proveedoresService.listarComboPrimerNombre().subscribe(
+      (res) => {
+        this.opcionesPrimerNombre = res;
+      }
+    );
+  }
+  private loadComboApellidoPaterno() {
+    this._proveedoresService.listarComboApellidoPaterno().subscribe(
+      (res) => {
+        this.opcionesApellidoPaterno = res;
+      }
+    );
+  }
+  private loadComboEmail() {
+    this._proveedoresService.listarComboEmail().subscribe(
+      (res) => {
+        this.opcionesEmail = res;
       }
     );
   }
@@ -70,33 +101,26 @@ export default class ListComponent {
 
   private getParams(): URLSearchParams {
     const params = new URLSearchParams();
-    const filtro = this.formData.value as IFiltroEmpresa;
-    if (isValidStringValue(filtro.nombreEmp)) params.append('nombreEmp', filtro.nombreEmp );
-    if (isValidStringValue(filtro.estadoEmp)) params.append('estadoEmp', filtro.estadoEmp );
-    if (isValidStringValue(filtro.responsableEmp)) params.append('responsableEmp', filtro.responsableEmp );
+    const filtro = this.formData.value as IFiltroProveedor;
+    if (isValidStringValue(filtro.ideEmpr)) params.append('ideEmpr', filtro.ideEmpr );
+    if (isValidStringValue(filtro.cedulaProv)) params.append('cedulaProv', filtro.cedulaProv );
+    if (isValidStringValue(filtro.primerNombreProv)) params.append('primerNombreProv', filtro.primerNombreProv );
+    if (isValidStringValue(filtro.apellidoPaternoProv)) params.append('apellidoPaternoProv', filtro.apellidoPaternoProv );
+    if (isValidStringValue(filtro.emailProv)) params.append('emailProv', filtro.emailProv );
+
     return params;
   }
 
-  protected redirectToEmpresaPrecios(clickAction: string) {
-    if(clickAction === 'redirect') {
-      if(this.idEmpresa > -1){
-        this._router.navigate(['../precios', this.idEmpresa], {relativeTo: this._route});
-      }
-    }
-  }
-
-  protected setIdEmpresa(elem: any) {
-    if(elem && elem.row){
-      this.idEmpresa = elem.row.ide_empr;
-    }else{
-      this.idEmpresa = -1;
-    }
-  }
 
   protected refreshData(actionClick: string){
     if(actionClick === 'refresh'){
       const tableListInstance = this._tableList();
       tableListInstance.refreshData();
+      this.resetForm();
     }
+  }
+
+  protected resetForm() {
+    this.formData.reset(this.initialFormValue);
   }
 }

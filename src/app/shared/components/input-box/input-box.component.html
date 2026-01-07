@@ -1,9 +1,10 @@
-<div class="div_container" clickOutside (clickOutside)="open = false">
-  <div class="div_select" [class.active]="open" (click)="toggle()">
+<div class="div_container" clickOutside (clickOutside)="open = false" >
+  <div class="div_select" [class.active]="open" (click)="toggle()" [ngStyle]="{'width': width()+'px'}">
     <input type="text" #inp
       [placeholder]="getPlaceholder"
       [value]="selectedLabel" 
-      (input)="optionsFiltered.set(inp.value)">
+      (input)="optionsFiltered.set(inp.value)"
+    >
     <label>{{ getLabel }}</label>
     @if(open){
       <ul class="options">

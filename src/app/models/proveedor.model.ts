@@ -128,7 +128,7 @@ export interface IResultDataProveedor {
 }
 
 export interface IFiltroProveedor {
-    ideEmpr: number;
+    ideEmpr: string;
     cedulaProv: string;
     primerNombreProv: string;
     apellidoPaternoProv: string;

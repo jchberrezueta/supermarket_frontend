@@ -1,177 +1,116 @@
 import { Component, inject } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { UiTextFieldComponent } from "@shared/components/text-field/text-field.component";
-import { UiButtonComponent } from "@shared/components/button/button.component";
+import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { UiDatetimePickerComponent } from "@shared/components/datetime-picker/datetime-picker.component";
+import { Location } from '@angular/common';
+
 import { FormGroupOf } from '@core/utils/utilities';
-import { UiTextAreaComponent } from "@shared/components/text-area/text-area.component";
-import { IEmpresa, IEmpresaResult } from '@models';
-import { UiComboBoxComponent } from '@shared/components/combo-box/combo-box.component';
 import { IComboBoxOption } from '@shared/models/combo_box_option';
-import Swal from 'sweetalert2'
-import { Location } from '@angular/common'; // 1. Importar Location
-import { EmpresasService } from '@services/index';
+import { IProveedor, IProveedorResult } from '@models';
+import { ProveedoresService, EmpresasService } from '@services/index';
+import { UiTextFieldComponent } from '../../../../../../shared/components/text-field/text-field.component';
+import { UiComboBoxComponent } from '../../../../../../shared/components/combo-box/combo-box.component';
+import { UiDatetimePickerComponent } from '../../../../../../shared/components/datetime-picker/datetime-picker.component';
+import { UiButtonComponent } from '../../../../../../shared/components/button/button.component';
+import { UiTextAreaComponent } from '../../../../../../shared/components/text-area/text-area.component';
 
-const IMPORTS = [
-  UiTextFieldComponent, 
-  UiTextAreaComponent,
-  UiDatetimePickerComponent,
-  UiComboBoxComponent,
-  UiButtonComponent,
-  ReactiveFormsModule, 
-];
-
-type EmpresaFormGroup = FormGroupOf<IEmpresa>;
+type ProveedorFormGroup = FormGroupOf<IProveedor>;
 
 @Component({
   selector: 'app-form',
   standalone: true,
-  imports: IMPORTS,
+  imports: [
+    UiTextFieldComponent,
+    UiComboBoxComponent,
+    UiDatetimePickerComponent,
+    UiButtonComponent,
+    ReactiveFormsModule
+  ],
   templateUrl: './form.component.html',
   styleUrl: './form.component.scss'
 })
 export default class FormComponent {
-  
-  protected estadosEmpresa!: IComboBoxOption[];
+
   private readonly _route = inject(ActivatedRoute);
+  private readonly _fb = inject(FormBuilder);
+  private readonly _proveedoresService = inject(ProveedoresService);
   private readonly _empresasService = inject(EmpresasService);
-  private readonly formBuilder = inject(FormBuilder);
   public location = inject(Location);
-  protected formData!: EmpresaFormGroup;
-  private initialFormValue!: IEmpresa;
-  protected isAdd: boolean = true;
-  private idParam: number = -1;
+
+  protected formData!: ProveedorFormGroup;
+  protected empresas!: IComboBoxOption[];
+
+  protected isAdd = true;
+  private idParam = -1;
 
   constructor() {
-    this.loadEstadosEmpresa();
+    this.loadEmpresas();
   }
 
-  ngOnInit() {
-    const idParam = this._route.snapshot.params['id'];
+  ngOnInit(): void {
     this.initForm();
-    if(idParam){
-      this.setData(idParam);
+
+    const id = this._route.snapshot.params['id'];
+    if (id) {
+      this.isAdd = false;
+      this.idParam = +id;
+      this.setData(this.idParam);
     }
   }
 
-  private initForm(): void {
-    this.formData = this.formBuilder.group({
-      ideEmp: [{ value: -1, disabled: true }, [Validators.required]],        
-      nombreEmp: ['', [Validators.required], []],
-      responsableEmp: ['', [Validators.required], []],
-      fechaContratoEmp: ['', [Validators.required], []],
-      direccionEmp: ['', [Validators.required], []],
-      telefonoEmp: ['', [Validators.required], []],
-      emailEmp: ['', [Validators.required], []],
-      estadoEmp: ['', [Validators.required], []],
-      descripcionEmp: ['', [Validators.required], []]
-    }) as EmpresaFormGroup;
-
-    // snapshot inicial
-    this.initialFormValue = this.formData.getRawValue();
+  private initForm() {
+    this.formData = this._fb.group({
+      ideProv: [{ value: -1, disabled: true }, Validators.required],
+      ideEmpr: [-1, Validators.required],
+      cedulaProv: ['', Validators.required],
+      primerNombreProv: ['', Validators.required],
+      segundoNombreProv: [''],
+      apellidoPaternoProv: ['', Validators.required],
+      apellidoMaternoProv: [''],
+      fechaNacimientoProv: ['', Validators.required],
+      edadProv: [0, Validators.required],
+      telefonoProv: ['', Validators.required],
+      emailProv: ['', Validators.required],
+    }) as ProveedorFormGroup;
   }
 
-  private setData(idParam: number) {
-    this._empresasService.buscar(idParam).subscribe(
-      (res) => {
-        const empresa = res.data[0] as IEmpresaResult;
-        this.idParam = empresa.ide_empr;
-        this.isAdd = false;
-        this.formData.patchValue({
-          ideEmp: empresa.ide_empr,
-          nombreEmp: empresa.nombre_empr,
-          responsableEmp: empresa.responsable_empr,
-          fechaContratoEmp: empresa.fecha_contrato_empr,
-          direccionEmp: empresa.direccion_empr,
-          telefonoEmp: empresa.telefono_empr,
-          emailEmp: empresa.email_empr,
-          estadoEmp: empresa.estado_empr,
-          descripcionEmp: empresa.descripcion_empr
-        });
-      }
-    )
-  }
-
-  private loadEstadosEmpresa() {
-    this._empresasService.listarEstados().subscribe(
-      (res) => {
-        this.estadosEmpresa = res;
-      }
-    );
-  }
-
-  protected guardar(): void {
-    if(!this.formData.invalid){
-      const data = this.formData.getRawValue() as IEmpresa;
-      if(this.isAdd){
-        data.ideEmp = -1;
-        this._empresasService.insertar(data).subscribe(
-          (res) => {
-            Swal.fire({
-              title: "Empresa registrada :)",
-              text: "La empresa fue guardada correctamente",
-              icon: "success"
-            });
-            this.location.back();
-            this.resetForm();
-          }
-        );
-      }else{
-        Swal.fire({
-          title: "Esta seguro de modificar esta empresa?",
-          text: "Los cambios realizados se registraran!",
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonColor: "#3085d6",
-          cancelButtonColor: "#d33",
-          confirmButtonText: "Si, de acuerdo"
-        }).then((result) => {
-          if (result.isConfirmed) {
-            data.ideEmp = this.idParam;
-            this._empresasService.actualizar(this.idParam, data).subscribe(
-              (res) => {
-                Swal.fire({
-                  title: "Empresa actualizada :)",
-                  text: "La empresa fue actualizada correctamente",
-                  icon: "success"
-                });
-                this.location.back();
-                this.resetForm();
-              }
-            );
-          }
-        });
-        
-      }
-    }else{
-      Swal.fire({
-        icon: "info",
-        title: "Oops... Faltan datos",
-        text: "Revise porfavor la información ingresada"
-      });
-    }
-  }
-
-  protected cancelar(): void {
-    Swal.fire({
-      title: "Esta Seguro de Cancelar?",
-      text: "Los cambios realizados no se guardaran!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Si, Cancelar!"
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.resetForm();
-        this.location.back();
-      }
+  private loadEmpresas() {
+    this._empresasService.listarComboEmpresas().subscribe(res => {
+      this.empresas = res;
     });
-    
   }
 
-  protected resetForm() {
-    this.formData.reset(this.initialFormValue);
+  private setData(id: number) {
+    this._proveedoresService.buscar(id).subscribe(res => {
+      const p = res.data[0] as IProveedorResult;
+      this.formData.patchValue({
+        ideProv: p.ide_prov,
+        ideEmpr: p.ide_empr,
+        cedulaProv: p.cedula_prov,
+        primerNombreProv: p.primer_nombre_prov,
+        segundoNombreProv: p.segundo_nombre_prov,
+        apellidoPaternoProv: p.apellido_paterno_prov,
+        apellidoMaternoProv: p.apellido_materno_prov,
+        fechaNacimientoProv: p.fecha_nacimiento_prov,
+        edadProv: p.edad_prov,
+        telefonoProv: p.telefono_prov,
+        emailProv: p.email_prov
+      });
+    });
+  }
+
+  protected guardar() {
+    const data = this.formData.getRawValue() as IProveedor;
+
+    if (this.isAdd) {
+      data.ideProv = -1;
+      this._proveedoresService.insertar(data).subscribe();
+    } else {
+      this._proveedoresService.actualizar(this.idParam, data).subscribe();
+    }
+  }
+
+  protected cancelar() {
+    this.formData.reset();
+    this.location.back();
   }
 }

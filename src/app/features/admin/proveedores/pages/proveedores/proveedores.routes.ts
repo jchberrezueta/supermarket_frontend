@@ -12,22 +12,26 @@ export const proveedoresRoutes: Routes = [
             {
                 path: 'list',
                 canMatch: [canMatchPermisoGuard],
-                loadComponent: () => import('./list/list.component')
+                loadComponent: () => import('./list/list.component'),
+                data: { showAddButton: true }
             },
             {
                 path: 'insert',
                 canMatch: [canMatchPermisoGuard],
                 loadComponent: () => import('./form/form.component'),
+                data: { showAddButton: false }
             },
             {
                 path: 'update/:id',
                 canMatch: [canMatchPermisoGuard],
                 loadComponent: () => import('./form/form.component'),
+                data: { showAddButton: false }
             },
             {
                 path: 'details/:id',
                 canMatch: [canMatchPermisoGuard],
                 loadComponent: () => import('./details/details.component'),
+                data: { showAddButton: false }
             }
         ]
     },

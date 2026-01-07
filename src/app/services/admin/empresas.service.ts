@@ -37,6 +37,10 @@ export class EmpresasService {
     return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/estados`);
   }
 
+  public listarComboEmpresas(): Observable<IComboBoxOption[]> {
+    return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/combo/empresas`);
+  }
+
   /**
    * Empresas Precios
    */
