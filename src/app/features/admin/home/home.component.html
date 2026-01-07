@@ -1,39 +1,60 @@
-<style>
-  .welcome-screen {
-    height: 100vh;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    text-align: center;
-  }
+<div class="home">
+  <div class="hero">
+    <h1>¡Bienvenido!</h1>
+    <p>Sistema de gestión administrativa</p>
+  </div>
 
-  .welcome-screen h1 {
-    font-size: 60px;
-    margin-bottom: 10px;
-  }
+  <div class="cards">
+    <div class="card">
+      <div class="icon">📦</div>
+      <div class="content">
+        <h3>Bodega</h3>
+        <p>Controla inventarios, productos y stock disponible.</p>
+      </div>
+    </div>
 
-  .welcome-screen .time {
-    font-size: 36px;
-    font-weight: 300;
-    letter-spacing: 2px;
-  }
-</style>
+    <div class="card">
+      <div class="icon">🧾</div>
+      <div class="content">
+        <h3>Nómina</h3>
+        <p>Gestiona empleados, roles, pagos y reportes internos.</p>
+      </div>
+    </div>
 
-<div class="welcome-screen">
-  <h1>¡Bienvenido!</h1>
-  <div class="time" id="timeDisplay">--:--:--</div>
+    <div class="card">
+      <div class="icon">🛍️</div>
+      <div class="content">
+        <h3>Productos</h3>
+        <p>Administra catálogo, marcas, categorías y precios de venta.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="icon">🏢</div>
+      <div class="content">
+        <h3>Proveedores</h3>
+        <p>Administra empresas, precios y convenios comerciales.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="icon">💰</div>
+      <div class="content">
+        <h3>Ventas</h3>
+        <p>Registra ventas, pedidos y movimientos financieros.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="icon">🔒</div>
+      <div class="content">
+        <h3>Seguridad</h3>
+        <p>Gestión de usuarios, roles y permisos del sistema.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="hint">
+    Selecciona una opción del menú para comenzar 🚀
+  </div>
 </div>
-
-<script>
-  function updateTime() {
-    const now = new Date();
-    const timeStr = now.toLocaleTimeString();
-    document.getElementById('timeDisplay').textContent = timeStr;
-  }
-  updateTime();
-  setInterval(updateTime, 1000);
-</script>

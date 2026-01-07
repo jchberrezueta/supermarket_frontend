@@ -39,6 +39,7 @@ export default class ListComponent {
   private formBuilder= inject(FormBuilder);
   protected estadosEmpresa!: IComboBoxOption[];
   protected formData!: filterEmpresaFormGroup;
+  private initialFormValue!: IFiltroEmpresa;
 
   private idEmpresa: number = -1;
 
@@ -53,6 +54,8 @@ export default class ListComponent {
       estadoEmp: ['', [], []],
       responsableEmp: ['', [], []],
     }) as filterEmpresaFormGroup;
+    //snapshot inicial
+    this.initialFormValue = this.formData.getRawValue();
   }
 
   private loadEstadosEmpresa() {
@@ -97,6 +100,11 @@ export default class ListComponent {
     if(actionClick === 'refresh'){
       const tableListInstance = this._tableList();
       tableListInstance.refreshData();
+      this.resetForm();
     }
+  }
+
+  protected resetForm() {
+    this.formData.reset(this.initialFormValue);
   }
 }

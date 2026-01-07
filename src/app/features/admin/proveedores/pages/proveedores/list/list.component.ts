@@ -7,7 +7,7 @@ import { UiComboBoxComponent } from '@shared/components/combo-box/combo-box.comp
 import { UiTextFieldComponent } from "@shared/components/text-field/text-field.component";
 import { isValidStringValue, FormGroupOf } from '@core/utils/utilities';
 import { IEmpresaResult, IFiltroEmpresa } from 'app/models';
-import { ListProveedoresConfig } from './list_proveedores.config';
+import { ListEmpresasConfig } from './list_empresas.config';
 import { EmpresasService } from '@services/index';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UiCardComponent } from '@shared/components/card/card.component';
@@ -32,7 +32,7 @@ type filterEmpresaFormGroup = FormGroupOf<IFiltroEmpresa>;
 })
 export default class ListComponent {
   private readonly _tableList = viewChild.required<UiTableListComponent>(UiTableListComponent);
-  protected readonly config = ListProveedoresConfig;
+  protected readonly config = ListEmpresasConfig;
   private readonly _empresasService = inject(EmpresasService);
   private readonly _router = inject(Router);
   private readonly _route = inject(ActivatedRoute);
@@ -78,7 +78,6 @@ export default class ListComponent {
   }
 
   protected redirectToEmpresaPrecios(clickAction: string) {
-    console.log(this.idEmpresa);
     if(clickAction === 'redirect') {
       if(this.idEmpresa > -1){
         this._router.navigate(['../precios', this.idEmpresa], {relativeTo: this._route});

@@ -1,4 +1,4 @@
-import { Component, forwardRef, input, output, signal, effect, ɵINPUT_SIGNAL_BRAND_WRITE_TYPE } from '@angular/core';
+import { Component, forwardRef, input, output, signal, effect, ɵINPUT_SIGNAL_BRAND_WRITE_TYPE, SimpleChanges } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -27,16 +27,16 @@ const PROVIDERS =[
 })
 export class UiTextFieldComponent implements ControlValueAccessor {
   public label = input.required<string>();
-  public value = input<string>('');
+  public value = input<any>('');
   public valueType = input<'string' | 'number'>('string');
-  //public disabled = input<boolean>(false);
+  public disabled = input<boolean>(false);
+  protected _isDisabled = signal(false);
   protected innerValue = signal<string>('');
   public placeholder = input<string>('...');
   public evntChange = output<string>();
   public onChange = (value: any) => {};
   public onTouched = () => {};
-  public value2: string = '';
-  public disabled2: boolean = false;
+  
 
   constructor() {
     effect(() => {
@@ -45,6 +45,12 @@ export class UiTextFieldComponent implements ControlValueAccessor {
       }
     },
     { allowSignalWrites: true });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['disabled']) {
+      this._isDisabled.set(this.disabled());
+    }
   }
 
   protected emitValue(event:any) {
@@ -79,8 +85,7 @@ export class UiTextFieldComponent implements ControlValueAccessor {
 
   // Si el formulario deshabilita el control
   public setDisabledState(isDisabled: boolean) {
-    this.disabled2 = isDisabled;
-    
+    this._isDisabled.set(isDisabled);
   }
 
   // Se ejecuta cuando el usuario escribe

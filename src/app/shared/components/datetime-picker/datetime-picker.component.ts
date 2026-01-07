@@ -68,7 +68,9 @@ export class UiDatetimePickerComponent implements ControlValueAccessor {
     // Ajuste de timezone para datetime-local
     fecha = new Date(fecha.getTime() - fecha.getTimezoneOffset() * 60000);
     const formatted = fecha.toISOString().slice(0, 16);
-    this.value = formatted;    
+    this.value = formatted; 
+    console.log(value); 
+    this.onChange(value);  
   }
 
 
@@ -89,7 +91,6 @@ export class UiDatetimePickerComponent implements ControlValueAccessor {
 
   // Se ejecuta cuando el usuario escribe
   public updateValue(event: any) {
-    console.log(event.target.value);
     this.onChange(event.target.value);   // notifica al formulario
   }
 }

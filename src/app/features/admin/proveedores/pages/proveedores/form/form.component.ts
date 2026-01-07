@@ -6,7 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 import { UiDatetimePickerComponent } from "@shared/components/datetime-picker/datetime-picker.component";
 import { FormGroupOf } from '@core/utils/utilities';
 import { UiTextAreaComponent } from "@shared/components/text-area/text-area.component";
-import { IEmpresa, IEmpresaResult, ListEstadosEmpresa } from '@models';
+import { IEmpresa, IEmpresaResult } from '@models';
 import { UiComboBoxComponent } from '@shared/components/combo-box/combo-box.component';
 import { IComboBoxOption } from '@shared/models/combo_box_option';
 import Swal from 'sweetalert2'
@@ -24,8 +24,6 @@ const IMPORTS = [
 
 type EmpresaFormGroup = FormGroupOf<IEmpresa>;
 
-
-
 @Component({
   selector: 'app-form',
   standalone: true,
@@ -35,58 +33,79 @@ type EmpresaFormGroup = FormGroupOf<IEmpresa>;
 })
 export default class FormComponent {
   
-  protected readonly estadosEmpresa: IComboBoxOption[] = ListEstadosEmpresa;
+  protected estadosEmpresa!: IComboBoxOption[];
   private readonly _route = inject(ActivatedRoute);
   private readonly _empresasService = inject(EmpresasService);
   private readonly formBuilder = inject(FormBuilder);
   public location = inject(Location);
   protected formData!: EmpresaFormGroup;
-  private isAdd: boolean = true;
+  private initialFormValue!: IEmpresa;
+  protected isAdd: boolean = true;
   private idParam: number = -1;
 
   constructor() {
-    this.configForm();
+    this.loadEstadosEmpresa();
   }
 
-  protected configForm(): void {
+  ngOnInit() {
     const idParam = this._route.snapshot.params['id'];
-    this.formData = this.formBuilder.group({
-        ideEmp: [-1, [], []],
-        nombreEmp: ['', [Validators.required], []],
-        responsableEmp: ['', [Validators.required], []],
-        fechaContratoEmp: ['', [Validators.required], []],
-        direccionEmp: ['', [Validators.required], []],
-        telefonoEmp: ['', [Validators.required], []],
-        emailEmp: ['', [Validators.required], []],
-        estadoEmp: ['', [Validators.required], []],
-        descripcionEmp: ['', [Validators.required], []]
-      }) as EmpresaFormGroup;
+    this.initForm();
     if(idParam){
-      this._empresasService.buscar(idParam).subscribe(
-        (res) => {
-          const empresa = res.data[0] as IEmpresaResult;
-          this.idParam = empresa.ide_empr;
-          this.isAdd = false;
-          this.formData.patchValue({
-            ideEmp: empresa.ide_empr,
-            nombreEmp: empresa.nombre_empr,
-            responsableEmp: empresa.responsable_empr,
-            fechaContratoEmp: empresa.fecha_contrato_empr,
-            direccionEmp: empresa.direccion_empr,
-            telefonoEmp: empresa.telefono_empr,
-            emailEmp: empresa.email_empr,
-            estadoEmp: empresa.estado_empr,
-            descripcionEmp: empresa.descripcion_empr
-          });
-        }
-      )
+      this.setData(idParam);
     }
+  }
+
+  private initForm(): void {
+    this.formData = this.formBuilder.group({
+      ideEmp: [{ value: -1, disabled: true }, [Validators.required]],        
+      nombreEmp: ['', [Validators.required], []],
+      responsableEmp: ['', [Validators.required], []],
+      fechaContratoEmp: ['', [Validators.required], []],
+      direccionEmp: ['', [Validators.required], []],
+      telefonoEmp: ['', [Validators.required], []],
+      emailEmp: ['', [Validators.required], []],
+      estadoEmp: ['', [Validators.required], []],
+      descripcionEmp: ['', [Validators.required], []]
+    }) as EmpresaFormGroup;
+
+    // snapshot inicial
+    this.initialFormValue = this.formData.getRawValue();
+  }
+
+  private setData(idParam: number) {
+    this._empresasService.buscar(idParam).subscribe(
+      (res) => {
+        const empresa = res.data[0] as IEmpresaResult;
+        this.idParam = empresa.ide_empr;
+        this.isAdd = false;
+        this.formData.patchValue({
+          ideEmp: empresa.ide_empr,
+          nombreEmp: empresa.nombre_empr,
+          responsableEmp: empresa.responsable_empr,
+          fechaContratoEmp: empresa.fecha_contrato_empr,
+          direccionEmp: empresa.direccion_empr,
+          telefonoEmp: empresa.telefono_empr,
+          emailEmp: empresa.email_empr,
+          estadoEmp: empresa.estado_empr,
+          descripcionEmp: empresa.descripcion_empr
+        });
+      }
+    )
+  }
+
+  private loadEstadosEmpresa() {
+    this._empresasService.listarEstados().subscribe(
+      (res) => {
+        this.estadosEmpresa = res;
+      }
+    );
   }
 
   protected guardar(): void {
     if(!this.formData.invalid){
-      const data = this.formData.value as IEmpresa;
+      const data = this.formData.getRawValue() as IEmpresa;
       if(this.isAdd){
+        data.ideEmp = -1;
         this._empresasService.insertar(data).subscribe(
           (res) => {
             Swal.fire({
@@ -95,7 +114,7 @@ export default class FormComponent {
               icon: "success"
             });
             this.location.back();
-            this.formData.reset();
+            this.resetForm();
           }
         );
       }else{
@@ -109,6 +128,7 @@ export default class FormComponent {
           confirmButtonText: "Si, de acuerdo"
         }).then((result) => {
           if (result.isConfirmed) {
+            data.ideEmp = this.idParam;
             this._empresasService.actualizar(this.idParam, data).subscribe(
               (res) => {
                 Swal.fire({
@@ -117,7 +137,7 @@ export default class FormComponent {
                   icon: "success"
                 });
                 this.location.back();
-                this.formData.reset();
+                this.resetForm();
               }
             );
           }
@@ -144,10 +164,14 @@ export default class FormComponent {
       confirmButtonText: "Si, Cancelar!"
     }).then((result) => {
       if (result.isConfirmed) {
-        this.formData.reset();
+        this.resetForm();
         this.location.back();
       }
     });
     
+  }
+
+  protected resetForm() {
+    this.formData.reset(this.initialFormValue);
   }
 }

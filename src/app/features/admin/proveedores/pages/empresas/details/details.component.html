@@ -1,1 +1,55 @@
-<p>details works!</p>
+<div class="div_container">
+  <ui-card [showHeader]="true" class="div_card">
+
+    <!-- CABECERA -->
+    <div card-header class="card_header">
+      <div class="header_left">
+        <ui-text-field
+          [label]="'ID Empresa'"
+          [value]="idEmpresa"
+          [disabled]="true"
+        />
+      </div>
+
+      <div class="header_right">
+        <ui-button
+          [icon]="'refresh'"
+          (evntClick)="loadEmpresa()"
+        />
+        <ui-button
+          [label]="'Volver'"
+          [icon]="'arrow_back'"
+          (evntClick)="volver()"
+        />
+      </div>
+    </div>
+
+    <!-- INFO EMPRESA -->
+    <div class="card_info">
+
+      <div class="info_row">
+        <ui-text-field [label]="'Empresa'" [value]="empresa?.nombreEmp"/>
+        <ui-text-field [label]="'Responsable'" [value]="empresa?.responsableEmp"/>
+        <ui-text-field [label]="'Teléfono'" [value]="empresa?.telefonoEmp"/>
+        <ui-text-field [label]="'Email'" [value]="empresa?.emailEmp"/>
+      </div>
+
+      <div class="info_row">
+        <ui-text-field [label]="'Fecha Contrato'" [value]="empresa?.fechaContratoEmp"/>
+        <ui-text-field [label]="'Estado'" [value]="empresa?.estadoEmp"/>
+        <ui-text-field [label]="'Dirección'" [value]="empresa?.direccionEmp"/>
+        <ui-text-field [label]="'Descripción'" [value]="empresa?.descripcionEmp"/>
+      </div>
+
+    </div>
+
+    <!-- TABLA PRECIOS -->
+    <div class="card_table">
+      <ui-table-list
+        [serviceApi]="'empresas/listar/precios/' + idEmpresa"
+        [columns]="config.columns"
+      />
+    </div>
+
+  </ui-card>
+</div>
