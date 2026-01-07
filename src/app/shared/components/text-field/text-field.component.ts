@@ -1,4 +1,4 @@
-import { Component, forwardRef, input, output } from '@angular/core';
+import { Component, forwardRef, input, output, signal, effect } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -27,14 +27,22 @@ const PROVIDERS =[
 })
 export class UiTextFieldComponent implements ControlValueAccessor {
   public label = input.required<string>();
+  public value = input<string>('');
+  protected innerValue = signal<string>('');
   public placeholder = input<string>('...');
   public evntChange = output<string>();
   public onChange = (value: any) => {};
   public onTouched = () => {};
-  public value: string = '';
+  public value2: string = '';
   public disabled: boolean = false;
 
-  constructor() {}
+  constructor() {
+    effect(() => {
+      if (this.value() !== undefined) {
+        this.innerValue.set(this.value());
+      }
+    });
+  }
 
   protected emitValue(event:any) {
     this.evntChange.emit(event.target.value);
@@ -53,7 +61,7 @@ export class UiTextFieldComponent implements ControlValueAccessor {
 
   // Método llamado por el formulario cuando cambia el valor
   public writeValue(value: any): void {
-    this.value = value;
+    this.innerValue.set(value ?? '');
   }
 
   // Angular llama a este método y tú guardas el callback
@@ -72,7 +80,9 @@ export class UiTextFieldComponent implements ControlValueAccessor {
   }
 
   // Se ejecuta cuando el usuario escribe
-  public updateValue(event: any) {
-    this.onChange(event.target.value);   // notifica al formulario
+  public updateValue(event: Event) {
+    const v = (event.target as HTMLInputElement).value;
+    this.innerValue.set(v);
+    this.onChange(v);
   }
 }
