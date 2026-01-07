@@ -7,7 +7,7 @@ import { UiComboBoxComponent } from '@shared/components/combo-box/combo-box.comp
 import { UiTextFieldComponent } from "@shared/components/text-field/text-field.component";
 import { isValidStringValue, FormGroupOf } from '@core/utils/utilities';
 import { IFiltroCategoria, IFiltroEmpresa, IFiltroMarca } from 'app/models';
-import { ListConfig } from './list_empresas.config';
+import { ListConfig } from './list_marcas.config';
 import { CategoriasService, MarcasService } from '@services/index';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UiCardComponent } from '@shared/components/card/card.component';
