@@ -50,6 +50,12 @@ export default class FormComponent {
 
   ngOnInit(): void {
     this.initForm();
+    this.formData.get('fechaNacimientoProv')!
+      .valueChanges
+      .subscribe(value => {
+        const edad = this.calcularEdad(value);
+        this.formData.get('edadProv')?.setValue(edad, { emitEvent: false });
+      });
 
     const id = this._route.snapshot.params['id'];
     if (id) {
@@ -173,4 +179,22 @@ export default class FormComponent {
   protected resetForm() {
     this.formData.reset(this.initialFormValue);
   }
+
+
+  protected calcularEdad(fecha: string | Date): number {
+  if (!fecha) return 0;
+
+  const fechaNac = new Date(fecha);
+  const hoy = new Date();
+
+  let edad = hoy.getFullYear() - fechaNac.getFullYear();
+  const mes = hoy.getMonth() - fechaNac.getMonth();
+
+  if (mes < 0 || (mes === 0 && hoy.getDate() < fechaNac.getDate())) {
+    edad--;
+  }
+
+  return edad;
+}
+
 }

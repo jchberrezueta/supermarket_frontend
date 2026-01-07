@@ -26,7 +26,7 @@
                         </div>
                     </div>
                     <div class="form_buttons">
-                        <ui-button [label]="'Guardar'" (evntClick)="guardar()"/>
+                        <ui-button [label]="isAdd ? 'Guardar' : 'Actualizar'" (evntClick)="guardar()"/>
                         <ui-button [label]="'Cancelar'" (evntClick)="cancelar()" [color]="'red'"/>
                     </div>
                 </form>
