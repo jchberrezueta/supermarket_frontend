@@ -1,1 +1,112 @@
-<p>Componente Empresas Precios Trbajando :)</p>
+<div class="div_container">
+  <ui-card [showHeader]="false" class="div_card">
+
+    <!-- CABECERA SUPERIOR -->
+    <div class="top_bar">
+
+      <ui-text-field
+        class="field_empresa"
+        [label]="'Empresa'"
+        [value]="nombreEmpresa"
+        
+      />
+
+      <ng-container [formGroup]="formData">
+        <ui-input-box
+          [label]="'Producto'"
+          [options]="productos"
+          formControlName="ideProd"
+        />
+      </ng-container>
+
+      <ui-button
+        icon="refresh"
+        [color]="'primary'"
+        (evntClick)="refreshData()"
+      />
+
+      <ui-button
+        icon="edit"
+        [color]="'primary'"
+        (evntClick)="changeModeUpdate()"
+      />
+
+      <ui-button
+        icon="add"
+        [color]="'green'"
+        (evntClick)="changeModeInsert()"
+      />
+
+      <div
+        class="mode_badge"
+        [class.add]="isAdd"
+        [class.update]="!isAdd"
+      >
+        {{ isAdd ? 'INSERTANDO' : 'ACTUALIZANDO' }}
+      </div>
+
+    </div>
+
+    <!-- FORMULARIO -->
+    <div class="card_form">
+      
+        <form [formGroup]="formData" class="form">
+
+          <div class="form_fields">
+            <ui-text-field
+              [label]="'Precio Compra'"
+              [valueType]="'number'"
+              formControlName="precioCompraProd"
+            />
+
+            <ui-text-field
+              [label]="'Dcto Compra'"
+              [valueType]="'number'"
+              formControlName="dctoCompraProd"
+            />
+
+            <ui-text-field
+              [label]="'Dcto Caducidad'"
+              [valueType]="'number'"
+              formControlName="dctoCaducidadProd"
+            />
+
+            <ui-text-field
+              [label]="'IVA'"
+              [valueType]="'number'"
+              formControlName="ivaProd"
+            />
+          </div>
+
+          <div class="form_buttons">
+            <ui-button
+              [label]="isAdd ? 'Agregar' : 'Actualizar'"
+              [color]="isAdd ? 'primary' : 'yellow'"
+              [textColor]="isAdd ? 'white' : 'black'"
+              (evntClick)="guardar()"
+            />
+
+            <ui-button
+              [label]="'Volver'"
+              [color]="'red'"
+              (evntClick)="volver()"
+            />
+          </div>
+
+        </form>
+      
+    </div>
+
+    <!-- TABLA -->
+    <div class="card_table">
+      <ui-table-list
+        #tableList
+        [serviceApi]="'empresas/listar/precios/' + idEmpresa"
+        [columns]="config.columns"
+        [isSelection]="true"
+        (rowClickAction)="setIdEmprProd($event)"
+      />
+    </div>
+
+  </ui-card>
+</div>

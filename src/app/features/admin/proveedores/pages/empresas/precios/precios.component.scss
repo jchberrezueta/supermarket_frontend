@@ -1,0 +1,80 @@
+:host {
+  width: 100%;
+  height: 100%;
+}
+
+.div_container {
+  width: 100%;
+  height: 100%;
+}
+
+.div_card {
+  width: 100%;
+  height: 100%;
+  padding: 16px;
+}
+
+/* ---------- TOP BAR ---------- */
+.top_bar {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  margin-bottom: 16px;
+
+  .field_empresa {
+    width: 220px;
+  }
+
+  .field_producto {
+    width: 260px;
+  }
+}
+
+.mode_badge {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 12px;
+  align-self: center;
+
+  &.add {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+  }
+
+  &.update {
+    background-color: #fff8e1;
+    color: #f57c00;
+  }
+}
+
+/* ---------- FORM ---------- */
+.card_form {
+  background-color: rgba(241, 245, 249);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form_fields {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.form_buttons {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+/* ---------- TABLE ---------- */
+.card_table {
+  padding-top: 10px;
+}
