@@ -14,14 +14,11 @@
                 </div>
             </form>
             <div class="btns_options">
-                <ui-button [label]="'Precios'" [icon]="'attach_money'" [color]="'yellow'" [textColor]="'black'" 
-                    [action]="'redirect'" (evntClick)="redirectToEmpresaPrecios($event)"/>
                 <ui-button [icon]="'refresh'" [action]="'refresh'" (evntClick)="refreshData($event)"/>
             </div>
         </div>
         <div class="card_table">
-            <ui-table-list #tableList [serviceApi]="'empresas'" [columns]="config.columns" [isSelection]="true"
-                (rowClickAction)="setIdEmpresa($event)"/>
+            <ui-table-list #tableList [serviceApi]="'entregas/listar/entregas'" [serviceApiFilter]="'entregas/filtrar/entregas'" [serviceApi]="'entregas'" [columns]="config.columns" />
         </div>
     </ui-card>
 </div>

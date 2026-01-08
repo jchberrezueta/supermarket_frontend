@@ -6,9 +6,9 @@ import { IComboBoxOption } from '@shared/models/combo_box_option';
 import { UiComboBoxComponent } from '@shared/components/combo-box/combo-box.component';
 import { UiTextFieldComponent } from "@shared/components/text-field/text-field.component";
 import { isValidStringValue, FormGroupOf } from '@core/utils/utilities';
-import { IFiltroEmpresa } from 'app/models';
-import { ListEmpresasConfig } from './list_empresas.config';
-import { EmpresasService } from '@services/index';
+import { IFiltroEmpresa, IFiltroEntrega } from 'app/models';
+import { ListEntregasConfig } from './list_entregas.config';
+import { EmpresasService, EntregasService, ProveedoresService } from '@services/index';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UiCardComponent } from '@shared/components/card/card.component';
 
@@ -21,7 +21,7 @@ const IMPORTS = [
   ReactiveFormsModule
 ];
 
-type filterEmpresaFormGroup = FormGroupOf<IFiltroEmpresa>;
+type filterEntregaFormGroup = FormGroupOf<IFiltroEntrega>;
 
 @Component({
   selector: 'app-list',
@@ -32,36 +32,45 @@ type filterEmpresaFormGroup = FormGroupOf<IFiltroEmpresa>;
 })
 export default class ListComponent {
   private readonly _tableList = viewChild.required<UiTableListComponent>(UiTableListComponent);
-  protected readonly config = ListEmpresasConfig;
-  private readonly _empresasService = inject(EmpresasService);
-  private readonly _router = inject(Router);
-  private readonly _route = inject(ActivatedRoute);
+  protected readonly config = ListEntregasConfig;
+  private readonly _proveedoresService = inject(ProveedoresService);
+  private readonly _entregasService = inject(EntregasService);
   private formBuilder= inject(FormBuilder);
-  protected estadosEmpresa!: IComboBoxOption[];
-  protected formData!: filterEmpresaFormGroup;
-  private initialFormValue!: IFiltroEmpresa;
+  protected opcionesProveedores!: IComboBoxOption[];
+  protected opcionesProvEstados!: IComboBoxOption[];
+  protected formData!: filterEntregaFormGroup;
+  private initialFormValue!: IFiltroEntrega;
 
-  private idEmpresa: number = -1;
 
   constructor() {
-    this.loadEstadosEmpresa();
+    this.loadComboProveedores();
+    this.loadComboEstados();
     this.configForm();
   }
 
   protected configForm() {
     this.formData = this.formBuilder.group({
-      nombreEmp: ['', [], []],
-      estadoEmp: ['', [], []],
-      responsableEmp: ['', [], []],
-    }) as filterEmpresaFormGroup;
+      idePedi: ['', [], []],
+      ideProv: ['', [], []],
+      estadoEntr: ['', [], []],
+      fechaEntrDesde: ['', [], []],
+      fechaEntrHasta: ['', [], []],
+    }) as filterEntregaFormGroup;
     //snapshot inicial
     this.initialFormValue = this.formData.getRawValue();
   }
 
-  private loadEstadosEmpresa() {
-    this._empresasService.listarEstados().subscribe(
+  private loadComboProveedores() {
+    this._proveedoresService.listarComboProveedores().subscribe(
       (res) => {
-        this.estadosEmpresa = res;
+        this.opcionesProveedores = res;
+      }
+    );
+  }
+  private loadComboEstados() {
+    this._entregasService.listarComboEstados().subscribe(
+      (res) => {
+        this.opcionesProvEstados = res;
       }
     );
   }
@@ -73,27 +82,13 @@ export default class ListComponent {
 
   private getParams(): URLSearchParams {
     const params = new URLSearchParams();
-    const filtro = this.formData.value as IFiltroEmpresa;
-    if (isValidStringValue(filtro.nombreEmp)) params.append('nombreEmp', filtro.nombreEmp );
-    if (isValidStringValue(filtro.estadoEmp)) params.append('estadoEmp', filtro.estadoEmp );
-    if (isValidStringValue(filtro.responsableEmp)) params.append('responsableEmp', filtro.responsableEmp );
+    const filtro = this.formData.value as IFiltroEntrega;
+    if (isValidStringValue(filtro.idePedi)) params.append('idePedi', filtro.idePedi );
+    if (isValidStringValue(filtro.ideProv)) params.append('ideProv', filtro.ideProv );
+    if (isValidStringValue(filtro.estadoEntr)) params.append('estadoEntr', filtro.estadoEntr );
+    if (isValidStringValue(filtro.fechaEntrDesde)) params.append('fechaEntrDesde', filtro.fechaEntrDesde );
+    if (isValidStringValue(filtro.fechaEntrHasta)) params.append('fechaEntrHasta', filtro.fechaEntrHasta );
     return params;
-  }
-
-  protected redirectToEmpresaPrecios(clickAction: string) {
-    if(clickAction === 'redirect') {
-      if(this.idEmpresa > -1){
-        this._router.navigate(['../precios', this.idEmpresa], {relativeTo: this._route});
-      }
-    }
-  }
-
-  protected setIdEmpresa(elem: any) {
-    if(elem && elem.row){
-      this.idEmpresa = elem.row.ide_empr;
-    }else{
-      this.idEmpresa = -1;
-    }
   }
 
   protected refreshData(actionClick: string){

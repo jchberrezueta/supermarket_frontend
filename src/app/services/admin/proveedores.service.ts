@@ -50,6 +50,9 @@ export class ProveedoresService {
    * COMBOS
    */
 
+  public listarComboProveedores(): Observable<IComboBoxOption[]> {
+    return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/proveedores/combo/proveedores`);
+  }
   public listarComboCedula(): Observable<IComboBoxOption[]> {
     return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/proveedores/combo/cedula`);
   }
