@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { IResultData } from '@core/models';
 import { RestService } from '@core/services/rest.service';
 import { IPerfil, IResultDataPerfil } from '@models';
+import { IComboBoxOption } from '@shared/models/combo_box_option';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -30,4 +31,24 @@ export class PerfilesService {
   public eliminar(id: number) {
     return this._restService.delete<any>(`${this.apiUrl}/eliminar/${id}`);
   }
+
+  /**
+     * JOINS
+     */
+    public listarPerfiles(): Observable<IResultData> {
+      return this._restService.get<IResultData>(`${this.apiUrl}/listar/perfiles`);
+    }
+  
+    /**
+     * COMBOS
+     */
+    public listarComboPerfiles(): Observable<IComboBoxOption[]> {
+      return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/combo/perfiles`);
+    }
+    public listarComboNombres(): Observable<IComboBoxOption[]> {
+      return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/combo/nombres`);
+    }
+    public listarComboDescripcion(): Observable<IComboBoxOption[]> {
+      return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/combo/descripciones`);
+    }
 }
