@@ -4,11 +4,10 @@ import { UiTableListComponent } from '@shared/components/index';
 import { UiButtonComponent } from "@shared/components/button/button.component";
 import { IComboBoxOption } from '@shared/models/combo_box_option';
 import { UiComboBoxComponent } from '@shared/components/combo-box/combo-box.component';
-import { UiTextFieldComponent } from "@shared/components/text-field/text-field.component";
 import { isValidStringValue, FormGroupOf } from '@core/utils/utilities';
-import { IEmpresaResult, IFiltroEmpresa, IFiltroProducto } from 'app/models';
+import { IFiltroProducto } from 'app/models';
 import { ListProductosConfig } from './list_productos.config';
-import { CategoriasService, EmpresasService, MarcasService, ProductosService } from '@services/index';
+import { CategoriasService, MarcasService, ProductosService } from '@services/index';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UiCardComponent } from '@shared/components/card/card.component';
 import { UiInputBoxComponent } from '@shared/components/input-box/input-box.component';
@@ -17,7 +16,6 @@ const IMPORTS = [
   UiTableListComponent,
   UiButtonComponent,
   UiComboBoxComponent,
-  UiTextFieldComponent,
   UiCardComponent,
   ReactiveFormsModule,
   UiInputBoxComponent

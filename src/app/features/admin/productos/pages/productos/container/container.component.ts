@@ -30,7 +30,7 @@ const breadcumbs = [
 export default class containerComponent {
   private readonly _router = inject(Router);
   private readonly _route = inject(ActivatedRoute);
-  protected readonly title: string = 'Convenios Empresas';
+  protected readonly title: string = 'Productos';
   public breadcumbs: IBreadcumb[] = breadcumbs;
   protected showAddButton = false;
 

@@ -1,40 +1,56 @@
 <div class="div_container">
-    <div class="div_card">
-        <div class="panel_1">
-            <div class="card_form">
-                <form [formGroup]="formData" class="form">
-                    <div class="div_form">
-                        @if (!isAdd) {
-                            <div class="div_id" >
-                                <ui-text-field [label]="'ID'" formControlName="ideEmp"/>
-                                <div class="input_falso"></div>
-                            </div>
-                        }
-                        <div class="form_info">
-                            <div class="form_div form_div_1">                       
-                                <ui-text-field [label]="'Empresa'" formControlName="nombreEmp"/>
-                                <ui-datetime-picker [label]="'Fecha Contrato'"  [isTime]="true"  formControlName="fechaContratoEmp"/>
-                                <ui-text-field [label]="'Telefono'" formControlName="telefonoEmp"/>
-                                <ui-text-area [label]="'Direccion'" formControlName="direccionEmp"/>
-                            </div>
-                            <div class="form_div form_div_2">
-                                <ui-text-field [label]="'Responsable'" formControlName="responsableEmp"/>
-                                <ui-combo-box [label]="'Estado'" [options]="estadosEmpresa" formControlName="estadoEmp"/>
-                                <ui-text-field [label]="'Email'" formControlName="emailEmp"/>
-                                <ui-text-area [label]="'Descripcion'" formControlName="descripcionEmp"/>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form_buttons">
-                        <ui-button [label]="isAdd ? 'Guardar' : 'Actualizar'" (evntClick)="guardar()"/>
-                        <ui-button [label]="'Cancelar'" (evntClick)="cancelar()" [color]="'red'"/>
-                    </div>
-                </form>
+  <div class="div_card">
+
+    <div class="panel_1">
+      <div class="card_form">
+        <form [formGroup]="formData" class="form">
+
+          <div class="div_form">
+
+            @if (!isAdd) {
+              <div class="div_id">
+                <ui-text-field label="ID" formControlName="ideProd" />
+                <div class="input_falso"></div>
+              </div>
+            }
+
+            <div class="form_info">
+
+              <div class="form_div">
+                <ui-combo-box label="Categoría" [options]="categorias" formControlName="ideCate" />
+                <ui-combo-box label="Marca" [options]="marcas" formControlName="ideMarc" />
+                <ui-text-field label="Código Barra" formControlName="codigoBarraProd" />
+                <ui-text-field label="Nombre" formControlName="nombreProd" />
+                <ui-text-field label="Precio Venta" [valueType]="'number'" formControlName="precioVentaProd" />
+              </div>
+
+              <div class="form_div">
+                <ui-text-field label="IVA" [valueType]="'number'" formControlName="ivaProd" />
+                <ui-text-field label="Descuento Promo" [valueType]="'number'" formControlName="dctoPromoProd" />
+                <ui-text-field label="Stock" [valueType]="'number'" formControlName="stockProd" />
+                <ui-text-field label="Disponible" formControlName="disponibleProd" />
+                <ui-text-field label="Estado" formControlName="estadoProd" />
+              </div>
+
             </div>
-            
-        </div>
-        <div class="panel_2">
-            <div class="panel_2_img"></div>
-        </div>
+
+            <ui-text-area label="Descripción" formControlName="descripcionProd" />
+            <ui-text-field label="URL Imagen" formControlName="urlImgProd" />
+
+          </div>
+
+          <div class="form_buttons">
+            <ui-button [label]="isAdd ? 'Guardar' : 'Actualizar'" (evntClick)="guardar()" />
+            <ui-button label="Cancelar" color="red" (evntClick)="cancelar()" />
+          </div>
+
+        </form>
+      </div>
     </div>
+
+    <div class="panel_2">
+      <div class="panel_2_img"></div>
+    </div>
+
+  </div>
 </div>
