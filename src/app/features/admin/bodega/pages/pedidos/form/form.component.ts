@@ -1,162 +1,177 @@
 import { Component, inject } from '@angular/core';
-import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Location } from '@angular/common';
-
-import { UiTextFieldComponent } from '@shared/components/text-field/text-field.component';
-import { UiInputBoxComponent } from '@shared/components/input-box/input-box.component';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { UiTextFieldComponent } from "@shared/components/text-field/text-field.component";
+import { UiButtonComponent } from "@shared/components/button/button.component";
+import { ActivatedRoute } from '@angular/router';
+import { UiDatetimePickerComponent } from "@shared/components/datetime-picker/datetime-picker.component";
+import { FormGroupOf } from '@core/utils/utilities';
+import { UiTextAreaComponent } from "@shared/components/text-area/text-area.component";
+import { IEmpresa, IEmpresaResult } from '@models';
 import { UiComboBoxComponent } from '@shared/components/combo-box/combo-box.component';
-import { UiDatetimePickerComponent } from '@shared/components/datetime-picker/datetime-picker.component';
-import { UiButtonComponent } from '@shared/components/button/button.component';
-import { UiTableListComponent } from '@shared/components/table-list/table-list.component';
-
 import { IComboBoxOption } from '@shared/models/combo_box_option';
+import Swal from 'sweetalert2'
+import { Location } from '@angular/common'; // 1. Importar Location
+import { EmpresasService } from '@services/index';
+
+const IMPORTS = [
+  UiTextFieldComponent, 
+  UiTextAreaComponent,
+  UiDatetimePickerComponent,
+  UiComboBoxComponent,
+  UiButtonComponent,
+  ReactiveFormsModule, 
+];
+
+type EmpresaFormGroup = FormGroupOf<IEmpresa>;
 
 @Component({
-  selector: 'app-pedido-form',
+  selector: 'app-form',
   standalone: true,
-  imports: [
-    UiTextFieldComponent,
-    UiInputBoxComponent,
-    UiComboBoxComponent,
-    UiDatetimePickerComponent,
-    UiButtonComponent,
-    UiTableListComponent,
-    ReactiveFormsModule
-  ],
+  imports: IMPORTS,
   templateUrl: './form.component.html',
   styleUrl: './form.component.scss'
 })
-export default class PedidoFormComponent {
-
-  private fb = inject(FormBuilder);
-  private location = inject(Location);
-
-  /* =========================
-     FLAGS
-  ========================== */
-  protected isAddPedido = true;
-  protected isAddDetalle = true;
-
-  /* =========================
-     COMBOS
-  ========================== */
-  protected empresas!: IComboBoxOption[];
-  protected productos!: IComboBoxOption[];
-
-  /* =========================
-     CABECERA FORM
-  ========================== */
-  protected pedidoForm = this.fb.group({
-    idePedi: [{ value: -1, disabled: true }],
-    ideEmpr: [-1, Validators.required],
-    fechaPedi: ['', Validators.required],
-    fechaEntrPedi: ['', Validators.required],
-    motivoPedi: ['peticion'],
-    observacionPedi: ['']
-  });
-
-  /* =========================
-     DETALLE FORM
-  ========================== */
-  protected detalleForm = this.fb.group({
-    ideDetaPedi: [-1],
-    ideProd: [-1, Validators.required],
-    cantidadProd: [1, Validators.required],
-    precioUnitarioProd: [0, Validators.required],
-    dctoCompraProd: [0],
-    dctoCaducProd: [0],
-    ivaProd: [0]
-  });
-
-  /* =========================
-     LISTA TEMPORAL DETALLE
-  ========================== */
-  protected detalles: any[] = [];
-
-  /* =========================
-     CALCULOS VISUALES
-  ========================== */
-  protected bruto = 0;
-  protected neto = 0;
-  protected total = 0;
+export default class FormComponent {
+  
+  protected estadosEmpresa!: IComboBoxOption[];
+  private readonly _route = inject(ActivatedRoute);
+  private readonly _empresasService = inject(EmpresasService);
+  private readonly formBuilder = inject(FormBuilder);
+  public location = inject(Location);
+  protected formData!: EmpresaFormGroup;
+  private initialFormValue!: IEmpresa;
+  protected isAdd: boolean = true;
+  private idParam: number = -1;
 
   constructor() {
-    // loadEmpresas()
-    // loadProductos()
+    this.loadEstadosEmpresa();
   }
 
-  /* =========================
-     CALCULO DETALLE
-  ========================== */
-  protected calcularDetalle() {
-    const v = this.detalleForm.value;
-
-    const subtotal = v.cantidadProd! * v.precioUnitarioProd!;
-    const dctoCompra = subtotal * (v.dctoCompraProd! / 100);
-    const dctoCaduc = subtotal * (v.dctoCaducProd! / 100);
-
-    this.bruto = subtotal;
-    this.neto = subtotal - dctoCompra - dctoCaduc;
-    this.total = this.neto + (this.neto * (v.ivaProd! / 100));
-  }
-
-  /* =========================
-     INSERT / UPDATE DETALLE
-  ========================== */
-  protected guardarDetalle() {
-    this.calcularDetalle();
-
-    const data = {
-      ...this.detalleForm.value,
-      subtotalProd: this.bruto,
-      totalProd: this.total,
-      estadoDetaPedi: 'progreso'
-    };
-
-    if (this.isAddDetalle) {
-      data.ideDetaPedi = -1;
-      this.detalles.push(data);
-    } else {
-      const index = this.detalles.findIndex(d => d.ideDetaPedi === data.ideDetaPedi);
-      this.detalles[index] = data;
+  ngOnInit() {
+    const idParam = this._route.snapshot.params['id'];
+    this.initForm();
+    if(idParam){
+      this.setData(idParam);
     }
-
-    this.clearDetalle();
   }
 
-  protected cargarDetalle(row: any) {
-    this.isAddDetalle = false;
-    this.detalleForm.patchValue(row);
-    this.calcularDetalle();
+  private initForm(): void {
+    this.formData = this.formBuilder.group({
+      ideEmp: [{ value: -1, disabled: true }, [Validators.required]],        
+      nombreEmp: ['', [Validators.required], []],
+      responsableEmp: ['', [Validators.required], []],
+      fechaContratoEmp: ['', [Validators.required], []],
+      direccionEmp: ['', [Validators.required], []],
+      telefonoEmp: ['', [Validators.required], []],
+      emailEmp: ['', [Validators.required], []],
+      estadoEmp: ['', [Validators.required], []],
+      descripcionEmp: ['', [Validators.required], []]
+    }) as EmpresaFormGroup;
+
+    // snapshot inicial
+    this.initialFormValue = this.formData.getRawValue();
   }
 
-  protected clearDetalle() {
-    this.isAddDetalle = true;
-    this.detalleForm.reset({
-      ideDetaPedi: -1,
-      cantidadProd: 1,
-      dctoCompraProd: 0,
-      dctoCaducProd: 0,
-      ivaProd: 0
+  private setData(idParam: number) {
+    this._empresasService.buscar(idParam).subscribe(
+      (res) => {
+        const empresa = res.data[0] as IEmpresaResult;
+        this.idParam = empresa.ide_empr;
+        this.isAdd = false;
+        this.formData.patchValue({
+          ideEmp: empresa.ide_empr,
+          nombreEmp: empresa.nombre_empr,
+          responsableEmp: empresa.responsable_empr,
+          fechaContratoEmp: empresa.fecha_contrato_empr,
+          direccionEmp: empresa.direccion_empr,
+          telefonoEmp: empresa.telefono_empr,
+          emailEmp: empresa.email_empr,
+          estadoEmp: empresa.estado_empr,
+          descripcionEmp: empresa.descripcion_empr
+        });
+      }
+    )
+  }
+
+  private loadEstadosEmpresa() {
+    this._empresasService.listarEstados().subscribe(
+      (res) => {
+        this.estadosEmpresa = res;
+      }
+    );
+  }
+
+  protected guardar(): void {
+    if(!this.formData.invalid){
+      const data = this.formData.getRawValue() as IEmpresa;
+      if(this.isAdd){
+        data.ideEmp = -1;
+        this._empresasService.insertar(data).subscribe(
+          (res) => {
+            Swal.fire({
+              title: "Empresa registrada :)",
+              text: "La empresa fue guardada correctamente",
+              icon: "success"
+            });
+            this.location.back();
+            this.resetForm();
+          }
+        );
+      }else{
+        Swal.fire({
+          title: "Esta seguro de modificar esta empresa?",
+          text: "Los cambios realizados se registraran!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Si, de acuerdo"
+        }).then((result) => {
+          if (result.isConfirmed) {
+            data.ideEmp = this.idParam;
+            this._empresasService.actualizar(this.idParam, data).subscribe(
+              (res) => {
+                Swal.fire({
+                  title: "Empresa actualizada :)",
+                  text: "La empresa fue actualizada correctamente",
+                  icon: "success"
+                });
+                this.location.back();
+                this.resetForm();
+              }
+            );
+          }
+        });
+        
+      }
+    }else{
+      Swal.fire({
+        icon: "info",
+        title: "Oops... Faltan datos",
+        text: "Revise porfavor la información ingresada"
+      });
+    }
+  }
+
+  protected cancelar(): void {
+    Swal.fire({
+      title: "Esta Seguro de Cancelar?",
+      text: "Los cambios realizados no se guardaran!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Si, Cancelar!"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.resetForm();
+        this.location.back();
+      }
     });
-    this.bruto = this.neto = this.total = 0;
+    
   }
 
-  /* =========================
-     GUARDAR PEDIDO COMPLETO
-  ========================== */
-  protected guardarPedido() {
-    const payload = {
-      pedido: this.pedidoForm.getRawValue(),
-      detalles: this.detalles
-    };
-
-    // backend decide:
-    // - ideDetaPedi === -1 → INSERT
-    // - ideDetaPedi > 0 → UPDATE
-  }
-
-  protected cancelar() {
-    this.location.back();
+  protected resetForm() {
+    this.formData.reset(this.initialFormValue);
   }
 }
