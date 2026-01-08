@@ -33,8 +33,12 @@ export class EmpresasService {
     return this._restService.delete<any>(`${this.apiUrl}/eliminar/${id}`);
   }
 
+  /**
+   * COMBOS
+   */
+
   public listarEstados(): Observable<IComboBoxOption[]> {
-    return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/estados`);
+    return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/combo/empresas/estados`);
   }
 
   public listarComboEmpresas(): Observable<IComboBoxOption[]> {

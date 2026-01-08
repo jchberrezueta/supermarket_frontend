@@ -6,7 +6,7 @@ import { IComboBoxOption } from '@shared/models/combo_box_option';
 import { UiComboBoxComponent } from '@shared/components/combo-box/combo-box.component';
 import { UiTextFieldComponent } from "@shared/components/text-field/text-field.component";
 import { isValidStringValue, FormGroupOf } from '@core/utils/utilities';
-import { IEmpresaResult, IFiltroEmpresa } from 'app/models';
+import { IFiltroEmpresa } from 'app/models';
 import { ListEmpresasConfig } from './list_empresas.config';
 import { EmpresasService } from '@services/index';
 import { ActivatedRoute, Router } from '@angular/router';
