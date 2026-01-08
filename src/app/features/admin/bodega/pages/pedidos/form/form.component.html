@@ -1,40 +1,53 @@
 <div class="div_container">
-    <div class="div_card">
-        <div class="panel_1">
-            <div class="card_form">
-                <form [formGroup]="formData" class="form">
-                    <div class="div_form">
-                        @if (!isAdd) {
-                            <div class="div_id" >
-                                <ui-text-field [label]="'ID'" formControlName="ideEmp"/>
-                                <div class="input_falso"></div>
-                            </div>
-                        }
-                        <div class="form_info">
-                            <div class="form_div form_div_1">                       
-                                <ui-text-field [label]="'Empresa'" formControlName="nombreEmp"/>
-                                <ui-datetime-picker [label]="'Fecha Contrato'"  [isTime]="true"  formControlName="fechaContratoEmp"/>
-                                <ui-text-field [label]="'Telefono'" formControlName="telefonoEmp"/>
-                                <ui-text-area [label]="'Direccion'" formControlName="direccionEmp"/>
-                            </div>
-                            <div class="form_div form_div_2">
-                                <ui-text-field [label]="'Responsable'" formControlName="responsableEmp"/>
-                                <ui-combo-box [label]="'Estado'" [options]="estadosEmpresa" formControlName="estadoEmp"/>
-                                <ui-text-field [label]="'Email'" formControlName="emailEmp"/>
-                                <ui-text-area [label]="'Descripcion'" formControlName="descripcionEmp"/>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form_buttons">
-                        <ui-button [label]="isAdd ? 'Guardar' : 'Actualizar'" (evntClick)="guardar()"/>
-                        <ui-button [label]="'Cancelar'" (evntClick)="cancelar()" [color]="'red'"/>
-                    </div>
-                </form>
-            </div>
-            
-        </div>
-        <div class="panel_2">
-            <div class="panel_2_img"></div>
-        </div>
+  <div class="div_card">
+
+    <!-- CABECERA -->
+    <form [formGroup]="pedidoForm" class="form_header">
+      <ui-combo-box label="Empresa" formControlName="ideEmpr" [options]="empresas"/>
+      <ui-datetime-picker label="Fecha Pedido" formControlName="fechaPedi"/>
+      <ui-datetime-picker label="Fecha Entrega" formControlName="fechaEntrPedi"/>
+    </form>
+
+    <!-- DETALLE -->
+    <form [formGroup]="detalleForm" class="form_detalle">
+
+      <ui-input-box label="Producto" formControlName="ideProd" [options]="productos"/>
+
+      <ui-text-field label="Cantidad" formControlName="cantidadProd"/>
+      <ui-text-field label="P/U" formControlName="precioUnitarioProd"/>
+
+      <ui-text-field label="% Dcto Compra" formControlName="dctoCompraProd"/>
+      <ui-text-field label="% Dcto Caducidad" formControlName="dctoCaducProd"/>
+      <ui-text-field label="% IVA" formControlName="ivaProd"/>
+
+      <div class="resumen">
+        <span>Bruto: {{ bruto }}</span>
+        <span>Neto: {{ neto }}</span>
+        <span>Total: {{ total }}</span>
+      </div>
+
+      <div class="acciones">
+        <ui-button
+          [label]="isAddDetalle ? 'Agregar Detalle' : 'Actualizar Detalle'"
+          (evntClick)="guardarDetalle()"
+        />
+        <ui-button label="Clear" color="gray" (evntClick)="clearDetalle()"/>
+      </div>
+
+    </form>
+
+    <!-- TABLA DETALLE -->
+    <ui-table-list
+      [inputData]="detalles"
+      [columns]="[]"
+      (rowClickAction)="cargarDetalle($event.row)">
+    </ui-table-list>
+
+    <!-- FOOTER -->
+    <div class="footer">
+      <ui-button label="Guardar Pedido" (evntClick)="guardarPedido()"/>
+      <ui-button label="Cancelar" color="red" (evntClick)="cancelar()"/>
     </div>
+
+  </div>
 </div>

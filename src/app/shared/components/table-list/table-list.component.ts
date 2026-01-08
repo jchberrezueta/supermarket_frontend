@@ -43,7 +43,8 @@ const IMPORTS = [
   styleUrls: ['./table-list.component.scss']
 })
 export class UiTableListComponent implements OnInit {
-  public serviceApi = input.required<string>();
+  public serviceApi = input<string>('');
+  public inputData = input<any[]>([]);
   public serviceApiReal = input<string>('');
   public serviceApiFilter = input<string>('');
   public columns = input.required<ITableColumn[]>();
@@ -87,13 +88,30 @@ export class UiTableListComponent implements OnInit {
   ngOnInit() {
     this.selection = new SelectionModel<any>(this.isSelection(), []);
     this.loadColumns();
-    this.requestData(this.serviceApi());
-    this.hasPermissionsUD();
+    if(this.serviceApi() !== ''){
+      this.requestData(this.serviceApi());
+      this.hasPermissionsUD();
+    }else if(this.inputData()){
+      this.setData();
+    }
   }
 
   public refreshData() {
     this.requestData(this.serviceApi());
     this.hasPermissionsUD();
+  }
+
+  private setData() {
+    /*this._loadingService.show();*/
+    this.data.set(this.inputData());
+    this.matDatasource.data = this.data();
+    this.resultsLength.set(this.matDatasource.data.length);
+
+    const s = this._matSort();
+    const p = this._matPaginator();
+    if (s) this.matDatasource.sort = s;
+    if (p) this.matDatasource.paginator = p;
+    /*this._loadingService.hide();*/
   }
 
   private requestData(ruta: string) {

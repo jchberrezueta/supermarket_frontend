@@ -97,8 +97,6 @@ export class UiTextFieldComponent implements ControlValueAccessor {
 
   // Si el formulario deshabilita el control
   public setDisabledState(isDisabled: boolean) {
-    console.log('angular disbaled');
-        console.log(isDisabled);
     this._isDisabled.set(isDisabled);
   }
 
