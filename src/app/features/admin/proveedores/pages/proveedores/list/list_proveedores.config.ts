@@ -1,6 +1,6 @@
 import { ITableListConfig } from "@shared/models/table-list.model";
 
-export const ListConfig: ITableListConfig = {
+export const ListProveedoresConfig: ITableListConfig = {
     dataKey: 'ide_prov',
     columns: [
         { 

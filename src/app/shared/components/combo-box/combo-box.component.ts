@@ -33,6 +33,7 @@ export class UiComboBoxComponent implements ControlValueAccessor {
   public options = input.required<IComboBoxOption[]>();
   public label = input.required<string>();
   public width = input<string>('');
+  public returnValue = input<string>('');
   public evntSelectOption = output<number>();
   public open: boolean = false;
   public disabled: boolean = false;
@@ -59,8 +60,12 @@ export class UiComboBoxComponent implements ControlValueAccessor {
     this.selectedValue = opt.value;
     this.open = false;
     this.evntSelectOption.emit(opt.value);
-    
-    this.onChange(opt.value); //notifica al formulario
+  
+    if(this.returnValue() === '' || this.returnValue() === 'value'){
+      this.onChange(opt.value);
+    }else if(this.returnValue() === 'label'){
+      this.onChange(opt.label);
+    }
     this.onTouched();
   }
 //

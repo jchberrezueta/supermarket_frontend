@@ -31,10 +31,10 @@ export class UiTextFieldComponent implements ControlValueAccessor {
   public label = input.required<string>();
   public value = input<any>('');
   public valueType = input<'string' | 'number'>('string');
-  public disabled = input<boolean>(false);
-  public width = input<string>('auto');
-  protected _isDisabled = signal(false);
   protected innerValue = signal<string>('');
+  public disabled = input<boolean>(false);
+  protected _isDisabled = signal(false);
+  public width = input<string>('auto');
   public placeholder = input<string>('...');
   public evntChange = output<string>();
   public onChange = (value: any) => {};

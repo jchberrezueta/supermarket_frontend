@@ -85,7 +85,6 @@ export class UiDatetimePickerComponent implements ControlValueAccessor {
     const formatted = fecha.toISOString().slice(0, 16);
     this.innerValue.set(formatted);
     this.onChange(value);  
-    console.log(formatted)
   }
 
 

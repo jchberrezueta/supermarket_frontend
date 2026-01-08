@@ -1,4 +1,4 @@
-import { Component, forwardRef, input, output } from '@angular/core';
+import { Component, effect, forwardRef, input, output, signal, SimpleChanges } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -26,14 +26,31 @@ const PROVIDERS = [
 })
 export class UiTextAreaComponent implements ControlValueAccessor {
   public label = input.required<string>();
+  public value = input<any>('');
+  public valueType = input<'string' | 'number'>('string');
+  protected innerValue = signal<string>('');
+  public disabled = input<boolean>(false);
+  protected _isDisabled = signal(false);
+  public width = input<string>('auto');
   public placeholder = input<string>('...');
   public evntChange = output<string>();
   public onChange = (value: any) => {};
   public onTouched = () => {};
-  public value: string = '';
-  public disabled = false;
 
-  constructor() {}
+  constructor() {
+    effect(() => {
+      if (this.value() !== undefined && this.value() !== '') {
+        this.innerValue.set(this.value());
+      }
+    },
+    { allowSignalWrites: true });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['disabled']) {
+      this._isDisabled.set(this.disabled());
+    }
+  }
 
   protected emitValue(event:any) {
     this.evntChange.emit(event.target.value);
@@ -49,7 +66,7 @@ export class UiTextAreaComponent implements ControlValueAccessor {
 
   // Método llamado por el formulario cuando cambia el valor
   public writeValue(value: any): void {
-    this.value = value;
+    this.innerValue.set(value ?? '');
   }
 
   // Angular llama a este método y tú guardas el callback
@@ -64,11 +81,18 @@ export class UiTextAreaComponent implements ControlValueAccessor {
 
   // Si el formulario deshabilita el control
   public setDisabledState(isDisabled: boolean) {
-    this.disabled = isDisabled;
+    this._isDisabled.set(isDisabled);
   }
 
   // Se ejecuta cuando el usuario escribe
-  public updateValue(event: any) {
-    this.onChange(event.target.value);   // notifica al formulario
+  public updateValue(event: Event) {
+    const rawValue = (event.target as HTMLInputElement).value;
+    let parsedValue: any = rawValue;
+
+    if (this.valueType() === 'number') {
+      parsedValue = rawValue === '' ? null : Number(rawValue);
+    }
+    this.innerValue.set(parsedValue);
+    this.onChange(parsedValue);
   }
 }

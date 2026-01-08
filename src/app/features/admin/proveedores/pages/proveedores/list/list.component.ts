@@ -7,7 +7,7 @@ import { UiComboBoxComponent } from '@shared/components/combo-box/combo-box.comp
 import { UiTextFieldComponent } from "@shared/components/text-field/text-field.component";
 import { isValidStringValue, FormGroupOf } from '@core/utils/utilities';
 import { IEmpresaResult, IFiltroEmpresa, IFiltroProveedor } from 'app/models';
-import { ListConfig } from './list_proveedores.config';
+import { ListProveedoresConfig } from './list_proveedores.config';
 import { EmpresasService, ProveedoresService } from '@services/index';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UiCardComponent } from '@shared/components/card/card.component';
@@ -33,10 +33,8 @@ type filterProveedorFormGroup = FormGroupOf<IFiltroProveedor>;
 })
 export default class ListComponent {
   private readonly _tableList = viewChild.required<UiTableListComponent>(UiTableListComponent);
-  protected readonly config = ListConfig;
+  protected readonly config = ListProveedoresConfig;
   private readonly _proveedoresService = inject(ProveedoresService);
-  private readonly _router = inject(Router);
-  private readonly _route = inject(ActivatedRoute);
   private formBuilder= inject(FormBuilder);
   protected opcionesCedula!: IComboBoxOption[];
   protected opcionesPrimerNombre!: IComboBoxOption[];

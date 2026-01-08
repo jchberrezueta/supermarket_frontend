@@ -70,6 +70,7 @@ export class UiInputBoxComponent implements ControlValueAccessor {
     this.selectedValue = opt.value;
     this.open = false;
     this.evntSelectOption.emit(opt.value);
+    
     if(this.returnValue() === '' || this.returnValue() === 'value'){
       this.onChange(opt.value);
     }else if(this.returnValue() === 'label'){

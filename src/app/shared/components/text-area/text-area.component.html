@@ -3,8 +3,8 @@
         <textarea type="text" required
             [placeholder]="getPlaceholder"
             (change)="emitValue($event)"
-            [disabled]="disabled"
-            [value]="value"
+            [disabled]="_isDisabled()"
+            [value]="innerValue()"
             (input)="updateValue($event)"
             (blur)="onTouched()"
         >

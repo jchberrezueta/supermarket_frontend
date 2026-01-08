@@ -36,8 +36,6 @@ export default class ListComponent {
   private readonly _categoriasService = inject(CategoriasService);
   private readonly _marcasService = inject(MarcasService);
   private readonly _productosService = inject(ProductosService);
-  private readonly _router = inject(Router);
-  private readonly _route = inject(ActivatedRoute);
   private formBuilder= inject(FormBuilder);
   protected opcionesCategorias!: IComboBoxOption[];
   protected opcionesMarcas!: IComboBoxOption[];
