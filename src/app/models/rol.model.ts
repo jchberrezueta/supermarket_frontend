@@ -48,7 +48,6 @@ export interface IResultDataRol {
 }
 
 export interface IFiltroRol {
-    ideRol: number;
     nombreRol: string;
     descripcionRol: string;
 }

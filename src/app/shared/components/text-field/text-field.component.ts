@@ -51,7 +51,9 @@ export class UiTextFieldComponent implements ControlValueAccessor {
 
     effect(() => {
       if (this.disabled() !== undefined) {
-        this._isDisabled.set(this.disabled());
+        if(this._isDisabled() === false){
+          this._isDisabled.set(this.disabled());
+        }
       }
     },
     { allowSignalWrites: true });
@@ -95,6 +97,8 @@ export class UiTextFieldComponent implements ControlValueAccessor {
 
   // Si el formulario deshabilita el control
   public setDisabledState(isDisabled: boolean) {
+    console.log('angular disbaled');
+        console.log(isDisabled);
     this._isDisabled.set(isDisabled);
   }
 
