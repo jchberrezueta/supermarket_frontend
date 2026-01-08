@@ -1,0 +1,34 @@
+:host {
+    width: 100%;
+    height: 100%;
+}
+
+.div_container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    .div_breadcumbs {
+        width: 100%;
+        height: 50px;
+    }
+
+    .div_title {
+        width: 100%;
+        height: 70px;
+        background-color: #FFFFFF;
+        border-radius: 12px;
+        padding: 16px;
+
+        box-shadow:
+            0 2px 4px rgba(0, 0, 0, 0.04),
+            0 6px 12px rgba(0, 0, 0, 0.06);
+    }
+
+    .div_main {
+        width: 100%;
+        flex: 1;
+    }
+}

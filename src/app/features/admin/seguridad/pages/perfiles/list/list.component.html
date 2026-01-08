@@ -1,1 +1,26 @@
-<p>perfiles works!</p>
+<div class="div_container">
+    <ui-card [showHeader]="true" class="div_card">
+        <div class="card_top" card-header>
+            <form [formGroup]="formData" (ngSubmit)="filtrar()" class="card_form">
+                <div class="card_filters">
+                    <div class="selects">
+                        <ui-input-box [label]="'Nombre'" [options]="opcionesNombres" [width]="'200'" [returnValue]="'label'" formControlName="nombreRol"/>
+                        <ui-input-box [label]="'Descripcion'" [options]="opcionesDescripcion" [width]="'200'" [returnValue]="'label'" formControlName="descripcionRol"/>
+                    </div>
+                    <div class="filter_btn">
+                        <ui-button [label]="'Filtrar'" [icon]="'filter_alt'"/>
+                    </div>
+                </div>
+            </form>
+            <div class="btns_options">
+                <ui-button [icon]="'refresh'" [action]="'refresh'" (evntClick)="refreshData($event)"/>
+            </div>
+        </div>
+        <div class="card_table">
+            <ui-table-list #tableList [serviceApi]="'roles'" [columns]="config.columns"/>
+        </div>
+    </ui-card>
+</div>
+
+
+
