@@ -1,3 +1,8 @@
+:host {
+  width: 100%;
+  height: 100%;
+}
+
 .div_container {
   width: 100%;
   height: 100%;
@@ -5,57 +10,53 @@
 
 .div_card {
   display: flex;
+  gap: 20px;
   height: 100%;
-  background: #fff;
-  border-radius: 10px;
 }
 
 .panel_1 {
-  width: 60%;
-  padding: 30px;
+  flex: 3;
+}
+
+.panel_2 {
+  flex: 1;
+
+  .panel_2_img {
+    width: 100%;
+    height: 100%;
+    background: #f1f5f9;
+    border-radius: 12px;
+  }
 }
 
 .card_form {
-  background: rgba(241,245,249);
-  border-radius: 20px;
-  padding: 40px;
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
 }
 
 .form {
   display: flex;
   flex-direction: column;
-  gap: 30px;
-}
-
-.div_id {
-  display: flex;
   gap: 20px;
-  justify-content: center;
-}
-
-.input_falso {
-  width: 280px;
 }
 
 .form_info {
   display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.form_div {
+  display: flex;
   flex-direction: column;
-  gap: 25px;
+  gap: 10px;
+  flex: 1;
+  min-width: 280px;
 }
 
 .form_buttons {
   display: flex;
   justify-content: center;
-  gap: 10px;
-}
-
-.panel_2 {
-  flex: 1;
-}
-
-.panel_2_img {
-  width: 100%;
-  height: 100%;
-  background-image: url('/imgs/img_categorias.jpg');
-  background-size: cover;
+  gap: 15px;
 }

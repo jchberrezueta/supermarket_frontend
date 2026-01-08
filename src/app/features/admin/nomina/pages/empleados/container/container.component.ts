@@ -16,7 +16,7 @@ const breadcumbs = [
   },
   {
     label: 'Empleados',
-    url: '/admin/nomina/empleado'
+    url: '/admin/nomina/empleados'
   }
 ];
 
