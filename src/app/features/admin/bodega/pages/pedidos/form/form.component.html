@@ -3,44 +3,79 @@
         <div class="panel_1">
             <div class="card_form">
                 <div class="fila div_1">
-
-                </div>
-                <div class="fila div_2">
-
-                </div>
-                <div class="fila div_3">
-
-                </div>
-                <!--<form [formGroup]="formData" class="form">
-                    <div class="div_form">
+                    <form [formGroup]="formData" class="form">
                         @if (!isAdd) {
-                            <div class="div_id" >
+                            <div>
                                 <ui-text-field [label]="'ID'" formControlName="ideEmp"/>
-                                <div class="input_falso"></div>
                             </div>
                         }
-                        <div class="form_info">
-                            <div class="form_div form_div_1">                       
-                                <ui-text-field [label]="'Empresa'" formControlName="nombreEmp"/>
-                                <ui-datetime-picker [label]="'Fecha Contrato'"  [isTime]="true"  formControlName="fechaContratoEmp"/>
-                                <ui-text-field [label]="'Telefono'" formControlName="telefonoEmp"/>
-                                <ui-text-area [label]="'Direccion'" formControlName="direccionEmp"/>
-                            </div>
-                            <div class="form_div form_div_2">
-                                <ui-text-field [label]="'Responsable'" formControlName="responsableEmp"/>
-                                <ui-combo-box [label]="'Estado'" [options]="estadosEmpresa" formControlName="estadoEmp"/>
-                                <ui-text-field [label]="'Email'" formControlName="emailEmp"/>
-                                <ui-text-area [label]="'Descripcion'" formControlName="descripcionEmp"/>
-                            </div>
+                        <div>
+                            <ui-input-box [label]="'Empresa'" [options]="[{label: '1', value: '2'}]" [width]="'200'" formControlName="fechaContratoEmp"/>
                         </div>
+                        <div>
+                            <ui-datetime-picker [label]="'Fecha Pedido'"  [isTime]="true"  formControlName="fechaContratoEmp"/>
+                        </div>
+                        <div>
+                            <ui-datetime-picker [label]="'Fecha Entrega'"  [isTime]="true"  formControlName="fechaContratoEmp"/>
+                        </div>
+                        <div>
+                            <ui-combo-box [label]="'Motivo'" [options]="[]" [width]="'200'" formControlName="ideEmp"/>
+                        </div>
+                        <div>
+                            <ui-text-field [label]="'Estado'" [width]="'200'" formControlName="ideEmp"/>
+                        </div>
+                    </form>
+                </div>
+                <div class="fila div_2">
+                    <div class="div_2_1">
+                        <form [formGroup]="formData" class="form">
+                            <div>
+                                <ui-input-box [label]="'Producto'" [options]="[{label: '1', value: '2'}]" [width]="'200'" formControlName="fechaContratoEmp"/>
+                            </div>
+                            <div>
+                                <ui-text-field [label]="'Cantidad'" [width]="'100'" formControlName="ideEmp"/>
+                            </div>
+                            <div class="cajita">
+                                <div>
+                                    <ui-text-field [label]="'Precio Unitario'" [width]="'100'" formControlName="ideEmp"/>
+                                </div>
+                                <div>
+                                    <ui-text-field [label]="'Bruto'" [width]="'100'" formControlName="ideEmp"/>
+                                </div>
+                            </div>
+                            <div class="cajita">
+                                <div>
+                                    <ui-text-field [label]="'Dcto Compra'" [width]="'100'" formControlName="ideEmp"/>
+                                </div>
+                                <div>
+                                    <ui-text-field [label]="'Neto'" [width]="'100'" formControlName="ideEmp"/>
+                                </div>
+                            </div>
+                            <div class="cajita">
+                                <div>
+                                    <ui-text-field [label]="'Dcto Caduc'" [width]="'100'" formControlName="ideEmp"/>
+                                </div>
+                                <div>
+                                    <ui-text-field [label]="'Neto'" [width]="'100'" formControlName="ideEmp"/>
+                                </div>
+                            </div>
+                            <div>
+                                <ui-text-field [label]="'IVA'" [width]="'100'" formControlName="ideEmp"/>
+                            </div>
+                            <div>
+                                <ui-text-field [label]="'Total'" [width]="'100'" formControlName="ideEmp"/>
+                            </div>
+                        </form>
                     </div>
-                    <div class="form_buttons">
-                        <ui-button [label]="isAdd ? 'Guardar' : 'Actualizar'" (evntClick)="guardar()"/>
-                        <ui-button [label]="'Cancelar'" (evntClick)="cancelar()" [color]="'red'"/>
+                    <div class="div_2_2">
+fbf
                     </div>
-                </form>-->
+                    
+                </div>
+                <div class="fila div_3">
+                    <ui-table-list [serviceApi]="'cuentas'" [columns]="[]"></ui-table-list>
+                </div>
             </div>
-            
         </div>
     </div>
 </div>

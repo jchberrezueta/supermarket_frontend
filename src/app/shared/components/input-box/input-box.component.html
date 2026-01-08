@@ -1,5 +1,5 @@
 <div class="div_container" clickOutside (clickOutside)="open = false" >
-  <div class="div_select" [class.active]="open" (click)="toggle()" [ngStyle]="{'width': width()+'px'}">
+  <div class="div_select" [class.active]="open" (click)="toggle()" [ngStyle]="{'width': width() !== '' ? width()+'px' : ''}">
     <input type="text" #inp
       [placeholder]="getPlaceholder"
       [value]="selectedLabel" 

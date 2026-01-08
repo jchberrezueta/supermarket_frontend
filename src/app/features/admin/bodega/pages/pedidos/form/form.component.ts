@@ -12,6 +12,8 @@ import { IComboBoxOption } from '@shared/models/combo_box_option';
 import Swal from 'sweetalert2'
 import { Location } from '@angular/common'; // 1. Importar Location
 import { EmpresasService } from '@services/index';
+import { UiInputBoxComponent } from '@shared/components/input-box/input-box.component';
+import { UiTableListComponent } from '@shared/components';
 
 const IMPORTS = [
   UiTextFieldComponent, 
@@ -20,6 +22,9 @@ const IMPORTS = [
   UiComboBoxComponent,
   UiButtonComponent,
   ReactiveFormsModule, 
+  UiInputBoxComponent,
+  UiComboBoxComponent,
+  UiTableListComponent
 ];
 
 type EmpresaFormGroup = FormGroupOf<IEmpresa>;
