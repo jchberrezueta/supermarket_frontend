@@ -26,7 +26,7 @@ export const ListEntregasConfig: ITableListConfig = {
     { label: 'Empresa', property: 'nombre_empr', type: 'text', sortable: true },
 
     // del JOIN proveedor (nombre completo)
-    { label: 'Proveedor', property: 'proveedor', type: 'text', sortable: true },
+    { label: 'Proveedor', property: 'nombre_proveedor', type: 'text', sortable: true },
 
     // formateada con TO_CHAR en el SQL
     { label: 'Fecha Entrega', property: 'fecha_entr', type: 'text', sortable: true },
