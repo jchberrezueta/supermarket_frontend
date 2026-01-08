@@ -4,8 +4,11 @@
             <form [formGroup]="formData" (ngSubmit)="filtrar()" class="card_form">
                 <div class="card_filters">
                     <div class="selects">
-                        <ui-input-box [label]="'Nombre'" [options]="opcionesNombres" [width]="'200'" [returnValue]="'label'" formControlName="nombreRol"/>
-                        <ui-input-box [label]="'Descripcion'" [options]="opcionesDescripcion" [width]="'200'" [returnValue]="'label'" formControlName="descripcionRol"/>
+                        <ui-input-box [label]="'Usuario'" [options]="opcionesCuentas" [width]="'200'" formControlName="ideCuen"/>
+                        <ui-input-box [label]="'Ip'" [options]="opcionesIps" [width]="'200'" [returnValue]="'label'" formControlName="ipAcce"/>
+                        <ui-input-box [label]="'Navegador'" [options]="opcionesNavegadores" [width]="'200'" [returnValue]="'label'" formControlName="navegadorAcce"/>
+                        <ui-datetime-picker [label]="'Desde'" formControlName="fechaAcceDesde"/>
+                        <ui-datetime-picker [label]="'Hasta'" formControlName="fechaAcceHasta"/>
                     </div>
                     <div class="filter_btn">
                         <ui-button [label]="'Filtrar'" [icon]="'filter_alt'"/>
@@ -17,7 +20,7 @@
             </div>
         </div>
         <div class="card_table">
-            <ui-table-list #tableList [serviceApi]="'accesos'" [columns]="config.columns"/>
+            <ui-table-list #tableList [serviceApi]="'accesos/listar/accesos'" [serviceApiFilter]="'accesos/filtrar/accesos'" [columns]="config.columns"/>
         </div>
     </ui-card>
 </div>

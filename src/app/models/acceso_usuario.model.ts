@@ -98,9 +98,10 @@ export interface IResultDataAccesoUsuario {
 }
 
 export interface IFiltroAccesoUsuario {
-    ideCuen: number;
+    ideCuen: string;
+    ipAcce: string;
     navegadorAcce: string;
     fechaAcceDesde: string;
     fechaAcceHasta: string;
-    ipAcce: string;
+    
 }

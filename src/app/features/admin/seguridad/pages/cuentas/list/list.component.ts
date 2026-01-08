@@ -6,7 +6,7 @@ import { IComboBoxOption } from '@shared/models/combo_box_option';
 import { UiComboBoxComponent } from '@shared/components/combo-box/combo-box.component';
 import { isValidStringValue, FormGroupOf } from '@core/utils/utilities';
 import { IFiltroRol } from 'app/models';
-import { ListRolesConfig } from './list_roles.config';
+import { ListCuentasConfig } from './list_cuentas.config';
 import { CategoriasService, RolesService } from '@services/index';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UiCardComponent } from '@shared/components/card/card.component';
@@ -31,7 +31,7 @@ type filterRolFormGroup = FormGroupOf<IFiltroRol>;
 })
 export default class ListComponent {
   private readonly _tableList = viewChild.required<UiTableListComponent>(UiTableListComponent);
-  protected readonly config = ListRolesConfig;
+  protected readonly config = ListCuentasConfig;
   private readonly _rolesService = inject(RolesService);
   private formBuilder= inject(FormBuilder);
   protected opcionesNombres!: IComboBoxOption[];

@@ -5,12 +5,13 @@ import { UiButtonComponent } from "@shared/components/button/button.component";
 import { IComboBoxOption } from '@shared/models/combo_box_option';
 import { UiComboBoxComponent } from '@shared/components/combo-box/combo-box.component';
 import { isValidStringValue, FormGroupOf } from '@core/utils/utilities';
-import { IFiltroRol } from 'app/models';
+import { IFiltroAccesoUsuario, IFiltroRol } from 'app/models';
 import { ListAccesosUsuarioConfig } from './list_accesos.config';
-import { CategoriasService, RolesService } from '@services/index';
+import { AccesosService, CategoriasService, CuentasService, RolesService } from '@services/index';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UiCardComponent } from '@shared/components/card/card.component';
 import { UiInputBoxComponent } from '@shared/components/input-box/input-box.component';
+import { UiDatetimePickerComponent } from '@shared/components/datetime-picker/datetime-picker.component';
 
 const IMPORTS = [
   UiTableListComponent,
@@ -18,9 +19,10 @@ const IMPORTS = [
   UiCardComponent,
   ReactiveFormsModule,
   UiInputBoxComponent,
+  UiDatetimePickerComponent
 ];
 
-type filterRolFormGroup = FormGroupOf<IFiltroRol>;
+type filterAccesoUsuarioFormGroup = FormGroupOf<IFiltroAccesoUsuario>;
 
 @Component({
   selector: 'app-list',
@@ -32,40 +34,54 @@ type filterRolFormGroup = FormGroupOf<IFiltroRol>;
 export default class ListComponent {
   private readonly _tableList = viewChild.required<UiTableListComponent>(UiTableListComponent);
   protected readonly config = ListAccesosUsuarioConfig;
-  private readonly _rolesService = inject(RolesService);
+  private readonly _accesosService = inject(AccesosService);
+  private readonly _cuentasService = inject(CuentasService);
   private formBuilder= inject(FormBuilder);
-  protected opcionesNombres!: IComboBoxOption[];
-  protected opcionesDescripcion!: IComboBoxOption[];
-  protected formData!: filterRolFormGroup;
-  private initialFormValue!: IFiltroRol;
+  protected opcionesCuentas!: IComboBoxOption[];
+  protected opcionesIps!: IComboBoxOption[];
+  protected opcionesNavegadores!: IComboBoxOption[];
+  protected formData!: filterAccesoUsuarioFormGroup;
+  private initialFormValue!: IFiltroAccesoUsuario;
 
 
   constructor() {
-    this.loadComboNombres();
-    this.loadComboDescripcion();
+    this.loadComboCuentas();
+    this.loadComboIps();
+    this.loadComboNavegador();
     this.configForm();
   }
 
   protected configForm() {
     this.formData = this.formBuilder.group({
-      nombreRol: ['', [], []],
-      descripcionRol: ['', [], []],
-    }) as filterRolFormGroup;
+      ideCuen: ['', [], []],
+      ipAcce: ['', [], []],
+      navegadorAcce: ['', [], []],
+      fechaAcceDesde: ['', [], []],
+      fechaAcceHasta: ['', [], []],
+    }) as filterAccesoUsuarioFormGroup;
     //snapshot inicial
     this.initialFormValue = this.formData.getRawValue();
   }
 
-  private loadComboNombres() {
-    this._rolesService.listarComboNombres().subscribe(
+  private loadComboCuentas() {
+    this._cuentasService.listarComboCuentas().subscribe(
       (res) => {
-        this.opcionesNombres = res;
+        this.opcionesCuentas = res;
       }
     );
   }
-  private loadComboDescripcion() {
-    this._rolesService.listarComboDescripcion().subscribe(
+  private loadComboIps() {
+    this._accesosService.listarComboIps().subscribe(
       (res) => {
-        this.opcionesDescripcion = res;
+        this.opcionesIps = res;
+      }
+    );
+  }
+  private loadComboNavegador() {
+    this._accesosService.listarComboNavegador().subscribe(
+      (res) => {
+        console.log(res);
+        this.opcionesNavegadores = res;
       }
     );
   }
@@ -77,10 +93,12 @@ export default class ListComponent {
 
   private getParams(): URLSearchParams {
     const params = new URLSearchParams();
-    const filtro = this.formData.value as IFiltroRol;
-    if (isValidStringValue(filtro.nombreRol)) params.append('nombreRol', filtro.nombreRol );
-    if (isValidStringValue(filtro.descripcionRol)) params.append('descripcionRol', filtro.descripcionRol );
-    console.log(params);
+    const filtro = this.formData.value as IFiltroAccesoUsuario;
+    if (isValidStringValue(filtro.ideCuen+'')) params.append('ideCuen', filtro.ideCuen+'' );
+    if (isValidStringValue(filtro.ipAcce)) params.append('ipAcce', filtro.ipAcce );
+    if (isValidStringValue(filtro.navegadorAcce)) params.append('navegadorAcce', filtro.navegadorAcce );
+    if (isValidStringValue(filtro.fechaAcceDesde)) params.append('fechaAcceDesde', filtro.fechaAcceDesde );
+    if (isValidStringValue(filtro.fechaAcceHasta)) params.append('fechaAcceHasta', filtro.fechaAcceHasta );
     return params;
   }
 
