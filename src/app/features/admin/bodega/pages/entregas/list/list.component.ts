@@ -11,6 +11,8 @@ import { ListEntregasConfig } from './list_entregas.config';
 import { EmpresasService, EntregasService, ProveedoresService } from '@services/index';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UiCardComponent } from '@shared/components/card/card.component';
+import { UiInputBoxComponent } from '@shared/components/input-box/input-box.component';
+import { UiDatetimePickerComponent } from '@shared/components/datetime-picker/datetime-picker.component';
 
 const IMPORTS = [
   UiTableListComponent,
@@ -18,7 +20,9 @@ const IMPORTS = [
   UiComboBoxComponent,
   UiTextFieldComponent,
   UiCardComponent,
-  ReactiveFormsModule
+  ReactiveFormsModule,
+  UiInputBoxComponent,
+  UiDatetimePickerComponent
 ];
 
 type filterEntregaFormGroup = FormGroupOf<IFiltroEntrega>;

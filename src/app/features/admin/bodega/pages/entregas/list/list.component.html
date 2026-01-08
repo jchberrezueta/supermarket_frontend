@@ -4,9 +4,11 @@
             <form [formGroup]="formData" (ngSubmit)="filtrar()" class="card_form">
                 <div class="card_filters">
                     <div class="selects">
-                        <ui-text-field [label]="'Empresa'" formControlName="nombreEmp"/>
-                        <ui-text-field [label]="'Responsable'" formControlName="responsableEmp"/>
-                        <ui-combo-box [label]="'Estados'" [options]="estadosEmpresa" formControlName="estadoEmp"/>
+                        <ui-text-field [label]="'Pedido ID'"  formControlName="idePedi"/>
+                        <ui-input-box [label]="'Proveedor'" [options]="opcionesProveedores" formControlName="ideProv"/>
+                        <ui-combo-box [label]="'Estado'" [options]="opcionesProvEstados" formControlName="estadoEntr"/>
+                        <ui-datetime-picker [label]="'Desde'" formControlName="fechaEntrDesde"/>
+                        <ui-datetime-picker [label]="'Hasta'" formControlName="fechaEntrHasta"/>
                     </div>
                     <div class="filter_btn">
                         <ui-button [label]="'Filtrar'" [icon]="'filter_alt'"/>

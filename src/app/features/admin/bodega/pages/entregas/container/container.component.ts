@@ -12,11 +12,11 @@ const breadcumbs = [
     url: '/admin'
   },
   {
-    label: 'Modulo Proveedores',
+    label: 'Modulo Bodega',
   },
   {
-    label: 'Empresas',
-    url: '/admin/proveedores/empresas'
+    label: 'Entregas',
+    url: '/admin/bodega/entregas'
   }
 ];
 
@@ -30,7 +30,7 @@ const breadcumbs = [
 export default class containerComponent {
   private readonly _router = inject(Router);
   private readonly _route = inject(ActivatedRoute);
-  protected readonly title: string = 'Convenios Empresas';
+  protected readonly title: string = 'Listado Entregas';
   public breadcumbs: IBreadcumb[] = breadcumbs;
   protected showAddButton = false;
 
