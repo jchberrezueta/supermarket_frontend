@@ -12,11 +12,11 @@ const breadcumbs = [
     url: '/admin'
   },
   {
-    label: 'Modulo Proveedores',
+    label: 'Modulo Productos',
   },
   {
-    label: 'Empresas',
-    url: '/admin/proveedores/empresas'
+    label: 'Productos',
+    url: '/admin/productos/productos'
   }
 ];
 

@@ -6,11 +6,12 @@ import { IComboBoxOption } from '@shared/models/combo_box_option';
 import { UiComboBoxComponent } from '@shared/components/combo-box/combo-box.component';
 import { UiTextFieldComponent } from "@shared/components/text-field/text-field.component";
 import { isValidStringValue, FormGroupOf } from '@core/utils/utilities';
-import { IEmpresaResult, IFiltroEmpresa } from 'app/models';
+import { IEmpresaResult, IFiltroEmpresa, IFiltroProducto } from 'app/models';
 import { ListProductosConfig } from './list_productos.config';
-import { EmpresasService } from '@services/index';
+import { CategoriasService, EmpresasService, MarcasService, ProductosService } from '@services/index';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UiCardComponent } from '@shared/components/card/card.component';
+import { UiInputBoxComponent } from '@shared/components/input-box/input-box.component';
 
 const IMPORTS = [
   UiTableListComponent,
@@ -18,10 +19,11 @@ const IMPORTS = [
   UiComboBoxComponent,
   UiTextFieldComponent,
   UiCardComponent,
-  ReactiveFormsModule
+  ReactiveFormsModule,
+  UiInputBoxComponent
 ];
 
-type filterEmpresaFormGroup = FormGroupOf<IFiltroEmpresa>;
+type filterProductoFormGroup = FormGroupOf<IFiltroProducto>;
 
 @Component({
   selector: 'app-list',
@@ -33,35 +35,84 @@ type filterEmpresaFormGroup = FormGroupOf<IFiltroEmpresa>;
 export default class ListComponent {
   private readonly _tableList = viewChild.required<UiTableListComponent>(UiTableListComponent);
   protected readonly config = ListProductosConfig;
-  private readonly _empresasService = inject(EmpresasService);
+  private readonly _categoriasService = inject(CategoriasService);
+  private readonly _marcasService = inject(MarcasService);
+  private readonly _productosService = inject(ProductosService);
   private readonly _router = inject(Router);
   private readonly _route = inject(ActivatedRoute);
   private formBuilder= inject(FormBuilder);
-  protected estadosEmpresa!: IComboBoxOption[];
-  protected formData!: filterEmpresaFormGroup;
-  private initialFormValue!: IFiltroEmpresa;
+  protected opcionesCategorias!: IComboBoxOption[];
+  protected opcionesMarcas!: IComboBoxOption[];
+  protected opcionesProdNombres!: IComboBoxOption[];
+  protected opcionesProdCodBarras!: IComboBoxOption[];
+  protected opcionesProdEstados!: IComboBoxOption[];
+  protected opcionesProdDisponibilidad!: IComboBoxOption[];
+  protected formData!: filterProductoFormGroup;
+  private initialFormValue!: IFiltroProducto;
 
-  private idEmpresa: number = -1;
 
   constructor() {
-    this.loadEstadosEmpresa();
+    this.loadCategorias();
+    this.loadMarcas();
+    this.loadProductos();
+    this.loadProductosCodBarras();
+    this.loadProductosEstados();
+    this.loadProductosDisponiblidad();
     this.configForm();
   }
 
   protected configForm() {
     this.formData = this.formBuilder.group({
-      nombreEmp: ['', [], []],
-      estadoEmp: ['', [], []],
-      responsableEmp: ['', [], []],
-    }) as filterEmpresaFormGroup;
+      ideCate: ['', [], []],
+      ideMarc: ['', [], []],
+      nombreProd: ['', [], []],
+      codigoBarraProd: ['', [], []],
+      estadoProd: ['', [], []],
+      disponibleProd: ['', [], []],
+    }) as filterProductoFormGroup;
     //snapshot inicial
     this.initialFormValue = this.formData.getRawValue();
   }
 
-  private loadEstadosEmpresa() {
-    this._empresasService.listarEstados().subscribe(
+  private loadCategorias() {
+    this._categoriasService.listarComboCategorias().subscribe(
       (res) => {
-        this.estadosEmpresa = res;
+        this.opcionesCategorias = res;
+      }
+    );
+  }
+  private loadMarcas() {
+    this._marcasService.listarComboMarcas().subscribe(
+      (res) => {
+        this.opcionesMarcas = res;
+      }
+    );
+  }
+  private loadProductos() {
+    this._productosService.listarComboProductos().subscribe(
+      (res) => {
+        this.opcionesProdNombres = res;
+      }
+    );
+  }
+  private loadProductosCodBarras() {
+    this._productosService.listarComboCodigoBarras().subscribe(
+      (res) => {
+        this.opcionesProdCodBarras = res;
+      }
+    );
+  }
+  private loadProductosEstados() {
+    this._productosService.listarComboEstados().subscribe(
+      (res) => {
+        this.opcionesProdEstados = res;
+      }
+    );
+  }
+  private loadProductosDisponiblidad() {
+    this._productosService.listarComboDisponibilidad().subscribe(
+      (res) => {
+        this.opcionesProdDisponibilidad = res;
       }
     );
   }
@@ -73,28 +124,17 @@ export default class ListComponent {
 
   private getParams(): URLSearchParams {
     const params = new URLSearchParams();
-    const filtro = this.formData.value as IFiltroEmpresa;
-    if (isValidStringValue(filtro.nombreEmp)) params.append('nombreEmp', filtro.nombreEmp );
-    if (isValidStringValue(filtro.estadoEmp)) params.append('estadoEmp', filtro.estadoEmp );
-    if (isValidStringValue(filtro.responsableEmp)) params.append('responsableEmp', filtro.responsableEmp );
+    const filtro = this.formData.value as IFiltroProducto;
+    if (isValidStringValue(filtro.ideCate+'')) params.append('ideCate', filtro.ideCate+'');
+    if (isValidStringValue(filtro.ideMarc+'')) params.append('ideMarc', filtro.ideMarc+'');
+    if (isValidStringValue(filtro.nombreProd)) params.append('nombreProd', filtro.nombreProd );
+    if (isValidStringValue(filtro.codigoBarraProd)) params.append('codigoBarraProd', filtro.codigoBarraProd );
+    if (isValidStringValue(filtro.estadoProd)) params.append('estadoProd', filtro.estadoProd );
+    if (isValidStringValue(filtro.disponibleProd)) params.append('disponibleProd', filtro.disponibleProd );
+    console.log(params)
     return params;
   }
 
-  protected redirectToEmpresaPrecios(clickAction: string) {
-    if(clickAction === 'redirect') {
-      if(this.idEmpresa > -1){
-        this._router.navigate(['../precios', this.idEmpresa], {relativeTo: this._route});
-      }
-    }
-  }
-
-  protected setIdEmpresa(elem: any) {
-    if(elem && elem.row){
-      this.idEmpresa = elem.row.ide_empr;
-    }else{
-      this.idEmpresa = -1;
-    }
-  }
 
   protected refreshData(actionClick: string){
     if(actionClick === 'refresh'){

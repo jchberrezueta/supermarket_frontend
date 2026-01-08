@@ -32,6 +32,7 @@ const PROVIDERS = [
 export class UiComboBoxComponent implements ControlValueAccessor {
   public options = input.required<IComboBoxOption[]>();
   public label = input.required<string>();
+  public width = input<string>('');
   public evntSelectOption = output<number>();
   public open: boolean = false;
   public disabled: boolean = false;

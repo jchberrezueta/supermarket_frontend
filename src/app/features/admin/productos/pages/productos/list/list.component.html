@@ -4,9 +4,12 @@
             <form [formGroup]="formData" (ngSubmit)="filtrar()" class="card_form">
                 <div class="card_filters">
                     <div class="selects">
-                        <ui-text-field [label]="'Empresa'" formControlName="nombreEmp"/>
-                        <ui-text-field [label]="'Responsable'" formControlName="responsableEmp"/>
-                        <ui-combo-box [label]="'Estados'" [options]="estadosEmpresa" formControlName="estadoEmp"/>
+                        <ui-input-box [label]="'Categoria'" [options]="opcionesCategorias" formControlName="ideCate"/>
+                        <ui-input-box [label]="'Marca'" [options]="opcionesMarcas" formControlName="ideMarc"/>
+                        <ui-input-box [label]="'Nombre'" [options]="opcionesProdNombres" formControlName="nombreProd"/>
+                        <ui-input-box [label]="'Codigo Barras'" [options]="opcionesProdCodBarras" [width]="'180'" formControlName="codigoBarraProd"/>
+                        <ui-combo-box [label]="'Estado'" [options]="opcionesProdEstados" [width]="'100'" formControlName="estadoProd"/>
+                        <ui-combo-box [label]="'Disponible'" [options]="opcionesProdDisponibilidad" [width]="'100'" formControlName="disponibleProd"/>
                     </div>
                     <div class="filter_btn">
                         <ui-button [label]="'Filtrar'" [icon]="'filter_alt'"/>
@@ -14,14 +17,11 @@
                 </div>
             </form>
             <div class="btns_options">
-                <ui-button [label]="'Precios'" [icon]="'attach_money'" [color]="'yellow'" [textColor]="'black'" 
-                    [action]="'redirect'" (evntClick)="redirectToEmpresaPrecios($event)"/>
                 <ui-button [icon]="'refresh'" [action]="'refresh'" (evntClick)="refreshData($event)"/>
             </div>
         </div>
         <div class="card_table">
-            <ui-table-list #tableList [serviceApi]="'productos/listar/productos'" [columns]="config.columns" [isSelection]="true"
-                (rowClickAction)="setIdEmpresa($event)"/>
+            <ui-table-list #tableList [serviceApi]="'productos/listar/productos'" [serviceApiFilter]="'productos/filtrar/productos'" [columns]="config.columns"/>
         </div>
     </ui-card>
 </div>

@@ -184,9 +184,8 @@ export interface IResultDataProducto {
 }
 
 export interface IFiltroProducto {
-    ideProd: number;
-    ideCate: number;
-    ideMarc: number;
+    ideCate: string;
+    ideMarc: string;
     codigoBarraProd: string;
     nombreProd: string;
     disponibleProd: string;
