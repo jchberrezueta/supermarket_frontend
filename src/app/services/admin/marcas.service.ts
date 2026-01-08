@@ -45,5 +45,8 @@ export class MarcasService {
   public listarComboCalidad(): Observable<IComboBoxOption[]> {
     return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/combo/calidad`);
   }
+  public listarComboMarcas(): Observable<IComboBoxOption[]> {
+    return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/combo/marcas`);
+  }
 
 }

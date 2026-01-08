@@ -41,5 +41,8 @@ private readonly _restService = inject(RestService);
   public listarComboDescripcion(): Observable<IComboBoxOption[]> {
     return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/combo/descripcion`);
   }
+  public listarComboCategorias(): Observable<IComboBoxOption[]> {
+    return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/combo/categorias`);
+  }
   
 }

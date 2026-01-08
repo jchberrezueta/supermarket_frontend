@@ -38,4 +38,13 @@ export class ProductosService {
   public listarComboProductos(): Observable<IComboBoxOption[]> {
     return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/combo/productos`);
   }
+  public listarComboCodigoBarras(): Observable<IComboBoxOption[]> {
+    return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/combo/codigo/barras`);
+  }
+  public listarComboEstados(): Observable<IComboBoxOption[]> {
+    return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/combo/estados`);
+  }
+  public listarComboDisponibilidad(): Observable<IComboBoxOption[]> {
+    return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/combo/disponibilidad`);
+  }
 }
