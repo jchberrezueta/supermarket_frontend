@@ -27,12 +27,12 @@ export const cuentasRoutes: Routes = [
                 loadComponent: () => import('./form/form.component'),
                 data: { showAddButton: false }
             },
-            /*{
+            {
                 path: 'details/:id',
                 canMatch: [canMatchPermisoGuard],
                 loadComponent: () => import('./details/details.component'),
                 data: { showAddButton: false }
-            }*/
+            }
         ]
     },
 ];

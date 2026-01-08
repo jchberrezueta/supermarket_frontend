@@ -4,6 +4,21 @@ export enum EnumEstadosCuenta {
     BLOQUEADO = 'bloqueado'
 }
 
+export const ListEstadosCuenta = [
+  {
+    value: EnumEstadosCuenta.ACTIVO,
+    label: 'activo'
+  },
+  {
+    value: EnumEstadosCuenta.INACTIVO,
+    label: 'inactivo'
+  },
+  {
+    value: EnumEstadosCuenta.BLOQUEADO,
+    label: 'bloqueado'
+  },
+]
+
 export interface ICuenta {
     ideCuen: number;
     ideEmpl: number;

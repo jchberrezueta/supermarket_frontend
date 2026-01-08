@@ -30,7 +30,7 @@ const PROVIDERS =[
 export class UiTextFieldComponent implements ControlValueAccessor {
   public label = input.required<string>();
   public value = input<any>('');
-  public valueType = input<'string' | 'number'>('string');
+  public valueType = input<'string' | 'number' | 'password'>('string');
   protected innerValue = signal<any>('');
   public disabled = input<boolean>(false);
   protected _isDisabled = signal(false);

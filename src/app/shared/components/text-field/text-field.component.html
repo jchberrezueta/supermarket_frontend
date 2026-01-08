@@ -1,6 +1,6 @@
 <div class="div_container">
     <div class="div_input" [ngStyle]="{'width': width()+'px'}">
-        <input type="text" required
+        <input [type]="valueType() === 'password' ? 'password' : valueType() === 'number' ? 'number' : 'text'" required
             [placeholder]="getPlaceholder" 
             (change)="emitValue($event)"
             [disabled]="_isDisabled()"

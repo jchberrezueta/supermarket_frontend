@@ -1,0 +1,40 @@
+<div class="div_container">
+  <ui-card [showHeader]="true" class="div_card">
+
+    <!-- CABECERA -->
+    <div card-header class="card_header">
+      <div class="header_left">
+        <ui-text-field
+          [label]="'ID Cuenta'"
+          [value]="idCuenta"
+          [disabled]="true"
+        />
+      </div>
+
+      <div class="header_right">
+        <ui-button
+          [icon]="'refresh'"
+          (evntClick)="loadCuenta()"
+        />
+        <ui-button
+          [label]="'Volver'"
+          [icon]="'arrow_back'"
+          (evntClick)="volver()"
+        />
+      </div>
+    </div>
+
+    <!-- INFO CUENTA -->
+    <div class="card_info">
+
+      <div class="info_row">
+        <ui-text-field [label]="'Usuario'" [value]="cuenta? cuenta.usuarioCuen:null" [disabled]="true"/>
+        <ui-text-field [label]="'ID Empleado'" [value]="cuenta? cuenta.ideEmpl:null" [disabled]="true"/>
+        <ui-text-field [label]="'ID Perfil'" [value]="cuenta? cuenta.idePerf:null" [disabled]="true"/>
+        <ui-text-field [label]="'Estado'" [value]="cuenta? cuenta.estadoCuen:null" [disabled]="true"/>
+      </div>
+
+    </div>
+
+  </ui-card>
+</div>
