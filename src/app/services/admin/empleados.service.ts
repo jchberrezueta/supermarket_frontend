@@ -36,6 +36,9 @@ private readonly _restService = inject(RestService);
   /**
      * COMBOS
      */
+    public listarComboEmpleados(): Observable<IComboBoxOption[]> {
+      return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/combo/empleados`);
+    }
     public listarComboCedulas(): Observable<IComboBoxOption[]> {
       return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/combo/cedulas`);
     }

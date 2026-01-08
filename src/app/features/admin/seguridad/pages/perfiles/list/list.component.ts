@@ -5,9 +5,9 @@ import { UiButtonComponent } from "@shared/components/button/button.component";
 import { IComboBoxOption } from '@shared/models/combo_box_option';
 import { UiComboBoxComponent } from '@shared/components/combo-box/combo-box.component';
 import { isValidStringValue, FormGroupOf } from '@core/utils/utilities';
-import { IFiltroRol } from 'app/models';
-import { ListRolesConfig } from './list_roles.config';
-import { CategoriasService, RolesService } from '@services/index';
+import { IFiltroPerfil, IFiltroRol } from 'app/models';
+import { ListPerfilesConfig } from './list_perfiles.config';
+import { CategoriasService, PerfilesService, RolesService } from '@services/index';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UiCardComponent } from '@shared/components/card/card.component';
 import { UiInputBoxComponent } from '@shared/components/input-box/input-box.component';
@@ -20,7 +20,7 @@ const IMPORTS = [
   UiInputBoxComponent,
 ];
 
-type filterRolFormGroup = FormGroupOf<IFiltroRol>;
+type filterPerfilFormGroup = FormGroupOf<IFiltroPerfil>;
 
 @Component({
   selector: 'app-list',
@@ -31,16 +31,19 @@ type filterRolFormGroup = FormGroupOf<IFiltroRol>;
 })
 export default class ListComponent {
   private readonly _tableList = viewChild.required<UiTableListComponent>(UiTableListComponent);
-  protected readonly config = ListRolesConfig;
+  protected readonly config = ListPerfilesConfig;
+  private readonly _perfilesService = inject(PerfilesService);
   private readonly _rolesService = inject(RolesService);
   private formBuilder= inject(FormBuilder);
+  protected opcionesRoles!: IComboBoxOption[];
   protected opcionesNombres!: IComboBoxOption[];
   protected opcionesDescripcion!: IComboBoxOption[];
-  protected formData!: filterRolFormGroup;
-  private initialFormValue!: IFiltroRol;
+  protected formData!: filterPerfilFormGroup;
+  private initialFormValue!: IFiltroPerfil;
 
 
   constructor() {
+    this.loadComboRoles();
     this.loadComboNombres();
     this.loadComboDescripcion();
     this.configForm();
@@ -48,22 +51,30 @@ export default class ListComponent {
 
   protected configForm() {
     this.formData = this.formBuilder.group({
-      nombreRol: ['', [], []],
-      descripcionRol: ['', [], []],
-    }) as filterRolFormGroup;
+      ideRol: ['', [], []],
+      nombrePerf: ['', [], []],
+      descripcionPerf: ['', [], []],
+    }) as filterPerfilFormGroup;
     //snapshot inicial
     this.initialFormValue = this.formData.getRawValue();
   }
 
+  private loadComboRoles() {
+    this._rolesService.listarComboRoles().subscribe(
+      (res) => {
+        this.opcionesRoles = res;
+      }
+    );
+  }
   private loadComboNombres() {
-    this._rolesService.listarComboNombres().subscribe(
+    this._perfilesService.listarComboNombres().subscribe(
       (res) => {
         this.opcionesNombres = res;
       }
     );
   }
   private loadComboDescripcion() {
-    this._rolesService.listarComboDescripcion().subscribe(
+    this._perfilesService.listarComboDescripcion().subscribe(
       (res) => {
         this.opcionesDescripcion = res;
       }
@@ -77,10 +88,10 @@ export default class ListComponent {
 
   private getParams(): URLSearchParams {
     const params = new URLSearchParams();
-    const filtro = this.formData.value as IFiltroRol;
-    if (isValidStringValue(filtro.nombreRol)) params.append('nombreRol', filtro.nombreRol );
-    if (isValidStringValue(filtro.descripcionRol)) params.append('descripcionRol', filtro.descripcionRol );
-    console.log(params);
+    const filtro = this.formData.value as IFiltroPerfil;
+    if (isValidStringValue(filtro.ideRol+'')) params.append('ideRol', filtro.ideRol+'' );
+    if (isValidStringValue(filtro.nombrePerf)) params.append('nombrePerf', filtro.nombrePerf );
+    if (isValidStringValue(filtro.descripcionPerf)) params.append('descripcionPerf', filtro.descripcionPerf );
     return params;
   }
 

@@ -84,9 +84,8 @@ export interface IResultDataCuenta {
 }
 
 export interface IFiltroCuenta {
-    ideCuen: number;
-    ideEmpl: number;
-    idePerf: number;
+    ideEmpl: string;
+    idePerf: string;
     usuarioCuen: string;
     estadoCuen: EnumEstadosCuenta;
 }

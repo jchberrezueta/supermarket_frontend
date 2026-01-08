@@ -4,8 +4,10 @@
             <form [formGroup]="formData" (ngSubmit)="filtrar()" class="card_form">
                 <div class="card_filters">
                     <div class="selects">
-                        <ui-input-box [label]="'Nombre'" [options]="opcionesNombres" [width]="'200'" [returnValue]="'label'" formControlName="nombreRol"/>
-                        <ui-input-box [label]="'Descripcion'" [options]="opcionesDescripcion" [width]="'200'" [returnValue]="'label'" formControlName="descripcionRol"/>
+                        <ui-input-box [label]="'Perfil'" [options]="opcionesPerfiles" [width]="'200'"  formControlName="idePerf"/>
+                        <ui-input-box [label]="'Empleado'" [options]="opcionesEmpleados" [width]="'200'" formControlName="ideEmpl"/>
+                        <ui-input-box [label]="'Usuario'" [options]="opcionesCuenUsuarios" [width]="'200'" [returnValue]="'label'" formControlName="usuarioCuen"/>
+                        <ui-combo-box [label]="'Estados'" [options]="opcionesCuenEstados" [width]="'200'" [returnValue]="'label'" formControlName="estadoCuen"/>
                     </div>
                     <div class="filter_btn">
                         <ui-button [label]="'Filtrar'" [icon]="'filter_alt'"/>
@@ -17,7 +19,7 @@
             </div>
         </div>
         <div class="card_table">
-            <ui-table-list #tableList [serviceApi]="'cuentas'" [columns]="config.columns"/>
+            <ui-table-list #tableList [serviceApi]="'cuentas/listar/cuentas'" [serviceApiFilter]="'cuentas/filtrar/cuentas'" [serviceApiReal]="'cuentas'" [columns]="config.columns"/>
         </div>
     </ui-card>
 </div>

@@ -13,7 +13,7 @@ export const accesosRoutes: Routes = [
                 path: 'list',
                 canMatch: [canMatchPermisoGuard],
                 loadComponent: () => import('./list/list.component'),
-                data: { showAddButton: true }
+                data: { showAddButton: false }
             },
             {
                 path: 'insert',

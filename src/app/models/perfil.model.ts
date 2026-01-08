@@ -58,8 +58,7 @@ export interface IResultDataPerfil {
 }
 
 export interface IFiltroPerfil {
-    idePerf: number;
-    ideRol: number;
+    ideRol: string;
     nombrePerf: string;
     descripcionPerf: string;
 }
