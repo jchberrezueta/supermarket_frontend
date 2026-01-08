@@ -1,0 +1,54 @@
+<div class="div_container">
+  <ui-card [showHeader]="true" class="div_card">
+
+    <!-- CABECERA -->
+    <div card-header class="card_header">
+      <div class="header_left">
+        <ui-text-field
+          [label]="'ID Empleado'"
+          [value]="idEmpleado"
+          [disabled]="true"
+        />
+      </div>
+
+      <div class="header_right">
+        <ui-button
+          [icon]="'refresh'"
+          (evntClick)="loadEmpleado()"
+        />
+        <ui-button
+          [label]="'Volver'"
+          [icon]="'arrow_back'"
+          (evntClick)="volver()"
+        />
+      </div>
+    </div>
+
+    <!-- INFO EMPLEADO -->
+    <div class="card_info">
+
+      <div class="info_row">
+        <ui-text-field [label]="'Cédula'" [value]="empleado? empleado.cedulaEmpl:null" [disabled]="true"/>
+        <ui-text-field [label]="'Primer Nombre'" [value]="empleado? empleado.primerNombreEmpl:null" [disabled]="true"/>
+        <ui-text-field [label]="'Segundo Nombre'" [value]="empleado? empleado.segundoNombreEmpl:null" [disabled]="true"/>
+        <ui-text-field [label]="'Apellido Paterno'" [value]="empleado? empleado.apellidoPaternoEmpl:null" [disabled]="true"/>
+      </div>
+
+      <div class="info_row">
+        <ui-text-field [label]="'Apellido Materno'" [value]="empleado? empleado.apellidoMaternoEmpl:null" [disabled]="true"/>
+        <ui-text-field [label]="'Fecha Nacimiento'" [value]="empleado? empleado.fechaNacimientoEmpl:null" [disabled]="true"/>
+        <ui-text-field [label]="'Edad'" [value]="empleado? empleado.edadEmpl:null" [disabled]="true"/>
+        <ui-text-field [label]="'Título'" [value]="empleado? empleado.tituloEmpl:null" [disabled]="true"/>
+      </div>
+
+      <div class="info_row">
+        <ui-text-field [label]="'Fecha Inicio'" [value]="empleado? empleado.fechaInicioEmpl:null" [disabled]="true"/>
+        <ui-text-field [label]="'Fecha Término'" [value]="empleado? empleado.fechaTerminoEmpl:null" [disabled]="true"/>
+        <ui-text-field [label]="'RMU'" [value]="empleado? empleado.rmuEmpl:null" [disabled]="true"/>
+        <ui-text-field [label]="'Estado'" [value]="empleado? empleado.estadoEmpl:null" [disabled]="true"/>
+      </div>
+
+    </div>
+
+  </ui-card>
+</div>

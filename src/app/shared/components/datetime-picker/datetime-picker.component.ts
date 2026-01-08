@@ -72,6 +72,13 @@ export class UiDatetimePickerComponent implements ControlValueAccessor {
       this.innerValue.set('');
       return;
     }
+    
+    // Si ya viene en formato correcto YYYY-MM-DD o YYYY-MM-DDTHH:mm, usar directamente
+    if (/^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2})?$/.test(value)) {
+      this.innerValue.set(value);
+      return;
+    }
+    
     // Convertir a Date
     let fecha = new Date(value);
     // Validar fecha
@@ -82,9 +89,8 @@ export class UiDatetimePickerComponent implements ControlValueAccessor {
     }
     // Ajuste de timezone para datetime-local
     fecha = new Date(fecha.getTime() - fecha.getTimezoneOffset() * 60000);
-    const formatted = fecha.toISOString().slice(0, 16);
+    const formatted = fecha.toISOString().slice(0, this.isTime() ? 16 : 10);
     this.innerValue.set(formatted);
-    this.onChange(value);  
   }
 
 

@@ -3,6 +3,17 @@ export enum EnumEstadoEmpleado {
     INACTIVO = 'inactivo'
 }
 
+export const ListEstadosEmpleado = [
+  {
+    value: EnumEstadoEmpleado.ACTIVO,
+    label: 'activo'
+  },
+  {
+    value: EnumEstadoEmpleado.INACTIVO,
+    label: 'inactivo'
+  },
+]
+
 export interface IEmpleado {
     ideEmpl: number;
     ideRol: number;

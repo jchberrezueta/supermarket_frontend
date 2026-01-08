@@ -5,50 +5,53 @@
       <div class="card_form">
         <form [formGroup]="formData" class="form">
 
-          @if (!isAdd) {
-            <ui-text-field label="ID" formControlName="ideEmpl" />
-          }
+          <div class="div_form">
+            @if (!isAdd) {
+              <div class="div_id">
+                <ui-text-field [label]="'ID'" formControlName="ideEmpl" />
+                <div class="input_falso"></div>
+              </div>
+            }
 
-          <div class="form_info">
+            <div class="form_info">
 
-            <div class="form_div">
-              <ui-combo-box label="Rol" [options]="roles" formControlName="ideRol" />
-              <ui-text-field label="Cédula" formControlName="cedulaEmpl" />
-              <ui-text-field label="Primer Nombre" formControlName="primerNombreEmpl" />
-              <ui-text-field label="Segundo Nombre" formControlName="segundoNombreEmpl" />
-              <ui-datetime-picker
-                label="Fecha Nacimiento"
-                formControlName="fechaNacimientoEmpl"
-                (valueChange)="calcularEdad()"
-              />
+              <div class="form_div form_div_1">
+                <ui-combo-box [label]="'Rol'" [options]="roles" formControlName="ideRol" />
+                <ui-text-field [label]="'Cédula'" formControlName="cedulaEmpl" />
+                <ui-text-field [label]="'Primer Nombre'" formControlName="primerNombreEmpl" />
+                <ui-text-field [label]="'Segundo Nombre'" formControlName="segundoNombreEmpl" />
+                <ui-text-field [label]="'Apellido Paterno'" formControlName="apellidoPaternoEmpl" />
+              </div>
+
+              <div class="form_div form_div_2">
+                <ui-text-field [label]="'Apellido Materno'" formControlName="apellidoMaternoEmpl" />
+                <ui-datetime-picker
+                  [label]="'Fecha Nacimiento'"
+                  [isTime]="false"
+                  formControlName="fechaNacimientoEmpl"
+                  (valueChange)="calcularEdad()"
+                />
+                <ui-text-field [label]="'Edad'" valueType="number" formControlName="edadEmpl" />
+                <ui-datetime-picker [label]="'Fecha Inicio'" [isTime]="false" formControlName="fechaInicioEmpl" />
+                <ui-datetime-picker [label]="'Fecha Término'" [isTime]="false" formControlName="fechaTerminoEmpl" />
+              </div>
+
+              <div class="form_div form_div_3">
+                <ui-text-field [label]="'Título'" formControlName="tituloEmpl" />
+                <ui-text-field [label]="'RMU'" valueType="number" formControlName="rmuEmpl" />
+                <ui-combo-box
+                  [label]="'Estado'"
+                  [options]="estadosEmpleado"
+                  formControlName="estadoEmpl"
+                />
+              </div>
+
             </div>
-
-            <div class="form_div">
-              <ui-text-field label="Apellido Paterno" formControlName="apellidoPaternoEmpl" />
-              <ui-text-field label="Apellido Materno" formControlName="apellidoMaternoEmpl" />
-              <ui-text-field label="Edad" valueType="number" formControlName="edadEmpl" />
-              <ui-datetime-picker label="Fecha Inicio" formControlName="fechaInicioEmpl" />
-              <ui-datetime-picker label="Fecha Término" formControlName="fechaTerminoEmpl" />
-            </div>
-
-            <div class="form_div">
-              <ui-text-field label="Título" formControlName="tituloEmpl" />
-              <ui-text-field label="RMU" valueType="number" formControlName="rmuEmpl" />
-              <ui-combo-box
-                label="Estado"
-                [options]="[
-                  { label: 'Activo', value: 'activo' },
-                  { label: 'Inactivo', value: 'inactivo' }
-                ]"
-                formControlName="estadoEmpl"
-              />
-            </div>
-
           </div>
 
           <div class="form_buttons">
             <ui-button [label]="isAdd ? 'Guardar' : 'Actualizar'" (evntClick)="guardar()" />
-            <ui-button label="Cancelar" color="red" (evntClick)="cancelar()" />
+            <ui-button [label]="'Cancelar'" (evntClick)="cancelar()" [color]="'red'" />
           </div>
 
         </form>
