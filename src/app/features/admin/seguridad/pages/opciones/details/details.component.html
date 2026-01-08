@@ -1,0 +1,72 @@
+<div class="details-container">
+  <div class="details-header">
+    <h2>Detalles de la Opción</h2>
+    <ui-button
+      label="Volver"
+      icon="arrow_back"
+      (clicked)="goBack()">
+    </ui-button>
+  </div>
+
+  @if (opcion) {
+    <div class="details-content">
+      <div class="form-row">
+        <ui-text-field
+          label="ID"
+          [value]="opcion.ideOpci.toString()"
+          [disabled]="true">
+        </ui-text-field>
+
+        <ui-text-field
+          label="Nombre"
+          [value]="opcion.nombreOpci"
+          [disabled]="true">
+        </ui-text-field>
+      </div>
+
+      <div class="form-row">
+        <ui-text-field
+          label="Ruta"
+          [value]="opcion.rutaOpci"
+          [disabled]="true">
+        </ui-text-field>
+
+        <ui-text-field
+          label="Nivel"
+          [value]="opcion.nivelOpci.toString()"
+          [disabled]="true">
+        </ui-text-field>
+      </div>
+
+      <div class="form-row">
+        <ui-text-field
+          label="Padre (ID)"
+          [value]="opcion.padreOpci?.toString() ?? 'Ninguno'"
+          [disabled]="true">
+        </ui-text-field>
+
+        <ui-text-field
+          label="Icono"
+          [value]="opcion.iconoOpci ?? 'Ninguno'"
+          [disabled]="true">
+        </ui-text-field>
+      </div>
+
+      <div class="form-row">
+        <ui-text-field
+          label="Estado"
+          [value]="opcion.activoOpci === 'si' ? 'Activo' : 'Inactivo'"
+          [disabled]="true">
+        </ui-text-field>
+      </div>
+
+      <div class="form-row full-width">
+        <ui-text-area
+          label="Descripción"
+          [value]="opcion.descripcionOpci"
+          [disabled]="true">
+        </ui-text-area>
+      </div>
+    </div>
+  }
+</div>

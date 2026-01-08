@@ -9,7 +9,7 @@
             <div class="div_id">
               <ui-text-field
                 [label]="'ID'"
-                formControlName="ideRol"
+                formControlName="ideOpci"
               />
               <div class="input_falso"></div>
             </div>
@@ -18,12 +18,40 @@
           <div class="form_info">
             <ui-text-field
               [label]="'Nombre'"
-              formControlName="nombreRol"
+              formControlName="nombreOpci"
+            />
+
+            <ui-text-field
+              [label]="'Ruta'"
+              formControlName="rutaOpci"
+            />
+
+            <ui-text-field
+              [label]="'Nivel'"
+              [valueType]="'number'"
+              formControlName="nivelOpci"
+            />
+
+            <ui-text-field
+              [label]="'Padre (ID)'"
+              [valueType]="'number'"
+              formControlName="padreOpci"
+            />
+
+            <ui-text-field
+              [label]="'Icono'"
+              formControlName="iconoOpci"
+            />
+
+            <ui-combo-box
+              [label]="'Estado'"
+              [options]="estadosOptions"
+              formControlName="activoOpci"
             />
 
             <ui-text-area
               [label]="'Descripción'"
-              formControlName="descripcionRol"
+              formControlName="descripcionOpci"
             />
           </div>
 

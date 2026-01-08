@@ -3,6 +3,11 @@ export enum EnumEstadosOpcion {
     no = 'no'
 }
 
+export const ListEstadosOpcion = [
+    { value: 'si', label: 'Activo' },
+    { value: 'no', label: 'Inactivo' }
+];
+
 export interface IOpciones {
     ideOpci: number;
     nombreOpci: string;
