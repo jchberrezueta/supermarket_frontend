@@ -17,8 +17,8 @@
             <div class="form_info">
 
               <div class="form_div">
-                <ui-combo-box label="Categoría" [options]="categorias" formControlName="ideCate" />
-                <ui-combo-box label="Marca" [options]="marcas" formControlName="ideMarc" />
+                <ui-input-box label="Categoría" [options]="categorias" formControlName="ideCate"/>
+                <ui-input-box label="Marca" [options]="marcas" formControlName="ideMarc" />
                 <ui-text-field label="Código Barra" formControlName="codigoBarraProd" />
                 <ui-text-field label="Nombre" formControlName="nombreProd" />
                 <ui-text-field label="Precio Venta" [valueType]="'number'" formControlName="precioVentaProd" />
@@ -27,9 +27,9 @@
               <div class="form_div">
                 <ui-text-field label="IVA" [valueType]="'number'" formControlName="ivaProd" />
                 <ui-text-field label="Descuento Promo" [valueType]="'number'" formControlName="dctoPromoProd" />
-                <ui-text-field label="Stock" [valueType]="'number'" formControlName="stockProd" />
-                <ui-text-field label="Disponible" formControlName="disponibleProd" />
-                <ui-text-field label="Estado" formControlName="estadoProd" />
+                <ui-text-field label="Stock" [valueType]="'number'" [disabled]="isAdd"  formControlName="stockProd" />
+                <ui-combo-box label="Disponible" [options]="opcionesProdDisponibilidad" [disabled]="isAdd" formControlName="disponibleProd" />
+                <ui-combo-box label="Estado" [options]="opcionesProdEstados" formControlName="estadoProd" />
               </div>
 
             </div>
@@ -49,7 +49,7 @@
     </div>
 
     <div class="panel_2">
-      <div class="panel_2_img"></div>
+      <div class="panel_2_img" [ngStyle]="{'background': 'url('+formData.value.urlImgProd+') center / cover no-repeat'}"></div>
     </div>
 
   </div>

@@ -31,7 +31,7 @@ export class UiTextFieldComponent implements ControlValueAccessor {
   public label = input.required<string>();
   public value = input<any>('');
   public valueType = input<'string' | 'number'>('string');
-  protected innerValue = signal<string>('');
+  protected innerValue = signal<any>('');
   public disabled = input<boolean>(false);
   protected _isDisabled = signal(false);
   public width = input<string>('auto');
@@ -45,6 +45,13 @@ export class UiTextFieldComponent implements ControlValueAccessor {
     effect(() => {
       if (this.value() !== undefined && this.value() !== '') {
         this.innerValue.set(this.value());
+      }
+    },
+    { allowSignalWrites: true });
+
+    effect(() => {
+      if (this.disabled() !== undefined) {
+        this._isDisabled.set(this.disabled());
       }
     },
     { allowSignalWrites: true });

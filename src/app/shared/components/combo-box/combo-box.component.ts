@@ -33,10 +33,11 @@ export class UiComboBoxComponent implements ControlValueAccessor {
   public options = input.required<IComboBoxOption[]>();
   public label = input.required<string>();
   public width = input<string>('');
+  public disabled = input<boolean>(false);
   public returnValue = input<string>('');
   public evntSelectOption = output<number>();
   public open: boolean = false;
-  public disabled: boolean = false;
+  public isDisabled: boolean = false;
   public selectedLabel: string | null = null;
   public selectedValue: any = null;
   public onChange = (value: any) => {};
@@ -47,6 +48,12 @@ export class UiComboBoxComponent implements ControlValueAccessor {
       this.options(); // dependencia
       this.syncSelection();
     });
+    effect(() => {
+      if (this.disabled() !== undefined) {
+        this.isDisabled = this.disabled();
+      }
+    },
+    { allowSignalWrites: true });
   }
 
   protected toggle() {
@@ -109,6 +116,6 @@ export class UiComboBoxComponent implements ControlValueAccessor {
 
   // Setear si está deshabilitado
   setDisabledState(isDisabled: boolean): void {
-    this.disabled = isDisabled;
+    this.isDisabled = isDisabled;
   }
 }

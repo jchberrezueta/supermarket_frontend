@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { Location } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import Swal from 'sweetalert2';
 
 import { FormGroupOf } from '@core/utils/utilities';
@@ -14,6 +14,7 @@ import { UiTextFieldComponent } from '@shared/components/text-field/text-field.c
 import { UiComboBoxComponent } from '@shared/components/combo-box/combo-box.component';
 import { UiButtonComponent } from '@shared/components/button/button.component';
 import { UiTextAreaComponent } from '@shared/components/text-area/text-area.component';
+import { UiInputBoxComponent } from '@shared/components/input-box/input-box.component';
 
 type ProductoFormGroup = FormGroupOf<IProducto>;
 
@@ -25,7 +26,9 @@ type ProductoFormGroup = FormGroupOf<IProducto>;
     UiComboBoxComponent,
     UiTextAreaComponent,
     UiButtonComponent,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    UiInputBoxComponent,
+    CommonModule
   ],
   templateUrl: './form.component.html',
   styleUrl: './form.component.scss'
@@ -44,6 +47,9 @@ export default class FormComponent {
 
   protected categorias!: IComboBoxOption[];
   protected marcas!: IComboBoxOption[];
+  protected opcionesProdEstados!: IComboBoxOption[];
+  protected opcionesProdDisponibilidad!: IComboBoxOption[];
+
 
   protected isAdd = true;
   private idParam = -1;
@@ -51,6 +57,8 @@ export default class FormComponent {
   constructor() {
     this.loadCategorias();
     this.loadMarcas();
+    this.loadProductosDisponiblidad()
+    this.loadProductosEstados();
   }
 
   ngOnInit(): void {
@@ -74,8 +82,8 @@ export default class FormComponent {
       precioVentaProd: [0, Validators.required],
       ivaProd: [0, Validators.required],
       dctoPromoProd: [0, Validators.required],
-      stockProd: [0, Validators.required],
-      disponibleProd: ['si', Validators.required],
+      stockProd: [0, [Validators.required], []],
+      disponibleProd: ['no', Validators.required],
       estadoProd: ['activo', Validators.required],
       descripcionProd: [''],
       urlImgProd: ['', Validators.required],
@@ -96,8 +104,24 @@ export default class FormComponent {
     });
   }
 
+  private loadProductosEstados() {
+    this._productosService.listarComboEstados().subscribe(
+      (res) => {
+        this.opcionesProdEstados = res;
+      }
+    );
+  }
+  private loadProductosDisponiblidad() {
+    this._productosService.listarComboDisponibilidad().subscribe(
+      (res) => {
+        this.opcionesProdDisponibilidad = res;
+      }
+    );
+  }
+
   private setData(id: number) {
     this._productosService.buscar(id).subscribe(res => {
+      console.log(res);
       const p = res.data[0] as IProductoResult;
 
       this.formData.patchValue({
@@ -119,6 +143,7 @@ export default class FormComponent {
   }
 
   protected guardar() {
+    console.log(this.formData.getRawValue());
     if (!this.formData.valid) {
       Swal.fire('Oops...', 'Faltan datos por completar', 'info');
       return;

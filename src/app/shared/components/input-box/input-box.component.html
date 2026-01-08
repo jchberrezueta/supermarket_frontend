@@ -4,6 +4,7 @@
       [placeholder]="getPlaceholder"
       [value]="selectedLabel" 
       (input)="optionsFiltered.set(inp.value)"
+      [disabled]="disabled"
     >
     <label>{{ getLabel }}</label>
     @if(open){

@@ -13,6 +13,12 @@
     font-family: sans-serif;
     z-index: 1;
 
+    &.disabled {
+      pointer-events: none;   // bloquea clics
+      opacity: 0.8;           // efecto visual
+      user-select: none;
+    }
+
     &.active {
       .selected {
         border-color: #F527E7;
@@ -41,6 +47,8 @@
       background: white;
       cursor: pointer;
       transition: border-color .3s, box-shadow .3s;
+      
+      
 
       &:hover {
         border-color: #F527E7;
@@ -81,3 +89,5 @@
     }
   }
 }
+
+

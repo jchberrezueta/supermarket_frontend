@@ -1,7 +1,8 @@
 <div class="div_container" clickOutside (clickOutside)="open = false">
   <div class="div_select" [class.active]="open" (click)="toggle()" 
     [attr.data-estado]="selectedLabel? 'true' : 'false'"
-    [ngStyle]="{'width': width()+'px'}" 
+    [ngStyle]="{'width': width()+'px'}"
+    [class.disabled]="isDisabled"
   >
     <div class="selected">
       <label class="label_0">{{ getLabel }}</label>

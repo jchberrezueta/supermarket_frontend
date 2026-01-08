@@ -162,12 +162,9 @@ export interface IProductoResult {
     ide_marc: number;
     codigo_barra_prod: string;
     nombre_prod: string;
-    precio_compra_prod: number;
     precio_venta_prod: number;
     iva_prod: number;
     dcto_promo_prod: number;
-    dcto_caduc_prod: number;
-    precio_final_prod: number;
     stock_prod: number;
     disponible_prod: 'si' | 'no';
     estado_prod: EnumEstadosProducto;
