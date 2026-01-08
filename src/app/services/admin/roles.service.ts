@@ -35,6 +35,9 @@ export class RolesService {
   /**
    * COMBOS
    */
+  public listarComboRoles(): Observable<IComboBoxOption[]> {
+    return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/combo/roles`);
+  }
   public listarComboNombres(): Observable<IComboBoxOption[]> {
     return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/combo/nombres`);
   }

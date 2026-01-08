@@ -6,9 +6,9 @@ import { IComboBoxOption } from '@shared/models/combo_box_option';
 import { UiComboBoxComponent } from '@shared/components/combo-box/combo-box.component';
 import { UiTextFieldComponent } from "@shared/components/text-field/text-field.component";
 import { isValidStringValue, FormGroupOf } from '@core/utils/utilities';
-import { IFiltroCategoria, IFiltroEmpresa } from 'app/models';
-import { ListConfig } from './list_empresas.config';
-import { CategoriasService } from '@services/index';
+import { IFiltroCategoria, IFiltroEmpleado, IFiltroEmpresa } from 'app/models';
+import { ListEmpleadosConfig } from './list_empleados.config';
+import { CategoriasService, EmpleadosService, RolesService } from '@services/index';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UiCardComponent } from '@shared/components/card/card.component';
 import { UiInputBoxComponent } from '@shared/components/input-box/input-box.component';
@@ -21,7 +21,7 @@ const IMPORTS = [
   UiInputBoxComponent
 ];
 
-type filterCategoriaFormGroup = FormGroupOf<IFiltroCategoria>;
+type filterEmpleadoFormGroup = FormGroupOf<IFiltroEmpleado>;
 
 @Component({
   selector: 'app-list',
@@ -32,43 +32,82 @@ type filterCategoriaFormGroup = FormGroupOf<IFiltroCategoria>;
 })
 export default class ListComponent {
   private readonly _tableList = viewChild.required<UiTableListComponent>(UiTableListComponent);
-  protected readonly config = ListConfig;
-  private readonly _categoriasService = inject(CategoriasService);
-  private readonly _router = inject(Router);
-  private readonly _route = inject(ActivatedRoute);
+  protected readonly config = ListEmpleadosConfig;
+  private readonly _empleadosService = inject(EmpleadosService);
+  private readonly _rolesService = inject(RolesService);
   private formBuilder= inject(FormBuilder);
-  protected opcionesNombres!: IComboBoxOption[];
-  protected opcionesDescripcion!: IComboBoxOption[];
-  protected formData!: filterCategoriaFormGroup;
-  private initialFormValue!: IFiltroCategoria;
+  protected opcionesRoles!: IComboBoxOption[];
+  protected opcionesEmplCedulas!: IComboBoxOption[];
+  protected opcionesEmplPrimerNombre!: IComboBoxOption[];
+  protected opcionesEmplApellidoPaterno!: IComboBoxOption[];
+  protected opcionesEmplTitulos!: IComboBoxOption[];
+  protected opcionesEmplEstados!: IComboBoxOption[];
+  protected formData!: filterEmpleadoFormGroup;
+  private initialFormValue!: IFiltroEmpleado;
 
 
   constructor() {
-    this.loadComboNombres();
-    this.loadComboDescripcion();
+    this.loadComboRoles();
+    this.loadComboCedulas();
+    this.loadComboPrimerNombre();
+    this.loadComboApellidoPaterno();
+    this.loadComboTitulos();
+    this.loadComboEstados();
     this.configForm();
   }
 
   protected configForm() {
     this.formData = this.formBuilder.group({
-      nombreCate: ['', [], []],
-      descripcionCate: ['', [], []],
-    }) as filterCategoriaFormGroup;
+      ideRol: ['', [], []],
+      cedulaEmpl: ['', [], []],
+      primerNombreEmpl: ['', [], []],
+      apellidoPaternoEmpl: ['', [], []],
+      tituloEmpl: ['', [], []],
+      estadoEmpl: ['', [], []],
+    }) as filterEmpleadoFormGroup;
     //snapshot inicial
     this.initialFormValue = this.formData.getRawValue();
   }
 
-  private loadComboNombres() {
-    this._categoriasService.listarComboNombres().subscribe(
+  private loadComboRoles() {
+    this._rolesService.listarComboRoles().subscribe(
       (res) => {
-        this.opcionesNombres = res;
+        this.opcionesRoles = res;
       }
     );
   }
-  private loadComboDescripcion() {
-    this._categoriasService.listarComboDescripcion().subscribe(
+  private loadComboCedulas() {
+    this._empleadosService.listarComboCedulas().subscribe(
       (res) => {
-        this.opcionesDescripcion = res;
+        this.opcionesEmplCedulas = res;
+      }
+    );
+  }
+  private loadComboPrimerNombre() {
+    this._empleadosService.listarComboPrimerNombre().subscribe(
+      (res) => {
+        this.opcionesEmplPrimerNombre = res;
+      }
+    );
+  }
+  private loadComboApellidoPaterno() {
+    this._empleadosService.listarComboApellidoPaterno().subscribe(
+      (res) => {
+        this.opcionesEmplApellidoPaterno = res;
+      }
+    );
+  }
+  private loadComboTitulos() {
+    this._empleadosService.listarComboTitulos().subscribe(
+      (res) => {
+        this.opcionesEmplTitulos = res;
+      }
+    );
+  }
+  private loadComboEstados() {
+    this._empleadosService.listarComboEstados().subscribe(
+      (res) => {
+        this.opcionesEmplEstados = res;
       }
     );
   }
@@ -80,9 +119,15 @@ export default class ListComponent {
 
   private getParams(): URLSearchParams {
     const params = new URLSearchParams();
-    const filtro = this.formData.value as IFiltroCategoria;
-    if (isValidStringValue(filtro.nombreCate)) params.append('nombreCate', filtro.nombreCate );
-    if (isValidStringValue(filtro.descripcionCate)) params.append('descripcionCate', filtro.descripcionCate );
+   
+    const filtro = this.formData.value as IFiltroEmpleado;
+     console.log(filtro);
+    if (isValidStringValue(filtro.ideRol+'')) params.append('ideRol', filtro.ideRol+'' );
+    if (isValidStringValue(filtro.cedulaEmpl)) params.append('cedulaEmpl', filtro.cedulaEmpl );
+    if (isValidStringValue(filtro.primerNombreEmpl)) params.append('primerNombreEmpl', filtro.primerNombreEmpl );
+    if (isValidStringValue(filtro.apellidoPaternoEmpl)) params.append('apellidoPaternoEmpl', filtro.apellidoPaternoEmpl );
+    if (isValidStringValue(filtro.tituloEmpl)) params.append('tituloEmpl', filtro.tituloEmpl );
+    if (isValidStringValue(filtro.estadoEmpl)) params.append('estadoEmpl', filtro.estadoEmpl );
     console.log(params);
     return params;
   }

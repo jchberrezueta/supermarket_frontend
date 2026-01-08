@@ -4,8 +4,12 @@
             <form [formGroup]="formData" (ngSubmit)="filtrar()" class="card_form">
                 <div class="card_filters">
                     <div class="selects">
-                        <ui-input-box [label]="'Nombre'" [options]="opcionesNombres" [width]="'200'" [returnValue]="'label'" formControlName="nombreCate"/>
-                        <ui-input-box [label]="'Descripcion'" [options]="opcionesDescripcion" [width]="'200'" [returnValue]="'label'" formControlName="descripcionCate"/>
+                        <ui-input-box [label]="'Rol'" [options]="opcionesRoles" [width]="'200'" formControlName="ideRol"/>
+                        <ui-input-box [label]="'Cedula'" [options]="opcionesEmplCedulas" [width]="'200'" [returnValue]="'label'" formControlName="cedulaEmpl"/>
+                        <ui-input-box [label]="'Primer Nombre'" [options]="opcionesEmplPrimerNombre" [width]="'200'" [returnValue]="'label'" formControlName="primerNombreEmpl"/>
+                        <ui-input-box [label]="'Apellido Paterno'" [options]="opcionesEmplApellidoPaterno" [width]="'200'" [returnValue]="'label'" formControlName="apellidoPaternoEmpl"/>
+                        <ui-input-box [label]="'Titulo'" [options]="opcionesEmplTitulos" [width]="'200'" [returnValue]="'label'" formControlName="tituloEmpl"/>
+                        <ui-input-box [label]="'Estado'" [options]="opcionesEmplEstados" [width]="'200'" [returnValue]="'label'" formControlName="estadoEmpl"/>
                     </div>
                     <div class="filter_btn">
                         <ui-button [label]="'Filtrar'" [icon]="'filter_alt'"/>
@@ -17,7 +21,7 @@
             </div>
         </div>
         <div class="card_table">
-            <ui-table-list #tableList [serviceApi]="'categorias'" [columns]="config.columns" [isSelection]="true"/>
+            <ui-table-list #tableList [serviceApi]="'empleados/listar/empleados'" [serviceApiFilter]="'empleados/filtrar/empleados'"  [serviceApiReal]="'empleados'"  [columns]="config.columns"/>
         </div>
     </ui-card>
 </div>

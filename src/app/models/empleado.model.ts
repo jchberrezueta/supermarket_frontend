@@ -164,14 +164,10 @@ export interface IResultDataEmpleado {
 
 
 export interface IFiltroEmpleado {
-    ideEmpl: number;
-    ideRol: number;
+    ideRol: string;
     cedulaEmpl: string;
     primerNombreEmpl: string;
     apellidoPaternoEmpl: string;
+    tituloEmpl: EnumEstadoEmpleado;
     estadoEmpl: EnumEstadoEmpleado;
-    rmuEmplMin: number;
-    rmuEmplMax: number;
-    fechaInicioEmplDesde: string;
-    fechaInicioEmplHasta: string;
 }

@@ -1,11 +1,11 @@
 import { ITableListConfig } from "@shared/models/table-list.model";
 
-export const ListConfig: ITableListConfig = {
-    dataKey: 'ide_cate',
+export const ListEmpleadosConfig: ITableListConfig = {
+    dataKey: 'ide_empl',
     columns: [
-        { 
-            label: 'Detalles', 
-            property: 'view_details', 
+        {
+            label: 'Detalles',
+            property: 'view_details',
             type: 'details',
             buttonItems: [
                 {
@@ -13,14 +13,20 @@ export const ListConfig: ITableListConfig = {
                     label: 'Ver Detalles',
                     icon: 'visibility',
                     router: true,
-                    key: 'ide_cate',
+                    key: 'ide_empl',
                     color: 'purple'
                 }
             ]
         },
-        { label: 'ID', property: 'ide_cate', type: 'text', sortable: true },
-        { label: 'Nombre', property: 'nombre_cate', type: 'text', sortable: true },
-        { label: 'Descripcion', property: 'descripcion_cate', type: 'text', sortable: true },
+
+        { label: 'ID', property: 'ide_empl', type: 'text', sortable: true },
+        { label: 'Cédula', property: 'cedula_empl', type: 'text', sortable: true },
+        { label: 'Empleado', property: 'nombre_completo', type: 'text', sortable: true },
+        { label: 'Rol', property: 'nombre_rol', type: 'text', sortable: true },
+        { label: 'Título', property: 'titulo_empl', type: 'text', sortable: true },
+        { label: 'RMU', property: 'rmu_empl', type: 'text', sortable: true },
+        { label: 'Estado', property: 'estado_empl', type: 'text', sortable: true },
+
         {
             label: '',
             property: 'menu',
@@ -31,17 +37,17 @@ export const ListConfig: ITableListConfig = {
                     label: 'Editar',
                     icon: 'edit',
                     router: true,
-                    key: 'ide_cate',
+                    key: 'ide_empl',
                     color: 'primary'
                 },
                 {
                     action: 'delete',
                     label: 'Eliminar',
                     icon: 'delete',
-                    key: 'ide_cate',
+                    key: 'ide_empl',
                     color: 'red'
                 }
-            ],
+            ]
         }
     ]
-}
+};

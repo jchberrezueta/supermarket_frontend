@@ -18,7 +18,6 @@ const IMPORTS = [
   UiCardComponent,
   ReactiveFormsModule,
   UiInputBoxComponent,
-  UiComboBoxComponent
 ];
 
 type filterRolFormGroup = FormGroupOf<IFiltroRol>;

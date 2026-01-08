@@ -34,7 +34,7 @@ export class UiInputBoxComponent implements ControlValueAccessor {
   public label = input.required<string>();
   public placeholder = input<string>('...');
   public width = input<string>('');
-  public returnValue = input<string>('');
+  public returnValue = input<string>('value');
   public evntSelectOption = output<number>();
   protected optionsFiltered = signal('');
   public open: boolean = false;
