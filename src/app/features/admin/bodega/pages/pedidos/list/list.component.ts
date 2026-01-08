@@ -4,24 +4,26 @@ import { UiTableListComponent } from '@shared/components/index';
 import { UiButtonComponent } from "@shared/components/button/button.component";
 import { IComboBoxOption } from '@shared/models/combo_box_option';
 import { UiComboBoxComponent } from '@shared/components/combo-box/combo-box.component';
-import { UiTextFieldComponent } from "@shared/components/text-field/text-field.component";
 import { isValidStringValue, FormGroupOf } from '@core/utils/utilities';
-import { IFiltroEmpresa } from 'app/models';
-import { ListEmpresasConfig } from './list_empresas.config';
-import { EmpresasService } from '@services/index';
+import { IFiltroPedido } from 'app/models';
+import { ListPedidoConfig } from './list_pedidos.config';
+import { EmpresasService, PedidosService } from '@services/index';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UiCardComponent } from '@shared/components/card/card.component';
+import { UiInputBoxComponent } from '@shared/components/input-box/input-box.component';
+import { UiDatetimePickerComponent } from '@shared/components/datetime-picker/datetime-picker.component';
 
 const IMPORTS = [
   UiTableListComponent,
   UiButtonComponent,
   UiComboBoxComponent,
-  UiTextFieldComponent,
   UiCardComponent,
-  ReactiveFormsModule
+  ReactiveFormsModule,
+  UiInputBoxComponent,
+  UiDatetimePickerComponent
 ];
 
-type filterEmpresaFormGroup = FormGroupOf<IFiltroEmpresa>;
+type filterPedidoFormGroup = FormGroupOf<IFiltroPedido>;
 
 @Component({
   selector: 'app-list',
@@ -32,36 +34,57 @@ type filterEmpresaFormGroup = FormGroupOf<IFiltroEmpresa>;
 })
 export default class ListComponent {
   private readonly _tableList = viewChild.required<UiTableListComponent>(UiTableListComponent);
-  protected readonly config = ListEmpresasConfig;
+  protected readonly config = ListPedidoConfig;
   private readonly _empresasService = inject(EmpresasService);
+  private readonly _pedidosService = inject(PedidosService);
   private readonly _router = inject(Router);
   private readonly _route = inject(ActivatedRoute);
   private formBuilder= inject(FormBuilder);
-  protected estadosEmpresa!: IComboBoxOption[];
-  protected formData!: filterEmpresaFormGroup;
-  private initialFormValue!: IFiltroEmpresa;
+  protected opcionesEmpresas!: IComboBoxOption[];
+  protected opcionesEstadosPedi!: IComboBoxOption[];
+  protected opcionesMotivosPedi!: IComboBoxOption[];
+  protected formData!: filterPedidoFormGroup;
+  private initialFormValue!: IFiltroPedido;
 
   private idEmpresa: number = -1;
 
   constructor() {
-    this.loadEstadosEmpresa();
+    this.loadEmpresas();
+    this.loadComboEstados();
+    this.loadComboMotivos();
     this.configForm();
   }
 
   protected configForm() {
     this.formData = this.formBuilder.group({
-      nombreEmp: ['', [], []],
-      estadoEmp: ['', [], []],
-      responsableEmp: ['', [], []],
-    }) as filterEmpresaFormGroup;
+      nombreEmpr: ['', [], []],
+      estadoPedi: ['', [], []],
+      motivoPedi: ['', [], []],
+      fechaPediDesde: ['', [], []],
+      fechaPediHasta: ['', [], []]
+    }) as filterPedidoFormGroup;
     //snapshot inicial
     this.initialFormValue = this.formData.getRawValue();
   }
 
-  private loadEstadosEmpresa() {
-    this._empresasService.listarEstados().subscribe(
+  private loadEmpresas() {
+    this._empresasService.listarComboEmpresas().subscribe(
       (res) => {
-        this.estadosEmpresa = res;
+        this.opcionesEmpresas = res;
+      }
+    );
+  }
+  private loadComboEstados() {
+    this._pedidosService.listarComboEstados().subscribe(
+      (res) => {
+        this.opcionesEstadosPedi = res;
+      }
+    );
+  }
+  private loadComboMotivos() {
+    this._pedidosService.listarComboMotivos().subscribe(
+      (res) => {
+        this.opcionesMotivosPedi = res;
       }
     );
   }
@@ -73,28 +96,16 @@ export default class ListComponent {
 
   private getParams(): URLSearchParams {
     const params = new URLSearchParams();
-    const filtro = this.formData.value as IFiltroEmpresa;
-    if (isValidStringValue(filtro.nombreEmp)) params.append('nombreEmp', filtro.nombreEmp );
-    if (isValidStringValue(filtro.estadoEmp)) params.append('estadoEmp', filtro.estadoEmp );
-    if (isValidStringValue(filtro.responsableEmp)) params.append('responsableEmp', filtro.responsableEmp );
+    const filtro = this.formData.value as IFiltroPedido;
+    if (isValidStringValue(filtro.nombreEmpr)) params.append('nombreEmpr', filtro.nombreEmpr );
+    if (isValidStringValue(filtro.estadoPedi)) params.append('estadoPedi', filtro.estadoPedi );
+    if (isValidStringValue(filtro.motivoPedi)) params.append('motivoPedi', filtro.motivoPedi );
+    if (isValidStringValue(filtro.fechaPediDesde)) params.append('fechaPediDesde', filtro.fechaPediDesde );
+    if (isValidStringValue(filtro.fechaPediDesde)) params.append('fechaPediDesde', filtro.fechaPediDesde );
     return params;
   }
 
-  protected redirectToEmpresaPrecios(clickAction: string) {
-    if(clickAction === 'redirect') {
-      if(this.idEmpresa > -1){
-        this._router.navigate(['../precios', this.idEmpresa], {relativeTo: this._route});
-      }
-    }
-  }
-
-  protected setIdEmpresa(elem: any) {
-    if(elem && elem.row){
-      this.idEmpresa = elem.row.ide_empr;
-    }else{
-      this.idEmpresa = -1;
-    }
-  }
+  
 
   protected refreshData(actionClick: string){
     if(actionClick === 'refresh'){

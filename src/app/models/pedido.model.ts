@@ -121,18 +121,12 @@ export interface IResultDataPedido {
 }
 
 export interface IFiltroPedido {
-    idePedi: number;
-    ideEmpr: number;
+    nombreEmpr: string;
+    estadoPedi: string;
+    motivoPedi: EnumMotivosPedido;
     fechaPediDesde: string;
     fechaPediHasta: string;
-    fechaEntrPediDesde: string;
-    fechaEntrPediHasta: string;
-    cantidadTotalPediMin: number;
-    cantidadTotalPediMax: number;
-    totalPediMin: number;
-    totalPediMax: number;
-    estadoPedi: EnumEstadosPedido;
-    motivoPedi: EnumMotivosPedido;
+    
 }
 
 export interface IPedidoCompleto {

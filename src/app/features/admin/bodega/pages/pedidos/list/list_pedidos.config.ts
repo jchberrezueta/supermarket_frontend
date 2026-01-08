@@ -1,6 +1,6 @@
 import { ITableListConfig } from '@shared/models/table-list.model';
 
-export const PedidoConfig: ITableListConfig = {
+export const ListPedidoConfig: ITableListConfig = {
   dataKey: 'ide_pedi',
   columns: [
     {

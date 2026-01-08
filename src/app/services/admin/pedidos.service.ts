@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { IResultData } from '@core/models';
 import { RestService } from '@core/services/rest.service';
 import { IPedidoCompleto, IResultDataPedido } from '@models';
+import { IComboBoxOption } from '@shared/models/combo_box_option';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -24,10 +25,20 @@ export class PedidosService {
   }
 
   public actualizar(id: number, body: IPedidoCompleto) {
-    return this._restService.post<any>(`${this.apiUrl}/actualizar/${id}`, body);
+    return this._restService.put<any>(`${this.apiUrl}/actualizar/${id}`, body);
   }
 
   public eliminar(id: number) {
     return this._restService.delete<any>(`${this.apiUrl}/eliminar/${id}`);
+  }
+
+  /**
+   * COMBOS
+   */
+  public listarComboEstados(): Observable<IComboBoxOption[]> {
+    return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/combo/estados`);
+  }
+  public listarComboMotivos(): Observable<IComboBoxOption[]> {
+    return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/combo/motivos`);
   }
 }

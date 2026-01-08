@@ -4,9 +4,11 @@
             <form [formGroup]="formData" (ngSubmit)="filtrar()" class="card_form">
                 <div class="card_filters">
                     <div class="selects">
-                        <ui-text-field [label]="'Empresa'" formControlName="nombreEmp"/>
-                        <ui-text-field [label]="'Responsable'" formControlName="responsableEmp"/>
-                        <ui-combo-box [label]="'Estados'" [options]="estadosEmpresa" formControlName="estadoEmp"/>
+                        <ui-input-box [label]="'Empresa'" [options]="opcionesEmpresas" formControlName="nombreEmpr"/>
+                        <ui-combo-box [label]="'Estado'" [options]="opcionesEstadosPedi" formControlName="estadoPedi"/>
+                        <ui-combo-box [label]="'Motivo'" [options]="opcionesMotivosPedi" formControlName="motivoPedi"/>
+                        <ui-datetime-picker [label]="'Desde'" formControlName="fechaPediDesde"/>
+                        <ui-datetime-picker [label]="'Hasta'" formControlName="fechaPediHasta"/>
                     </div>
                     <div class="filter_btn">
                         <ui-button [label]="'Filtrar'" [icon]="'filter_alt'"/>
@@ -14,14 +16,11 @@
                 </div>
             </form>
             <div class="btns_options">
-                <ui-button [label]="'Precios'" [icon]="'attach_money'" [color]="'yellow'" [textColor]="'black'" 
-                    [action]="'redirect'" (evntClick)="redirectToEmpresaPrecios($event)"/>
                 <ui-button [icon]="'refresh'" [action]="'refresh'" (evntClick)="refreshData($event)"/>
             </div>
         </div>
         <div class="card_table">
-            <ui-table-list #tableList [serviceApi]="'empresas'" [columns]="config.columns" [isSelection]="true"
-                (rowClickAction)="setIdEmpresa($event)"/>
+            <ui-table-list #tableList [serviceApi]="'pedidos/listar/pedidos'" [serviceApiFilter]="'pedidos/filtrar/pedidos'" [serviceApiReal]="'pedidos'" [columns]="config.columns" />
         </div>
     </ui-card>
 </div>
