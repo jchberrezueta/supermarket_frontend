@@ -31,6 +31,10 @@ private readonly _restService = inject(RestService);
     return this._restService.delete<any>(`${this.apiUrl}/eliminar/${id}`);
   }
 
+  /**
+   * COMBOS
+   */
+
   public listarComboNombres(): Observable<IComboBoxOption[]> {
     return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/combo/nombre`);
   }

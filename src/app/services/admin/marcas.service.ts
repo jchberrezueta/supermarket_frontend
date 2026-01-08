@@ -32,6 +32,9 @@ export class MarcasService {
     return this._restService.delete<any>(`${this.apiUrl}/eliminar/${id}`);
   }
 
+  /**
+   * COMBOS
+   */
 
   public listarComboNombres(): Observable<IComboBoxOption[]> {
     return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/combo/nombre`);
@@ -42,6 +45,5 @@ export class MarcasService {
   public listarComboCalidad(): Observable<IComboBoxOption[]> {
     return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/combo/calidad`);
   }
-
 
 }

@@ -32,10 +32,23 @@ export class ProveedoresService {
     return this._restService.delete<any>(`${this.apiUrl}/eliminar/${id}`);
   }
 
+  /**
+   * JOINS
+   */
+
+  public listarProveedores(): Observable<IResultData> {
+    return this._restService.get<IResultData>(`${this.apiUrl}/listar/proveedores`);
+  }
+  public filtrarProveedores(): Observable<IResultData> {
+    return this._restService.get<IResultData>(`${this.apiUrl}/filtrar/proveedores`);
+  }
   public buscarProveedor(id: number): Observable<IResultData> {
     return this._restService.get<IResultData>(`${this.apiUrl}/buscar/proveedor/${id}`);
   }
 
+  /**
+   * COMBOS
+   */
 
   public listarComboCedula(): Observable<IComboBoxOption[]> {
     return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/proveedores/combo/cedula`);

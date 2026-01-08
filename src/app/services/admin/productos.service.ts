@@ -16,10 +16,6 @@ export class ProductosService {
     return this._restService.get<IResultDataProducto>(`${this.apiUrl}`);
   }
 
-  public listarComboProductos(): Observable<IComboBoxOption[]> {
-    return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/combo/productos`);
-  }
-
   public buscar(id: number): Observable<IResultDataProducto> {
     return this._restService.get<IResultDataProducto>(`${this.apiUrl}/buscar/${id}`);
   }
@@ -34,5 +30,12 @@ export class ProductosService {
 
   public eliminar(id: number) {
     return this._restService.delete<any>(`${this.apiUrl}/eliminar/${id}`);
+  }
+
+  /**
+   * COMBOS
+   */
+  public listarComboProductos(): Observable<IComboBoxOption[]> {
+    return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/combo/productos`);
   }
 }
