@@ -141,7 +141,6 @@ export interface IFiltroCliente {
     cedulaClie: string;
     primerNombreClie: string;
     apellidoPaternoClie: string;
-    emailClie: string;
     esSocio: 'si' | 'no';
     esTerceraEdad: 'si' | 'no';
 }

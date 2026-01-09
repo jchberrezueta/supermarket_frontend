@@ -4,9 +4,11 @@
             <form [formGroup]="formData" (ngSubmit)="filtrar()" class="card_form">
                 <div class="card_filters">
                     <div class="selects">
-                        <ui-text-field [label]="'Cédula'" formControlName="cedulaClie" [width]="'180'"/>
-                        <ui-text-field [label]="'Nombre'" formControlName="primerNombreClie" [width]="'180'"/>
-                        <ui-combo-box [label]="'Es Socio'" [options]="opcionesSocio" formControlName="esSocio"/>
+                        <ui-input-box [label]="'Cédula'" [options]="opcionesCedulas" [returnValue]="'label'" formControlName="cedulaClie" [width]="'180'"/>
+                        <ui-input-box [label]="'nombre'" [options]="opcionesNombre" [returnValue]="'label'" formControlName="primerNombreClie" [width]="'180'"/>
+                        <ui-input-box [label]="'Apellido'" [options]="opcionesApellido" [returnValue]="'label'" formControlName="apellidoPaternoClie" [width]="'180'"/>
+                        <ui-combo-box [label]="'Es Socio'" [options]="opcionesSocio" [returnValue]="'label'" formControlName="esSocio" [width]="'180'"/>
+                        <ui-combo-box [label]="'Es Tercera Edad'" [options]="opcionesTerceraEdad" [returnValue]="'label'" formControlName="esTerceraEdad" [width]="'180'"/>
                     </div>
                     <div class="filter_btn">
                         <ui-button [label]="'Filtrar'" [icon]="'filter_alt'"/>
@@ -20,10 +22,8 @@
         <div class="card_table">
             <ui-table-list #tableList 
                 [serviceApi]="'clientes'" 
-                [serviceApiFilter]="'clientes/filtrar'"
-                [serviceApiReal]="'clientes'"
                 [columns]="config.columns" 
-                [isSelection]="true"/>
+            />
         </div>
     </ui-card>
 </div>

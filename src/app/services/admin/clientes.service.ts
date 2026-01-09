@@ -37,5 +37,20 @@ private readonly _restService = inject(RestService);
   public listarComboClientes(): Observable<IComboBoxOption[]> {
     return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/combo/clientes`);
   }
+  public listarComboCedulas(): Observable<IComboBoxOption[]> {
+    return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/combo/cedulas`);
+  }
+  public listarComboNombres(): Observable<IComboBoxOption[]> {
+    return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/combo/nombres`);
+  }
+  public listarComboApellidos(): Observable<IComboBoxOption[]> {
+    return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/combo/apellidos`);
+  }
+  public listarComboSocio(): Observable<IComboBoxOption[]> {
+    return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/combo/socios`);
+  }
+  public listarComboTerceraEdad(): Observable<IComboBoxOption[]> {
+    return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/combo/tercera/edad`);
+  }
 
 }
