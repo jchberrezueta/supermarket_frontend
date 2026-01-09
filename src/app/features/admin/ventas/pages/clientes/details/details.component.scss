@@ -5,61 +5,218 @@
 
 .div_container {
   width: 100%;
-  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 40px;
+  box-sizing: border-box;
+}
 
-  .div_card {
+.div_card {
+  width: 100%;
+  display: flex;
+}
+
+.panel_1 {
+  width: 100%;
+}
+
+.card_form {
+  padding: 20px;
+}
+
+.header_actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #e0e0e0;
+
+  .header_title {
+    h2 {
+      margin: 0;
+      font-size: 1.6rem;
+      color: #333;
+    }
+  }
+
+  .header_buttons {
     display: flex;
-    height: 100%;
-    background: #fff;
-    border-radius: 10px;
+    gap: 12px;
+  }
+}
 
-    .panel_1 {
-      width: 60%;
-      padding: 30px;
+.cliente_perfil {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 16px;
+  padding: 30px;
+  margin-bottom: 30px;
+  color: white;
+
+  .avatar {
+    width: 90px;
+    height: 90px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .material-icons {
+      font-size: 50px;
+      color: white;
+    }
+  }
+
+  .cliente_info_principal {
+    flex: 1;
+
+    h3 {
+      margin: 0 0 8px 0;
+      font-size: 1.5rem;
+      font-weight: 600;
+      text-transform: capitalize;
+    }
+
+    .cedula {
       display: flex;
-      flex-direction: column;
-      gap: 20px;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 15px 0;
+      opacity: 0.9;
+      font-size: 1rem;
 
-      .card_header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px 0;
-
-        .header_right {
-          display: flex;
-          gap: 10px;
-        }
-      }
-
-      .card_info {
-        background-color: rgba(241, 245, 249);
-        border-radius: 12px;
-        padding: 25px;
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-
-        .info_row {
-          display: flex;
-          gap: 15px;
-          flex-wrap: wrap;
-        }
+      .material-icons {
+        font-size: 18px;
       }
     }
 
-    .panel_2 {
-      flex: 1;
+    .badges {
       display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 30px;
+      gap: 12px;
+      flex-wrap: wrap;
 
-      .panel_2_img {
-        width: 80%;
-        height: 70%;
-        border-radius: 12px;
-        background-color: #f1f5f9;
+      .badge {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 500;
+
+        .material-icons {
+          font-size: 16px;
+        }
+
+        &.badge-success {
+          background: #10b981;
+          color: white;
+        }
+
+        &.badge-info {
+          background: #3b82f6;
+          color: white;
+        }
+
+        &.badge-inactive {
+          background: rgba(255, 255, 255, 0.2);
+          color: rgba(255, 255, 255, 0.8);
+        }
+      }
+    }
+  }
+}
+
+.section_title {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #555;
+  margin: 25px 0 15px 0;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #3b82f6;
+  display: inline-block;
+}
+
+.info_grid {
+  background: #f9fafb;
+  border-radius: 10px;
+  padding: 25px;
+  margin-bottom: 20px;
+
+  .info_row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+    margin-bottom: 20px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+      gap: 15px;
+    }
+  }
+}
+
+.membresia_cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+
+  .membresia_card {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background: #f1f5f9;
+    border-radius: 12px;
+    padding: 25px;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+
+    .material-icons {
+      font-size: 40px;
+      color: #94a3b8;
+    }
+
+    .membresia_info {
+      display: flex;
+      flex-direction: column;
+
+      .label {
+        font-size: 0.9rem;
+        color: #64748b;
+        margin-bottom: 4px;
+      }
+
+      .status {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #475569;
+      }
+    }
+
+    &.active {
+      background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+      border-color: #10b981;
+
+      .material-icons {
+        color: #10b981;
+      }
+
+      .membresia_info {
+        .status {
+          color: #059669;
+        }
       }
     }
   }

@@ -1,57 +1,86 @@
 <div class="div_container">
   <div class="div_card">
-
     <div class="panel_1">
-      <!-- CABECERA -->
-      <div class="card_header">
-        <div class="header_left">
-          <ui-text-field
-            [label]="'ID Cliente'"
-            [value]="idCliente"
-            [disabled]="true"
-          />
+      <div class="card_form">
+        
+        <!-- CABECERA -->
+        <div class="header_actions">
+          <div class="header_title">
+            <h2>Detalle del Cliente #{{ idCliente }}</h2>
+          </div>
+          <div class="header_buttons">
+            <ui-button [icon]="'refresh'" (evntClick)="loadCliente()"/>
+            <ui-button [label]="'Volver'" [icon]="'arrow_back'" (evntClick)="volver()"/>
+          </div>
         </div>
 
-        <div class="header_right">
-          <ui-button
-            [icon]="'refresh'"
-            (evntClick)="loadCliente()"
-          />
-          <ui-button
-            [label]="'Volver'"
-            [icon]="'arrow_back'"
-            (evntClick)="volver()"
-          />
-        </div>
-      </div>
-
-      <!-- INFO CLIENTE -->
-      <div class="card_info">
-        <div class="info_row">
-          <ui-text-field [label]="'Nombre Completo'" [value]="getNombreCompleto()"/>
-          <ui-text-field [label]="'Cédula'" [value]="cliente?.cedulaClie"/>
-        </div>
-
-        <div class="info_row">
-          <ui-text-field [label]="'Fecha Nacimiento'" [value]="formatDate(cliente?.fechaNacimientoClie || '')"/>
-          <ui-text-field [label]="'Edad'" [value]="cliente?.edadClie"/>
+        <!-- PERFIL DEL CLIENTE -->
+        <div class="cliente_perfil">
+          <div class="avatar">
+            <span class="material-icons">person</span>
+          </div>
+          <div class="cliente_info_principal">
+            <h3>{{ getNombreCompleto() }}</h3>
+            <p class="cedula"><span class="material-icons">badge</span> {{ cliente?.cedulaClie }}</p>
+            <div class="badges">
+              <span class="badge" [class.badge-success]="cliente?.esSocio === 'si'" [class.badge-inactive]="cliente?.esSocio === 'no'">
+                <span class="material-icons">card_membership</span>
+                {{ cliente?.esSocio === 'si' ? 'Socio' : 'No Socio' }}
+              </span>
+              <span class="badge" [class.badge-info]="cliente?.esTerceraEdad === 'si'" [class.badge-inactive]="cliente?.esTerceraEdad === 'no'">
+                <span class="material-icons">elderly</span>
+                {{ cliente?.esTerceraEdad === 'si' ? 'Tercera Edad' : 'No Tercera Edad' }}
+              </span>
+            </div>
+          </div>
         </div>
 
-        <div class="info_row">
-          <ui-text-field [label]="'Teléfono'" [value]="cliente?.telefonoClie"/>
-          <ui-text-field [label]="'Email'" [value]="cliente?.emailClie"/>
+        <!-- INFORMACIÓN PERSONAL -->
+        <div class="section_title">Información Personal</div>
+        <div class="info_grid">
+          <div class="info_row">
+            <ui-text-field [label]="'Primer Nombre'" [value]="cliente?.primerNombreClie" [disabled]="true"/>
+            <ui-text-field [label]="'Segundo Nombre'" [value]="cliente?.segundoNombreClie || 'N/A'" [disabled]="true"/>
+          </div>
+          <div class="info_row">
+            <ui-text-field [label]="'Apellido Paterno'" [value]="cliente?.apellidoPaternoClie" [disabled]="true"/>
+            <ui-text-field [label]="'Apellido Materno'" [value]="cliente?.apellidoMaternoClie || 'N/A'" [disabled]="true"/>
+          </div>
+          <div class="info_row">
+            <ui-text-field [label]="'Fecha de Nacimiento'" [value]="formatDate(cliente?.fechaNacimientoClie || '')" [disabled]="true"/>
+            <ui-text-field [label]="'Edad'" [value]="cliente?.edadClie + ' años'" [disabled]="true"/>
+          </div>
         </div>
 
-        <div class="info_row">
-          <ui-text-field [label]="'Es Socio'" [value]="cliente?.esSocio"/>
-          <ui-text-field [label]="'Tercera Edad'" [value]="cliente?.esTerceraEdad"/>
+        <!-- INFORMACIÓN DE CONTACTO -->
+        <div class="section_title">Información de Contacto</div>
+        <div class="info_grid">
+          <div class="info_row">
+            <ui-text-field [label]="'Teléfono'" [value]="cliente?.telefonoClie" [disabled]="true"/>
+            <ui-text-field [label]="'Email'" [value]="cliente?.emailClie" [disabled]="true"/>
+          </div>
         </div>
+
+        <!-- ESTADO DE MEMBRESÍA -->
+        <div class="section_title">Estado de Membresía</div>
+        <div class="membresia_cards">
+          <div class="membresia_card" [class.active]="cliente?.esSocio === 'si'">
+            <span class="material-icons">card_membership</span>
+            <div class="membresia_info">
+              <span class="label">Membresía Socio</span>
+              <span class="status">{{ cliente?.esSocio === 'si' ? 'Activa' : 'Inactiva' }}</span>
+            </div>
+          </div>
+          <div class="membresia_card" [class.active]="cliente?.esTerceraEdad === 'si'">
+            <span class="material-icons">elderly</span>
+            <div class="membresia_info">
+              <span class="label">Descuento Tercera Edad</span>
+              <span class="status">{{ cliente?.esTerceraEdad === 'si' ? 'Aplica' : 'No Aplica' }}</span>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
-
-    <div class="panel_2">
-      <div class="panel_2_img"></div>
-    </div>
-
   </div>
 </div>
