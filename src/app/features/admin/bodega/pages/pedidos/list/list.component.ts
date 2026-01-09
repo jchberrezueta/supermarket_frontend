@@ -101,7 +101,8 @@ export default class ListComponent {
     if (isValidStringValue(filtro.estadoPedi)) params.append('estadoPedi', filtro.estadoPedi );
     if (isValidStringValue(filtro.motivoPedi)) params.append('motivoPedi', filtro.motivoPedi );
     if (isValidStringValue(filtro.fechaPediDesde)) params.append('fechaPediDesde', filtro.fechaPediDesde );
-    if (isValidStringValue(filtro.fechaPediDesde)) params.append('fechaPediDesde', filtro.fechaPediDesde );
+    if (isValidStringValue(filtro.fechaPediHasta)) params.append('fechaPediHasta', filtro.fechaPediHasta );
+    console.log(params);
     return params;
   }
 

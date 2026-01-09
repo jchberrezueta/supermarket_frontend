@@ -4,11 +4,13 @@ import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {provideNativeDateAdapter} from '@angular/material/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 const IMPORTS = [
   MatFormFieldModule, 
   MatInputModule, 
-  MatDatepickerModule
+  MatDatepickerModule,
+  CommonModule
 ];
 
 const PROVIDERS = [
@@ -32,6 +34,7 @@ export class UiDatetimePickerComponent implements ControlValueAccessor {
   public label = input.required<string>();
   public value = input<string>('');
   public disabled = input<boolean>(false);
+  public width = input<string>('auto');
   public isTime = input<boolean>(false);
   public showHint = input<boolean>(false);
   public evntDateChange = output<Date>();

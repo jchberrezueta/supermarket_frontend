@@ -1,5 +1,5 @@
 <div class="div_container">
-    <div class="div_datetime">
+    <div class="div_datetime" [ngStyle]="{'width': width()+'px'}">
         @if(isTime()) {
             <input type="datetime-local" required #inp_fecha
                 (input)="updateValue($event)"

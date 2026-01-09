@@ -4,11 +4,12 @@
             <form [formGroup]="formData" (ngSubmit)="filtrar()" class="card_form">
                 <div class="card_filters">
                     <div class="selects">
-                        <ui-input-box [label]="'Empresa'" [options]="opcionesEmpresas" formControlName="nombreEmpr"/>
-                        <ui-combo-box [label]="'Estado'" [options]="opcionesEstadosPedi" formControlName="estadoPedi"/>
-                        <ui-combo-box [label]="'Motivo'" [options]="opcionesMotivosPedi" formControlName="motivoPedi"/>
-                        <ui-datetime-picker [label]="'Desde'" formControlName="fechaPediDesde"/>
-                        <ui-datetime-picker [label]="'Hasta'" formControlName="fechaPediHasta"/>
+                        <ui-input-box [label]="'Empresa'" [options]="opcionesEmpresas" [width]="'200'" 
+                        [returnValue]="'label'" formControlName="nombreEmpr"/>
+                        <ui-combo-box [label]="'Estado'" [options]="opcionesEstadosPedi" [width]="'200'" [returnValue]="'label'" formControlName="estadoPedi"/>
+                        <ui-combo-box [label]="'Motivo'" [options]="opcionesMotivosPedi" [width]="'150'" [returnValue]="'label'" formControlName="motivoPedi"/>
+                        <ui-datetime-picker [label]="'Desde'" [width]="'200'" formControlName="fechaPediDesde"/>
+                        <ui-datetime-picker [label]="'Hasta'" [width]="'200'" formControlName="fechaPediHasta"/>
                     </div>
                     <div class="filter_btn">
                         <ui-button [label]="'Filtrar'" [icon]="'filter_alt'"/>
