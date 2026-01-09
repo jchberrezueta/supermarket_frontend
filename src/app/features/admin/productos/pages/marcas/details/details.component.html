@@ -1,0 +1,50 @@
+<div class="div_container">
+  <div class="div_card">
+
+    <div class="panel_1">
+      <!-- CABECERA -->
+      <div class="card_header">
+        <div class="header_left">
+          <ui-text-field
+            [label]="'ID Marca'"
+            [value]="idMarca"
+            [disabled]="true"
+          />
+        </div>
+
+        <div class="header_right">
+          <ui-button
+            [icon]="'refresh'"
+            (evntClick)="loadMarca()"
+          />
+          <ui-button
+            [label]="'Volver'"
+            [icon]="'arrow_back'"
+            (evntClick)="volver()"
+          />
+        </div>
+      </div>
+
+      <!-- INFO MARCA -->
+      <div class="card_info">
+        <div class="info_row">
+          <ui-text-field [label]="'Nombre'" [value]="marca?.nombreMarc"/>
+          <ui-text-field [label]="'País Origen'" [value]="marca?.paisOrigenMarc"/>
+        </div>
+
+        <div class="info_row">
+          <ui-text-field [label]="'Calidad'" [value]="marca?.calidadMarc"/>
+        </div>
+
+        <div class="info_row">
+          <ui-text-field [label]="'Descripción'" [value]="marca?.descripcionMarc"/>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel_2">
+      <div class="panel_2_img"></div>
+    </div>
+
+  </div>
+</div>

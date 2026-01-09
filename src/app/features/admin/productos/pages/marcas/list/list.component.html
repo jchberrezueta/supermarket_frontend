@@ -18,7 +18,12 @@
             </div>
         </div>
         <div class="card_table">
-            <ui-table-list #tableList [serviceApi]="'marcas'" [columns]="config.columns" [isSelection]="true"/>
+            <ui-table-list #tableList 
+                [serviceApi]="'marcas'" 
+                [serviceApiFilter]="'marcas/filtrar/marcas'"
+                [serviceApiReal]="'marcas'"
+                [columns]="config.columns" 
+                [isSelection]="true"/>
         </div>
     </ui-card>
 </div>

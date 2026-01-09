@@ -4,9 +4,10 @@
             <form [formGroup]="formData" (ngSubmit)="filtrar()" class="card_form">
                 <div class="card_filters">
                     <div class="selects">
-                        <ui-input-box [label]="'Marca'" [options]="opcionesNombres" [width]="'200'" [returnValue]="'label'" formControlName="nombreMarc"/>
-                        <ui-input-box [label]="'Pais Origen'" [options]="opcionesPais" [width]="'200'" [returnValue]="'label'" formControlName="paisOrigenMarc"/>
-                        <ui-combo-box [label]="'Calidad'" [options]="opcionesCalidad"  formControlName="calidadMarc"/>
+                        <ui-input-box [label]="'Producto'" [options]="opcionesProductos" [width]="'200'" formControlName="ideProd"/>
+                        <ui-combo-box [label]="'Estado'" [options]="opcionesEstados" [width]="'150'" formControlName="estadoLote"/>
+                        <ui-datetime-picker [label]="'Fecha Desde'" formControlName="fechaCaducidadDesde" [isTime]="false"/>
+                        <ui-datetime-picker [label]="'Fecha Hasta'" formControlName="fechaCaducidadHasta" [isTime]="false"/>
                     </div>
                     <div class="filter_btn">
                         <ui-button [label]="'Filtrar'" [icon]="'filter_alt'"/>
@@ -18,7 +19,7 @@
             </div>
         </div>
         <div class="card_table">
-            <ui-table-list #tableList [serviceApi]="'marcas'" [columns]="config.columns" [isSelection]="true"/>
+            <ui-table-list #tableList [serviceApi]="'lotes/listar/lotes'" [serviceApiFilter]="'lotes/filtrar/lotes'" [serviceApiReal]="'lotes'" [columns]="config.columns"/>
         </div>
     </ui-card>
 </div>

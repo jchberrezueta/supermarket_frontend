@@ -4,14 +4,14 @@ import { UiTableListComponent } from '@shared/components/index';
 import { UiButtonComponent } from "@shared/components/button/button.component";
 import { IComboBoxOption } from '@shared/models/combo_box_option';
 import { UiComboBoxComponent } from '@shared/components/combo-box/combo-box.component';
-import { UiTextFieldComponent } from "@shared/components/text-field/text-field.component";
 import { isValidStringValue, FormGroupOf } from '@core/utils/utilities';
-import { IFiltroCategoria, IFiltroEmpresa, IFiltroMarca } from 'app/models';
-import { ListConfig } from './list_lotes.config';
-import { CategoriasService, MarcasService } from '@services/index';
+import { IFiltroLote } from 'app/models';
+import { ListLotesConfig } from './list_lotes.config';
+import { LotesService } from '@services/lotes.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UiCardComponent } from '@shared/components/card/card.component';
 import { UiInputBoxComponent } from '@shared/components/input-box/input-box.component';
+import { UiDatetimePickerComponent } from '@shared/components/datetime-picker/datetime-picker.component';
 
 const IMPORTS = [
   UiTableListComponent,
@@ -19,10 +19,18 @@ const IMPORTS = [
   UiCardComponent,
   ReactiveFormsModule,
   UiInputBoxComponent,
-  UiComboBoxComponent
+  UiComboBoxComponent,
+  UiDatetimePickerComponent
 ];
 
-type filterMarcaFormGroup = FormGroupOf<IFiltroMarca>;
+interface IFiltroLoteForm {
+  ideProd: number;
+  estadoLote: string;
+  fechaCaducidadDesde: string;
+  fechaCaducidadHasta: string;
+}
+
+type filterLoteFormGroup = FormGroupOf<IFiltroLoteForm>;
 
 @Component({
   selector: 'app-list',
@@ -33,53 +41,44 @@ type filterMarcaFormGroup = FormGroupOf<IFiltroMarca>;
 })
 export default class ListComponent {
   private readonly _tableList = viewChild.required<UiTableListComponent>(UiTableListComponent);
-  protected readonly config = ListConfig;
-  private readonly _marcasService = inject(MarcasService);
+  protected readonly config = ListLotesConfig;
+  private readonly _lotesService = inject(LotesService);
   private readonly _router = inject(Router);
   private readonly _route = inject(ActivatedRoute);
-  private formBuilder= inject(FormBuilder);
-  protected opcionesNombres!: IComboBoxOption[];
-  protected opcionesPais!: IComboBoxOption[];
-  protected opcionesCalidad!: IComboBoxOption[];
-  protected formData!: filterMarcaFormGroup;
-  private initialFormValue!: IFiltroMarca;
-
+  private formBuilder = inject(FormBuilder);
+  protected opcionesProductos!: IComboBoxOption[];
+  protected opcionesEstados!: IComboBoxOption[];
+  protected formData!: filterLoteFormGroup;
+  private initialFormValue!: IFiltroLoteForm;
 
   constructor() {
-    this.loadComboNombres();
-    this.loadComboPais();
-    this.loadComboCalidad();
+    this.loadComboProductos();
+    this.loadComboEstados();
     this.configForm();
   }
 
   protected configForm() {
     this.formData = this.formBuilder.group({
-      nombreMarc: ['', [], []],
-      paisOrigenMarc: ['', [], []],
-      calidadMarc: [-1, [], []],
-    }) as filterMarcaFormGroup;
-    //snapshot inicial
+      ideProd: [-1, [], []],
+      estadoLote: ['', [], []],
+      fechaCaducidadDesde: ['', [], []],
+      fechaCaducidadHasta: ['', [], []]
+    }) as filterLoteFormGroup;
     this.initialFormValue = this.formData.getRawValue();
   }
 
-  private loadComboNombres() {
-    this._marcasService.listarComboNombres().subscribe(
+  private loadComboProductos() {
+    this._lotesService.listarComboProductos().subscribe(
       (res) => {
-        this.opcionesNombres = res;
+        this.opcionesProductos = res;
       }
     );
   }
-  private loadComboPais() {
-    this._marcasService.listarComboPais().subscribe(
+
+  private loadComboEstados() {
+    this._lotesService.listarComboEstados().subscribe(
       (res) => {
-        this.opcionesPais = res;
-      }
-    );
-  }
-  private loadComboCalidad() {
-    this._marcasService.listarComboCalidad().subscribe(
-      (res) => {
-        this.opcionesCalidad = res;
+        this.opcionesEstados = res;
       }
     );
   }
@@ -91,16 +90,16 @@ export default class ListComponent {
 
   private getParams(): URLSearchParams {
     const params = new URLSearchParams();
-    const filtro = this.formData.value as IFiltroMarca;
-    if (isValidStringValue(filtro.nombreMarc)) params.append('nombreMarc', filtro.nombreMarc );
-    if (isValidStringValue(filtro.paisOrigenMarc)) params.append('paisOrigenMarc', filtro.paisOrigenMarc );
-    if (isValidStringValue(filtro.calidadMarc+'')) params.append('calidadMarc', filtro.calidadMarc+'' );
+    const filtro = this.formData.value as IFiltroLoteForm;
+    if (filtro.ideProd && filtro.ideProd > 0) params.append('ideProd', filtro.ideProd + '');
+    if (isValidStringValue(filtro.estadoLote)) params.append('estadoLote', filtro.estadoLote);
+    if (isValidStringValue(filtro.fechaCaducidadDesde)) params.append('fechaCaducidadLoteDesde', filtro.fechaCaducidadDesde);
+    if (isValidStringValue(filtro.fechaCaducidadHasta)) params.append('fechaCaducidadLoteHasta', filtro.fechaCaducidadHasta);
     return params;
   }
 
-
-  protected refreshData(actionClick: string){
-    if(actionClick === 'refresh'){
+  protected refreshData(actionClick: string) {
+    if (actionClick === 'refresh') {
       const tableListInstance = this._tableList();
       tableListInstance.refreshData();
       this.resetForm();
