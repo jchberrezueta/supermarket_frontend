@@ -5,39 +5,237 @@
 
 .div_container {
   width: 100%;
-  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 40px;
+  box-sizing: border-box;
+}
 
-  .div_card {
-    width: 100%;
-    height: 100%;
-    padding: 10px;
+.div_card {
+  width: 100%;
+  display: flex;
+}
 
-    .card_header {
+.panel_1 {
+  width: 100%;
+}
+
+.card_form {
+  padding: 20px;
+}
+
+.header_actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #e0e0e0;
+
+  .header_title {
+    h2 {
+      margin: 0;
+      font-size: 1.6rem;
+      color: #333;
+    }
+  }
+
+  .header_buttons {
+    display: flex;
+    gap: 12px;
+  }
+}
+
+.cuenta_perfil {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+  border-radius: 16px;
+  padding: 30px;
+  margin-bottom: 30px;
+  color: white;
+
+  .avatar {
+    width: 90px;
+    height: 90px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .material-icons {
+      font-size: 50px;
+      color: white;
+    }
+  }
+
+  .cuenta_info_principal {
+    flex: 1;
+
+    h3 {
+      margin: 0 0 8px 0;
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .empleado {
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      padding: 10px;
+      gap: 8px;
+      margin: 0 0 15px 0;
+      opacity: 0.9;
+      font-size: 1rem;
 
-      .header_right {
-        display: flex;
-        gap: 10px;
+      .material-icons {
+        font-size: 18px;
       }
     }
 
-    .card_info {
-      background-color: rgba(241, 245, 249);
-      border-radius: 12px;
-      padding: 20px;
-      margin-bottom: 15px;
+    .badges {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
 
+      .badge {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 500;
+
+        .material-icons {
+          font-size: 16px;
+        }
+
+        &.estado-activo {
+          background: #10b981;
+          color: white;
+        }
+
+        &.estado-inactivo {
+          background: rgba(255, 255, 255, 0.2);
+          color: rgba(255, 255, 255, 0.9);
+        }
+
+        &.estado-bloqueado {
+          background: #ef4444;
+          color: white;
+        }
+      }
+    }
+  }
+}
+
+.section_title {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #555;
+  margin: 25px 0 15px 0;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #0ea5e9;
+  display: inline-block;
+}
+
+.info_grid {
+  background: #f9fafb;
+  border-radius: 10px;
+  padding: 25px;
+  margin-bottom: 20px;
+
+  .info_row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+    margin-bottom: 20px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+      gap: 15px;
+    }
+  }
+}
+
+.estado_cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+
+  .estado_card {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background: #f1f5f9;
+    border-radius: 12px;
+    padding: 25px;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+
+    .material-icons {
+      font-size: 40px;
+      color: #94a3b8;
+    }
+
+    .estado_info {
       display: flex;
       flex-direction: column;
-      gap: 20px;
 
-      .info_row {
-        display: flex;
-        gap: 15px;
-        flex-wrap: wrap;
+      .label {
+        font-size: 0.9rem;
+        color: #64748b;
+        margin-bottom: 4px;
+      }
+
+      .status {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #475569;
+      }
+    }
+
+    &.active {
+      background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+      border-color: #10b981;
+
+      .material-icons {
+        color: #10b981;
+      }
+
+      .estado_info .status {
+        color: #059669;
+      }
+    }
+
+    &.inactive {
+      background: linear-gradient(135deg, #f5f5f5 0%, #e5e5e5 100%);
+      border-color: #a3a3a3;
+
+      .material-icons {
+        color: #737373;
+      }
+
+      .estado_info .status {
+        color: #525252;
+      }
+    }
+
+    &.blocked {
+      background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+      border-color: #ef4444;
+
+      .material-icons {
+        color: #ef4444;
+      }
+
+      .estado_info .status {
+        color: #dc2626;
       }
     }
   }

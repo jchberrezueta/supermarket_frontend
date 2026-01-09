@@ -1,40 +1,81 @@
 <div class="div_container">
-  <ui-card [showHeader]="true" class="div_card">
+  <div class="div_card">
+    <div class="panel_1">
+      <div class="card_form">
+        
+        <!-- CABECERA -->
+        <div class="header_actions">
+          <div class="header_title">
+            <h2>Detalle de la Cuenta #{{ idCuenta }}</h2>
+          </div>
+          <div class="header_buttons">
+            <ui-button [icon]="'refresh'" (evntClick)="loadCuenta()"/>
+            <ui-button [label]="'Volver'" [icon]="'arrow_back'" (evntClick)="volver()"/>
+          </div>
+        </div>
 
-    <!-- CABECERA -->
-    <div card-header class="card_header">
-      <div class="header_left">
-        <ui-text-field
-          [label]="'ID Cuenta'"
-          [value]="idCuenta"
-          [disabled]="true"
-        />
-      </div>
+        <!-- PERFIL DE LA CUENTA -->
+        <div class="cuenta_perfil">
+          <div class="avatar">
+            <span class="material-icons">account_circle</span>
+          </div>
+          <div class="cuenta_info_principal">
+            <h3>{{ cuenta?.usuarioCuen }}</h3>
+            <p class="empleado"><span class="material-icons">person</span> {{ cuenta?.nombreEmpleado }}</p>
+            <div class="badges">
+              <span class="badge" [ngClass]="getEstadoClass()">
+                <span class="material-icons">{{ cuenta?.estadoCuen === 'activo' ? 'check_circle' : cuenta?.estadoCuen === 'bloqueado' ? 'block' : 'cancel' }}</span>
+                {{ cuenta?.estadoCuen | titlecase }}
+              </span>
+            </div>
+          </div>
+        </div>
 
-      <div class="header_right">
-        <ui-button
-          [icon]="'refresh'"
-          (evntClick)="loadCuenta()"
-        />
-        <ui-button
-          [label]="'Volver'"
-          [icon]="'arrow_back'"
-          (evntClick)="volver()"
-        />
+        <!-- INFORMACIÓN DE LA CUENTA -->
+        <div class="section_title">Información de la Cuenta</div>
+        <div class="info_grid">
+          <div class="info_row">
+            <ui-text-field [label]="'ID Cuenta'" [value]="cuenta?.ideCuen" [disabled]="true"/>
+            <ui-text-field [label]="'Usuario'" [value]="cuenta?.usuarioCuen" [disabled]="true"/>
+          </div>
+          <div class="info_row">
+            <ui-text-field [label]="'Estado'" [value]="cuenta?.estadoCuen | titlecase" [disabled]="true"/>
+          </div>
+        </div>
+
+        <!-- EMPLEADO ASOCIADO -->
+        <div class="section_title">Empleado Asociado</div>
+        <div class="info_grid">
+          <div class="info_row">
+            <ui-text-field [label]="'ID Empleado'" [value]="cuenta?.ideEmpl" [disabled]="true"/>
+            <ui-text-field [label]="'Nombre del Empleado'" [value]="cuenta?.nombreEmpleado" [disabled]="true"/>
+          </div>
+        </div>
+
+        <!-- PERFIL ASIGNADO -->
+        <div class="section_title">Perfil de Acceso</div>
+        <div class="info_grid">
+          <div class="info_row">
+            <ui-text-field [label]="'ID Perfil'" [value]="cuenta?.idePerf" [disabled]="true"/>
+            <ui-text-field [label]="'Nombre del Perfil'" [value]="cuenta?.nombrePerfil" [disabled]="true"/>
+          </div>
+        </div>
+
+        <!-- ESTADO DE LA CUENTA -->
+        <div class="section_title">Estado de la Cuenta</div>
+        <div class="estado_cards">
+          <div class="estado_card" [class.active]="cuenta?.estadoCuen === 'activo'" [class.inactive]="cuenta?.estadoCuen === 'inactivo'" [class.blocked]="cuenta?.estadoCuen === 'bloqueado'">
+            <span class="material-icons">
+              {{ cuenta?.estadoCuen === 'activo' ? 'verified_user' : cuenta?.estadoCuen === 'bloqueado' ? 'gpp_bad' : 'remove_circle_outline' }}
+            </span>
+            <div class="estado_info">
+              <span class="label">Estado Actual</span>
+              <span class="status">{{ cuenta?.estadoCuen | titlecase }}</span>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
-
-    <!-- INFO CUENTA -->
-    <div class="card_info">
-
-      <div class="info_row">
-        <ui-text-field [label]="'Usuario'" [value]="cuenta? cuenta.usuarioCuen:null" [disabled]="true"/>
-        <ui-text-field [label]="'ID Empleado'" [value]="cuenta? cuenta.ideEmpl:null" [disabled]="true"/>
-        <ui-text-field [label]="'ID Perfil'" [value]="cuenta? cuenta.idePerf:null" [disabled]="true"/>
-        <ui-text-field [label]="'Estado'" [value]="cuenta? cuenta.estadoCuen:null" [disabled]="true"/>
-      </div>
-
-    </div>
-
-  </ui-card>
+  </div>
 </div>
