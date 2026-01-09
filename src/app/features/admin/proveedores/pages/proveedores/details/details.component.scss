@@ -5,33 +5,170 @@
 
 .div_container {
   width: 100%;
-  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 40px;
+  box-sizing: border-box;
 }
 
 .div_card {
   width: 100%;
-  height: 100%;
+  display: flex;
+}
+
+.panel_1 {
+  width: 100%;
+}
+
+.card_form {
   padding: 20px;
+}
 
-  .card_header {
-    margin-bottom: 20px;
-  }
+.header_actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #e0e0e0;
 
-  .card_body {
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
-
-    .info_block {
-      display: flex;
-      gap: 20px;
-      flex-wrap: wrap;
+  .header_title {
+    h2 {
+      margin: 0;
+      font-size: 1.6rem;
+      color: #333;
     }
   }
 
-  .card_footer {
-    margin-top: 30px;
+  .header_buttons {
     display: flex;
+    gap: 12px;
+  }
+}
+
+.proveedor_perfil {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  border-radius: 16px;
+  padding: 30px;
+  margin-bottom: 30px;
+  color: white;
+
+  .avatar {
+    width: 100px;
+    height: 100px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
     justify-content: center;
+
+    .material-icons {
+      font-size: 55px;
+      color: white;
+    }
+  }
+
+  .proveedor_info_principal {
+    flex: 1;
+
+    h3 {
+      margin: 0 0 10px 0;
+      font-size: 1.6rem;
+      font-weight: 600;
+      text-transform: capitalize;
+    }
+
+    .cedula,
+    .empresa {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 5px 0;
+      opacity: 0.9;
+      font-size: 0.95rem;
+
+      .material-icons {
+        font-size: 18px;
+      }
+    }
+  }
+}
+
+.section_title {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #555;
+  margin: 25px 0 15px 0;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #10b981;
+  display: inline-block;
+}
+
+.info_grid {
+  background: #f9fafb;
+  border-radius: 10px;
+  padding: 25px;
+  margin-bottom: 20px;
+
+  .info_row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+    margin-bottom: 20px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+      gap: 15px;
+    }
+  }
+}
+
+.empresa_card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+  border-radius: 12px;
+  padding: 25px;
+  border-left: 4px solid #10b981;
+
+  .empresa_icon {
+    width: 60px;
+    height: 60px;
+    background: #10b981;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .material-icons {
+      font-size: 32px;
+      color: white;
+    }
+  }
+
+  .empresa_info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    .empresa_label {
+      font-size: 0.9rem;
+      color: #065f46;
+      font-weight: 500;
+    }
+
+    .empresa_value {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #047857;
+    }
   }
 }

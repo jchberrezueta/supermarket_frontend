@@ -1,22 +1,19 @@
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Location } from '@angular/common';
+import { Location, CommonModule } from '@angular/common';
 
 import { ProveedoresService } from '@services/index';
-import { IProveedorResult } from '@models';
+import { LoadingService } from '@shared/services/loading.service';
 
-import { UiCardComponent } from '@shared/components/card/card.component';
 import { UiTextFieldComponent } from '@shared/components/text-field/text-field.component';
-import { UiDatetimePickerComponent } from '@shared/components/datetime-picker/datetime-picker.component';
 import { UiButtonComponent } from '@shared/components/button/button.component';
 
 @Component({
   selector: 'app-details',
   standalone: true,
   imports: [
-    UiCardComponent,
+    CommonModule,
     UiTextFieldComponent,
-    UiDatetimePickerComponent,
     UiButtonComponent
   ],
   templateUrl: './details.component.html',
@@ -26,9 +23,10 @@ export default class DetailsComponent {
 
   private readonly _route = inject(ActivatedRoute);
   private readonly _proveedoresService = inject(ProveedoresService);
+  private readonly _loadingService = inject(LoadingService);
   public location = inject(Location);
 
-  protected proveedor!: any;
+  protected proveedor: any = null;
   protected idProv = -1;
 
   ngOnInit(): void {
@@ -39,9 +37,14 @@ export default class DetailsComponent {
     }
   }
 
-  private loadProveedor(): void {
-    this._proveedoresService.buscarProveedor(this.idProv).subscribe(res => {
-      this.proveedor = res.data[0];
+  protected loadProveedor(): void {
+    this._loadingService.show();
+    this._proveedoresService.buscarProveedor(this.idProv).subscribe({
+      next: (res) => {
+        this.proveedor = res.data[0];
+        this._loadingService.hide();
+      },
+      error: () => this._loadingService.hide()
     });
   }
 

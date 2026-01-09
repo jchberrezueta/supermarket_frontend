@@ -1,47 +1,73 @@
 <div class="div_container">
-  <ui-card class="div_card">
+  <div class="div_card">
+    <div class="panel_1">
+      <div class="card_form">
+        
+        <!-- CABECERA -->
+        <div class="header_actions">
+          <div class="header_title">
+            <h2>Detalle del Proveedor #{{ idProv }}</h2>
+          </div>
+          <div class="header_buttons">
+            <ui-button [icon]="'refresh'" (evntClick)="loadProveedor()"/>
+            <ui-button [label]="'Volver'" [icon]="'arrow_back'" (evntClick)="volver()"/>
+          </div>
+        </div>
 
-    <!-- CABECERA -->
-    <div class="card_header">
-      <ui-text-field
-        [label]="'Proveedor'"
-        [value]="
-          proveedor.primer_nombre_prov + ' ' +
-          (proveedor.segundo_nombre_prov ?? '') + ' ' +
-          proveedor.apellido_paterno_prov + ' ' +
-          (proveedor.apellido_materno_prov ?? '')
-        "
-      />
-    </div>
+        <!-- PERFIL DEL PROVEEDOR -->
+        <div class="proveedor_perfil">
+          <div class="avatar">
+            <span class="material-icons">local_shipping</span>
+          </div>
+          <div class="proveedor_info_principal">
+            <h3>{{ proveedor?.primer_nombre_prov }} {{ proveedor?.segundo_nombre_prov }} {{ proveedor?.apellido_paterno_prov }} {{ proveedor?.apellido_materno_prov }}</h3>
+            <p class="cedula"><span class="material-icons">badge</span> {{ proveedor?.cedula_prov }}</p>
+            <p class="empresa"><span class="material-icons">business</span> {{ proveedor?.nombre_empr }}</p>
+          </div>
+        </div>
 
-    <!-- CUERPO -->
-    <div class="card_body">
+        <!-- INFORMACIÓN PERSONAL -->
+        <div class="section_title">Información Personal</div>
+        <div class="info_grid">
+          <div class="info_row">
+            <ui-text-field [label]="'Cédula'" [value]="proveedor?.cedula_prov" [disabled]="true"/>
+            <ui-text-field [label]="'Edad'" [value]="proveedor?.edad_prov" [disabled]="true"/>
+          </div>
+          <div class="info_row">
+            <ui-text-field [label]="'Primer Nombre'" [value]="proveedor?.primer_nombre_prov" [disabled]="true"/>
+            <ui-text-field [label]="'Segundo Nombre'" [value]="proveedor?.segundo_nombre_prov" [disabled]="true"/>
+          </div>
+          <div class="info_row">
+            <ui-text-field [label]="'Apellido Paterno'" [value]="proveedor?.apellido_paterno_prov" [disabled]="true"/>
+            <ui-text-field [label]="'Apellido Materno'" [value]="proveedor?.apellido_materno_prov" [disabled]="true"/>
+          </div>
+          <div class="info_row">
+            <ui-text-field [label]="'Fecha de Nacimiento'" [value]="proveedor?.fecha_nacimiento_prov" [disabled]="true"/>
+          </div>
+        </div>
 
-      <div class="info_block">
-        <ui-text-field [label]="'Empresa'" [value]="proveedor.nombre_empr"/>
-        <ui-text-field [label]="'Cédula'" [value]="proveedor.cedula_prov"/>
-        <ui-text-field [label]="'Edad'" [value]="proveedor.edad_prov"/>
-        <ui-datetime-picker
-          [label]="'Fecha Nacimiento'"
-          [value]="proveedor.fecha_nacimiento_prov"
-          [isTime]="true"
-        />
+        <!-- INFORMACIÓN DE CONTACTO -->
+        <div class="section_title">Información de Contacto</div>
+        <div class="info_grid">
+          <div class="info_row">
+            <ui-text-field [label]="'Teléfono'" [value]="proveedor?.telefono_prov" [disabled]="true"/>
+            <ui-text-field [label]="'Email'" [value]="proveedor?.email_prov" [disabled]="true"/>
+          </div>
+        </div>
+
+        <!-- EMPRESA -->
+        <div class="section_title">Empresa Asociada</div>
+        <div class="empresa_card">
+          <div class="empresa_icon">
+            <span class="material-icons">business</span>
+          </div>
+          <div class="empresa_info">
+            <span class="empresa_label">Empresa</span>
+            <span class="empresa_value">{{ proveedor?.nombre_empr || 'Sin empresa asignada' }}</span>
+          </div>
+        </div>
+
       </div>
-
-      <div class="info_block">
-        <ui-text-field [label]="'Teléfono'" [value]="proveedor.telefono_prov"/>
-        <ui-text-field [label]="'Email'" [value]="proveedor.email_prov"/>
-      </div>
-
     </div>
-
-    <!-- FOOTER -->
-    <div class="card_footer">
-      <ui-button
-        [label]="'Volver'"
-        (evntClick)="volver()"
-      />
-    </div>
-
-  </ui-card>
+  </div>
 </div>
