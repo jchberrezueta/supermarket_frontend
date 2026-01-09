@@ -11,6 +11,7 @@ import { ListOpcionesConfig } from './list_opciones.config';
 import { OpcionesService } from '@services/index';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UiCardComponent } from '@shared/components/card/card.component';
+import { UiInputBoxComponent } from '@shared/components/input-box/input-box.component';
 
 const IMPORTS = [
   UiTableListComponent,
@@ -18,7 +19,7 @@ const IMPORTS = [
   UiCardComponent,
   ReactiveFormsModule,
   UiComboBoxComponent,
-  UiTextFieldComponent
+  UiInputBoxComponent
 ];
 
 type filterOpcionFormGroup = FormGroupOf<IFiltroOpciones>;
@@ -36,12 +37,17 @@ export default class ListComponent {
   private readonly _opcionesService = inject(OpcionesService);
   private formBuilder= inject(FormBuilder);
   protected opcionesNombres!: IComboBoxOption[];
+  protected opcionesRutas!: IComboBoxOption[];
+  protected opcionesActividad!: IComboBoxOption[];
   protected opcionesEstados = ListEstadosOpcion;
   protected formData!: filterOpcionFormGroup;
   private initialFormValue!: IFiltroOpciones;
 
 
   constructor() {
+    this.loadComboEstados();
+    this.loadComboNombres();
+    this.loadComboRutas();
     this.configForm();
   }
 
@@ -57,6 +63,28 @@ export default class ListComponent {
     }) as filterOpcionFormGroup;
     //snapshot inicial
     this.initialFormValue = this.formData.getRawValue();
+  }
+
+  private loadComboNombres() {
+    this._opcionesService.listarComboNombres().subscribe(
+      (res) => {
+        this.opcionesNombres = res;
+      }
+    );
+  }
+  private loadComboRutas() {
+    this._opcionesService.listarComboRutas().subscribe(
+      (res) => {
+        this.opcionesRutas = res;
+      }
+    );
+  }
+  private loadComboEstados() {
+    this._opcionesService.listarComboEstados().subscribe(
+      (res) => {
+        this.opcionesActividad = res;
+      }
+    );
   }
 
   protected filtrar() {

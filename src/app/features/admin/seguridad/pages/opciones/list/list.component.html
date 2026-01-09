@@ -4,9 +4,9 @@
             <form [formGroup]="formData" (ngSubmit)="filtrar()" class="card_form">
                 <div class="card_filters">
                     <div class="selects">
-                        <ui-text-field [label]="'Nombre'" formControlName="nombreOpci"/>
-                        <ui-text-field [label]="'Ruta'" formControlName="rutaOpci"/>
-                        <ui-combo-box [label]="'Estado'" [options]="opcionesEstados" formControlName="activoOpci"/>
+                        <ui-input-box [label]="'Nombre'" [options]="opcionesNombres" [returnValue]="'label'" formControlName="nombreOpci"/>
+                        <ui-input-box [label]="'Ruta'" [options]="opcionesRutas" [returnValue]="'label'" formControlName="rutaOpci"/>
+                        <ui-combo-box [label]="'Estado'" [options]="opcionesActividad" [returnValue]="'label'" formControlName="activoOpci"/>
                     </div>
                     <div class="filter_btn">
                         <ui-button [label]="'Filtrar'" [icon]="'filter_alt'"/>
