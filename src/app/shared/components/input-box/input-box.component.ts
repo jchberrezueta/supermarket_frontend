@@ -108,7 +108,7 @@ export class UiInputBoxComponent implements ControlValueAccessor {
     const options = this.options?.();
     if (!options || !options.length) return;
     if (this.selectedValue == null) return;
-    const labelFound = options.find(op => op.value === this.selectedValue)?.label;
+    const labelFound = options.find(op => op.value == this.selectedValue)?.label;
     if (labelFound) {
       this.selectedLabel = labelFound;
     }

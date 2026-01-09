@@ -1,55 +1,60 @@
 <div class="div_container">
-  <ui-card [showHeader]="true" class="div_card">
+  <div class="div_card">
 
-    <!-- CABECERA -->
-    <div card-header class="card_header">
-      <div class="header_left">
-        <ui-text-field
-          [label]="'ID Empresa'"
-          [value]="idEmpresa"
-          [disabled]="true"
-        />
+    <div class="panel_1">
+      <!-- CABECERA -->
+      <div class="card_header">
+        <div class="header_left">
+          <ui-text-field
+            [label]="'ID Producto'"
+            [value]="idProducto"
+            [disabled]="true"
+          />
+        </div>
+
+        <div class="header_right">
+          <ui-button
+            [icon]="'refresh'"
+            (evntClick)="loadProducto()"
+          />
+          <ui-button
+            [label]="'Volver'"
+            [icon]="'arrow_back'"
+            (evntClick)="volver()"
+          />
+        </div>
       </div>
 
-      <div class="header_right">
-        <ui-button
-          [icon]="'refresh'"
-          (evntClick)="loadEmpresa()"
-        />
-        <ui-button
-          [label]="'Volver'"
-          [icon]="'arrow_back'"
-          (evntClick)="volver()"
-        />
+      <!-- INFO PRODUCTO -->
+      <div class="card_info">
+        <div class="info_row">
+          <ui-text-field [label]="'Nombre'" [value]="producto?.nombreProd"/>
+          <ui-text-field [label]="'Código Barra'" [value]="producto?.codigoBarraProd"/>
+          <ui-text-field [label]="'Categoría'" [value]="producto?.nombreCate"/>
+          <ui-text-field [label]="'Marca'" [value]="producto?.nombreMarc"/>
+        </div>
+
+        <div class="info_row">
+          <ui-text-field [label]="'Precio Venta'" [value]="producto?.precioVentaProd | currency:'$'"/>
+          <ui-text-field [label]="'IVA'" [value]="producto?.ivaProd | currency:'$'"/>
+          <ui-text-field [label]="'Dcto. Promo'" [value]="producto?.dctoPromoProd | currency:'$'"/>
+          <ui-text-field [label]="'Stock'" [value]="producto?.stockProd"/>
+        </div>
+
+        <div class="info_row">
+          <ui-text-field [label]="'Disponible'" [value]="producto?.disponibleProd"/>
+          <ui-text-field [label]="'Estado'" [value]="producto?.estadoProd"/>
+        </div>
+
+        <div class="info_row">
+          <ui-text-field [label]="'Descripción'" [value]="producto?.descripcionProd"/>
+        </div>
       </div>
     </div>
 
-    <!-- INFO EMPRESA -->
-    <div class="card_info">
-
-      <div class="info_row">
-        <ui-text-field [label]="'Empresa'" [value]="empresa? empresa.nombreEmp:null"/>
-        <ui-text-field [label]="'Responsable'" [value]="empresa? empresa.responsableEmp:null"/>
-        <ui-text-field [label]="'Teléfono'" [value]="empresa? empresa.telefonoEmp:null"/>
-        <ui-text-field [label]="'Email'" [value]="empresa? empresa.emailEmp:null"/>
-      </div>
-
-      <div class="info_row">
-        <ui-text-field [label]="'Fecha Contrato'" [value]="empresa? empresa.fechaContratoEmp:null"/>
-        <ui-text-field [label]="'Estado'" [value]="empresa? empresa.estadoEmp:null"/>
-        <ui-text-field [label]="'Dirección'" [value]="empresa? empresa.direccionEmp:null"/>
-        <ui-text-field [label]="'Descripción'" [value]="empresa? empresa.descripcionEmp:null"/>
-      </div>
-
+    <div class="panel_2">
+      <div class="panel_2_img" [ngStyle]="{'background': producto?.urlImgProd ? 'url('+producto?.urlImgProd+') center / cover no-repeat' : '#f1f5f9'}"></div>
     </div>
 
-    <!-- TABLA PRECIOS -->
-    <div class="card_table">
-      <ui-table-list
-        [serviceApi]="'empresas/listar/precios/' + idEmpresa"
-        [columns]="config.columns"
-      />
-    </div>
-
-  </ui-card>
+  </div>
 </div>
