@@ -6,23 +6,25 @@ import { ActivatedRoute } from '@angular/router';
 import { UiDatetimePickerComponent } from "@shared/components/datetime-picker/datetime-picker.component";
 import { FormGroupOf } from '@core/utils/utilities';
 import { UiTextAreaComponent } from "@shared/components/text-area/text-area.component";
-import { IEmpresa, IEmpresaResult } from '@models';
+import { IEntrega, IEntregaResult, EnumEstadoEntrega, IEntregaCompleta } from '@models';
 import { UiComboBoxComponent } from '@shared/components/combo-box/combo-box.component';
 import { IComboBoxOption } from '@shared/models/combo_box_option';
 import Swal from 'sweetalert2'
-import { Location } from '@angular/common'; // 1. Importar Location
-import { EmpresasService } from '@services/index';
+import { Location, CommonModule } from '@angular/common';
+import { EntregasService, ProveedoresService, PedidosService } from '@services/index';
+import { forkJoin } from 'rxjs';
 
 const IMPORTS = [
-  UiTextFieldComponent, 
+  CommonModule,
+  UiTextFieldComponent,
   UiTextAreaComponent,
   UiDatetimePickerComponent,
   UiComboBoxComponent,
   UiButtonComponent,
-  ReactiveFormsModule, 
+  ReactiveFormsModule,
 ];
 
-type EmpresaFormGroup = FormGroupOf<IEmpresa>;
+type EntregaFormGroup = FormGroupOf<IEntrega>;
 
 @Component({
   selector: 'app-form',
@@ -32,108 +34,130 @@ type EmpresaFormGroup = FormGroupOf<IEmpresa>;
   styleUrl: './form.component.scss'
 })
 export default class FormComponent {
-  
-  protected estadosEmpresa!: IComboBoxOption[];
+
+  protected estadosEntrega: IComboBoxOption[] = [];
+  protected proveedores: IComboBoxOption[] = [];
+  protected pedidos: IComboBoxOption[] = [];
+
   private readonly _route = inject(ActivatedRoute);
-  private readonly _empresasService = inject(EmpresasService);
+  private readonly _entregasService = inject(EntregasService);
+  private readonly _proveedoresService = inject(ProveedoresService);
+  private readonly _pedidosService = inject(PedidosService);
   private readonly formBuilder = inject(FormBuilder);
   public location = inject(Location);
-  protected formData!: EmpresaFormGroup;
-  private initialFormValue!: IEmpresa;
+
+  protected formData!: EntregaFormGroup;
+  private initialFormValue!: IEntrega;
   protected isAdd: boolean = true;
   private idParam: number = -1;
 
-  constructor() {
-    this.loadEstadosEmpresa();
-  }
-
   ngOnInit() {
-    const idParam = this._route.snapshot.params['id'];
     this.initForm();
-    if(idParam){
-      this.setData(idParam);
-    }
+    this.loadCombos();
   }
 
   private initForm(): void {
     this.formData = this.formBuilder.group({
-      ideEmp: [{ value: -1, disabled: true }, [Validators.required]],        
-      nombreEmp: ['', [Validators.required], []],
-      responsableEmp: ['', [Validators.required], []],
-      fechaContratoEmp: ['', [Validators.required], []],
-      direccionEmp: ['', [Validators.required], []],
-      telefonoEmp: ['', [Validators.required], []],
-      emailEmp: ['', [Validators.required], []],
-      estadoEmp: ['', [Validators.required], []],
-      descripcionEmp: ['', [Validators.required], []]
-    }) as EmpresaFormGroup;
+      ideEntr: [{ value: -1, disabled: true }, [Validators.required]],
+      idePedi: [0, [Validators.required]],
+      ideProv: [0, [Validators.required]],
+      fechaEntr: ['', [Validators.required]],
+      cantidadTotalEntr: [1, [Validators.required, Validators.min(1)]],
+      totalEntr: [0, [Validators.required, Validators.min(0)]],
+      estadoEntr: [EnumEstadoEntrega.INCOMPLETO, [Validators.required]],
+      observacionEntr: ['Ninguna', []]
+    }) as EntregaFormGroup;
 
     // snapshot inicial
     this.initialFormValue = this.formData.getRawValue();
   }
 
+  private loadCombos() {
+    const idParam = this._route.snapshot.params['id'];
+
+    forkJoin({
+      estados: this._entregasService.listarComboEstados(),
+      proveedores: this._proveedoresService.listarComboProveedores(),
+      pedidos: this._pedidosService.listarComboPedidos()
+    }).subscribe({
+      next: (res) => {
+        this.estadosEntrega = res.estados;
+        this.proveedores = res.proveedores;
+        this.pedidos = res.pedidos;
+
+        // Cargar datos si es edición
+        if (idParam) {
+          this.setData(+idParam);
+        }
+      },
+      error: (err) => {
+        console.error('Error cargando combos:', err);
+      }
+    });
+  }
+
   private setData(idParam: number) {
-    this._empresasService.buscar(idParam).subscribe(
+    this._entregasService.buscar(idParam).subscribe(
       (res) => {
-        const empresa = res.data[0] as IEmpresaResult;
-        this.idParam = empresa.ide_empr;
+        const entrega = res.data[0] as IEntregaResult;
+        this.idParam = entrega.ide_entr;
         this.isAdd = false;
         this.formData.patchValue({
-          ideEmp: empresa.ide_empr,
-          nombreEmp: empresa.nombre_empr,
-          responsableEmp: empresa.responsable_empr,
-          fechaContratoEmp: empresa.fecha_contrato_empr,
-          direccionEmp: empresa.direccion_empr,
-          telefonoEmp: empresa.telefono_empr,
-          emailEmp: empresa.email_empr,
-          estadoEmp: empresa.estado_empr,
-          descripcionEmp: empresa.descripcion_empr
+          ideEntr: entrega.ide_entr,
+          idePedi: entrega.ide_pedi,
+          ideProv: entrega.ide_prov,
+          fechaEntr: entrega.fecha_entr,
+          cantidadTotalEntr: entrega.cantidad_total_entr,
+          totalEntr: entrega.total_entr,
+          estadoEntr: entrega.estado_entr,
+          observacionEntr: entrega.observacion_entr
         });
       }
     )
   }
 
-  private loadEstadosEmpresa() {
-    this._empresasService.listarEstados().subscribe(
-      (res) => {
-        this.estadosEmpresa = res;
-      }
-    );
-  }
-
   protected guardar(): void {
-    if(!this.formData.invalid){
-      const data = this.formData.getRawValue() as IEmpresa;
-      if(this.isAdd){
-        data.ideEmp = -1;
-        this._empresasService.insertar(data).subscribe(
+    if (!this.formData.invalid) {
+      const data = this.formData.getRawValue() as IEntrega;
+      // Convertir valores a números
+      data.cantidadTotalEntr = +data.cantidadTotalEntr;
+      data.totalEntr = +data.totalEntr;
+
+      const body: IEntregaCompleta = {
+        cabeceraEntrega: data,
+        detalleEntrega: []
+      };
+
+      if (this.isAdd) {
+        body.cabeceraEntrega.ideEntr = -1;
+        this._entregasService.insertar(body).subscribe(
           (res) => {
             Swal.fire({
-              title: "Empresa registrada :)",
-              text: "La empresa fue guardada correctamente",
+              title: "Entrega registrada :)",
+              text: "La entrega fue guardada correctamente",
               icon: "success"
             });
             this.location.back();
             this.resetForm();
           }
         );
-      }else{
+      } else {
         Swal.fire({
-          title: "Esta seguro de modificar esta empresa?",
-          text: "Los cambios realizados se registraran!",
+          title: "¿Está seguro de modificar esta entrega?",
+          text: "Los cambios realizados se registrarán!",
           icon: "warning",
           showCancelButton: true,
           confirmButtonColor: "#3085d6",
           cancelButtonColor: "#d33",
-          confirmButtonText: "Si, de acuerdo"
+          confirmButtonText: "Sí, de acuerdo"
         }).then((result) => {
           if (result.isConfirmed) {
-            data.ideEmp = this.idParam;
-            this._empresasService.actualizar(this.idParam, data).subscribe(
+            body.cabeceraEntrega.ideEntr = this.idParam;
+            this._entregasService.actualizar(this.idParam, body).subscribe(
               (res) => {
                 Swal.fire({
-                  title: "Empresa actualizada :)",
-                  text: "La empresa fue actualizada correctamente",
+                  title: "Entrega actualizada :)",
+                  text: "La entrega fue actualizada correctamente",
                   icon: "success"
                 });
                 this.location.back();
@@ -142,33 +166,31 @@ export default class FormComponent {
             );
           }
         });
-        
       }
-    }else{
+    } else {
       Swal.fire({
         icon: "info",
         title: "Oops... Faltan datos",
-        text: "Revise porfavor la información ingresada"
+        text: "Revise por favor la información ingresada"
       });
     }
   }
 
   protected cancelar(): void {
     Swal.fire({
-      title: "Esta Seguro de Cancelar?",
-      text: "Los cambios realizados no se guardaran!",
+      title: "¿Está Seguro de Cancelar?",
+      text: "Los cambios realizados no se guardarán!",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Si, Cancelar!"
+      confirmButtonText: "Sí, Cancelar!"
     }).then((result) => {
       if (result.isConfirmed) {
         this.resetForm();
         this.location.back();
       }
     });
-    
   }
 
   protected resetForm() {

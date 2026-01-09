@@ -1,55 +1,81 @@
 <div class="div_container">
-  <ui-card [showHeader]="true" class="div_card">
+  <div class="div_card">
+    <div class="panel_1">
+      <div class="card_form">
+        
+        <!-- CABECERA -->
+        <div class="header_actions">
+          <div class="header_title">
+            <h2>Detalle de la Entrega #{{ idEntrega }}</h2>
+          </div>
+          <div class="header_buttons">
+            <ui-button [icon]="'refresh'" (evntClick)="loadEntrega()"/>
+            <ui-button [label]="'Volver'" [icon]="'arrow_back'" (evntClick)="volver()"/>
+          </div>
+        </div>
 
-    <!-- CABECERA -->
-    <div card-header class="card_header">
-      <div class="header_left">
-        <ui-text-field
-          [label]="'ID Empresa'"
-          [value]="idEmpresa"
-          [disabled]="true"
-        />
-      </div>
+        <!-- PERFIL DE LA ENTREGA -->
+        <div class="entrega_perfil">
+          <div class="avatar">
+            <span class="material-icons">local_shipping</span>
+          </div>
+          <div class="entrega_info_principal">
+            <h3>Entrega #{{ entrega?.ideEntr }}</h3>
+            <p class="pedido"><span class="material-icons">receipt_long</span> Pedido #{{ entrega?.idePedi }}</p>
+            <p class="proveedor"><span class="material-icons">person</span> {{ entrega?.nombreProveedor }}</p>
+          </div>
+          <div class="estado_badge" [class.completo]="entrega?.estadoEntr === 'completo'" [class.incompleto]="entrega?.estadoEntr !== 'completo'">
+            {{ entrega?.estadoEntr }}
+          </div>
+        </div>
 
-      <div class="header_right">
-        <ui-button
-          [icon]="'refresh'"
-          (evntClick)="loadEmpresa()"
-        />
-        <ui-button
-          [label]="'Volver'"
-          [icon]="'arrow_back'"
-          (evntClick)="volver()"
-        />
+        <!-- INFORMACIÓN DE LA ENTREGA -->
+        <div class="section_title">Información de la Entrega</div>
+        <div class="info_grid">
+          <div class="info_row">
+            <ui-text-field [label]="'ID Entrega'" [value]="entrega?.ideEntr" [disabled]="true"/>
+            <ui-text-field [label]="'ID Pedido'" [value]="entrega?.idePedi" [disabled]="true"/>
+          </div>
+          <div class="info_row">
+            <ui-text-field [label]="'Proveedor'" [value]="entrega?.nombreProveedor" [disabled]="true"/>
+            <ui-text-field [label]="'Fecha de Entrega'" [value]="formatDate(entrega?.fechaEntr || '')" [disabled]="true"/>
+          </div>
+          <div class="info_row">
+            <ui-text-field [label]="'Cantidad Total'" [value]="entrega?.cantidadTotalEntr" [disabled]="true"/>
+            <ui-text-field [label]="'Estado'" [value]="entrega?.estadoEntr" [disabled]="true"/>
+          </div>
+        </div>
+
+        <!-- TOTALES -->
+        <div class="section_title">Totales</div>
+        <div class="totales_card">
+          <div class="total_item">
+            <div class="total_icon">
+              <span class="material-icons">shopping_cart</span>
+            </div>
+            <div class="total_info">
+              <span class="total_label">Cantidad Total</span>
+              <span class="total_value">{{ entrega?.cantidadTotalEntr }} items</span>
+            </div>
+          </div>
+          <div class="total_item principal">
+            <div class="total_icon">
+              <span class="material-icons">payments</span>
+            </div>
+            <div class="total_info">
+              <span class="total_label">Total de la Entrega</span>
+              <span class="total_value">{{ formatCurrency(entrega?.totalEntr || 0) }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- OBSERVACIÓN -->
+        <div class="section_title">Observación</div>
+        <div class="observacion_card">
+          <p>{{ entrega?.observacionEntr || 'Sin observaciones' }}</p>
+        </div>
+
       </div>
     </div>
-
-    <!-- INFO EMPRESA -->
-    <div class="card_info">
-
-      <div class="info_row">
-        <ui-text-field [label]="'Empresa'" [value]="empresa? empresa.nombreEmp:null"/>
-        <ui-text-field [label]="'Responsable'" [value]="empresa? empresa.responsableEmp:null"/>
-        <ui-text-field [label]="'Teléfono'" [value]="empresa? empresa.telefonoEmp:null"/>
-        <ui-text-field [label]="'Email'" [value]="empresa? empresa.emailEmp:null"/>
-      </div>
-
-      <div class="info_row">
-        <ui-text-field [label]="'Fecha Contrato'" [value]="empresa? empresa.fechaContratoEmp:null"/>
-        <ui-text-field [label]="'Estado'" [value]="empresa? empresa.estadoEmp:null"/>
-        <ui-text-field [label]="'Dirección'" [value]="empresa? empresa.direccionEmp:null"/>
-        <ui-text-field [label]="'Descripción'" [value]="empresa? empresa.descripcionEmp:null"/>
-      </div>
-
-    </div>
-
-    <!-- TABLA PRECIOS -->
-    <div class="card_table">
-      <ui-table-list
-        [serviceApi]="'empresas/listar/precios/' + idEmpresa"
-        [columns]="config.columns"
-      />
-    </div>
-
-  </ui-card>
+  </div>
 </div>

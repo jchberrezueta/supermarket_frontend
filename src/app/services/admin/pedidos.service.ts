@@ -45,4 +45,7 @@ export class PedidosService {
   public listarComboMotivos(): Observable<IComboBoxOption[]> {
     return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/combo/motivos`);
   }
+  public listarComboPedidos(): Observable<IComboBoxOption[]> {
+    return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/combo/pedidos`);
+  }
 }
