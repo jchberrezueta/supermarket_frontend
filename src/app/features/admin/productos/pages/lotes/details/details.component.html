@@ -1,0 +1,47 @@
+<div class="div_container">
+  <div class="div_card">
+
+    <div class="panel_1">
+      <!-- CABECERA -->
+      <div class="card_header">
+        <div class="header_left">
+          <ui-text-field
+            [label]="'ID Lote'"
+            [value]="idLote"
+            [disabled]="true"
+          />
+        </div>
+
+        <div class="header_right">
+          <ui-button
+            [icon]="'refresh'"
+            (evntClick)="loadLote()"
+          />
+          <ui-button
+            [label]="'Volver'"
+            [icon]="'arrow_back'"
+            (evntClick)="volver()"
+          />
+        </div>
+      </div>
+
+      <!-- INFO LOTE -->
+      <div class="card_info">
+        <div class="info_row">
+          <ui-text-field [label]="'Producto'" [value]="lote?.nombreProd"/>
+          <ui-text-field [label]="'Fecha Caducidad'" [value]="formatDate(lote?.fechaCaducidadLote || '')"/>
+        </div>
+
+        <div class="info_row">
+          <ui-text-field [label]="'Stock'" [value]="lote?.stockLote"/>
+          <ui-text-field [label]="'Estado'" [value]="lote?.estadoLote"/>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel_2">
+      <div class="panel_2_img"></div>
+    </div>
+
+  </div>
+</div>

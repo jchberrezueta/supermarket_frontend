@@ -1,6 +1,6 @@
 import { ITableListConfig } from "@shared/models/table-list.model";
 
-export const ListConfig: ITableListConfig = {
+export const ListLotesConfig: ITableListConfig = {
     dataKey: 'ide_lote',
     columns: [
         { 
@@ -19,10 +19,10 @@ export const ListConfig: ITableListConfig = {
             ]
         },
         { label: 'ID', property: 'ide_lote', type: 'text', sortable: true },
-        { label: 'Nombre', property: 'nombre_marc', type: 'text', sortable: true },
-        { label: 'Pais Origen', property: 'fecha_caducidad_prod', type: 'text', sortable: true },
-        { label: 'Calidad', property: 'stock_lote', type: 'text', sortable: true },
-        { label: 'Descripcion', property: 'estado_lote', type: 'text', sortable: true },
+        { label: 'Producto', property: 'nombre_prod', type: 'text', sortable: true },
+        { label: 'Fecha Caducidad', property: 'fecha_caducidad_lote', type: 'text', sortable: true },
+        { label: 'Stock', property: 'stock_lote', type: 'text', sortable: true },
+        { label: 'Estado', property: 'estado_lote', type: 'text', sortable: true },
         {
             label: '',
             property: 'menu',
@@ -33,14 +33,14 @@ export const ListConfig: ITableListConfig = {
                     label: 'Editar',
                     icon: 'edit',
                     router: true,
-                    key: 'ide_marc',
+                    key: 'ide_lote',
                     color: 'primary'
                 },
                 {
                     action: 'delete',
                     label: 'Eliminar',
                     icon: 'delete',
-                    key: 'ide_marc',
+                    key: 'ide_lote',
                     color: 'red'
                 }
             ],

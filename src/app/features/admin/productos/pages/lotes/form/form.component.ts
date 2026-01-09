@@ -4,24 +4,30 @@ import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 
 import { FormGroupOf } from '@core/utils/utilities';
-import { IMarca, IMarcaResult } from '@models';
-import { MarcasService } from '@services/index';
+import { ILote, ILoteResult } from '@models';
+import { LotesService } from '@services/lotes.service';
+import { IComboBoxOption } from '@shared/models/combo_box_option';
 
 import { UiTextFieldComponent } from '@shared/components/text-field/text-field.component';
-import { UiTextAreaComponent } from '@shared/components/text-area/text-area.component';
+import { UiComboBoxComponent } from '@shared/components/combo-box/combo-box.component';
 import { UiButtonComponent } from '@shared/components/button/button.component';
+import { UiInputBoxComponent } from '@shared/components/input-box/input-box.component';
+import { UiDatetimePickerComponent } from '@shared/components/datetime-picker/datetime-picker.component';
+import { LoadingService } from '@shared/services/loading.service';
 
 import Swal from 'sweetalert2';
 
-type MarcaFormGroup = FormGroupOf<IMarca>;
+type LoteFormGroup = FormGroupOf<ILote>;
 
 @Component({
   selector: 'app-form',
   standalone: true,
   imports: [
     UiTextFieldComponent,
-    UiTextAreaComponent,
+    UiComboBoxComponent,
     UiButtonComponent,
+    UiInputBoxComponent,
+    UiDatetimePickerComponent,
     ReactiveFormsModule
   ],
   templateUrl: './form.component.html',
@@ -31,14 +37,22 @@ export default class FormComponent {
 
   private readonly _route = inject(ActivatedRoute);
   private readonly _fb = inject(FormBuilder);
-  private readonly _marcasService = inject(MarcasService);
+  private readonly _lotesService = inject(LotesService);
+  private readonly _loadingService = inject(LoadingService);
   public location = inject(Location);
 
-  protected formData!: MarcaFormGroup;
-  private initialFormValue!: IMarca;
+  protected formData!: LoteFormGroup;
+  private initialFormValue!: ILote;
+
+  protected productos: IComboBoxOption[] = [];
+  protected estados: IComboBoxOption[] = [];
 
   protected isAdd = true;
   private idParam = -1;
+
+  constructor() {
+    this.loadCombos();
+  }
 
   ngOnInit(): void {
     this.initForm();
@@ -51,59 +65,83 @@ export default class FormComponent {
     }
   }
 
+  private loadCombos(): void {
+    this._lotesService.listarComboProductos().subscribe(res => {
+      this.productos = res;
+    });
+    this._lotesService.listarComboEstados().subscribe(res => {
+      this.estados = res;
+    });
+  }
+
   private initForm() {
     this.formData = this._fb.group({
-      ideMarc: [{ value: -1, disabled: true }, Validators.required],
-      nombreMarc: ['', Validators.required],
-      paisOrigenMarc: ['', Validators.required],
-      calidadMarc: [1, [Validators.required, Validators.min(1), Validators.max(10)]],
-      descripcionMarc: ['']
-    }) as MarcaFormGroup;
+      ideLote: [{ value: -1, disabled: true }, Validators.required],
+      ideProd: [-1, Validators.required],
+      fechaCaducidadLote: ['', Validators.required],
+      stockLote: [0, [Validators.required, Validators.min(0)]],
+      estadoLote: ['correcto', Validators.required]
+    }) as LoteFormGroup;
 
     this.initialFormValue = this.formData.getRawValue();
   }
 
   private setData(id: number) {
-    this._marcasService.buscar(id).subscribe(res => {
-      const m = res.data[0] as IMarcaResult;
-      this.formData.patchValue({
-        ideMarc: m.ide_marc,
-        nombreMarc: m.nombre_marc,
-        paisOrigenMarc: m.pais_origen_marc,
-        calidadMarc: m.calidad_marc,
-        descripcionMarc: m.descripcion_marc
-      });
+    this._loadingService.show();
+    this._lotesService.buscar(id).subscribe({
+      next: (res) => {
+        const l = res.data[0] as ILoteResult;
+        this.formData.patchValue({
+          ideLote: l.ide_lote,
+          ideProd: l.ide_prod,
+          fechaCaducidadLote: l.fecha_caducidad_lote,
+          stockLote: l.stock_lote,
+          estadoLote: l.estado_lote
+        });
+        this._loadingService.hide();
+      },
+      error: () => this._loadingService.hide()
     });
   }
 
   protected guardar() {
-    const data = this.formData.getRawValue() as IMarca;
-    console.log(data);
     if (!this.formData.valid) {
       Swal.fire('Oops', 'Faltan datos obligatorios', 'info');
       return;
     }
 
+    const data = this.formData.getRawValue() as ILote;
+
     if (this.isAdd) {
-      data.ideMarc = -1;
-      this._marcasService.insertar(data).subscribe(() => {
-        Swal.fire('Marca registrada', 'La marca fue guardada correctamente', 'success');
-        this.location.back();
-        this.resetForm();
+      data.ideLote = -1;
+      this._loadingService.show();
+      this._lotesService.insertar(data).subscribe({
+        next: () => {
+          this._loadingService.hide();
+          Swal.fire('Lote registrado', 'El lote fue guardado correctamente', 'success');
+          this.location.back();
+          this.resetForm();
+        },
+        error: () => this._loadingService.hide()
       });
     } else {
       Swal.fire({
-        title: '¿Actualizar marca?',
+        title: '¿Actualizar lote?',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonText: 'Sí, actualizar'
       }).then(r => {
         if (r.isConfirmed) {
-          data.ideMarc = this.idParam;
-          this._marcasService.actualizar(this.idParam, data).subscribe(() => {
-            Swal.fire('Marca actualizada', 'Cambios guardados', 'success');
-            this.location.back();
-            this.resetForm();
+          data.ideLote = this.idParam;
+          this._loadingService.show();
+          this._lotesService.actualizar(this.idParam, data).subscribe({
+            next: () => {
+              this._loadingService.hide();
+              Swal.fire('Lote actualizado', 'Cambios guardados', 'success');
+              this.location.back();
+              this.resetForm();
+            },
+            error: () => this._loadingService.hide()
           });
         }
       });

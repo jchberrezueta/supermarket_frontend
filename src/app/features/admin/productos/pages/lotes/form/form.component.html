@@ -11,7 +11,7 @@
               <div class="div_id">
                 <ui-text-field
                   [label]="'ID'"
-                  formControlName="ideMarc"
+                  formControlName="ideLote"
                 />
                 <div class="input_falso"></div>
               </div>
@@ -19,27 +19,27 @@
 
             <div class="form_info">
               <div class="form_div">
-                <ui-text-field
-                  [label]="'Nombre Marca'"
-                  formControlName="nombreMarc"
+                <ui-input-box
+                  [label]="'Producto'"
+                  formControlName="ideProd"
+                  [options]="productos"
+                />
+
+                <ui-datetime-picker
+                  [label]="'Fecha Caducidad'"
+                  formControlName="fechaCaducidadLote"
                 />
 
                 <ui-text-field
-                  [label]="'País Origen'"
-                  formControlName="paisOrigenMarc"
-                />
-
-                <ui-text-field
-                  [label]="'Calidad (1–10)'"
+                  [label]="'Stock'"
                   [valueType]="'number'"
-                  formControlName="calidadMarc"
+                  formControlName="stockLote"
                 />
-              </div>
 
-              <div class="form_div">
-                <ui-text-area
-                  [label]="'Descripción'"
-                  formControlName="descripcionMarc"
+                <ui-combo-box
+                  [label]="'Estado'"
+                  formControlName="estadoLote"
+                  [options]="estados"
                 />
               </div>
             </div>
@@ -67,3 +67,4 @@
 
   </div>
 </div>
+
