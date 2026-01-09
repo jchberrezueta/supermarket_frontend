@@ -1,0 +1,45 @@
+<div class="div_container">
+  <div class="div_card">
+
+    <div class="panel_1">
+      <!-- CABECERA -->
+      <div class="card_header">
+        <div class="header_left">
+          <ui-text-field
+            [label]="'ID Categoría'"
+            [value]="idCategoria"
+            [disabled]="true"
+          />
+        </div>
+
+        <div class="header_right">
+          <ui-button
+            [icon]="'refresh'"
+            (evntClick)="loadCategoria()"
+          />
+          <ui-button
+            [label]="'Volver'"
+            [icon]="'arrow_back'"
+            (evntClick)="volver()"
+          />
+        </div>
+      </div>
+
+      <!-- INFO CATEGORÍA -->
+      <div class="card_info">
+        <div class="info_row">
+          <ui-text-field [label]="'Nombre'" [value]="categoria?.nombreCate"/>
+        </div>
+
+        <div class="info_row">
+          <ui-text-field [label]="'Descripción'" [value]="categoria?.descripcionCate"/>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel_2">
+      <div class="panel_2_img"></div>
+    </div>
+
+  </div>
+</div>
