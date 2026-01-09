@@ -4,16 +4,18 @@ import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 
 import { FormGroupOf } from '@core/utils/utilities';
-import { ICategoria, ICategoriaResult, IRol, IRolResult } from '@models';
-import { CategoriasService, RolesService } from '@services/index';
+import { IPerfil, IPerfilResult } from '@models';
+import { PerfilesService, RolesService } from '@services/index';
+import { IComboBoxOption } from '@shared/models/combo_box_option';
 
 import { UiTextFieldComponent } from '@shared/components/text-field/text-field.component';
 import { UiTextAreaComponent } from '@shared/components/text-area/text-area.component';
 import { UiButtonComponent } from '@shared/components/button/button.component';
+import { UiComboBoxComponent } from '@shared/components/combo-box/combo-box.component';
 
 import Swal from 'sweetalert2';
 
-type RolFormGroup = FormGroupOf<IRol>;
+type PerfilFormGroup = FormGroupOf<IPerfil>;
 
 @Component({
   selector: 'app-form',
@@ -22,6 +24,7 @@ type RolFormGroup = FormGroupOf<IRol>;
     UiTextFieldComponent,
     UiTextAreaComponent,
     UiButtonComponent,
+    UiComboBoxComponent,
     ReactiveFormsModule
   ],
   templateUrl: './form.component.html',
@@ -31,16 +34,20 @@ export default class FormComponent {
 
   private readonly _route = inject(ActivatedRoute);
   private readonly _fb = inject(FormBuilder);
+  private readonly _perfilesService = inject(PerfilesService);
   private readonly _rolesService = inject(RolesService);
   public location = inject(Location);
 
-  protected formData!: RolFormGroup;
-  private initialFormValue!: IRol;
+  protected formData!: PerfilFormGroup;
+  private initialFormValue!: IPerfil;
 
   protected isAdd = true;
   private idParam = -1;
 
+  protected opcionesRoles: IComboBoxOption[] = [];
+
   ngOnInit(): void {
+    this.loadComboRoles();
     this.initForm();
 
     const id = this._route.snapshot.params['id'];
@@ -51,49 +58,59 @@ export default class FormComponent {
     }
   }
 
+  private loadComboRoles() {
+    this._rolesService.listarComboRoles().subscribe(
+      (res) => {
+        this.opcionesRoles = res;
+      }
+    );
+  }
+
   private initForm() {
     this.formData = this._fb.group({
-      ideRol: [{ value: -1, disabled: true }, Validators.required],
-      nombreRol: ['', Validators.required],
-      descripcionRol: ['', Validators.required]
-    }) as RolFormGroup;
+      idePerf: [{ value: -1, disabled: true }, Validators.required],
+      ideRol: [0, Validators.required],
+      nombrePerf: ['', Validators.required],
+      descripcionPerf: ['', Validators.required]
+    }) as PerfilFormGroup;
 
     this.initialFormValue = this.formData.getRawValue();
   }
 
   private setData(id: number) {
-    this._rolesService.buscar(id).subscribe(res => {
-      const c = res.data[0] as IRolResult;
+    this._perfilesService.buscar(id).subscribe(res => {
+      const c = res.data[0] as IPerfilResult;
       this.formData.patchValue({
+        idePerf: c.ide_perf,
         ideRol: c.ide_rol,
-        nombreRol: c.nombre_rol,
-        descripcionRol: c.descripcion_rol
+        nombrePerf: c.nombre_perf,
+        descripcionPerf: c.descripcion_perf
       });
     });
   }
 
   protected guardar() {
     if (this.formData.valid) {
-      const data = this.formData.getRawValue() as IRol;
+      const data = this.formData.getRawValue() as IPerfil;
 
       if (this.isAdd) {
-        data.ideRol = -1;
-        this._rolesService.insertar(data).subscribe(() => {
-          Swal.fire('Rol registrado', '', 'success');
+        data.idePerf = -1;
+        this._perfilesService.insertar(data).subscribe(() => {
+          Swal.fire('Perfil registrado', '', 'success');
           this.location.back();
           this.resetForm();
         });
       } else {
         Swal.fire({
-          title: '¿Actualizar Rol?',
+          title: '¿Actualizar Perfil?',
           icon: 'warning',
           showCancelButton: true,
           confirmButtonText: 'Sí'
         }).then(r => {
           if (r.isConfirmed) {
-            data.ideRol = this.idParam;
-            this._rolesService.actualizar(this.idParam, data).subscribe(() => {
-              Swal.fire('Rol actualizado', '', 'success');
+            data.idePerf = this.idParam;
+            this._perfilesService.actualizar(this.idParam, data).subscribe(() => {
+              Swal.fire('Perfil actualizado', '', 'success');
               this.location.back();
               this.resetForm();
             });
@@ -105,13 +122,13 @@ export default class FormComponent {
 
   protected cancelar() {
     Swal.fire({
-      title: "Esta Seguro de Cancelar?",
-      text: "Los cambios realizados no se guardaran!",
+      title: "¿Está Seguro de Cancelar?",
+      text: "Los cambios realizados no se guardarán!",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Si, Cancelar!"
+      confirmButtonText: "Sí, Cancelar!"
     }).then((result) => {
       if (result.isConfirmed) {
         this.resetForm();

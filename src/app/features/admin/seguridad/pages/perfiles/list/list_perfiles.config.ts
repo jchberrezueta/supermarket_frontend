@@ -19,12 +19,7 @@ export const ListPerfilesConfig: ITableListConfig = {
       ]
     },
     {
-      label: 'ID',
-      property: 'ide_perf',
-      type: 'text',
-      sortable: true
-    },
-    {
+
       label: 'Rol',
       property: 'nombre_rol',
       type: 'text',

@@ -1,66 +1,84 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { UiCardComponent } from '@shared/components/card/card.component';
-import { UiTableListComponent } from '@shared/components/table-list/table-list.component';
-import { UiTextFieldComponent } from '@shared/components/text-field/text-field.component';
-import { UiButtonComponent } from '@shared/components/button/button.component';
 import { Location } from '@angular/common';
-import { EmpresasService } from '@services/empresas.service';
-import { IEmpresa } from '@models';
-import { PreciosEmpresaConfig } from './precios.config';
+
 import { LoadingService } from '@shared/services/loading.service';
+import { IPedido, IResultDataPedido } from '@models';
+import { PedidosService, EmpresasService } from '@services/index';
+import { IComboBoxOption } from '@shared/models/combo_box_option';
+
+import { UiTextFieldComponent } from '@shared/components/text-field/text-field.component';
+import { UiTextAreaComponent } from '@shared/components/text-area/text-area.component';
+import { UiButtonComponent } from '@shared/components/button/button.component';
+import { UiDatetimePickerComponent } from '@shared/components/datetime-picker/datetime-picker.component';
 
 @Component({
   selector: 'app-details',
   standalone: true,
   imports: [
-    UiCardComponent,
-    UiTableListComponent,
     UiTextFieldComponent,
-    UiButtonComponent
+    UiTextAreaComponent,
+    UiButtonComponent,
+    UiDatetimePickerComponent
   ],
   templateUrl: './details.component.html',
   styleUrl: './details.component.scss'
 })
-export default class DetailsComponent {
+export default class DetailsComponent implements OnInit {
 
   private readonly _route = inject(ActivatedRoute);
+  private readonly _pedidosService = inject(PedidosService);
   private readonly _empresasService = inject(EmpresasService);
   private readonly _loadingService = inject(LoadingService);
   public location = inject(Location);
 
-  protected readonly config = PreciosEmpresaConfig;
-  protected empresa!: IEmpresa;
-  protected idEmpresa!: number;
+  protected pedido: IPedido | null = null;
+  protected empresaNombre: string | null = null;
 
-  constructor() {
-    const idParam = this._route.snapshot.params['id'];
-    if (idParam) {
-      this.idEmpresa = idParam;
-      this.loadEmpresa();
+  ngOnInit(): void {
+    const id = this._route.snapshot.params['id'];
+    if (id) {
+      this.loadPedido(+id);
     }
   }
 
-  protected loadEmpresa() {
+  private loadPedido(id: number): void {
     this._loadingService.show();
-    this._empresasService.buscar(this.idEmpresa).subscribe((res) => {
-      const data = res.data[0];
-      this.empresa = {
-        ideEmp: data.ide_empr,
-        nombreEmp: data.nombre_empr,
-        responsableEmp: data.responsable_empr,
-        fechaContratoEmp: data.fecha_contrato_empr,
-        direccionEmp: data.direccion_empr,
-        telefonoEmp: data.telefono_empr,
-        emailEmp: data.email_empr,
-        estadoEmp: data.estado_empr,
-        descripcionEmp: data.descripcion_empr
-      };
-      this._loadingService.hide();
+    this._pedidosService.buscar(id).subscribe({
+      next: (response: IResultDataPedido) => {
+        if (response.data && response.data.length > 0) {
+          const p = response.data[0];
+          this.pedido = {
+            idePedi: p.ide_pedi,
+            ideEmpr: p.ide_empr,
+            fechaPedi: p.fecha_pedi,
+            fechaEntrPedi: p.fecha_entr_pedi,
+            cantidadTotalPedi: p.cantidad_total_pedi,
+            totalPedi: p.total_pedi,
+            estadoPedi: p.estado_pedi,
+            motivoPedi: p.motivo_pedi,
+            observacionPedi: p.observacion_pedi
+          };
+          this.loadEmpresaNombre();
+        }
+        this._loadingService.hide();
+      },
+      error: () => this._loadingService.hide(),
     });
   }
 
-  protected volver() {
+  private loadEmpresaNombre(): void {
+    if (!this.pedido) return;
+
+    this._empresasService.listarComboEmpresas().subscribe({
+      next: (options: IComboBoxOption[]) => {
+        const found = options.find(o => +o.value === this.pedido!.ideEmpr);
+        this.empresaNombre = found?.label ?? null;
+      }
+    });
+  }
+
+  goBack(): void {
     this.location.back();
   }
 }

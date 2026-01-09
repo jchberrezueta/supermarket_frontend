@@ -9,21 +9,27 @@
             <div class="div_id">
               <ui-text-field
                 [label]="'ID'"
-                formControlName="ideRol"
+                formControlName="idePerf"
               />
               <div class="input_falso"></div>
             </div>
           }
 
           <div class="form_info">
+            <ui-combo-box
+              [label]="'Rol'"
+              [options]="opcionesRoles"
+              formControlName="ideRol"
+            />
+
             <ui-text-field
-              [label]="'Nombre'"
-              formControlName="nombreRol"
+              [label]="'Nombre del Perfil'"
+              formControlName="nombrePerf"
             />
 
             <ui-text-area
               [label]="'Descripción'"
-              formControlName="descripcionRol"
+              formControlName="descripcionPerf"
             />
           </div>
 

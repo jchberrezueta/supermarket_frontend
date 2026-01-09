@@ -19,7 +19,6 @@ export const ListProductosConfig: ITableListConfig = {
       ]
     },
 
-    { label: 'ID', property: 'ide_prod', type: 'text', sortable: true },
     { label: 'Categoría', property: 'nombre_cate', type: 'text', sortable: true },
     { label: 'Marca', property: 'nombre_marc', type: 'text', sortable: true },
 

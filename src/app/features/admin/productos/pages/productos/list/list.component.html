@@ -21,7 +21,7 @@
             </div>
         </div>
         <div class="card_table">
-            <ui-table-list #tableList [serviceApi]="'productos/listar/productos'" [serviceApiFilter]="'productos/filtrar/productos'" [columns]="config.columns"/>
+            <ui-table-list #tableList [serviceApi]="'productos/listar/productos'" [serviceApiFilter]="'productos/filtrar/productos'" [serviceApiReal]="'productos'" [columns]="config.columns"/>
         </div>
     </ui-card>
 </div>

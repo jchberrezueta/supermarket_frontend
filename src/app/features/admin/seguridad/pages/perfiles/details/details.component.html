@@ -1,0 +1,44 @@
+<div class="details-container">
+  <div class="details-header">
+    <h2>Detalles del Perfil</h2>
+    <ui-button
+      label="Volver"
+      icon="arrow_back"
+      (clicked)="goBack()">
+    </ui-button>
+  </div>
+
+  @if (perfil) {
+    <div class="details-content">
+      <div class="form-row">
+        <ui-text-field
+          label="ID"
+          [value]="perfil.idePerf.toString()"
+          [disabled]="true">
+        </ui-text-field>
+
+        <ui-text-field
+          label="ID Rol"
+          [value]="perfil.ideRol.toString()"
+          [disabled]="true">
+        </ui-text-field>
+      </div>
+
+      <div class="form-row">
+        <ui-text-field
+          label="Nombre del Perfil"
+          [value]="perfil.nombrePerf"
+          [disabled]="true">
+        </ui-text-field>
+      </div>
+
+      <div class="form-row full-width">
+        <ui-text-area
+          label="Descripción"
+          [value]="perfil.descripcionPerf"
+          [disabled]="true">
+        </ui-text-area>
+      </div>
+    </div>
+  }
+</div>

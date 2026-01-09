@@ -3,46 +3,34 @@
   height: 100%;
 }
 
-.div_container {
-  width: 100%;
-  height: 100%;
+.details-container {
+  padding: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
 
-  .div_card {
-    width: 100%;
-    height: 100%;
-    padding: 10px;
+.details-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #e5e7eb;
+}
 
-    .card_header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px;
+.details-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+}
 
-      .header_right {
-        display: flex;
-        gap: 10px;
-      }
-    }
+.pedido-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
 
-    .card_info {
-      background-color: rgba(241, 245, 249);
-      border-radius: 12px;
-      padding: 20px;
-      margin-bottom: 15px;
-
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-
-      .info_row {
-        display: flex;
-        gap: 15px;
-        flex-wrap: wrap;
-      }
-    }
-
-    .card_table {
-      padding: 10px;
-    }
-  }
+.info-item.full-width {
+  grid-column: 1 / -1;
 }

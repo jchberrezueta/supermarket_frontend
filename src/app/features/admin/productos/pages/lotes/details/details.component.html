@@ -1,0 +1,50 @@
+<div class="details-container">
+  <div class="details-header">
+    <h2>Detalles del Lote</h2>
+    <ui-button
+      label="Volver"
+      icon="arrow_back"
+      (clicked)="goBack()">
+    </ui-button>
+  </div>
+
+  @if (lote) {
+    <div class="details-content">
+      <div class="form-row">
+        <ui-text-field
+          label="ID Lote"
+          [value]="lote.ideLote.toString()"
+          [disabled]="true">
+        </ui-text-field>
+
+        <ui-text-field
+          label="ID Producto"
+          [value]="lote.ideProd.toString()"
+          [disabled]="true">
+        </ui-text-field>
+      </div>
+
+      <div class="form-row">
+        <ui-datetime-picker
+          label="Fecha de Caducidad"
+          [value]="lote.fechaCaducidadLote"
+          [disabled]="true">
+        </ui-datetime-picker>
+
+        <ui-text-field
+          label="Stock"
+          [value]="lote.stockLote.toString()"
+          [disabled]="true">
+        </ui-text-field>
+      </div>
+
+      <div class="form-row">
+        <ui-text-field
+          label="Estado"
+          [value]="lote.estadoLote"
+          [disabled]="true">
+        </ui-text-field>
+      </div>
+    </div>
+  }
+</div>

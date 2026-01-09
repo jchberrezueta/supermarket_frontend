@@ -19,12 +19,6 @@ export const ListPedidoConfig: ITableListConfig = {
       ]
     },
     {
-      label: 'ID',
-      property: 'ide_pedi',
-      type: 'text',
-      sortable: true
-    },
-    {
       label: 'Empresa',
       property: 'nombre_empr',
       type: 'text',

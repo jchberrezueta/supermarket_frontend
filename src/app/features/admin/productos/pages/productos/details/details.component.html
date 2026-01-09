@@ -1,55 +1,61 @@
 <div class="div_container">
-  <ui-card [showHeader]="true" class="div_card">
+  <div class="div_card">
 
-    <!-- CABECERA -->
-    <div card-header class="card_header">
-      <div class="header_left">
-        <ui-text-field
-          [label]="'ID Empresa'"
-          [value]="idEmpresa"
-          [disabled]="true"
-        />
-      </div>
-
-      <div class="header_right">
+    <div class="panel_1">
+      <div class="card_header">
+        <h2>Detalles del Producto</h2>
         <ui-button
-          [icon]="'refresh'"
-          (evntClick)="loadEmpresa()"
-        />
-        <ui-button
-          [label]="'Volver'"
-          [icon]="'arrow_back'"
-          (evntClick)="volver()"
-        />
-      </div>
-    </div>
-
-    <!-- INFO EMPRESA -->
-    <div class="card_info">
-
-      <div class="info_row">
-        <ui-text-field [label]="'Empresa'" [value]="empresa? empresa.nombreEmp:null"/>
-        <ui-text-field [label]="'Responsable'" [value]="empresa? empresa.responsableEmp:null"/>
-        <ui-text-field [label]="'Teléfono'" [value]="empresa? empresa.telefonoEmp:null"/>
-        <ui-text-field [label]="'Email'" [value]="empresa? empresa.emailEmp:null"/>
+          label="Volver"
+          icon="arrow_back"
+          (clicked)="goBack()">
+        </ui-button>
       </div>
 
-      <div class="info_row">
-        <ui-text-field [label]="'Fecha Contrato'" [value]="empresa? empresa.fechaContratoEmp:null"/>
-        <ui-text-field [label]="'Estado'" [value]="empresa? empresa.estadoEmp:null"/>
-        <ui-text-field [label]="'Dirección'" [value]="empresa? empresa.direccionEmp:null"/>
-        <ui-text-field [label]="'Descripción'" [value]="empresa? empresa.descripcionEmp:null"/>
-      </div>
+      @if (producto) {
+        <div class="card_form">
+          <div class="form">
 
+            <div class="div_form">
+
+              <div class="div_id">
+                <ui-text-field label="ID" [value]="producto.ideProd.toString()" [disabled]="true" />
+                <div class="input_falso"></div>
+              </div>
+
+              <div class="form_info">
+
+                <div class="form_div">
+                  <ui-text-field label="Categoría" [value]="categoriaNombre ?? producto.ideCate.toString()" [disabled]="true" />
+                  <ui-text-field label="Marca" [value]="marcaNombre ?? producto.ideMarc.toString()" [disabled]="true" />
+                  <ui-text-field label="Código de Barras" [value]="producto.codigoBarraProd" [disabled]="true" />
+                  <ui-text-field label="Nombre" [value]="producto.nombreProd" [disabled]="true" />
+                  <ui-text-field label="Precio Venta" [value]="producto.precioVentaProd.toString()" [disabled]="true" />
+                </div>
+
+                <div class="form_div">
+                  <ui-text-field label="IVA" [value]="producto.ivaProd.toString()" [disabled]="true" />
+                  <ui-text-field label="Descuento Promo" [value]="producto.dctoPromoProd.toString()" [disabled]="true" />
+                  <ui-text-field label="Stock" [value]="producto.stockProd.toString()" [disabled]="true" />
+                  <ui-text-field label="Disponible" [value]="producto.disponibleProd" [disabled]="true" />
+                  <ui-text-field label="Estado" [value]="producto.estadoProd" [disabled]="true" />
+                </div>
+
+              </div>
+
+              <ui-text-area label="Descripción" [value]="producto.descripcionProd" [disabled]="true" />
+
+            </div>
+
+          </div>
+        </div>
+      }
     </div>
 
-    <!-- TABLA PRECIOS -->
-    <div class="card_table">
-      <ui-table-list
-        [serviceApi]="'empresas/listar/precios/' + idEmpresa"
-        [columns]="config.columns"
-      />
+    <div class="panel_2">
+      @if (producto) {
+        <div class="panel_2_img" [ngStyle]="{'background': 'url('+producto.urlImgProd+') center / cover no-repeat'}"></div>
+      }
     </div>
 
-  </ui-card>
+  </div>
 </div>

@@ -1,3 +1,17 @@
+export enum EnumEstadosLote {
+    CORRECTO = 'correcto',
+    PROXIMO = 'proximo',
+    CADUCADO = 'caducado',
+    DEVUELTO = 'devuelto'
+}
+
+export const ListEstadosLote = [
+    { value: 'correcto', label: 'Correcto' },
+    { value: 'proximo', label: 'Próximo a caducar' },
+    { value: 'caducado', label: 'Caducado' },
+    { value: 'devuelto', label: 'Devuelto' }
+];
+
 export interface ILote {
     ideLote: number;
     ideProd: number;

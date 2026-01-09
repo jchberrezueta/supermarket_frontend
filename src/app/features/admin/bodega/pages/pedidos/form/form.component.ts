@@ -1,17 +1,19 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
+
 import { UiTextFieldComponent } from "@shared/components/text-field/text-field.component";
 import { UiButtonComponent } from "@shared/components/button/button.component";
-import { ActivatedRoute } from '@angular/router';
 import { UiDatetimePickerComponent } from "@shared/components/datetime-picker/datetime-picker.component";
-import { FormGroupOf } from '@core/utils/utilities';
 import { UiTextAreaComponent } from "@shared/components/text-area/text-area.component";
-import { IEmpresa, IEmpresaResult } from '@models';
 import { UiComboBoxComponent } from '@shared/components/combo-box/combo-box.component';
 import { IComboBoxOption } from '@shared/models/combo_box_option';
-import Swal from 'sweetalert2'
-import { Location } from '@angular/common'; // 1. Importar Location
-import { EmpresasService } from '@services/index';
+
+import { FormGroupOf } from '@core/utils/utilities';
+import { IPedido, IPedidoResult } from '@models';
+import { PedidosService, EmpresasService } from '@services/index';
+import Swal from 'sweetalert2';
 
 const IMPORTS = [
   UiTextFieldComponent, 
@@ -22,7 +24,7 @@ const IMPORTS = [
   ReactiveFormsModule, 
 ];
 
-type EmpresaFormGroup = FormGroupOf<IEmpresa>;
+type PedidoFormGroup = FormGroupOf<IPedido>;
 
 @Component({
   selector: 'app-form',
@@ -31,20 +33,25 @@ type EmpresaFormGroup = FormGroupOf<IEmpresa>;
   templateUrl: './form.component.html',
   styleUrl: './form.component.scss'
 })
-export default class FormComponent {
+export default class FormComponent implements OnInit {
   
-  protected estadosEmpresa!: IComboBoxOption[];
+  protected empresas!: IComboBoxOption[];
+  protected estados!: IComboBoxOption[];
+  protected motivos!: IComboBoxOption[];
+  
   private readonly _route = inject(ActivatedRoute);
+  private readonly _pedidosService = inject(PedidosService);
   private readonly _empresasService = inject(EmpresasService);
   private readonly formBuilder = inject(FormBuilder);
   public location = inject(Location);
-  protected formData!: EmpresaFormGroup;
-  private initialFormValue!: IEmpresa;
+  
+  protected formData!: PedidoFormGroup;
+  private initialFormValue!: IPedido;
   protected isAdd: boolean = true;
   private idParam: number = -1;
 
   constructor() {
-    this.loadEstadosEmpresa();
+    this.loadCombos();
   }
 
   ngOnInit() {
@@ -57,60 +64,76 @@ export default class FormComponent {
 
   private initForm(): void {
     this.formData = this.formBuilder.group({
-      ideEmp: [{ value: -1, disabled: true }, [Validators.required]],        
-      nombreEmp: ['', [Validators.required], []],
-      responsableEmp: ['', [Validators.required], []],
-      fechaContratoEmp: ['', [Validators.required], []],
-      direccionEmp: ['', [Validators.required], []],
-      telefonoEmp: ['', [Validators.required], []],
-      emailEmp: ['', [Validators.required], []],
-      estadoEmp: ['', [Validators.required], []],
-      descripcionEmp: ['', [Validators.required], []]
-    }) as EmpresaFormGroup;
+      idePedi: [{ value: -1, disabled: true }, [Validators.required]],        
+      ideEmpr: [-1, [Validators.required]],
+      fechaPedi: ['', [Validators.required]],
+      fechaEntrPedi: ['', [Validators.required]],
+      cantidadTotalPedi: [0, [Validators.required, Validators.min(0)]],
+      totalPedi: [0, [Validators.required, Validators.min(0)]],
+      estadoPedi: ['', [Validators.required]],
+      motivoPedi: ['', [Validators.required]],
+      observacionPedi: ['']
+    }) as PedidoFormGroup;
 
-    // snapshot inicial
     this.initialFormValue = this.formData.getRawValue();
   }
 
   private setData(idParam: number) {
-    this._empresasService.buscar(idParam).subscribe(
+    this._pedidosService.buscar(idParam).subscribe(
       (res) => {
-        const empresa = res.data[0] as IEmpresaResult;
-        this.idParam = empresa.ide_empr;
+        const pedido = res.data[0] as IPedidoResult;
+        this.idParam = pedido.ide_pedi;
         this.isAdd = false;
         this.formData.patchValue({
-          ideEmp: empresa.ide_empr,
-          nombreEmp: empresa.nombre_empr,
-          responsableEmp: empresa.responsable_empr,
-          fechaContratoEmp: empresa.fecha_contrato_empr,
-          direccionEmp: empresa.direccion_empr,
-          telefonoEmp: empresa.telefono_empr,
-          emailEmp: empresa.email_empr,
-          estadoEmp: empresa.estado_empr,
-          descripcionEmp: empresa.descripcion_empr
+          idePedi: pedido.ide_pedi,
+          ideEmpr: pedido.ide_empr,
+          fechaPedi: pedido.fecha_pedi,
+          fechaEntrPedi: pedido.fecha_entr_pedi,
+          cantidadTotalPedi: pedido.cantidad_total_pedi,
+          totalPedi: pedido.total_pedi,
+          estadoPedi: pedido.estado_pedi,
+          motivoPedi: pedido.motivo_pedi,
+          observacionPedi: pedido.observacion_pedi
         });
       }
-    )
+    );
   }
 
-  private loadEstadosEmpresa() {
-    this._empresasService.listarEstados().subscribe(
-      (res) => {
-        this.estadosEmpresa = res;
+  private loadCombos() {
+    this._empresasService.listarComboEmpresas().subscribe(
+      (res: IComboBoxOption[]) => {
+        this.empresas = res;
+      }
+    );
+
+    this._pedidosService.listarComboEstados().subscribe(
+      (res: IComboBoxOption[]) => {
+        this.estados = res;
+      }
+    );
+
+    this._pedidosService.listarComboMotivos().subscribe(
+      (res: IComboBoxOption[]) => {
+        this.motivos = res;
       }
     );
   }
 
   protected guardar(): void {
     if(!this.formData.invalid){
-      const data = this.formData.getRawValue() as IEmpresa;
+      const pedido = this.formData.getRawValue() as IPedido;
+      const pedidoCompleto: any = {
+        cabeceraPedido: pedido,
+        detallePedido: []
+      };
+      
       if(this.isAdd){
-        data.ideEmp = -1;
-        this._empresasService.insertar(data).subscribe(
-          (res) => {
+        pedidoCompleto.cabeceraPedido.idePedi = -1;
+        this._pedidosService.insertar(pedidoCompleto).subscribe(
+          () => {
             Swal.fire({
-              title: "Empresa registrada :)",
-              text: "La empresa fue guardada correctamente",
+              title: "Pedido registrado :)",
+              text: "El pedido fue guardado correctamente",
               icon: "success"
             });
             this.location.back();
@@ -119,21 +142,21 @@ export default class FormComponent {
         );
       }else{
         Swal.fire({
-          title: "Esta seguro de modificar esta empresa?",
-          text: "Los cambios realizados se registraran!",
+          title: "¿Está seguro de modificar este pedido?",
+          text: "Los cambios realizados se registrarán!",
           icon: "warning",
           showCancelButton: true,
           confirmButtonColor: "#3085d6",
           cancelButtonColor: "#d33",
-          confirmButtonText: "Si, de acuerdo"
+          confirmButtonText: "Sí, de acuerdo"
         }).then((result) => {
           if (result.isConfirmed) {
-            data.ideEmp = this.idParam;
-            this._empresasService.actualizar(this.idParam, data).subscribe(
-              (res) => {
+            pedidoCompleto.cabeceraPedido.idePedi = this.idParam;
+            this._pedidosService.actualizar(this.idParam, pedidoCompleto).subscribe(
+              () => {
                 Swal.fire({
-                  title: "Empresa actualizada :)",
-                  text: "La empresa fue actualizada correctamente",
+                  title: "Pedido actualizado :)",
+                  text: "El pedido fue actualizado correctamente",
                   icon: "success"
                 });
                 this.location.back();
@@ -142,33 +165,31 @@ export default class FormComponent {
             );
           }
         });
-        
       }
     }else{
       Swal.fire({
         icon: "info",
         title: "Oops... Faltan datos",
-        text: "Revise porfavor la información ingresada"
+        text: "Revise por favor la información ingresada"
       });
     }
   }
 
   protected cancelar(): void {
     Swal.fire({
-      title: "Esta Seguro de Cancelar?",
-      text: "Los cambios realizados no se guardaran!",
+      title: "¿Está Seguro de Cancelar?",
+      text: "Los cambios realizados no se guardarán!",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Si, Cancelar!"
+      confirmButtonText: "Sí, Cancelar!"
     }).then((result) => {
       if (result.isConfirmed) {
         this.resetForm();
         this.location.back();
       }
     });
-    
   }
 
   protected resetForm() {

@@ -2,35 +2,26 @@
     <div class="div_card">
         <div class="panel_1">
             <div class="card_form">
-                <div class="fila div_1">
-
-                </div>
-                <div class="fila div_2">
-
-                </div>
-                <div class="fila div_3">
-
-                </div>
-                <!--<form [formGroup]="formData" class="form">
+                <form [formGroup]="formData" class="form">
                     <div class="div_form">
                         @if (!isAdd) {
                             <div class="div_id" >
-                                <ui-text-field [label]="'ID'" formControlName="ideEmp"/>
+                                <ui-text-field [label]="'ID'" formControlName="idePedi"/>
                                 <div class="input_falso"></div>
                             </div>
                         }
                         <div class="form_info">
                             <div class="form_div form_div_1">                       
-                                <ui-text-field [label]="'Empresa'" formControlName="nombreEmp"/>
-                                <ui-datetime-picker [label]="'Fecha Contrato'"  [isTime]="true"  formControlName="fechaContratoEmp"/>
-                                <ui-text-field [label]="'Telefono'" formControlName="telefonoEmp"/>
-                                <ui-text-area [label]="'Direccion'" formControlName="direccionEmp"/>
+                                <ui-combo-box [label]="'Empresa'" [options]="empresas" formControlName="ideEmpr"/>
+                                <ui-datetime-picker [label]="'Fecha Pedido'" [isTime]="false" formControlName="fechaPedi"/>
+                                <ui-datetime-picker [label]="'Fecha Entrega'" [isTime]="false" formControlName="fechaEntrPedi"/>
+                                <ui-text-field [label]="'Cantidad Total'" formControlName="cantidadTotalPedi" valueType="number"/>
+                                <ui-text-field [label]="'Total'" formControlName="totalPedi" valueType="number"/>
                             </div>
                             <div class="form_div form_div_2">
-                                <ui-text-field [label]="'Responsable'" formControlName="responsableEmp"/>
-                                <ui-combo-box [label]="'Estado'" [options]="estadosEmpresa" formControlName="estadoEmp"/>
-                                <ui-text-field [label]="'Email'" formControlName="emailEmp"/>
-                                <ui-text-area [label]="'Descripcion'" formControlName="descripcionEmp"/>
+                                <ui-combo-box [label]="'Estado'" [options]="estados" formControlName="estadoPedi"/>
+                                <ui-combo-box [label]="'Motivo'" [options]="motivos" formControlName="motivoPedi"/>
+                                <ui-text-area [label]="'Observación'" formControlName="observacionPedi"/>
                             </div>
                         </div>
                     </div>
@@ -38,9 +29,8 @@
                         <ui-button [label]="isAdd ? 'Guardar' : 'Actualizar'" (evntClick)="guardar()"/>
                         <ui-button [label]="'Cancelar'" (evntClick)="cancelar()" [color]="'red'"/>
                     </div>
-                </form>-->
+                </form>
             </div>
-            
         </div>
     </div>
 </div>

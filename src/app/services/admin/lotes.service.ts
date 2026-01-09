@@ -24,7 +24,7 @@ export class LotesService {
   }
 
   public actualizar(id: number, body: ILote) {
-    return this._restService.post<any>(`${this.apiUrl}/actualizar/${id}`, body);
+    return this._restService.put<any>(`${this.apiUrl}/actualizar/${id}`, body);
   }
 
   public eliminar(id: number) {
