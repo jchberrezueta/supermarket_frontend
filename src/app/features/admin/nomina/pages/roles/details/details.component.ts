@@ -1,7 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UiTextFieldComponent } from '@shared/components/text-field/text-field.component';
-import { UiTextAreaComponent } from '@shared/components/text-area/text-area.component';
 import { UiButtonComponent } from '@shared/components/button/button.component';
 import { Location, CommonModule } from '@angular/common';
 import { RolesService } from '@services/roles.service';
@@ -19,7 +18,6 @@ interface IRolView {
   imports: [
     CommonModule,
     UiTextFieldComponent,
-    UiTextAreaComponent,
     UiButtonComponent
   ],
   templateUrl: './details.component.html',

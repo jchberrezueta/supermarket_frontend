@@ -135,8 +135,17 @@ export default class DetailsComponent {
     return this._datePipe.transform(date, 'dd/MM/yyyy HH:mm') || date;
   }
 
-  protected formatCurrency(value: number): string {
-    return this._currencyPipe.transform(value, '$') || value.toString();
+  protected formatCurrency(value: number | string): string {
+    // Sanitizar el valor - puede venir mal formateado de la BD
+    let numValue: number;
+    if (typeof value === 'string') {
+      // Remover caracteres no numéricos excepto punto y signo negativo
+      const cleanValue = value.replace(/[^0-9.-]/g, '');
+      numValue = parseFloat(cleanValue) || 0;
+    } else {
+      numValue = value || 0;
+    }
+    return this._currencyPipe.transform(numValue, '$') || numValue.toString();
   }
 
   protected getEstadoClass(estado: string): string {
