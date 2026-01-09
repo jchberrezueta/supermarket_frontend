@@ -95,10 +95,9 @@ export default class ListComponent {
     const filtro = this.formData.value as IFiltroAccesoUsuario;
     if (isValidStringValue(filtro.ideCuen+'')) params.append('ideCuen', filtro.ideCuen+'' );
     if (isValidStringValue(filtro.ipAcce)) params.append('ipAcce', filtro.ipAcce );
-    if (isValidStringValue(filtro.navegadorAcce)) params.append('navegadorAcce', filtro.navegadorAcce );
+    if (isValidStringValue(filtro.navegadorAcce)) params.append('navegadorAcce', encodeURIComponent(filtro.navegadorAcce) );
     if (isValidStringValue(filtro.fechaAcceDesde)) params.append('fechaAcceDesde', filtro.fechaAcceDesde );
     if (isValidStringValue(filtro.fechaAcceHasta)) params.append('fechaAcceHasta', filtro.fechaAcceHasta );
-    console.log(params);
     return params;
   }
 

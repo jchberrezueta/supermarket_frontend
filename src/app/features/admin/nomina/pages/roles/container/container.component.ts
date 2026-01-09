@@ -16,7 +16,7 @@ const breadcumbs = [
   },
   {
     label: 'Roles',
-    url: '/admin/productos/roles'
+    url: '/admin/nomina/roles'
   }
 ];
 
