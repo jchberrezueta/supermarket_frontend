@@ -54,11 +54,12 @@ export default class PreciosComponent {
 
 
   constructor() {
-    this.initForm();
+    
 
     const idParam = this._route.snapshot.params['id'];
     if(idParam){
       this.idEmpresa = +idParam;
+      this.initForm();
       this.loadEmpresa();
       this.loadProductos();
     }
