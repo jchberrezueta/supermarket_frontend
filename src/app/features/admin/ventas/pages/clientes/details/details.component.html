@@ -1,0 +1,57 @@
+<div class="div_container">
+  <div class="div_card">
+
+    <div class="panel_1">
+      <!-- CABECERA -->
+      <div class="card_header">
+        <div class="header_left">
+          <ui-text-field
+            [label]="'ID Cliente'"
+            [value]="idCliente"
+            [disabled]="true"
+          />
+        </div>
+
+        <div class="header_right">
+          <ui-button
+            [icon]="'refresh'"
+            (evntClick)="loadCliente()"
+          />
+          <ui-button
+            [label]="'Volver'"
+            [icon]="'arrow_back'"
+            (evntClick)="volver()"
+          />
+        </div>
+      </div>
+
+      <!-- INFO CLIENTE -->
+      <div class="card_info">
+        <div class="info_row">
+          <ui-text-field [label]="'Nombre Completo'" [value]="getNombreCompleto()"/>
+          <ui-text-field [label]="'Cédula'" [value]="cliente?.cedulaClie"/>
+        </div>
+
+        <div class="info_row">
+          <ui-text-field [label]="'Fecha Nacimiento'" [value]="formatDate(cliente?.fechaNacimientoClie || '')"/>
+          <ui-text-field [label]="'Edad'" [value]="cliente?.edadClie"/>
+        </div>
+
+        <div class="info_row">
+          <ui-text-field [label]="'Teléfono'" [value]="cliente?.telefonoClie"/>
+          <ui-text-field [label]="'Email'" [value]="cliente?.emailClie"/>
+        </div>
+
+        <div class="info_row">
+          <ui-text-field [label]="'Es Socio'" [value]="cliente?.esSocio"/>
+          <ui-text-field [label]="'Tercera Edad'" [value]="cliente?.esTerceraEdad"/>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel_2">
+      <div class="panel_2_img"></div>
+    </div>
+
+  </div>
+</div>

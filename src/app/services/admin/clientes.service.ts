@@ -23,7 +23,7 @@ private readonly _restService = inject(RestService);
   }
 
   public actualizar(id: number, body: ICliente) {
-    return this._restService.post<any>(`${this.apiUrl}/actualizar/${id}`, body);
+    return this._restService.put<any>(`${this.apiUrl}/actualizar/${id}`, body);
   }
 
   public eliminar(id: number) {
