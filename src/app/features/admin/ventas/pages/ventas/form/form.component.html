@@ -1,0 +1,129 @@
+<div class="div_container">
+  <div class="div_card">
+    <div class="panel_1">
+      <div class="card_form">
+        
+        <!-- CABECERA DE LA VENTA -->
+        <div class="section_title">Información de la Venta</div>
+        <form [formGroup]="formData" class="form">
+          <div class="div_form">
+            @if (!isAdd) {
+              <div class="div_id">
+                <ui-text-field [label]="'ID'" formControlName="ideVent"/>
+              </div>
+            }
+            <div class="form_info">
+              <div class="form_div form_div_1">
+                <ui-text-field
+                  [label]="'Num. Factura'"
+                  formControlName="numFacturaVent"
+                />
+                <ui-datetime-picker
+                  [label]="'Fecha Venta'"
+                  formControlName="fechaVent"
+                />
+                <ui-combo-box
+                  [label]="'Cliente'"
+                  [options]="clientes"
+                  formControlName="ideClie"
+                />
+              </div>
+              <div class="form_div form_div_2">
+                <ui-text-field
+                  [label]="'ID Empleado'"
+                  [valueType]="'number'"
+                  formControlName="ideEmpl"
+                />
+                <ui-combo-box
+                  [label]="'Estado'"
+                  [options]="opcionesEstado"
+                  formControlName="estadoVent"
+                />
+                <ui-text-field
+                  [label]="'Dcto. Socio'"
+                  [valueType]="'number'"
+                  formControlName="dctoSocioVent"
+                />
+                <ui-text-field
+                  [label]="'Dcto. Edad'"
+                  [valueType]="'number'"
+                  formControlName="dctoEdadVent"
+                />
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <!-- AGREGAR PRODUCTOS -->
+        <div class="section_title">Agregar Productos</div>
+        <div class="productos_form">
+          <div class="productos_row">
+            <ui-combo-box [label]="'Producto'" [options]="productos" [(ngModel)]="productoSeleccionado"/>
+            <ui-text-field [label]="'Cantidad'" [(ngModel)]="cantidadProducto" valueType="number"/>
+            <ui-text-field [label]="'Precio Unit.'" [(ngModel)]="precioUnitario" valueType="number"/>
+          </div>
+          <div class="productos_row">
+            <ui-text-field [label]="'IVA'" [(ngModel)]="ivaProd" valueType="number"/>
+            <ui-text-field [label]="'Dcto Promo'" [(ngModel)]="dctoPromoProd" valueType="number"/>
+            <ui-button [label]="'Agregar'" [icon]="'add'" (evntClick)="agregarProducto()"/>
+          </div>
+        </div>
+
+        <!-- TABLA DE PRODUCTOS -->
+        <div class="section_title">Productos de la Venta</div>
+        <div class="tabla_productos">
+          <table>
+            <thead>
+              <tr>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>P. Unit.</th>
+                <th>Subtotal</th>
+                <th>IVA</th>
+                <th>Dcto</th>
+                <th>Total</th>
+                <th>Acción</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (detalle of detalles; track detalle.ideProd; let i = $index) {
+                <tr>
+                  <td>{{ detalle.nombreProd }}</td>
+                  <td>{{ detalle.cantidadProd }}</td>
+                  <td>{{ detalle.precioUnitarioProd | number:'1.2-2' }}</td>
+                  <td>{{ detalle.subtotalProd | number:'1.2-2' }}</td>
+                  <td>{{ detalle.ivaProd | number:'1.2-2' }}</td>
+                  <td>{{ detalle.dctoPromoProd | number:'1.2-2' }}</td>
+                  <td>{{ detalle.totalProd | number:'1.2-2' }}</td>
+                  <td>
+                    <ui-button [icon]="'delete'" [color]="'red'" (evntClick)="eliminarProducto(i)"/>
+                  </td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="8" class="empty_row">No hay productos agregados</td>
+                </tr>
+              }
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="3" class="total_label">TOTALES:</td>
+                <td>{{ formData.get('subTotalVent')?.value | number:'1.2-2' }}</td>
+                <td colspan="2"></td>
+                <td>{{ formData.get('totalVent')?.value | number:'1.2-2' }}</td>
+                <td></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+        <!-- BOTONES -->
+        <div class="form_buttons">
+          <ui-button [label]="isAdd ? 'Guardar Venta' : 'Actualizar Venta'" (evntClick)="guardar()"/>
+          <ui-button [label]="'Cancelar'" (evntClick)="cancelar()" [color]="'red'"/>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,104 @@
+<div class="div_container">
+  <div class="div_card">
+    <div class="panel_1">
+      <div class="card_form">
+        
+        <!-- CABECERA -->
+        <div class="header_actions">
+          <div class="header_title">
+            <h2>Detalle de Venta #{{ idVenta }}</h2>
+            <span class="estado_badge" [ngClass]="getEstadoClass(venta?.estadoVent || '')">
+              {{ venta?.estadoVent | titlecase }}
+            </span>
+          </div>
+          <div class="header_buttons">
+            <ui-button [icon]="'refresh'" (evntClick)="loadData()"/>
+            <ui-button [label]="'Volver'" [icon]="'arrow_back'" (evntClick)="volver()"/>
+          </div>
+        </div>
+
+        <!-- INFO VENTA -->
+        <div class="section_title">Información de la Venta</div>
+        <div class="info_grid">
+          <div class="info_row">
+            <ui-text-field [label]="'Num. Factura'" [value]="venta?.numFacturaVent" [disabled]="true"/>
+            <ui-text-field [label]="'Fecha'" [value]="formatDate(venta?.fechaVent || '')" [disabled]="true"/>
+          </div>
+          <div class="info_row">
+            <ui-text-field [label]="'Cliente'" [value]="venta?.nombreCliente" [disabled]="true"/>
+            <ui-text-field [label]="'ID Empleado'" [value]="venta?.ideEmpl" [disabled]="true"/>
+          </div>
+          <div class="info_row">
+            <ui-text-field [label]="'Dcto. Socio'" [value]="formatCurrency(venta?.dctoSocioVent || 0)" [disabled]="true"/>
+            <ui-text-field [label]="'Dcto. Edad'" [value]="formatCurrency(venta?.dctoEdadVent || 0)" [disabled]="true"/>
+          </div>
+        </div>
+
+        <!-- PRODUCTOS DE LA VENTA -->
+        <div class="section_title">Productos de la Venta</div>
+        <div class="tabla_productos">
+          <table>
+            <thead>
+              <tr>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>P. Unit.</th>
+                <th>Subtotal</th>
+                <th>IVA</th>
+                <th>Dcto</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (detalle of detalles; track detalle.ideDetaVent) {
+                <tr>
+                  <td>{{ detalle.nombreProd }}</td>
+                  <td>{{ detalle.cantidadProd }}</td>
+                  <td>{{ detalle.precioUnitarioProd | number:'1.2-2' }}</td>
+                  <td>{{ detalle.subtotalProd | number:'1.2-2' }}</td>
+                  <td>{{ detalle.ivaProd | number:'1.2-2' }}</td>
+                  <td>{{ detalle.dctoPromoProd | number:'1.2-2' }}</td>
+                  <td>{{ detalle.totalProd | number:'1.2-2' }}</td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="7" class="empty_row">No hay productos en esta venta</td>
+                </tr>
+              }
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="2" class="total_label">TOTALES:</td>
+                <td></td>
+                <td>{{ formatCurrency(venta?.subTotalVent || 0) }}</td>
+                <td colspan="2"></td>
+                <td class="total_value">{{ formatCurrency(venta?.totalVent || 0) }}</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+        <!-- RESUMEN -->
+        <div class="resumen_card">
+          <div class="resumen_item">
+            <span class="resumen_label">Cantidad de Productos:</span>
+            <span class="resumen_value">{{ venta?.cantidadVent }}</span>
+          </div>
+          <div class="resumen_item">
+            <span class="resumen_label">Subtotal:</span>
+            <span class="resumen_value">{{ formatCurrency(venta?.subTotalVent || 0) }}</span>
+          </div>
+          <div class="resumen_item">
+            <span class="resumen_label">Descuentos:</span>
+            <span class="resumen_value">{{ formatCurrency((venta?.dctoSocioVent || 0) + (venta?.dctoEdadVent || 0)) }}</span>
+          </div>
+          <div class="resumen_item total">
+            <span class="resumen_label">TOTAL:</span>
+            <span class="resumen_value">{{ formatCurrency(venta?.totalVent || 0) }}</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

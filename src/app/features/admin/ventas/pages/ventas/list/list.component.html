@@ -1,0 +1,30 @@
+<div class="div_container">
+    <ui-card [showHeader]="true" class="div_card">
+        <div class="card_top" card-header>
+            <form [formGroup]="formData" (ngSubmit)="filtrar()" class="card_form">
+                <div class="card_filters">
+                    <div class="selects">
+                        <ui-text-field [label]="'Num. Factura'" formControlName="numFacturaVent" [width]="'160'"/>
+                        <ui-combo-box [label]="'Estado'" [options]="opcionesEstado" formControlName="estadoVent"/>
+                        <ui-datetime-picker [label]="'Fecha Desde'" formControlName="fechaVentDesde"/>
+                        <ui-datetime-picker [label]="'Fecha Hasta'" formControlName="fechaVentHasta"/>
+                    </div>
+                    <div class="filter_btn">
+                        <ui-button [label]="'Filtrar'" [icon]="'filter_alt'"/>
+                    </div>
+                </div>
+            </form>
+            <div class="btns_options">
+                <ui-button [icon]="'refresh'" [action]="'refresh'" (evntClick)="refreshData($event)"/>
+            </div>
+        </div>
+        <div class="card_table">
+            <ui-table-list #tableList 
+                [serviceApi]="'ventas'" 
+                [serviceApiFilter]="'ventas/filtrar'"
+                [serviceApiReal]="'ventas'"
+                [columns]="config.columns" 
+                [isSelection]="true"/>
+        </div>
+    </ui-card>
+</div>
