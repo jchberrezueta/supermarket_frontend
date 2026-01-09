@@ -6,7 +6,7 @@
                     <div class="selects">
                         <ui-input-box [label]="'Categoria'" [options]="opcionesCategorias" formControlName="ideCate"/>
                         <ui-input-box [label]="'Marca'" [options]="opcionesMarcas" formControlName="ideMarc"/>
-                        <ui-input-box [label]="'Nombre'" [options]="opcionesProdNombres" formControlName="nombreProd"/>
+                        <ui-input-box [label]="'Nombre'" [options]="opcionesProdNombres" [returnValue]="'label'" formControlName="nombreProd"/>
                         <ui-input-box [label]="'Codigo Barras'" [options]="opcionesProdCodBarras" [width]="'180'" formControlName="codigoBarraProd"/>
                         <ui-combo-box [label]="'Estado'" [options]="opcionesProdEstados" [width]="'100'" formControlName="estadoProd"/>
                         <ui-combo-box [label]="'Disponible'" [options]="opcionesProdDisponibilidad" [width]="'100'" formControlName="disponibleProd"/>
