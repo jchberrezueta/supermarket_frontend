@@ -5,62 +5,161 @@
 
 .div_container {
   width: 100%;
-  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 40px;
+  box-sizing: border-box;
+}
 
-  .div_card {
+.div_card {
+  width: 100%;
+  display: flex;
+}
+
+.panel_1 {
+  width: 100%;
+}
+
+.card_form {
+  padding: 20px;
+}
+
+.header_actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #e0e0e0;
+
+  .header_title {
+    h2 {
+      margin: 0;
+      font-size: 1.6rem;
+      color: #333;
+    }
+  }
+
+  .header_buttons {
     display: flex;
-    height: 100%;
-    background: #fff;
-    border-radius: 10px;
+    gap: 12px;
+  }
+}
 
-    .panel_1 {
-      width: 60%;
-      padding: 30px;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
+.marca_perfil {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+  border-radius: 16px;
+  padding: 30px;
+  margin-bottom: 30px;
+  color: white;
+  position: relative;
 
-      .card_header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px 0;
+  .avatar {
+    width: 90px;
+    height: 90px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-        .header_right {
-          display: flex;
-          gap: 10px;
-        }
-      }
+    .material-icons {
+      font-size: 50px;
+      color: white;
+    }
+  }
 
-      .card_info {
-        background-color: rgba(241, 245, 249);
-        border-radius: 12px;
-        padding: 25px;
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
+  .marca_info_principal {
+    flex: 1;
 
-        .info_row {
-          display: flex;
-          gap: 15px;
-          flex-wrap: wrap;
-        }
-      }
+    h3 {
+      margin: 0 0 8px 0;
+      font-size: 1.5rem;
+      font-weight: 600;
+      text-transform: capitalize;
     }
 
-    .panel_2 {
-      flex: 1;
+    .id_marca,
+    .pais_origen {
       display: flex;
-      justify-content: center;
       align-items: center;
-      padding: 30px;
+      gap: 8px;
+      margin: 5px 0;
+      opacity: 0.9;
+      font-size: 0.95rem;
 
-      .panel_2_img {
-        width: 80%;
-        height: 70%;
-        border-radius: 12px;
-        background-color: #f1f5f9;
+      .material-icons {
+        font-size: 18px;
       }
     }
+  }
+
+  .calidad_badge {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.25);
+    padding: 10px 18px;
+    border-radius: 25px;
+    font-weight: 700;
+    font-size: 1.1rem;
+
+    .material-icons {
+      font-size: 22px;
+      color: #fbbf24;
+    }
+  }
+}
+
+.section_title {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #555;
+  margin: 25px 0 15px 0;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #06b6d4;
+  display: inline-block;
+}
+
+.info_grid {
+  background: #f9fafb;
+  border-radius: 10px;
+  padding: 25px;
+  margin-bottom: 20px;
+
+  .info_row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+    margin-bottom: 20px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+      gap: 15px;
+    }
+  }
+}
+
+.descripcion_card {
+  background: #f9fafb;
+  border-radius: 10px;
+  padding: 25px;
+  border-left: 4px solid #06b6d4;
+
+  p {
+    margin: 0;
+    color: #555;
+    font-size: 0.95rem;
+    line-height: 1.6;
   }
 }
