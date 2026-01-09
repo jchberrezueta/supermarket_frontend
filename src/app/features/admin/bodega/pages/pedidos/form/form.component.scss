@@ -6,73 +6,143 @@
 .div_container {
     width: 100%;
     height: 100%;
+    overflow-y: auto;
 
     .div_card {
         width: 100%;
-        height: 100%;
+        min-height: 100%;
         display: flex;
         background-color: #FFFFFF;
         border-radius: 10px;
 
         .panel_1 {
             width: 100%;
-            height: 100%;
-            padding: 10px;
+            padding: 20px;
 
             .card_form {
                 background-color: rgba(241, 245, 249);
                 border-radius: 20px;
                 width: 100%;
-                height: 100%;
                 padding: 30px;
-                display: flex;
-                flex-direction: column;
-                gap: 20px;
 
-                .fila {
-                    width: 100%;
-                    height: 60px;
-                    /*background-color: red;*/
-                    border-color: black;
-                    border-style: solid;
-                    display: flex;
+                .section_title {
+                    font-size: 1.1rem;
+                    font-weight: 600;
+                    color: #374151;
+                    margin-bottom: 15px;
+                    padding-bottom: 8px;
+                    border-bottom: 2px solid #e5e7eb;
                 }
 
                 .form {
                     width: 100%;
-                    height: 100%;
-                    display: flex;
-                    gap: 30px;                    
-                }
-                .div_2 {
-                    display: flex;
-                    height: 130px;
-                    /*gap: 50px;*/
+                    margin-bottom: 25px;
 
-                    .div_2_1{
-                        width: 70%;
-                        height: 100%;
-
-                    }
-
-                    .div_2_2{
-                        width: 20%;
-                        height: 100%;
-                    }
-
-                    .cajita {
+                    .div_form {
                         display: flex;
                         flex-direction: column;
                         gap: 20px;
+
+                        .div_id {
+                            display: flex;
+                            width: 200px;
+                        }
+
+                        .form_info {
+                            display: flex;
+                            gap: 30px;
+
+                            .form_div {
+                                flex: 1;
+                                display: flex;
+                                flex-direction: column;
+                                gap: 15px;
+                            }
+                        }
                     }
                 }
-                
-                .div_3 {
-                    flex: 1;
+
+                .productos_form {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 15px;
+                    margin-bottom: 25px;
+                    padding: 15px;
+                    background-color: #ffffff;
+                    border-radius: 10px;
+
+                    .productos_row {
+                        display: flex;
+                        gap: 15px;
+                        align-items: flex-end;
+                        flex-wrap: wrap;
+                    }
                 }
 
+                .tabla_productos {
+                    margin-bottom: 25px;
+                    overflow-x: auto;
+
+                    table {
+                        width: 100%;
+                        border-collapse: collapse;
+                        background-color: #ffffff;
+                        border-radius: 10px;
+                        overflow: hidden;
+
+                        th, td {
+                            padding: 12px 15px;
+                            text-align: left;
+                            border-bottom: 1px solid #e5e7eb;
+                        }
+
+                        thead {
+                            background-color: #4f46e5;
+                            color: white;
+
+                            th {
+                                font-weight: 600;
+                                font-size: 0.85rem;
+                                text-transform: uppercase;
+                            }
+                        }
+
+                        tbody {
+                            tr:hover {
+                                background-color: #f9fafb;
+                            }
+
+                            td {
+                                font-size: 0.9rem;
+                                color: #374151;
+                            }
+
+                            .empty_row {
+                                text-align: center;
+                                color: #9ca3af;
+                                padding: 30px;
+                            }
+                        }
+
+                        tfoot {
+                            background-color: #f3f4f6;
+                            font-weight: 600;
+
+                            .total_label {
+                                text-align: right;
+                            }
+                        }
+                    }
+                }
+
+                .form_buttons {
+                    display: flex;
+                    gap: 15px;
+                    justify-content: center;
+                    padding-top: 20px;
+                    border-top: 2px solid #e5e7eb;
+                }
             }
         }
-        
     }
 }

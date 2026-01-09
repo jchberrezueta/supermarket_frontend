@@ -32,6 +32,10 @@ export class PedidosService {
     return this._restService.delete<any>(`${this.apiUrl}/eliminar/${id}`);
   }
 
+  public listarDetallesPedido(idPedido: number): Observable<IResultData> {
+    return this._restService.get<IResultData>(`${this.apiUrl}/listar/detalles/${idPedido}`);
+  }
+
   /**
    * COMBOS
    */

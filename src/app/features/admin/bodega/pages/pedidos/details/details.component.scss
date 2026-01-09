@@ -43,6 +43,56 @@
 
     .card_table {
       padding: 10px;
+
+      .table_title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 15px;
+      }
+
+      .productos_table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: #fff;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+        th, td {
+          padding: 12px 15px;
+          text-align: left;
+          border-bottom: 1px solid #e2e8f0;
+        }
+
+        th {
+          background-color: #f8fafc;
+          font-weight: 600;
+          color: #475569;
+          font-size: 0.85rem;
+          text-transform: uppercase;
+        }
+
+        td {
+          color: #334155;
+          font-size: 0.9rem;
+        }
+
+        tbody tr:hover {
+          background-color: #f1f5f9;
+        }
+
+        tbody tr:last-child td {
+          border-bottom: none;
+        }
+
+        .empty_row {
+          text-align: center;
+          color: #94a3b8;
+          padding: 30px;
+          font-style: italic;
+        }
+      }
     }
   }
 }

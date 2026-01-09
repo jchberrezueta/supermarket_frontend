@@ -7,7 +7,7 @@ export enum EnumEstadosPedido {
 }
 
 export enum EnumMotivosPedido {
-    PEDIDO = 'pedido',
+    PETICION = 'peticion',
     DEVOLUCION = 'devolucion'
 }
 

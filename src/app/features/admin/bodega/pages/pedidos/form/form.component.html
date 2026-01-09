@@ -2,78 +2,96 @@
     <div class="div_card">
         <div class="panel_1">
             <div class="card_form">
-                <div class="fila div_1">
-                    <form [formGroup]="formData" class="form">
+                <!-- CABECERA DEL PEDIDO -->
+                <div class="section_title">Información del Pedido</div>
+                <form [formGroup]="formData" class="form">
+                    <div class="div_form">
                         @if (!isAdd) {
-                            <div>
-                                <ui-text-field [label]="'ID'" formControlName="ideEmp"/>
+                            <div class="div_id">
+                                <ui-text-field [label]="'ID'" formControlName="idePedi"/>
                             </div>
                         }
-                        <div>
-                            <ui-input-box [label]="'Empresa'" [options]="[{label: '1', value: '2'}]" [width]="'200'" formControlName="fechaContratoEmp"/>
+                        <div class="form_info">
+                            <div class="form_div form_div_1">                       
+                                <ui-combo-box [label]="'Empresa'" [options]="empresas" formControlName="ideEmpr"/>
+                                <ui-datetime-picker [label]="'Fecha Pedido'" [isTime]="false" formControlName="fechaPedi"/>
+                                <ui-combo-box [label]="'Motivo'" [options]="motivos" formControlName="motivoPedi"/>
+                            </div>
+                            <div class="form_div form_div_2">
+                                <ui-combo-box [label]="'Estado'" [options]="estados" formControlName="estadoPedi"/>
+                                <ui-datetime-picker [label]="'Fecha Entrega'" [isTime]="false" formControlName="fechaEntrPedi"/>
+                                <ui-text-area [label]="'Observación'" formControlName="observacionPedi"/>
+                            </div>
                         </div>
-                        <div>
-                            <ui-datetime-picker [label]="'Fecha Pedido'"  [isTime]="true"  formControlName="fechaContratoEmp"/>
-                        </div>
-                        <div>
-                            <ui-datetime-picker [label]="'Fecha Entrega'"  [isTime]="true"  formControlName="fechaContratoEmp"/>
-                        </div>
-                        <div>
-                            <ui-combo-box [label]="'Motivo'" [options]="[]" [width]="'200'" formControlName="ideEmp"/>
-                        </div>
-                        <div>
-                            <ui-text-field [label]="'Estado'" [width]="'200'" formControlName="ideEmp"/>
-                        </div>
-                    </form>
-                </div>
-                <div class="fila div_2">
-                    <div class="div_2_1">
-                        <form [formGroup]="formData" class="form">
-                            <div>
-                                <ui-input-box [label]="'Producto'" [options]="[{label: '1', value: '2'}]" [width]="'200'" formControlName="fechaContratoEmp"/>
-                            </div>
-                            <div>
-                                <ui-text-field [label]="'Cantidad'" [width]="'100'" formControlName="ideEmp"/>
-                            </div>
-                            <div class="cajita">
-                                <div>
-                                    <ui-text-field [label]="'Precio Unitario'" [width]="'100'" formControlName="ideEmp"/>
-                                </div>
-                                <div>
-                                    <ui-text-field [label]="'Bruto'" [width]="'100'" formControlName="ideEmp"/>
-                                </div>
-                            </div>
-                            <div class="cajita">
-                                <div>
-                                    <ui-text-field [label]="'Dcto Compra'" [width]="'100'" formControlName="ideEmp"/>
-                                </div>
-                                <div>
-                                    <ui-text-field [label]="'Neto'" [width]="'100'" formControlName="ideEmp"/>
-                                </div>
-                            </div>
-                            <div class="cajita">
-                                <div>
-                                    <ui-text-field [label]="'Dcto Caduc'" [width]="'100'" formControlName="ideEmp"/>
-                                </div>
-                                <div>
-                                    <ui-text-field [label]="'Neto'" [width]="'100'" formControlName="ideEmp"/>
-                                </div>
-                            </div>
-                            <div>
-                                <ui-text-field [label]="'IVA'" [width]="'100'" formControlName="ideEmp"/>
-                            </div>
-                            <div>
-                                <ui-text-field [label]="'Total'" [width]="'100'" formControlName="ideEmp"/>
-                            </div>
-                        </form>
                     </div>
-                    <div class="div_2_2">
-fbf
+                </form>
+
+                <!-- AGREGAR PRODUCTOS -->
+                <div class="section_title">Agregar Productos</div>
+                <div class="productos_form">
+                    <div class="productos_row">
+                        <ui-combo-box [label]="'Producto'" [options]="productos" [(ngModel)]="productoSeleccionado"/>
+                        <ui-text-field [label]="'Cantidad'" [(ngModel)]="cantidadProducto" valueType="number"/>
+                        <ui-text-field [label]="'Precio Unit.'" [(ngModel)]="precioUnitario" valueType="number"/>
                     </div>
-                    
+                    <div class="productos_row">
+                        <ui-text-field [label]="'IVA'" [(ngModel)]="ivaProd" valueType="number"/>
+                        <ui-text-field [label]="'Dcto Compra'" [(ngModel)]="dctoCompraProd" valueType="number"/>
+                        <ui-text-field [label]="'Dcto Caduc.'" [(ngModel)]="dctoCaducProd" valueType="number"/>
+                        <ui-button [label]="'Agregar'" [icon]="'add'" (evntClick)="agregarProducto()"/>
+                    </div>
                 </div>
-                <div class="fila div_3">
-                    <ui-table-list [serviceApi]="'cuentas'" [columns]="[]"></ui-table-list>
+
+                <!-- TABLA DE PRODUCTOS -->
+                <div class="section_title">Productos del Pedido</div>
+                <div class="tabla_productos">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Cantidad</th>
+                                <th>P. Unit.</th>
+                                <th>Subtotal</th>
+                                <th>IVA</th>
+                                <th>Dcto</th>
+                                <th>Total</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (detalle of detalles; track detalle.ideProd; let i = $index) {
+                                <tr>
+                                    <td>{{ detalle.nombreProd }}</td>
+                                    <td>{{ detalle.cantidadProd }}</td>
+                                    <td>{{ detalle.precioUnitarioProd | number:'1.2-2' }}</td>
+                                    <td>{{ detalle.subtotalProd | number:'1.2-2' }}</td>
+                                    <td>{{ detalle.ivaProd | number:'1.2-2' }}</td>
+                                    <td>{{ detalle.dctoCompraProd + detalle.dctoCaducProd | number:'1.2-2' }}</td>
+                                    <td>{{ detalle.totalProd | number:'1.2-2' }}</td>
+                                    <td>
+                                        <ui-button [icon]="'delete'" [color]="'red'" (evntClick)="eliminarProducto(i)"/>
+                                    </td>
+                                </tr>
+                            } @empty {
+                                <tr>
+                                    <td colspan="8" class="empty_row">No hay productos agregados</td>
+                                </tr>
+                            }
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="6" class="total_label">TOTALES:</td>
+                                <td>{{ formData.get('totalPedi')?.value | number:'1.2-2' }}</td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <!-- BOTONES -->
+                <div class="form_buttons">
+                    <ui-button [label]="isAdd ? 'Guardar Pedido' : 'Actualizar Pedido'" (evntClick)="guardar()"/>
+                    <ui-button [label]="'Cancelar'" (evntClick)="cancelar()" [color]="'red'"/>
                 </div>
             </div>
         </div>

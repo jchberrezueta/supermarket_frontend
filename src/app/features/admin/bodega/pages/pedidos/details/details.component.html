@@ -5,8 +5,8 @@
     <div card-header class="card_header">
       <div class="header_left">
         <ui-text-field
-          [label]="'ID Empresa'"
-          [value]="idEmpresa"
+          [label]="'ID Pedido'"
+          [value]="idPedido"
           [disabled]="true"
         />
       </div>
@@ -14,7 +14,7 @@
       <div class="header_right">
         <ui-button
           [icon]="'refresh'"
-          (evntClick)="loadEmpresa()"
+          (evntClick)="loadPedido()"
         />
         <ui-button
           [label]="'Volver'"
@@ -24,31 +24,61 @@
       </div>
     </div>
 
-    <!-- INFO EMPRESA -->
+    <!-- INFO PEDIDO -->
     <div class="card_info">
 
       <div class="info_row">
-        <ui-text-field [label]="'Empresa'" [value]="empresa? empresa.nombreEmp:null"/>
-        <ui-text-field [label]="'Responsable'" [value]="empresa? empresa.responsableEmp:null"/>
-        <ui-text-field [label]="'Teléfono'" [value]="empresa? empresa.telefonoEmp:null"/>
-        <ui-text-field [label]="'Email'" [value]="empresa? empresa.emailEmp:null"/>
+        <ui-text-field [label]="'Empresa'" [value]="pedido?.nombreEmpr"/>
+        <ui-text-field [label]="'Fecha Pedido'" [value]="pedido?.fechaPedi | date:'dd/MM/yyyy'"/>
+        <ui-text-field [label]="'Fecha Entrega'" [value]="pedido?.fechaEntrPedi | date:'dd/MM/yyyy'"/>
+        <ui-text-field [label]="'Estado'" [value]="pedido?.estadoPedi"/>
       </div>
 
       <div class="info_row">
-        <ui-text-field [label]="'Fecha Contrato'" [value]="empresa? empresa.fechaContratoEmp:null"/>
-        <ui-text-field [label]="'Estado'" [value]="empresa? empresa.estadoEmp:null"/>
-        <ui-text-field [label]="'Dirección'" [value]="empresa? empresa.direccionEmp:null"/>
-        <ui-text-field [label]="'Descripción'" [value]="empresa? empresa.descripcionEmp:null"/>
+        <ui-text-field [label]="'Motivo'" [value]="pedido?.motivoPedi"/>
+        <ui-text-field [label]="'Cantidad Total'" [value]="pedido?.cantidadTotalPedi"/>
+        <ui-text-field [label]="'Total'" [value]="pedido?.totalPedi | currency:'$'"/>
+        <ui-text-field [label]="'Observación'" [value]="pedido?.observacionPedi"/>
       </div>
 
     </div>
 
-    <!-- TABLA PRECIOS -->
+    <!-- TABLA PRODUCTOS -->
     <div class="card_table">
-      <ui-table-list
-        [serviceApi]="'empresas/listar/precios/' + idEmpresa"
-        [columns]="config.columns"
-      />
+      <h3 class="table_title">Productos del Pedido</h3>
+      <table class="productos_table">
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Precio Unit.</th>
+            <th>Subtotal</th>
+            <th>IVA</th>
+            <th>Dcto. Compra</th>
+            <th>Dcto. Caduc.</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          @if (detalles.length === 0) {
+            <tr>
+              <td colspan="8" class="empty_row">No hay productos en este pedido</td>
+            </tr>
+          }
+          @for (detalle of detalles; track detalle.ideProd) {
+            <tr>
+              <td>{{ detalle.nombreProd }}</td>
+              <td>{{ detalle.cantidadProd }}</td>
+              <td>{{ detalle.precioUnitarioProd | currency:'$' }}</td>
+              <td>{{ detalle.subtotalProd | currency:'$' }}</td>
+              <td>{{ detalle.ivaProd | currency:'$' }}</td>
+              <td>{{ detalle.dctoCompraProd | currency:'$' }}</td>
+              <td>{{ detalle.dctoCaducProd | currency:'$' }}</td>
+              <td>{{ detalle.totalProd | currency:'$' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
     </div>
 
   </ui-card>
