@@ -1,0 +1,59 @@
+<div class="div_container">
+  <div class="div_card">
+    <div class="panel_1">
+      <div class="card_form">
+        
+        <!-- CABECERA -->
+        <div class="header_actions">
+          <div class="header_title">
+            <h2>Detalle del Acceso #{{ idAcceso }}</h2>
+          </div>
+          <div class="header_buttons">
+            <ui-button [icon]="'refresh'" (evntClick)="loadData()"/>
+            <ui-button [label]="'Volver'" [icon]="'arrow_back'" (evntClick)="volver()"/>
+          </div>
+        </div>
+
+        <!-- INFO ACCESO -->
+        <div class="section_title">Información del Acceso</div>
+        <div class="info_grid">
+          <div class="info_row">
+            <ui-text-field [label]="'ID Acceso'" [value]="acceso?.ideAcce" [disabled]="true"/>
+            <ui-text-field [label]="'ID Cuenta'" [value]="acceso?.ideCuen" [disabled]="true"/>
+          </div>
+          <div class="info_row">
+            <ui-text-field [label]="'Navegador'" [value]="acceso?.navegadorAcce" [disabled]="true"/>
+            <ui-text-field [label]="'Dirección IP'" [value]="acceso?.ipAcce" [disabled]="true"/>
+          </div>
+          <div class="info_row">
+            <ui-text-field [label]="'Fecha de Acceso'" [value]="formatDate(acceso?.fechaAcce || '')" [disabled]="true"/>
+            <ui-text-field [label]="'Intentos Fallidos'" [value]="acceso?.numIntFallAcce" [disabled]="true"/>
+          </div>
+        </div>
+
+        <!-- UBICACIÓN -->
+        <div class="section_title">Ubicación Geográfica</div>
+        <div class="info_grid">
+          <div class="info_row">
+            <ui-text-field [label]="'Latitud'" [value]="acceso?.latitudAcce ?? 'No disponible'" [disabled]="true"/>
+            <ui-text-field [label]="'Longitud'" [value]="acceso?.longitudAcce ?? 'No disponible'" [disabled]="true"/>
+          </div>
+        </div>
+
+        <!-- MAPA (si hay coordenadas) -->
+        @if (acceso?.latitudAcce && acceso?.longitudAcce) {
+          <div class="section_title">Mapa</div>
+          <div class="mapa_card">
+            <a [href]="'https://www.google.com/maps?q=' + acceso!.latitudAcce + ',' + acceso!.longitudAcce" 
+               target="_blank" 
+               class="mapa_link">
+              <span class="material-icons">location_on</span>
+              Ver ubicación en Google Maps
+            </a>
+          </div>
+        }
+
+      </div>
+    </div>
+  </div>
+</div>
