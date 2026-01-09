@@ -36,15 +36,15 @@
             padding: 10px;
             background-color: #FFFFFF;
             grid-area: sidebar;
+            overflow-y: auto;
         }
         .main {
             padding: 10px;
-            background-color: #ececec   ;
+            background-color: #ececec;
             grid-area: main;
-            /*Loading*/
             position: relative;
-            /*min-height: 100%;*/
-            /*overflow-x: auto;*/
+            overflow-y: auto;
+            overflow-x: hidden;
         }
     }
 }
