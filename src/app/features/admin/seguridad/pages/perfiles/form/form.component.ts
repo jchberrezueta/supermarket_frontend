@@ -1,44 +1,59 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { Location } from '@angular/common';
+import { Location, CommonModule } from '@angular/common';
+import { forkJoin } from 'rxjs';
 
 import { FormGroupOf } from '@core/utils/utilities';
-import { ICategoria, ICategoriaResult, IRol, IRolResult } from '@models';
-import { CategoriasService, RolesService } from '@services/index';
+import { IPerfil, IPerfilResult } from '@models';
+import { PerfilesService, RolesService } from '@services/index';
+import { IComboBoxOption } from '@shared/models/combo_box_option';
 
 import { UiTextFieldComponent } from '@shared/components/text-field/text-field.component';
 import { UiTextAreaComponent } from '@shared/components/text-area/text-area.component';
+import { UiComboBoxComponent } from '@shared/components/combo-box/combo-box.component';
 import { UiButtonComponent } from '@shared/components/button/button.component';
+import { LoadingService } from '@shared/services/loading.service';
 
 import Swal from 'sweetalert2';
 
-type RolFormGroup = FormGroupOf<IRol>;
+type PerfilFormGroup = FormGroupOf<IPerfil>;
 
 @Component({
   selector: 'app-form',
   standalone: true,
   imports: [
+    CommonModule,
     UiTextFieldComponent,
     UiTextAreaComponent,
+    UiComboBoxComponent,
     UiButtonComponent,
     ReactiveFormsModule
   ],
   templateUrl: './form.component.html',
   styleUrl: './form.component.scss'
 })
-export default class FormComponent {
+export default class FormComponent implements OnInit {
 
   private readonly _route = inject(ActivatedRoute);
   private readonly _fb = inject(FormBuilder);
+  private readonly _perfilesService = inject(PerfilesService);
   private readonly _rolesService = inject(RolesService);
+  private readonly _loadingService = inject(LoadingService);
   public location = inject(Location);
 
-  protected formData!: RolFormGroup;
-  private initialFormValue!: IRol;
+  protected formData!: PerfilFormGroup;
+  private initialFormValue!: IPerfil;
+
+  // Combos
+  protected roles: IComboBoxOption[] = [];
 
   protected isAdd = true;
   private idParam = -1;
+
+  constructor() {
+    this.loadCombos();
+  }
 
   ngOnInit(): void {
     this.initForm();
@@ -51,51 +66,76 @@ export default class FormComponent {
     }
   }
 
+  private loadCombos() {
+    this._rolesService.listarComboRoles().subscribe({
+      next: (res) => {
+        this.roles = res;
+      }
+    });
+  }
+
   private initForm() {
     this.formData = this._fb.group({
-      ideRol: [{ value: -1, disabled: true }, Validators.required],
-      nombreRol: ['', Validators.required],
-      descripcionRol: ['', Validators.required]
-    }) as RolFormGroup;
+      idePerf: [{ value: -1, disabled: true }, Validators.required],
+      ideRol: [-1, Validators.required],
+      nombrePerf: ['', Validators.required],
+      descripcionPerf: ['', Validators.required]
+    }) as PerfilFormGroup;
 
     this.initialFormValue = this.formData.getRawValue();
   }
 
   private setData(id: number) {
-    this._rolesService.buscar(id).subscribe(res => {
-      const c = res.data[0] as IRolResult;
-      this.formData.patchValue({
-        ideRol: c.ide_rol,
-        nombreRol: c.nombre_rol,
-        descripcionRol: c.descripcion_rol
-      });
+    this._loadingService.show();
+    this._perfilesService.buscar(id).subscribe({
+      next: (res) => {
+        const p = res.data[0] as IPerfilResult;
+        this.formData.patchValue({
+          idePerf: p.ide_perf,
+          ideRol: p.ide_rol,
+          nombrePerf: p.nombre_perf,
+          descripcionPerf: p.descripcion_perf
+        });
+        this._loadingService.hide();
+      },
+      error: () => this._loadingService.hide()
     });
   }
 
   protected guardar() {
     if (this.formData.valid) {
-      const data = this.formData.getRawValue() as IRol;
+      const data = this.formData.getRawValue() as IPerfil;
 
       if (this.isAdd) {
-        data.ideRol = -1;
-        this._rolesService.insertar(data).subscribe(() => {
-          Swal.fire('Rol registrado', '', 'success');
-          this.location.back();
-          this.resetForm();
+        data.idePerf = -1;
+        this._loadingService.show();
+        this._perfilesService.insertar(data).subscribe({
+          next: () => {
+            this._loadingService.hide();
+            Swal.fire('Perfil registrado', '', 'success');
+            this.location.back();
+            this.resetForm();
+          },
+          error: () => this._loadingService.hide()
         });
       } else {
         Swal.fire({
-          title: '¿Actualizar Rol?',
+          title: '¿Actualizar Perfil?',
           icon: 'warning',
           showCancelButton: true,
           confirmButtonText: 'Sí'
         }).then(r => {
           if (r.isConfirmed) {
-            data.ideRol = this.idParam;
-            this._rolesService.actualizar(this.idParam, data).subscribe(() => {
-              Swal.fire('Rol actualizado', '', 'success');
-              this.location.back();
-              this.resetForm();
+            data.idePerf = this.idParam;
+            this._loadingService.show();
+            this._perfilesService.actualizar(this.idParam, data).subscribe({
+              next: () => {
+                this._loadingService.hide();
+                Swal.fire('Perfil actualizado', '', 'success');
+                this.location.back();
+                this.resetForm();
+              },
+              error: () => this._loadingService.hide()
             });
           }
         });
