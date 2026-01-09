@@ -1,45 +1,46 @@
 <div class="div_container">
   <div class="div_card">
-
     <div class="panel_1">
-      <!-- CABECERA -->
-      <div class="card_header">
-        <div class="header_left">
-          <ui-text-field
-            [label]="'ID Categoría'"
-            [value]="idCategoria"
-            [disabled]="true"
-          />
+      <div class="card_form">
+        
+        <!-- CABECERA -->
+        <div class="header_actions">
+          <div class="header_title">
+            <h2>Detalle de la Categoría #{{ idCategoria }}</h2>
+          </div>
+          <div class="header_buttons">
+            <ui-button [icon]="'refresh'" (evntClick)="loadCategoria()"/>
+            <ui-button [label]="'Volver'" [icon]="'arrow_back'" (evntClick)="volver()"/>
+          </div>
         </div>
 
-        <div class="header_right">
-          <ui-button
-            [icon]="'refresh'"
-            (evntClick)="loadCategoria()"
-          />
-          <ui-button
-            [label]="'Volver'"
-            [icon]="'arrow_back'"
-            (evntClick)="volver()"
-          />
-        </div>
-      </div>
-
-      <!-- INFO CATEGORÍA -->
-      <div class="card_info">
-        <div class="info_row">
-          <ui-text-field [label]="'Nombre'" [value]="categoria?.nombreCate"/>
+        <!-- PERFIL DE LA CATEGORÍA -->
+        <div class="categoria_perfil">
+          <div class="avatar">
+            <span class="material-icons">category</span>
+          </div>
+          <div class="categoria_info_principal">
+            <h3>{{ categoria?.nombreCate }}</h3>
+            <p class="id_categoria"><span class="material-icons">tag</span> ID: {{ categoria?.ideCate }}</p>
+          </div>
         </div>
 
-        <div class="info_row">
-          <ui-text-field [label]="'Descripción'" [value]="categoria?.descripcionCate"/>
+        <!-- INFORMACIÓN DE LA CATEGORÍA -->
+        <div class="section_title">Información General</div>
+        <div class="info_grid">
+          <div class="info_row">
+            <ui-text-field [label]="'ID'" [value]="categoria?.ideCate" [disabled]="true"/>
+            <ui-text-field [label]="'Nombre de la Categoría'" [value]="categoria?.nombreCate" [disabled]="true"/>
+          </div>
         </div>
+
+        <!-- DESCRIPCIÓN -->
+        <div class="section_title">Descripción</div>
+        <div class="descripcion_card">
+          <p>{{ categoria?.descripcionCate || 'Sin descripción' }}</p>
+        </div>
+
       </div>
     </div>
-
-    <div class="panel_2">
-      <div class="panel_2_img"></div>
-    </div>
-
   </div>
 </div>
