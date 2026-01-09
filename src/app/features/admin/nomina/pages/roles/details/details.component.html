@@ -1,0 +1,35 @@
+<div class="div_container">
+  <div class="div_card">
+    <div class="panel_1">
+      <div class="card_form">
+        
+        <!-- CABECERA -->
+        <div class="header_actions">
+          <div class="header_title">
+            <h2>Detalle del Rol #{{ idRol }}</h2>
+          </div>
+          <div class="header_buttons">
+            <ui-button [icon]="'refresh'" (evntClick)="loadData()"/>
+            <ui-button [label]="'Volver'" [icon]="'arrow_back'" (evntClick)="volver()"/>
+          </div>
+        </div>
+
+        <!-- INFO ROL -->
+        <div class="section_title">Información del Rol</div>
+        <div class="info_grid">
+          <div class="info_row">
+            <ui-text-field [label]="'ID'" [value]="rol?.ideRol" [disabled]="true"/>
+            <ui-text-field [label]="'Nombre del Rol'" [value]="rol?.nombreRol" [disabled]="true"/>
+          </div>
+        </div>
+
+        <!-- DESCRIPCIÓN -->
+        <div class="section_title">Descripción</div>
+        <div class="descripcion_card">
+          <p>{{ rol?.descripcionRol || 'Sin descripción' }}</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
