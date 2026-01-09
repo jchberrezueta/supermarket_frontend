@@ -56,7 +56,7 @@ export default class ListComponent {
     this.formData = this.formBuilder.group({
       nombreMarc: ['', [], []],
       paisOrigenMarc: ['', [], []],
-      calidadMarc: [-1, [], []],
+      calidadMarc: ['', [], []],
     }) as filterMarcaFormGroup;
     //snapshot inicial
     this.initialFormValue = this.formData.getRawValue();

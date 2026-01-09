@@ -71,7 +71,7 @@ export interface IFiltroMarca {
     //ideMarc: number;
     nombreMarc: string;
     paisOrigenMarc: string;
-    calidadMarc: number;
+    calidadMarc: string;
     //calidadMarcMax: number;
     //descripcionMarc: string;
 }

@@ -80,7 +80,6 @@ export default class ListComponent {
   private loadComboNavegador() {
     this._accesosService.listarComboNavegador().subscribe(
       (res) => {
-        console.log(res);
         this.opcionesNavegadores = res;
       }
     );
@@ -99,6 +98,7 @@ export default class ListComponent {
     if (isValidStringValue(filtro.navegadorAcce)) params.append('navegadorAcce', filtro.navegadorAcce );
     if (isValidStringValue(filtro.fechaAcceDesde)) params.append('fechaAcceDesde', filtro.fechaAcceDesde );
     if (isValidStringValue(filtro.fechaAcceHasta)) params.append('fechaAcceHasta', filtro.fechaAcceHasta );
+    console.log(params);
     return params;
   }
 
