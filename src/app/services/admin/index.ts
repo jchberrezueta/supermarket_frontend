@@ -2,6 +2,7 @@ export * from './accesos.service';
 export * from './categorias.service';
 export * from './clientes.service';
 export * from './cuentas.service';
+export * from './dashboard.service';
 export * from './empleados.service';
 export * from './empresas.service';
 export * from './entregas.service';

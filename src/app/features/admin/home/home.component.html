@@ -1,60 +1,319 @@
-<div class="home">
-  <div class="hero">
-    <h1>¡Bienvenido! {{username}} :)</h1>
-    <p>Sistema de gestión administrativa</p>
-  </div>
-
-  <div class="cards">
-    <div class="card">
-      <div class="icon">📦</div>
-      <div class="content">
-        <h3>Bodega</h3>
-        <p>Controla inventarios, productos y stock disponible.</p>
-      </div>
+<div class="dashboard">
+  <!-- Header -->
+  <div class="dashboard_header">
+    <div class="header_welcome">
+      <h1>¡Bienvenido, {{username}}!</h1>
+      <p>Panel de control - {{ currentDate | date:'EEEE, d MMMM yyyy' }}</p>
     </div>
-
-    <div class="card">
-      <div class="icon">🧾</div>
-      <div class="content">
-        <h3>Nómina</h3>
-        <p>Gestiona empleados, roles, pagos y reportes internos.</p>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="icon">🛍️</div>
-      <div class="content">
-        <h3>Productos</h3>
-        <p>Administra catálogo, marcas, categorías y precios de venta.</p>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="icon">🏢</div>
-      <div class="content">
-        <h3>Proveedores</h3>
-        <p>Administra empresas, precios y convenios comerciales.</p>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="icon">💰</div>
-      <div class="content">
-        <h3>Ventas</h3>
-        <p>Registra ventas, pedidos y movimientos financieros.</p>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="icon">🔒</div>
-      <div class="content">
-        <h3>Seguridad</h3>
-        <p>Gestión de usuarios, roles y permisos del sistema.</p>
+    <div class="header_actions">
+      <div class="date_badge">
+        <span class="material-symbols-rounded">calendar_today</span>
+        <span>{{ currentDate | date:'HH:mm' }}</span>
       </div>
     </div>
   </div>
 
-  <div class="hint">
-    Selecciona una opción del menú para comenzar 🚀
-  </div>
+  @if (loading) {
+    <div class="loading_container">
+      <div class="loading_spinner"></div>
+      <p>Cargando estadísticas...</p>
+    </div>
+  } @else {
+    <!-- Stats Cards -->
+    <div class="stats_grid">
+      <div class="stat_card stat_ventas">
+        <div class="stat_icon">
+          <span class="material-symbols-rounded">payments</span>
+        </div>
+        <div class="stat_content">
+          <span class="stat_label">Ventas del Día</span>
+          <span class="stat_value">{{ stats?.totalVentas | currency:'$' }}</span>
+          <span class="stat_detail">{{ stats?.ventasHoy }} transacciones</span>
+        </div>
+      </div>
+
+      <div class="stat_card stat_mes">
+        <div class="stat_icon">
+          <span class="material-symbols-rounded">trending_up</span>
+        </div>
+        <div class="stat_content">
+          <span class="stat_label">Ventas del Mes</span>
+          <span class="stat_value">{{ stats?.ventasMes | currency:'$' }}</span>
+          <span class="stat_detail">Acumulado mensual</span>
+        </div>
+      </div>
+
+      <div class="stat_card stat_productos">
+        <div class="stat_icon">
+          <span class="material-symbols-rounded">inventory_2</span>
+        </div>
+        <div class="stat_content">
+          <span class="stat_label">Productos Activos</span>
+          <span class="stat_value">{{ stats?.totalProductos }}</span>
+          <span class="stat_detail stat_warning" *ngIf="stats?.productosStockBajo">
+            <span class="material-symbols-rounded">warning</span>
+            {{ stats?.productosStockBajo }} con stock bajo
+          </span>
+        </div>
+      </div>
+
+      <div class="stat_card stat_clientes">
+        <div class="stat_icon">
+          <span class="material-symbols-rounded">group</span>
+        </div>
+        <div class="stat_content">
+          <span class="stat_label">Clientes</span>
+          <span class="stat_value">{{ stats?.totalClientes }}</span>
+          <span class="stat_detail">Registrados</span>
+        </div>
+      </div>
+
+      <div class="stat_card stat_pedidos">
+        <div class="stat_icon">
+          <span class="material-symbols-rounded">local_shipping</span>
+        </div>
+        <div class="stat_content">
+          <span class="stat_label">Pedidos Pendientes</span>
+          <span class="stat_value">{{ stats?.pedidosPendientes }}</span>
+          <span class="stat_detail">En progreso</span>
+        </div>
+      </div>
+
+      <div class="stat_card stat_entregas">
+        <div class="stat_icon">
+          <span class="material-symbols-rounded">package</span>
+        </div>
+        <div class="stat_content">
+          <span class="stat_label">Entregas Pendientes</span>
+          <span class="stat_value">{{ stats?.entregasPendientes }}</span>
+          <span class="stat_detail">Por completar</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="charts_section">
+      <!-- Ventas Mensuales Chart -->
+      <div class="chart_card">
+        <div class="chart_header">
+          <h3>
+            <span class="material-symbols-rounded">bar_chart</span>
+            Ventas Mensuales
+          </h3>
+        </div>
+        <div class="bar_chart">
+          @for (venta of ventasMensuales; track venta.mes) {
+            <div class="bar_item">
+              <div class="bar_container">
+                <div 
+                  class="bar" 
+                  [style.height.%]="getBarHeight(venta.total)"
+                  [style.background]="'linear-gradient(180deg, #6366f1 0%, #4f46e5 100%)'"
+                >
+                  <span class="bar_value">{{ venta.total | currency:'$':'symbol':'1.0-0' }}</span>
+                </div>
+              </div>
+              <span class="bar_label">{{ venta.mes }}</span>
+            </div>
+          }
+          @if (ventasMensuales.length === 0) {
+            <div class="no_data">
+              <span class="material-symbols-rounded">info</span>
+              <p>No hay datos de ventas</p>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Productos Top -->
+      <div class="chart_card">
+        <div class="chart_header">
+          <h3>
+            <span class="material-symbols-rounded">star</span>
+            Productos Más Vendidos
+          </h3>
+        </div>
+        <div class="products_chart">
+          @for (producto of productosTop; track producto.nombre; let i = $index) {
+            <div class="product_item">
+              <div class="product_info">
+                <span class="product_rank">{{ i + 1 }}</span>
+                <span class="product_name">{{ producto.nombre }}</span>
+              </div>
+              <div class="product_bar_container">
+                <div 
+                  class="product_bar" 
+                  [style.width.%]="getProductPercentage(producto.cantidad)"
+                  [style.background]="chartColors[i % chartColors.length]"
+                ></div>
+              </div>
+              <span class="product_quantity">{{ producto.cantidad }} uds</span>
+            </div>
+          }
+          @if (productosTop.length === 0) {
+            <div class="no_data">
+              <span class="material-symbols-rounded">info</span>
+              <p>No hay datos de productos</p>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Second Row Charts -->
+    <div class="charts_section">
+      <!-- Ventas por Categoría -->
+      <div class="chart_card">
+        <div class="chart_header">
+          <h3>
+            <span class="material-symbols-rounded">donut_large</span>
+            Ventas por Categoría
+          </h3>
+        </div>
+        <div class="category_chart">
+          @for (cat of ventasPorCategoria; track cat.categoria; let i = $index) {
+            <div class="category_item">
+              <div class="category_color" [style.background]="chartColors[i % chartColors.length]"></div>
+              <div class="category_info">
+                <span class="category_name">{{ cat.categoria }}</span>
+                <span class="category_percentage">{{ getCategoriaPercentage(cat.total) | number:'1.1-1' }}%</span>
+              </div>
+              <span class="category_total">{{ cat.total | currency:'$':'symbol':'1.0-0' }}</span>
+            </div>
+          }
+          @if (ventasPorCategoria.length === 0) {
+            <div class="no_data">
+              <span class="material-symbols-rounded">info</span>
+              <p>No hay datos de categorías</p>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Resumen Rápido -->
+      <div class="chart_card">
+        <div class="chart_header">
+          <h3>
+            <span class="material-symbols-rounded">dashboard</span>
+            Resumen del Sistema
+          </h3>
+        </div>
+        <div class="summary_grid">
+          <div class="summary_item">
+            <span class="material-symbols-rounded">badge</span>
+            <div class="summary_content">
+              <span class="summary_value">{{ stats?.totalEmpleados }}</span>
+              <span class="summary_label">Empleados</span>
+            </div>
+          </div>
+          <div class="summary_item">
+            <span class="material-symbols-rounded">handshake</span>
+            <div class="summary_content">
+              <span class="summary_value">{{ stats?.totalProveedores }}</span>
+              <span class="summary_label">Proveedores</span>
+            </div>
+          </div>
+          <div class="summary_item">
+            <span class="material-symbols-rounded">inventory</span>
+            <div class="summary_content">
+              <span class="summary_value">{{ stats?.totalProductos }}</span>
+              <span class="summary_label">Productos</span>
+            </div>
+          </div>
+          <div class="summary_item">
+            <span class="material-symbols-rounded">groups</span>
+            <div class="summary_content">
+              <span class="summary_value">{{ stats?.totalClientes }}</span>
+              <span class="summary_label">Clientes</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tables Section -->
+    <div class="tables_section">
+      <!-- Últimas Ventas -->
+      <div class="table_card">
+        <div class="table_header">
+          <h3>
+            <span class="material-symbols-rounded">receipt_long</span>
+            Últimas Ventas
+          </h3>
+        </div>
+        <div class="table_content">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Fecha</th>
+                <th>Total</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (venta of ultimasVentas; track venta.id) {
+                <tr>
+                  <td>#{{ venta.id }}</td>
+                  <td>{{ venta.fecha }}</td>
+                  <td class="td_money">{{ venta.total | currency:'$' }}</td>
+                  <td>
+                    <span class="estado_badge" [ngClass]="getEstadoClass(venta.estado)">
+                      {{ venta.estado }}
+                    </span>
+                  </td>
+                </tr>
+              }
+              @if (ultimasVentas.length === 0) {
+                <tr>
+                  <td colspan="4" class="no_data_table">No hay ventas recientes</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Pedidos Recientes -->
+      <div class="table_card">
+        <div class="table_header">
+          <h3>
+            <span class="material-symbols-rounded">local_shipping</span>
+            Pedidos Recientes
+          </h3>
+        </div>
+        <div class="table_content">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Empresa</th>
+                <th>Total</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (pedido of pedidosRecientes; track pedido.id) {
+                <tr>
+                  <td>#{{ pedido.id }}</td>
+                  <td>{{ pedido.empresa }}</td>
+                  <td class="td_money">{{ pedido.total | currency:'$' }}</td>
+                  <td>
+                    <span class="estado_badge" [ngClass]="getEstadoClass(pedido.estado)">
+                      {{ pedido.estado }}
+                    </span>
+                  </td>
+                </tr>
+              }
+              @if (pedidosRecientes.length === 0) {
+                <tr>
+                  <td colspan="4" class="no_data_table">No hay pedidos recientes</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  }
 </div>
