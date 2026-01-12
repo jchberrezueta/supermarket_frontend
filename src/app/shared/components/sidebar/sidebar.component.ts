@@ -47,7 +47,7 @@ export class UiSidebarComponent {
 
   ngOnInit() {
     const rutas: IOpcionSidebar[] = this._authService.getSidebarOptions();
-    if (rutas) {
+    if (rutas && this._authService.getUserPerfil() === 'padmin') {
       rutas.unshift({
         id: 0,
         titulo: 'DashBoard',
@@ -56,7 +56,7 @@ export class UiSidebarComponent {
         activo: 'si',
         hijas: []
       });
-      this.opciones = rutas;
     }
+    this.opciones = rutas;
   }
 }

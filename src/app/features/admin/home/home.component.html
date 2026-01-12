@@ -13,6 +13,9 @@
     </div>
   </div>
 
+  @if(_authService.getUserPerfil() === 'padmin'){
+
+  
   @if (loading) {
     <div class="loading_container">
       <div class="loading_spinner"></div>
@@ -315,5 +318,5 @@
         </div>
       </div>
     </div>
-  }
+  }}
 </div>

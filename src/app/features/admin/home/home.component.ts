@@ -20,7 +20,7 @@ import { forkJoin } from 'rxjs';
   styleUrl: './home.component.scss'
 })
 export default class HomeComponent implements OnInit {
-  private readonly _authService = inject(AuthService);
+  public _authService = inject(AuthService);
   private readonly _dashboardService = inject(DashboardService);
   
   protected readonly username: string = '';
@@ -43,7 +43,10 @@ export default class HomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadDashboardData();
+    if( this._authService.getUserPerfil() === 'padmin'){
+      this.loadDashboardData();
+    }
+    
   }
 
   private loadDashboardData(): void {
