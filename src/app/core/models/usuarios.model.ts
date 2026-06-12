@@ -1,5 +1,5 @@
-import { IOpcionSidebar } from "./opcion_sidebar.model";
-import { IRuta } from "./rutas.model";
+import { IOpcionSidebar } from './opcion_sidebar.model';
+import { IRuta } from './rutas.model';
 
 export interface IUsuario {
   id: number;
@@ -7,5 +7,6 @@ export interface IUsuario {
   state: string;
   perfil: string;
   permisos: IRuta[];
+  ideEmpl: number;
   rutas_sidebar: IOpcionSidebar[];
 }

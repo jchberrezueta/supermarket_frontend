@@ -1,0 +1,298 @@
+<section class="pos-page">
+  <header class="pos-header">
+    <div>
+      <p class="eyebrow">Punto de venta</p>
+      <h1>POS SuperMarket</h1>
+      <p class="subtitle">
+        Escaneo o ingreso manual de código QR/código de barras.
+      </p>
+    </div>
+
+    <div class="header-summary">
+      <span>Productos</span>
+      <strong>{{ cantidadTotal }}</strong>
+    </div>
+  </header>
+
+  <div class="messages">
+    <div class="message success" *ngIf="successMessage">
+      {{ successMessage }}
+    </div>
+
+    <div class="message error" *ngIf="errorMessage">
+      {{ errorMessage }}
+    </div>
+  </div>
+
+  <section class="pos-grid">
+    <article class="panel scanner-panel">
+      <h2>Escanear producto</h2>
+
+      <form (ngSubmit)="buscarProducto()" class="scan-form">
+        <label for="codigoProducto">Código QR / barras</label>
+
+        <div class="scan-row">
+          <input
+            id="codigoProducto"
+            name="codigoProducto"
+            type="text"
+            [(ngModel)]="codigoProducto"
+            placeholder="Ej: PRD-000000003"
+            autocomplete="off"
+            autofocus
+          />
+
+          <button type="submit" [disabled]="loadingProducto">
+            {{ loadingProducto ? "Buscando..." : "Agregar" }}
+          </button>
+        </div>
+      </form>
+
+      <div class="sale-data">
+        <div class="client-search">
+          <label for="cedulaCliente">Cédula del cliente</label>
+
+          <div class="client-search-row">
+            <input
+              id="cedulaCliente"
+              name="cedulaCliente"
+              type="text"
+              [(ngModel)]="cedulaCliente"
+              placeholder="Ej: 0700000000"
+              autocomplete="off"
+            />
+
+            <button
+              type="button"
+              class="client-search-btn"
+              [disabled]="buscandoCliente"
+              (click)="buscarCliente()"
+            >
+              {{ buscandoCliente ? "Buscando..." : "Buscar" }}
+            </button>
+          </div>
+
+          <div class="client-selected" *ngIf="clienteSeleccionado">
+            <div>
+              <strong>{{ nombreClienteSeleccionado }}</strong>
+              <span>Cédula: {{ clienteSeleccionado.cedulaClie }}</span>
+            </div>
+
+            <button
+              type="button"
+              class="client-clear-btn"
+              (click)="limpiarCliente()"
+            >
+              Cambiar
+            </button>
+          </div>
+        </div>
+        <div>
+          <label for="tipoPagoVent">Forma de pago</label>
+          <select
+            id="tipoPagoVent"
+            name="tipoPagoVent"
+            [(ngModel)]="tipoPagoVent"
+          >
+            <option value="efectivo">Efectivo</option>
+            <option value="tarjeta_credito">Tarjeta crédito</option>
+            <option value="tarjeta_debito">Tarjeta débito</option>
+            <option value="paypal">PayPal</option>
+          </select>
+        </div>
+      </div>
+    </article>
+
+    <article class="panel totals-panel">
+      <h2>Resumen</h2>
+
+      <div class="total-line">
+        <span>Subtotal / base imponible</span>
+        <strong>{{
+          subtotalVenta | currency: "USD" : "symbol" : "1.2-2"
+        }}</strong>
+      </div>
+
+      <div class="total-line">
+        <span>Descuento</span>
+        <strong>{{
+          descuentoVenta | currency: "USD" : "symbol" : "1.2-2"
+        }}</strong>
+      </div>
+
+      <div class="total-line">
+        <span>IVA</span>
+        <strong>{{ ivaVenta | currency: "USD" : "symbol" : "1.2-2" }}</strong>
+      </div>
+
+      <div class="total-line grand-total">
+        <span>Total</span>
+        <strong>{{ totalVenta | currency: "USD" : "symbol" : "1.2-2" }}</strong>
+      </div>
+
+      <button
+        type="button"
+        class="confirm-btn"
+        [disabled]="
+          procesandoVenta || carrito.length === 0 || !carritoTieneStockValido
+        "
+        (click)="confirmarVenta()"
+      >
+        {{ procesandoVenta ? "Procesando..." : "Confirmar venta" }}
+      </button>
+
+      <button type="button" class="clear-btn" (click)="limpiarVenta()">
+        Limpiar venta
+      </button>
+    </article>
+  </section>
+
+  <section class="panel cart-panel">
+    <div class="cart-header">
+      <h2>Carrito de venta</h2>
+      <span>{{ carrito.length }} producto(s)</span>
+    </div>
+
+    <div class="empty-cart" *ngIf="carrito.length === 0">
+      Aún no hay productos agregados.
+    </div>
+
+    <div class="cart-table" *ngIf="carrito.length > 0">
+      <table>
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Código</th>
+            <th>Stock</th>
+            <th>Cantidad</th>
+            <th>Base imponible</th>
+            <th>IVA</th>
+            <th>Total</th>
+            <th></th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let item of carrito; trackBy: trackByProducto">
+            <td>
+              <div class="product-cell">
+                <img
+                  [src]="item.producto.urlImgProd"
+                  [alt]="item.producto.nombreProd"
+                />
+                <div>
+                  <strong>{{ item.producto.nombreProd }}</strong>
+                  <small>
+                    Precio:
+                    {{
+                      item.precioUnitario | currency: "USD" : "symbol" : "1.2-2"
+                    }}
+                  </small>
+                </div>
+              </div>
+            </td>
+
+            <td>{{ item.producto.codigoBarraProd }}</td>
+
+            <td>
+              <span
+                class="stock-badge"
+                [class.low]="item.producto.stockProd <= 5"
+              >
+                {{ item.producto.stockProd }}
+              </span>
+            </td>
+
+            <td>
+              <div class="quantity-control">
+                <button type="button" (click)="disminuirCantidad(item)">
+                  -
+                </button>
+
+                <input
+                  type="number"
+                  min="1"
+                  [max]="item.producto.stockProd"
+                  [(ngModel)]="item.cantidad"
+                  [name]="'cantidad_' + item.producto.ideProd"
+                  (change)="cambiarCantidad(item)"
+                />
+
+                <button type="button" (click)="aumentarCantidad(item)">
+                  +
+                </button>
+              </div>
+              <small
+                class="stock-warning"
+                *ngIf="item.cantidad >= item.producto.stockProd"
+              >
+                Stock máximo disponible
+              </small>
+            </td>
+
+            <td>
+              {{ item.baseImponible | currency: "USD" : "symbol" : "1.2-2" }}
+            </td>
+            <td>{{ item.iva | currency: "USD" : "symbol" : "1.2-2" }}</td>
+            <td>
+              <strong>{{
+                item.total | currency: "USD" : "symbol" : "1.2-2"
+              }}</strong>
+            </td>
+
+            <td>
+              <button
+                type="button"
+                class="remove-btn"
+                (click)="quitarProducto(item.producto.ideProd)"
+              >
+                Quitar
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="panel result-panel" *ngIf="ultimaVenta">
+    <h2>Última venta</h2>
+
+    <div class="result-grid">
+      <div>
+        <span>Factura</span>
+        <strong>{{ ultimaVenta.numFacturaVent }}</strong>
+      </div>
+
+      <div>
+        <span>Total</span>
+        <strong>{{
+          ultimaVenta.totalVent | currency: "USD" : "symbol" : "1.2-2"
+        }}</strong>
+      </div>
+
+      <div>
+        <span>Cantidad</span>
+        <strong>{{ ultimaVenta.cantidadVent }}</strong>
+      </div>
+    </div>
+
+    <button
+      type="button"
+      class="cancel-btn"
+      [disabled]="procesandoCancelacion"
+      (click)="cancelarUltimaVenta()"
+    >
+      {{ procesandoCancelacion ? "Cancelando..." : "Cancelar última venta" }}
+    </button>
+  </section>
+
+  <section class="panel alerts-panel" *ngIf="alertasStock.length > 0">
+    <h2>Alertas de stock</h2>
+
+    <div class="alert-item" *ngFor="let alerta of alertasStock">
+      <strong>{{ alerta.nombreProd }}</strong>
+      <span>{{ alerta.mensaje }}. Stock actual: {{ alerta.stockActual }}</span>
+    </div>
+  </section>
+</section>

@@ -15,3 +15,4 @@ export * from './productos.service';
 export * from './proveedores.service';
 export * from './roles.service';
 export * from './ventas.service';
+export * from './pos.service';

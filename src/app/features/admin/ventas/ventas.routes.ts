@@ -1,14 +1,18 @@
 import { Routes } from '@angular/router';
 
 export const ventasRoutes: Routes = [
-    {
-        path: 'clientes',
-        loadChildren: () => import('./pages/clientes/clientes.routes')
-    },
-    {
-        path: 'ventas',
-        loadChildren: () => import('./pages/ventas/ventas.routes')
-    }
+  {
+    path: 'clientes',
+    loadChildren: () => import('./pages/clientes/clientes.routes'),
+  },
+  {
+    path: 'ventas',
+    loadChildren: () => import('./pages/ventas/ventas.routes'),
+  },
+  {
+    path: 'pos',
+    loadComponent: () => import('./pages/pos/pos.component'),
+  },
 ];
 
 export default ventasRoutes;
