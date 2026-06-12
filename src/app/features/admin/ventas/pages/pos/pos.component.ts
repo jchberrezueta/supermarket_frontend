@@ -3,6 +3,7 @@ import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import * as QRCode from 'qrcode';
+import { QrLabelComponent } from '@shared/components/qr-label/qr-label.component';
 
 import {
   IAlertaStockPos,
@@ -31,7 +32,13 @@ interface ICarritoPosItem {
 @Component({
   selector: 'app-pos',
   standalone: true,
-  imports: [CommonModule, FormsModule, CurrencyPipe, DecimalPipe],
+  imports: [
+    CommonModule,
+    FormsModule,
+    CurrencyPipe,
+    DecimalPipe,
+    QrLabelComponent,
+  ],
   templateUrl: './pos.component.html',
   styleUrl: './pos.component.scss',
 })
@@ -39,6 +46,8 @@ export default class PosComponent implements OnInit, OnDestroy {
   private readonly posService = inject(PosService);
   private readonly posScanService = inject(PosScanService);
   private scanSubscription?: Subscription;
+
+  public codigoQrPrueba = 'PRD-000000003';
 
   public posSessionId = '';
   public scannerToken = '';

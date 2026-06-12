@@ -1,0 +1,22 @@
+<article class="qr-label">
+  <header class="qr-label-header">
+    <h3>{{ title }}</h3>
+    <p *ngIf="subtitle">{{ subtitle }}</p>
+  </header>
+
+  <div class="qr-box" *ngIf="qrDataUrl">
+    <img [src]="qrDataUrl" [alt]="'QR ' + code" />
+  </div>
+
+  <div class="qr-error" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <div class="qr-code" *ngIf="showCode && code">
+    Código: <strong>{{ code }}</strong>
+  </div>
+
+  <footer *ngIf="footer">
+    {{ footer }}
+  </footer>
+</article>

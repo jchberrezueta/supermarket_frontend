@@ -19,9 +19,9 @@ export default class ScannerComponent implements AfterViewInit, OnDestroy {
   private html5QrCode?: Html5Qrcode;
   private readonly readerId = 'pos-mobile-qr-reader';
 
-  private ultimoCodigoEnviado = '';
-  private ultimoEnvioAt = 0;
-  private readonly bloqueoLecturaMs = 1400;
+  private codigoBloqueadoActual = '';
+  private lecturasFallidasConsecutivas = 0;
+  private readonly lecturasFallidasParaDesbloquear = 8;
 
   public sessionId = this.route.snapshot.paramMap.get('sessionId') || '';
   public scannerToken = this.route.snapshot.queryParamMap.get('token') || '';
@@ -78,8 +78,7 @@ export default class ScannerComponent implements AfterViewInit, OnDestroy {
           this.onCodigoDetectado(decodedText);
         },
         () => {
-          // Los fallos de lectura son normales mientras no haya QR enfocado.
-          // No mostramos error por cada frame.
+          this.registrarFrameSinLectura();
         },
       );
 
@@ -130,18 +129,35 @@ export default class ScannerComponent implements AfterViewInit, OnDestroy {
       return;
     }
 
-    const ahora = Date.now();
+    this.lecturasFallidasConsecutivas = 0;
 
-    const esRepetidoMuyRapido =
-      codigo === this.ultimoCodigoEnviado &&
-      ahora - this.ultimoEnvioAt < this.bloqueoLecturaMs;
-
-    if (esRepetidoMuyRapido || this.enviando) {
+    if (this.enviando) {
       return;
     }
 
+    if (codigo === this.codigoBloqueadoActual) {
+      return;
+    }
+
+    this.codigoBloqueadoActual = codigo;
     this.ultimoCodigoDetectado = codigo;
+
     this.enviarCodigoAlPos(codigo, 'camara');
+  }
+
+  private registrarFrameSinLectura(): void {
+    if (!this.codigoBloqueadoActual) {
+      return;
+    }
+
+    this.lecturasFallidasConsecutivas += 1;
+
+    if (
+      this.lecturasFallidasConsecutivas >= this.lecturasFallidasParaDesbloquear
+    ) {
+      this.codigoBloqueadoActual = '';
+      this.lecturasFallidasConsecutivas = 0;
+    }
   }
 
   private enviarCodigoAlPos(codigo: string, origen: 'manual' | 'camara'): void {
@@ -167,8 +183,6 @@ export default class ScannerComponent implements AfterViewInit, OnDestroy {
       })
       .subscribe({
         next: (resp) => {
-          this.ultimoCodigoEnviado = codigo;
-          this.ultimoEnvioAt = Date.now();
           this.ultimoCodigoDetectado = codigo;
           this.successMessage =
             origen === 'camara'
@@ -179,6 +193,7 @@ export default class ScannerComponent implements AfterViewInit, OnDestroy {
           this.vibrar();
         },
         error: (error) => {
+          this.codigoBloqueadoActual = '';
           this.errorMessage =
             error?.error?.message || 'No se pudo enviar el código al POS.';
           this.enviando = false;
