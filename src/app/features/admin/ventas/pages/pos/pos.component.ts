@@ -2,6 +2,7 @@ import { CommonModule, CurrencyPipe, DecimalPipe } from '@angular/common';
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import * as QRCode from 'qrcode';
 
 import {
   IAlertaStockPos,
@@ -41,7 +42,9 @@ export default class PosComponent implements OnInit, OnDestroy {
 
   public posSessionId = '';
   public scannerToken = '';
+
   public scannerUrl = '';
+  public scannerQrDataUrl = '';
   public ultimoCodigoEscaneado = '';
   public scannerActivo = false;
   public creandoSesionScanner = false;
@@ -128,6 +131,8 @@ export default class PosComponent implements OnInit, OnDestroy {
           this.posSessionId,
           this.scannerToken,
         );
+
+        this.generarQrVinculacion(this.scannerUrl);
 
         this.posScanService.conectarPos(this.posSessionId);
 
@@ -379,6 +384,19 @@ export default class PosComponent implements OnInit, OnDestroy {
       .join(' ');
 
     return nombres;
+  }
+
+  private async generarQrVinculacion(url: string): Promise<void> {
+    try {
+      this.scannerQrDataUrl = await QRCode.toDataURL(url, {
+        width: 220,
+        margin: 2,
+        errorCorrectionLevel: 'M',
+      });
+    } catch (error) {
+      console.error('No se pudo generar el QR de vinculación', error);
+      this.scannerQrDataUrl = '';
+    }
   }
 
   public trackByProducto(_index: number, item: ICarritoPosItem): number {

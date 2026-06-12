@@ -470,3 +470,18 @@ button {
   color: #1e3a8a;
   font-size: 0.85rem;
 }
+
+.scanner-qr-box {
+  margin: 0.75rem 0;
+  display: flex;
+  justify-content: center;
+
+  img {
+    width: 180px;
+    height: 180px;
+    padding: 0.5rem;
+    border-radius: 0.9rem;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+  }
+}

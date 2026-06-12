@@ -69,13 +69,17 @@
         </div>
 
         <div class="scanner-session" *ngIf="scannerUrl">
-          <label>URL para abrir en el celular</label>
+          <label>Vincular celular como escáner</label>
+
+          <div class="scanner-qr-box" *ngIf="scannerQrDataUrl">
+            <img [src]="scannerQrDataUrl" alt="QR de vinculación POS" />
+          </div>
 
           <input type="text" [value]="scannerUrl" readonly />
 
           <small>
-            Abra esta URL en el celular conectado a la misma red para usarlo
-            como escáner inalámbrico.
+            Escanee este QR con la cámara normal del celular, o copie la URL en
+            un navegador conectado a la misma red.
           </small>
         </div>
 

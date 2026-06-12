@@ -3,9 +3,10 @@
     <div class="scanner-icon">📱</div>
 
     <h1>Escáner móvil POS</h1>
+
     <p>
-      Este celular está vinculado a una caja POS. Ingrese o escanee el código
-      del producto para enviarlo al carrito.
+      Este celular está vinculado a una caja POS. Use la cámara para leer el QR
+      del producto y enviarlo automáticamente al carrito.
     </p>
 
     <div class="session-box">
@@ -13,7 +14,50 @@
       <strong>{{ sessionId }}</strong>
     </div>
 
-    <form (ngSubmit)="enviarCodigo()" class="scanner-form">
+    <div class="camera-panel">
+      <div id="pos-mobile-qr-reader"></div>
+
+      <div class="camera-actions">
+        <button
+          type="button"
+          class="start-btn"
+          [disabled]="iniciandoCamara || camaraActiva"
+          (click)="iniciarCamara()"
+        >
+          {{
+            iniciandoCamara
+              ? "Iniciando cámara..."
+              : camaraActiva
+                ? "Cámara activa"
+                : "Iniciar cámara"
+          }}
+        </button>
+
+        <button
+          type="button"
+          class="stop-btn"
+          [disabled]="!camaraActiva"
+          (click)="detenerCamara()"
+        >
+          Detener
+        </button>
+      </div>
+
+      <div class="camera-message" *ngIf="cameraMessage">
+        {{ cameraMessage }}
+      </div>
+    </div>
+
+    <div class="last-code" *ngIf="ultimoCodigoDetectado">
+      Último código detectado:
+      <strong>{{ ultimoCodigoDetectado }}</strong>
+    </div>
+
+    <div class="divider">
+      <span>o ingreso manual</span>
+    </div>
+
+    <form (ngSubmit)="enviarCodigoManual()" class="scanner-form">
       <label for="codigo">Código del producto</label>
 
       <input
@@ -23,7 +67,6 @@
         [(ngModel)]="codigo"
         placeholder="Ej: PRD-000000003"
         autocomplete="off"
-        autofocus
       />
 
       <button type="submit" [disabled]="enviando">
