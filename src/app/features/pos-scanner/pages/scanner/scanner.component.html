@@ -1,0 +1,42 @@
+<section class="scanner-page">
+  <article class="scanner-card">
+    <div class="scanner-icon">📱</div>
+
+    <h1>Escáner móvil POS</h1>
+    <p>
+      Este celular está vinculado a una caja POS. Ingrese o escanee el código
+      del producto para enviarlo al carrito.
+    </p>
+
+    <div class="session-box">
+      <span>Sesión vinculada</span>
+      <strong>{{ sessionId }}</strong>
+    </div>
+
+    <form (ngSubmit)="enviarCodigo()" class="scanner-form">
+      <label for="codigo">Código del producto</label>
+
+      <input
+        id="codigo"
+        name="codigo"
+        type="text"
+        [(ngModel)]="codigo"
+        placeholder="Ej: PRD-000000003"
+        autocomplete="off"
+        autofocus
+      />
+
+      <button type="submit" [disabled]="enviando">
+        {{ enviando ? "Enviando..." : "Enviar al POS" }}
+      </button>
+    </form>
+
+    <div class="message success" *ngIf="successMessage">
+      {{ successMessage }}
+    </div>
+
+    <div class="message error" *ngIf="errorMessage">
+      {{ errorMessage }}
+    </div>
+  </article>
+</section>

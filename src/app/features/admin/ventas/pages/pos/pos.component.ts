@@ -1,6 +1,8 @@
 import { CommonModule, CurrencyPipe, DecimalPipe } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Subscription } from 'rxjs';
+
 import {
   IAlertaStockPos,
   IClientePos,
@@ -8,6 +10,7 @@ import {
   IVentaPosResponse,
   PosService,
 } from '@services/pos.service';
+import { PosScanService } from '@services/pos-scan.service';
 
 type TipoPagoPos = 'efectivo' | 'tarjeta_credito' | 'tarjeta_debito' | 'paypal';
 
@@ -31,8 +34,17 @@ interface ICarritoPosItem {
   templateUrl: './pos.component.html',
   styleUrl: './pos.component.scss',
 })
-export default class PosComponent {
+export default class PosComponent implements OnInit, OnDestroy {
   private readonly posService = inject(PosService);
+  private readonly posScanService = inject(PosScanService);
+  private scanSubscription?: Subscription;
+
+  public posSessionId = '';
+  public scannerToken = '';
+  public scannerUrl = '';
+  public ultimoCodigoEscaneado = '';
+  public scannerActivo = false;
+  public creandoSesionScanner = false;
 
   public codigoProducto = '';
 
@@ -53,9 +65,25 @@ export default class PosComponent {
   public successMessage = '';
   public errorMessage = '';
 
+  public ngOnInit(): void {
+    this.crearSesionScanner();
+  }
+
+  public ngOnDestroy(): void {
+    this.scanSubscription?.unsubscribe();
+    this.posScanService.desconectar();
+  }
+
   public buscarProducto(): void {
     const codigo = this.codigoProducto.trim();
 
+    this.buscarYAgregarProductoPorCodigo(codigo, 'manual');
+  }
+
+  private buscarYAgregarProductoPorCodigo(
+    codigo: string,
+    origen: 'manual' | 'scanner',
+  ): void {
     this.limpiarMensajes();
 
     if (!codigo) {
@@ -69,7 +97,16 @@ export default class PosComponent {
       next: (resp) => {
         this.agregarProducto(resp.data);
         this.codigoProducto = '';
-        this.successMessage = `Producto agregado: ${resp.data.nombreProd}`;
+
+        this.successMessage =
+          origen === 'scanner'
+            ? `Producto escaneado: ${resp.data.nombreProd}`
+            : `Producto agregado: ${resp.data.nombreProd}`;
+
+        if (origen === 'scanner') {
+          this.reproducirBeep();
+        }
+
         this.loadingProducto = false;
       },
       error: (error) => {
@@ -78,6 +115,66 @@ export default class PosComponent {
         this.loadingProducto = false;
       },
     });
+  }
+
+  private crearSesionScanner(): void {
+    this.creandoSesionScanner = true;
+
+    this.posScanService.crearSesion().subscribe({
+      next: (resp) => {
+        this.posSessionId = resp.data.sessionId;
+        this.scannerToken = resp.data.scannerToken;
+        this.scannerUrl = this.posScanService.buildScannerUrl(
+          this.posSessionId,
+          this.scannerToken,
+        );
+
+        this.posScanService.conectarPos(this.posSessionId);
+
+        this.scanSubscription = this.posScanService
+          .onProductoEscaneado()
+          .subscribe((event) => {
+            this.ultimoCodigoEscaneado = event.codigo;
+            this.buscarYAgregarProductoPorCodigo(event.codigo, 'scanner');
+          });
+
+        this.scannerActivo = true;
+        this.creandoSesionScanner = false;
+      },
+      error: () => {
+        this.scannerActivo = false;
+        this.creandoSesionScanner = false;
+        this.errorMessage = 'No se pudo crear la sesión del escáner móvil.';
+      },
+    });
+  }
+
+  private reproducirBeep(): void {
+    try {
+      const AudioContextClass =
+        window.AudioContext || (window as any).webkitAudioContext;
+
+      if (!AudioContextClass) {
+        return;
+      }
+
+      const audioContext = new AudioContextClass();
+      const oscillator = audioContext.createOscillator();
+      const gain = audioContext.createGain();
+
+      oscillator.type = 'square';
+      oscillator.frequency.setValueAtTime(880, audioContext.currentTime);
+
+      gain.gain.setValueAtTime(0.08, audioContext.currentTime);
+
+      oscillator.connect(gain);
+      gain.connect(audioContext.destination);
+
+      oscillator.start();
+      oscillator.stop(audioContext.currentTime + 0.09);
+    } catch {
+      // Si el navegador bloquea audio automático, no rompemos el POS.
+    }
   }
 
   public agregarProducto(producto: IProductoPos): void {

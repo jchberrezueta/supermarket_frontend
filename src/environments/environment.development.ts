@@ -1,5 +1,6 @@
 export const environment = {
-    production: false,
-    api_url: 'http://localhost:3001/api'
-    //api_url: 'http://10.88.191.1:3001/api'
-}
+  production: false,
+  api_url: 'http://localhost:3001/api',
+  posScanSocketUrl: 'http://localhost:3001/pos-scan',
+  appBaseUrl: 'http://localhost:4200',
+};

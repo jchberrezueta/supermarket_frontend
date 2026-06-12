@@ -48,6 +48,42 @@
         </div>
       </form>
 
+      <div class="mobile-scanner-card">
+        <div class="mobile-scanner-header">
+          <div>
+            <strong>Escáner móvil</strong>
+            <span>
+              {{
+                creandoSesionScanner
+                  ? "Creando sesión..."
+                  : scannerActivo
+                    ? "Sesión activa"
+                    : "No conectado"
+              }}
+            </span>
+          </div>
+
+          <span class="scanner-status" [class.active]="scannerActivo">
+            {{ scannerActivo ? "Activo" : "Inactivo" }}
+          </span>
+        </div>
+
+        <div class="scanner-session" *ngIf="scannerUrl">
+          <label>URL para abrir en el celular</label>
+
+          <input type="text" [value]="scannerUrl" readonly />
+
+          <small>
+            Abra esta URL en el celular conectado a la misma red para usarlo
+            como escáner inalámbrico.
+          </small>
+        </div>
+
+        <div class="last-scan" *ngIf="ultimoCodigoEscaneado">
+          Último código recibido: <strong>{{ ultimoCodigoEscaneado }}</strong>
+        </div>
+      </div>
+
       <div class="sale-data">
         <div class="client-search">
           <label for="cedulaCliente">Cédula del cliente</label>
