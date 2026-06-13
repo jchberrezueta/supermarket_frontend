@@ -83,24 +83,6 @@
           </small>
         </div>
 
-        <div class="product-qr-test">
-          <h3>QR de producto para prueba</h3>
-
-          <input
-            type="text"
-            name="codigoQrPrueba"
-            [(ngModel)]="codigoQrPrueba"
-            placeholder="Ej: PRD-000000003"
-          />
-
-          <app-qr-label
-            title="SuperMarket"
-            subtitle="Etiqueta de producto"
-            [code]="codigoQrPrueba"
-            footer="Escanee este QR con el celular vinculado al POS"
-          ></app-qr-label>
-        </div>
-
         <div class="last-scan" *ngIf="ultimoCodigoEscaneado">
           Último código recibido: <strong>{{ ultimoCodigoEscaneado }}</strong>
         </div>

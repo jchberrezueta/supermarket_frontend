@@ -51,15 +51,24 @@
     .panel_2 {
       flex: 1;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
+      gap: 20px;
       padding: 30px;
 
       .panel_2_img {
         width: 80%;
-        height: 70%;
+        height: 45%;
+        min-height: 220px;
         border-radius: 12px;
         background-color: #f1f5f9;
+      }
+
+      .product_qr_panel {
+        width: 100%;
+        display: flex;
+        justify-content: center;
       }
     }
   }

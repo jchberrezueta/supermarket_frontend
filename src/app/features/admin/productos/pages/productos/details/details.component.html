@@ -1,6 +1,5 @@
 <div class="div_container">
   <div class="div_card">
-
     <div class="panel_1">
       <!-- CABECERA -->
       <div class="card_header">
@@ -13,10 +12,7 @@
         </div>
 
         <div class="header_right">
-          <ui-button
-            [icon]="'refresh'"
-            (evntClick)="loadProducto()"
-          />
+          <ui-button [icon]="'refresh'" (evntClick)="loadProducto()" />
           <ui-button
             [label]="'Volver'"
             [icon]="'arrow_back'"
@@ -28,33 +24,66 @@
       <!-- INFO PRODUCTO -->
       <div class="card_info">
         <div class="info_row">
-          <ui-text-field [label]="'Nombre'" [value]="producto?.nombreProd"/>
-          <ui-text-field [label]="'Código Barra'" [value]="producto?.codigoBarraProd"/>
-          <ui-text-field [label]="'Categoría'" [value]="producto?.nombreCate"/>
-          <ui-text-field [label]="'Marca'" [value]="producto?.nombreMarc"/>
+          <ui-text-field [label]="'Nombre'" [value]="producto?.nombreProd" />
+          <ui-text-field
+            [label]="'Código Barra'"
+            [value]="producto?.codigoBarraProd"
+          />
+          <ui-text-field [label]="'Categoría'" [value]="producto?.nombreCate" />
+          <ui-text-field [label]="'Marca'" [value]="producto?.nombreMarc" />
         </div>
 
         <div class="info_row">
-          <ui-text-field [label]="'Precio Venta'" [value]="producto?.precioVentaProd | currency:'$'"/>
-          <ui-text-field [label]="'IVA'" [value]="producto?.ivaProd | currency:'$'"/>
-          <ui-text-field [label]="'Dcto. Promo'" [value]="producto?.dctoPromoProd | currency:'$'"/>
-          <ui-text-field [label]="'Stock'" [value]="producto?.stockProd"/>
+          <ui-text-field
+            [label]="'Precio Venta'"
+            [value]="producto?.precioVentaProd | currency: '$'"
+          />
+          <ui-text-field
+            [label]="'IVA'"
+            [value]="producto?.ivaProd | currency: '$'"
+          />
+          <ui-text-field
+            [label]="'Dcto. Promo'"
+            [value]="producto?.dctoPromoProd | currency: '$'"
+          />
+          <ui-text-field [label]="'Stock'" [value]="producto?.stockProd" />
         </div>
 
         <div class="info_row">
-          <ui-text-field [label]="'Disponible'" [value]="producto?.disponibleProd"/>
-          <ui-text-field [label]="'Estado'" [value]="producto?.estadoProd"/>
+          <ui-text-field
+            [label]="'Disponible'"
+            [value]="producto?.disponibleProd"
+          />
+          <ui-text-field [label]="'Estado'" [value]="producto?.estadoProd" />
         </div>
 
         <div class="info_row">
-          <ui-text-field [label]="'Descripción'" [value]="producto?.descripcionProd"/>
+          <ui-text-field
+            [label]="'Descripción'"
+            [value]="producto?.descripcionProd"
+          />
         </div>
       </div>
     </div>
 
     <div class="panel_2">
-      <div class="panel_2_img" [ngStyle]="{'background': producto?.urlImgProd ? 'url('+producto?.urlImgProd+') center / cover no-repeat' : '#f1f5f9'}"></div>
-    </div>
+      <div
+        class="panel_2_img"
+        [ngStyle]="{
+          background: producto?.urlImgProd
+            ? 'url(' + producto?.urlImgProd + ') center / cover no-repeat'
+            : '#f1f5f9',
+        }"
+      ></div>
 
+      <div class="product_qr_panel" *ngIf="producto?.codigoBarraProd">
+        <app-qr-label
+          title="SuperMarket"
+          [subtitle]="producto?.nombreProd || 'Etiqueta de producto'"
+          [code]="producto?.codigoBarraProd || ''"
+          footer="Escanee este QR desde el POS"
+        ></app-qr-label>
+      </div>
+    </div>
   </div>
 </div>

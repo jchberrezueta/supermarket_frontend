@@ -6,6 +6,7 @@ import { UiButtonComponent } from '@shared/components/button/button.component';
 import { Location, CommonModule, CurrencyPipe } from '@angular/common';
 import { ProductosService } from '@services/productos.service';
 import { LoadingService } from '@shared/services/loading.service';
+import { QrLabelComponent } from '@shared/components/qr-label/qr-label.component';
 
 interface IProductoView {
   ideProd: number;
@@ -29,14 +30,14 @@ interface IProductoView {
   imports: [
     CommonModule,
     UiTextFieldComponent,
-    UiButtonComponent
+    UiButtonComponent,
+    QrLabelComponent,
   ],
   providers: [CurrencyPipe],
   templateUrl: './details.component.html',
-  styleUrl: './details.component.scss'
+  styleUrl: './details.component.scss',
 })
 export default class DetailsComponent {
-
   private readonly _route = inject(ActivatedRoute);
   private readonly _productosService = inject(ProductosService);
   private readonly _loadingService = inject(LoadingService);
@@ -71,11 +72,11 @@ export default class DetailsComponent {
           disponibleProd: data.disponible_prod,
           estadoProd: data.estado_prod,
           descripcionProd: data.descripcion_prod,
-          urlImgProd: data.url_img_prod
+          urlImgProd: data.url_img_prod,
         };
         this._loadingService.hide();
       },
-      error: () => this._loadingService.hide()
+      error: () => this._loadingService.hide(),
     });
   }
 
