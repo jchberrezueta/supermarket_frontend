@@ -1,31 +1,41 @@
 import { Component, inject } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from "@angular/router";
+import {
+  ActivatedRoute,
+  NavigationEnd,
+  Router,
+  RouterOutlet,
+} from '@angular/router';
 import { UiBreadcumbsComponent } from '@shared/components/breadcumbs/breadcumbs.component';
 import { IBreadcumb } from '@shared/models/breadcumb.model';
-import { UiTitleComponent } from "@shared/components/title/title.component";
+import { UiTitleComponent } from '@shared/components/title/title.component';
+import { UiButtonComponent } from '@shared/components/button/button.component';
 import { filter } from 'rxjs';
-
 
 const breadcumbs = [
   {
     label: 'Dashboard',
-    url: '/admin'
+    url: '/admin',
   },
   {
     label: 'Modulo Productos',
   },
   {
     label: 'Productos',
-    url: '/admin/productos/productos'
-  }
+    url: '/admin/productos/productos',
+  },
 ];
 
 @Component({
   selector: 'app-container',
   standalone: true,
-  imports: [RouterOutlet, UiBreadcumbsComponent, UiTitleComponent],
+  imports: [
+    RouterOutlet,
+    UiBreadcumbsComponent,
+    UiTitleComponent,
+    UiButtonComponent,
+  ],
   templateUrl: './container.component.html',
-  styleUrl: './container.component.scss'
+  styleUrl: './container.component.scss',
 })
 export default class containerComponent {
   private readonly _router = inject(Router);
@@ -36,7 +46,7 @@ export default class containerComponent {
 
   ngOnInit(): void {
     this._router.events
-      .pipe(filter(e => e instanceof NavigationEnd))
+      .pipe(filter((e) => e instanceof NavigationEnd))
       .subscribe(() => {
         // baja hasta la ruta activa más profunda
         let r: ActivatedRoute | null = this._route;
@@ -50,5 +60,8 @@ export default class containerComponent {
     while (r?.firstChild) r = r.firstChild;
     this.showAddButton = !!r?.snapshot.data?.['showAddButton'];
   }
-  
+
+  protected irAEtiquetas(): void {
+    this._router.navigate(['/admin/productos/productos/etiquetas']);
+  }
 }

@@ -1,38 +1,55 @@
 :host {
-    width: 100%;
-    height: 100%;
-    display: block;
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 
 .div_container {
+  width: 100%;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  .div_breadcumbs {
     width: 100%;
-    min-height: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+    height: 50px;
+    flex-shrink: 0;
+  }
 
-    .div_breadcumbs {
-        width: 100%;
-        height: 50px;
-        flex-shrink: 0;
-    }
+  .div_title {
+    width: 100%;
+    height: 70px;
+    flex-shrink: 0;
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 16px;
 
-    .div_title {
-        width: 100%;
-        height: 70px;
-        flex-shrink: 0;
-        background-color: #FFFFFF;
-        border-radius: 12px;
-        padding: 16px;
+    box-shadow:
+      0 2px 4px rgba(0, 0, 0, 0.04),
+      0 6px 12px rgba(0, 0, 0, 0.06);
+  }
 
-        box-shadow:
-            0 2px 4px rgba(0, 0, 0, 0.04),
-            0 6px 12px rgba(0, 0, 0, 0.06);
-    }
+  .div_main {
+    width: 100%;
+    flex: 1;
+    min-height: 0;
+  }
+}
 
-    .div_main {
-        width: 100%;
-        flex: 1;
-        min-height: 0;
-    }
+.div_title {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.title_left {
+  flex: 1;
+  min-width: 0;
+}
+
+.title_actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 }

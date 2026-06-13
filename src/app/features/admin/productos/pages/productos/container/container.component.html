@@ -1,11 +1,25 @@
 <div class="div_container">
-    <div class="div_breadcumbs">
-        <ui-breadcumbs [breadcumbs]="breadcumbs"/>
+  <div class="div_breadcumbs">
+    <ui-breadcumbs [breadcumbs]="breadcumbs" />
+  </div>
+
+  <div class="div_title">
+    <div class="title_left">
+      <ui-title [title]="title" [showAddButton]="showAddButton" />
     </div>
-    <div class="div_title">
-        <ui-title [title]="title" [showAddButton]="showAddButton"/> 
+
+    <div class="title_actions">
+      <ui-button
+        [label]="'Etiquetas QR'"
+        [icon]="'qr_code_2'"
+        [color]="'#16a34a'"
+        [action]="'labels'"
+        (evntClick)="irAEtiquetas()"
+      />
     </div>
-    <div class="div_main">
-        <router-outlet/>
-    </div>
+  </div>
+
+  <div class="div_main">
+    <router-outlet />
+  </div>
 </div>
