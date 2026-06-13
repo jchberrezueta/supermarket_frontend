@@ -12,7 +12,15 @@
         </div>
 
         <div class="header_right">
+          <ui-button
+            [label]="'Imprimir etiqueta'"
+            [icon]="'print'"
+            [color]="'#16a34a'"
+            (evntClick)="imprimirEtiqueta()"
+          />
+
           <ui-button [icon]="'refresh'" (evntClick)="loadProducto()" />
+
           <ui-button
             [label]="'Volver'"
             [icon]="'arrow_back'"
