@@ -320,11 +320,16 @@ export default class PosComponent implements OnInit, OnDestroy {
       return;
     }
 
+    const ideVentCancelada = this.ultimaVenta.ideVent;
+    const facturaCancelada = this.ultimaVenta.numFacturaVent;
+
     this.procesandoCancelacion = true;
 
-    this.posService.cancelarVenta(this.ultimaVenta.ideVent).subscribe({
+    this.posService.cancelarVenta(ideVentCancelada).subscribe({
       next: (resp) => {
-        this.successMessage = resp.response.message;
+        this.successMessage = `${resp.response.message} Factura: ${facturaCancelada}.`;
+        this.ultimaVenta = null;
+        this.alertasStock = [];
         this.procesandoCancelacion = false;
       },
       error: (error) => {
