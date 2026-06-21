@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule, CurrencyPipe, DecimalPipe } from '@angular/common';
 import { AuthService } from '@core/services/auth.service';
 import {
@@ -21,7 +21,7 @@ import { forkJoin } from 'rxjs';
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
-export default class HomeComponent implements OnInit {
+export default class HomeComponent implements OnInit, OnDestroy {
   public _authService = inject(AuthService);
   private readonly _dashboardService = inject(DashboardService);
   private readonly _iotService = inject(IotService);
@@ -36,6 +36,7 @@ export default class HomeComponent implements OnInit {
   protected iotResumen: IIotResumenBodega | null = null;
   protected loading = true;
   protected currentDate = new Date();
+  private iotIntervalId?: ReturnType<typeof setInterval>;
 
   // Colores para gráficas
   protected chartColors = [
@@ -54,6 +55,7 @@ export default class HomeComponent implements OnInit {
   ngOnInit(): void {
     if (this._authService.getUserPerfil() === 'padmin') {
       this.loadDashboardData();
+      this.iniciarActualizacionIot();
     }
   }
 
@@ -65,7 +67,6 @@ export default class HomeComponent implements OnInit {
       ventasPorCategoria: this._dashboardService.getVentasPorCategoria(),
       ultimasVentas: this._dashboardService.getUltimasVentas(),
       pedidosRecientes: this._dashboardService.getPedidosRecientes(),
-      iotResumen: this._iotService.getResumenBodega(),
     }).subscribe({
       next: (res) => {
         this.stats = res.stats;
@@ -74,7 +75,6 @@ export default class HomeComponent implements OnInit {
         this.ventasPorCategoria = res.ventasPorCategoria || [];
         this.ultimasVentas = res.ultimasVentas || [];
         this.pedidosRecientes = res.pedidosRecientes || [];
-        this.iotResumen = res.iotResumen?.data ?? null;
         this.loading = false;
       },
       error: (err) => {
@@ -82,6 +82,31 @@ export default class HomeComponent implements OnInit {
         this.loading = false;
       },
     });
+  }
+
+  private iniciarActualizacionIot(): void {
+    this.loadIotResumen();
+
+    this.iotIntervalId = setInterval(() => {
+      this.loadIotResumen();
+    }, 10000);
+  }
+
+  private loadIotResumen(): void {
+    this._iotService.getResumenBodega().subscribe({
+      next: (res) => {
+        this.iotResumen = res.data;
+      },
+      error: (err) => {
+        console.error('Error cargando resumen IoT:', err);
+      },
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.iotIntervalId) {
+      clearInterval(this.iotIntervalId);
+    }
   }
 
   // Calcular altura de barra para gráfico de ventas mensuales
