@@ -17,3 +17,4 @@ export * from './roles.service';
 export * from './ventas.service';
 export * from './pos.service';
 export * from './pos-scan.service';
+export * from './iot.service';

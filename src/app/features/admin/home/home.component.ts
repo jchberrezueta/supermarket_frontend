@@ -1,14 +1,16 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule, CurrencyPipe, DecimalPipe } from '@angular/common';
 import { AuthService } from '@core/services/auth.service';
-import { 
-  DashboardService, 
-  IDashboardStats, 
-  IVentaMensual, 
-  IProductoTop, 
+import {
+  DashboardService,
+  IDashboardStats,
+  IVentaMensual,
+  IProductoTop,
   IVentaCategoria,
   IUltimaVenta,
-  IPedidoReciente
+  IPedidoReciente,
+  IotService,
+  IIotResumenBodega,
 } from '@services/index';
 import { forkJoin } from 'rxjs';
 
@@ -17,12 +19,13 @@ import { forkJoin } from 'rxjs';
   standalone: true,
   imports: [CommonModule, CurrencyPipe, DecimalPipe],
   templateUrl: './home.component.html',
-  styleUrl: './home.component.scss'
+  styleUrl: './home.component.scss',
 })
 export default class HomeComponent implements OnInit {
   public _authService = inject(AuthService);
   private readonly _dashboardService = inject(DashboardService);
-  
+  private readonly _iotService = inject(IotService);
+
   protected readonly username: string = '';
   protected stats: IDashboardStats | null = null;
   protected ventasMensuales: IVentaMensual[] = [];
@@ -30,12 +33,18 @@ export default class HomeComponent implements OnInit {
   protected ventasPorCategoria: IVentaCategoria[] = [];
   protected ultimasVentas: IUltimaVenta[] = [];
   protected pedidosRecientes: IPedidoReciente[] = [];
+  protected iotResumen: IIotResumenBodega | null = null;
   protected loading = true;
   protected currentDate = new Date();
 
   // Colores para gráficas
   protected chartColors = [
-    '#6366f1', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'
+    '#6366f1',
+    '#10b981',
+    '#f59e0b',
+    '#ef4444',
+    '#8b5cf6',
+    '#ec4899',
   ];
 
   constructor() {
@@ -43,10 +52,9 @@ export default class HomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if( this._authService.getUserPerfil() === 'padmin'){
+    if (this._authService.getUserPerfil() === 'padmin') {
       this.loadDashboardData();
     }
-    
   }
 
   private loadDashboardData(): void {
@@ -56,7 +64,8 @@ export default class HomeComponent implements OnInit {
       productosTop: this._dashboardService.getProductosTop(),
       ventasPorCategoria: this._dashboardService.getVentasPorCategoria(),
       ultimasVentas: this._dashboardService.getUltimasVentas(),
-      pedidosRecientes: this._dashboardService.getPedidosRecientes()
+      pedidosRecientes: this._dashboardService.getPedidosRecientes(),
+      iotResumen: this._iotService.getResumenBodega(),
     }).subscribe({
       next: (res) => {
         this.stats = res.stats;
@@ -65,26 +74,27 @@ export default class HomeComponent implements OnInit {
         this.ventasPorCategoria = res.ventasPorCategoria || [];
         this.ultimasVentas = res.ultimasVentas || [];
         this.pedidosRecientes = res.pedidosRecientes || [];
+        this.iotResumen = res.iotResumen?.data ?? null;
         this.loading = false;
       },
       error: (err) => {
         console.error('Error cargando dashboard:', err);
         this.loading = false;
-      }
+      },
     });
   }
 
   // Calcular altura de barra para gráfico de ventas mensuales
   getBarHeight(total: number): number {
     if (!this.ventasMensuales.length) return 0;
-    const max = Math.max(...this.ventasMensuales.map(v => v.total));
+    const max = Math.max(...this.ventasMensuales.map((v) => v.total));
     return max > 0 ? (total / max) * 100 : 0;
   }
 
   // Calcular porcentaje para gráfico de productos
   getProductPercentage(cantidad: number): number {
     if (!this.productosTop.length) return 0;
-    const max = Math.max(...this.productosTop.map(p => p.cantidad));
+    const max = Math.max(...this.productosTop.map((p) => p.cantidad));
     return max > 0 ? (cantidad / max) * 100 : 0;
   }
 
@@ -116,5 +126,34 @@ export default class HomeComponent implements OnInit {
         return 'estado-default';
     }
   }
-}
 
+  getIotEstadoClass(estado?: string): string {
+    switch (estado) {
+      case 'normal':
+        return 'iot_normal';
+      case 'alerta':
+        return 'iot_alerta';
+      case 'critico':
+        return 'iot_critico';
+      case 'sin_datos':
+        return 'iot_sin_datos';
+      default:
+        return 'iot_sin_datos';
+    }
+  }
+
+  getIotEstadoLabel(estado?: string): string {
+    switch (estado) {
+      case 'normal':
+        return 'Normal';
+      case 'alerta':
+        return 'Alerta';
+      case 'critico':
+        return 'Crítico';
+      case 'sin_datos':
+        return 'Sin datos';
+      default:
+        return 'Sin datos';
+    }
+  }
+}
