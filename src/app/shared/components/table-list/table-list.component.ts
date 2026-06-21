@@ -7,7 +7,7 @@ import {
   output,
   SimpleChanges,
   viewChild,
-  inject
+  inject,
 } from '@angular/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
@@ -16,12 +16,12 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { RestService } from '@core/services/rest.service';
 import { ITableColumn } from '@shared/models/table_column.model';
 import { SelectionModel } from '@angular/cdk/collections';
-import {DashIfEmptyPipe} from '@shared/pipes/dashIfEmpty.pipe'
-import { UiButtonComponent } from "../button/button.component";
-import { Router } from "@angular/router";
+import { DashIfEmptyPipe } from '@shared/pipes/dashIfEmpty.pipe';
+import { UiButtonComponent } from '../button/button.component';
+import { Router } from '@angular/router';
 import { AuthService } from '@core/services/auth.service';
 
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
 import { LoadingService } from '@shared/services/loading.service';
 import { IResultData } from '@core/models';
 
@@ -32,7 +32,7 @@ const IMPORTS = [
   MatCheckboxModule,
   UiButtonComponent,
   DashIfEmptyPipe,
-  CommonModule
+  CommonModule,
 ];
 
 @Component({
@@ -40,7 +40,7 @@ const IMPORTS = [
   standalone: true,
   imports: IMPORTS,
   templateUrl: './table-list.component.html',
-  styleUrls: ['./table-list.component.scss']
+  styleUrls: ['./table-list.component.scss'],
 })
 export class UiTableListComponent implements OnInit {
   public serviceApi = input<string>('');
@@ -52,7 +52,7 @@ export class UiTableListComponent implements OnInit {
   public isSelection = input<boolean>(false);
   private data = signal<any[]>([]);
   protected matDatasource = new MatTableDataSource<any>();
-  
+
   public selection!: SelectionModel<any>;
 
   public onSelectRow = output<any>();
@@ -79,7 +79,7 @@ export class UiTableListComponent implements OnInit {
   constructor() {}
 
   ngOnChanges(changes: SimpleChanges) {
-    if(changes['serviceApi'] && !changes['serviceApi'].isFirstChange()) {
+    if (changes['serviceApi'] && !changes['serviceApi'].isFirstChange()) {
       console.log('ngONChangessss');
       this.refreshData();
     }
@@ -88,10 +88,10 @@ export class UiTableListComponent implements OnInit {
   ngOnInit() {
     this.selection = new SelectionModel<any>(this.isSelection(), []);
     this.loadColumns();
-    if(this.serviceApi() !== ''){
+    if (this.serviceApi() !== '') {
       this.requestData(this.serviceApi());
       this.hasPermissionsUD();
-    }else if(this.inputData()){
+    } else if (this.inputData()) {
       this.setData();
     }
   }
@@ -116,28 +116,42 @@ export class UiTableListComponent implements OnInit {
 
   private requestData(ruta: string) {
     this._loadingService.show();
-    this._restService.get<IResultData>(ruta).subscribe(
-      (res) => {
-        this.data.set(res.data);
+
+    this._restService.get<IResultData>(ruta).subscribe({
+      next: (res) => {
+        this.data.set(res.data ?? []);
         this.matDatasource.data = this.data();
         this.resultsLength.set(this.matDatasource.data.length);
 
         const s = this._matSort();
         const p = this._matPaginator();
+
         if (s) this.matDatasource.sort = s;
         if (p) this.matDatasource.paginator = p;
+
         this._loadingService.hide();
-      }
-    );
+      },
+      error: (error) => {
+        console.error('Error al cargar datos de la tabla:', {
+          ruta,
+          error,
+        });
+
+        this.data.set([]);
+        this.matDatasource.data = [];
+        this.resultsLength.set(0);
+
+        this._loadingService.hide();
+      },
+    });
   }
 
   public filterData(params: URLSearchParams) {
-    if(this.serviceApiFilter() === ''){
-      this.requestData(this.serviceApi()+`/filtrar?${params.toString()}`);
-    }else if(this.serviceApiFilter()){
-      this.requestData(this.serviceApiFilter()+`?${params.toString()}`);
+    if (this.serviceApiFilter() === '') {
+      this.requestData(this.serviceApi() + `/filtrar?${params.toString()}`);
+    } else if (this.serviceApiFilter()) {
+      this.requestData(this.serviceApiFilter() + `?${params.toString()}`);
     }
-    
   }
 
   private loadColumns() {
@@ -154,13 +168,13 @@ export class UiTableListComponent implements OnInit {
   }
 
   public selectCheckBox(action: string, row: any) {
-    if(!this.selection.isSelected(row)){
+    if (!this.selection.isSelected(row)) {
       this.selection.clear();
     }
     this.selection.toggle(row);
-    if(this.selection.isSelected(row)){
-      this.rowClickAction.emit({ action, row});
-    }else{
+    if (this.selection.isSelected(row)) {
+      this.rowClickAction.emit({ action, row });
+    } else {
       this.rowClickAction.emit(null);
     }
   }
@@ -194,79 +208,80 @@ export class UiTableListComponent implements OnInit {
   }
 
   protected hasPermissionsUD() {
-    this.rutaActual = this.getSegmentsRoute().map(p => p).join('/');
+    this.rutaActual = this.getSegmentsRoute()
+      .map((p) => p)
+      .join('/');
     this.canUpdate = this._authService.canUpdate(this.rutaActual);
     this.canDelete = this._authService.canDelete(this.rutaActual);
     this.canList = this._authService.canList(this.rutaActual);
   }
 
-  protected redirectUD(clickAction: string, id:number) {
-    if(clickAction === 'update' && this.canUpdate){
+  protected redirectUD(clickAction: string, id: number) {
+    if (clickAction === 'update' && this.canUpdate) {
       this.generateUpdateRoute(this.getSegmentsRoute(), id);
       this._router.navigate([this.rutaUpdate]);
-    }
-    else if(clickAction === 'delete' && this.canDelete){
+    } else if (clickAction === 'delete' && this.canDelete) {
       Swal.fire({
-        title: "Esta seguro de eliminar este elemento?",
-        text: "No se podra revertir esta accion!",
-        icon: "warning",
+        title: 'Esta seguro de eliminar este elemento?',
+        text: 'No se podra revertir esta accion!',
+        icon: 'warning',
         showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Si, eliminar!"
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si, eliminar!',
       }).then((result) => {
         if (result.isConfirmed) {
-          this._restService.delete<any>( 
-            (this.serviceApiReal() !== '' ?  (this.serviceApiReal())  : (this.serviceApi()) )+`/eliminar/${id}`
-          ).subscribe(
-            (res) => {
+          this._restService
+            .delete<any>(
+              (this.serviceApiReal() !== ''
+                ? this.serviceApiReal()
+                : this.serviceApi()) + `/eliminar/${id}`,
+            )
+            .subscribe((res) => {
               Swal.fire({
-                title: "Eliminado Exitosamente!",
-                text: "El elemento ha sido eliminado",
-                icon: "success"
+                title: 'Eliminado Exitosamente!',
+                text: 'El elemento ha sido eliminado',
+                icon: 'success',
               });
               this.requestData(this.serviceApi());
-            }
-          );
-          
+            });
         }
       });
     }
   }
 
-  protected viewDetails(clickAction: string, id:number) {
+  protected viewDetails(clickAction: string, id: number) {
     console.log(this.canList);
-    if(clickAction === 'details' && this.canList){
+    if (clickAction === 'details' && this.canList) {
       this.generateDetailsRoute(this.getSegmentsRoute(), id);
       this._router.navigate([this.rutaDetails]);
     }
   }
 
-  protected redirectToUrl(clickAction: string, url:string='') {
-    if(clickAction === 'redirect') {
+  protected redirectToUrl(clickAction: string, url: string = '') {
+    if (clickAction === 'redirect') {
       this._router.navigate([url]);
     }
   }
 
   private generateUpdateRoute(segments: string[], id: number) {
     segments.push('update');
-    segments.push(id+'');
-    this.rutaUpdate = segments.map(p => p).join('/');
+    segments.push(id + '');
+    this.rutaUpdate = segments.map((p) => p).join('/');
   }
 
   private generateDetailsRoute(segments: string[], id: number) {
     segments.push('details');
-    segments.push(id+'');
-    this.rutaDetails = segments.map(p => p).join('/');
+    segments.push(id + '');
+    this.rutaDetails = segments.map((p) => p).join('/');
   }
 
   private getSegmentsRoute(): string[] {
     const segments = this._router.url.split('/');
-    const posFinal = segments.length-1;
-    if(segments[posFinal] === 'list'){
+    const posFinal = segments.length - 1;
+    if (segments[posFinal] === 'list') {
       segments.pop();
     }
     return segments;
   }
-
 }

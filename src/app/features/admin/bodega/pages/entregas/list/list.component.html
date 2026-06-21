@@ -1,29 +1,56 @@
 <div class="div_container">
-    <ui-card [showHeader]="true" class="div_card">
-        <div class="card_top" card-header>
-            <form [formGroup]="formData" (ngSubmit)="filtrar()" class="card_form">
-                <div class="card_filters">
-                    <div class="selects">
-                        <ui-text-field [label]="'Pedido ID'" [width]="'100'" formControlName="idePedi"/>
-                        <ui-input-box [label]="'Proveedor'" [width]="'200'" [options]="opcionesProveedores" formControlName="ideProv"/>
-                        <ui-combo-box [label]="'Estado'" [width]="'150'" [options]="opcionesProvEstados" formControlName="estadoEntr"/>
-                        <ui-datetime-picker [label]="'Desde'" formControlName="fechaEntrDesde"/>
-                        <ui-datetime-picker [label]="'Hasta'" formControlName="fechaEntrHasta"/>
-                    </div>
-                    <div class="filter_btn">
-                        <ui-button [label]="'Filtrar'" [icon]="'filter_alt'"/>
-                    </div>
-                </div>
-            </form>
-            <div class="btns_options">
-                <ui-button [icon]="'refresh'" [action]="'refresh'" (evntClick)="refreshData($event)"/>
-            </div>
+  <ui-card [showHeader]="true" class="div_card">
+    <div class="card_top" card-header>
+      <form [formGroup]="formData" (ngSubmit)="filtrar()" class="card_form">
+        <div class="card_filters">
+          <div class="selects">
+            <ui-text-field
+              [label]="'Pedido ID'"
+              [width]="'100'"
+              formControlName="idePedi"
+            />
+            <ui-input-box
+              [label]="'Proveedor'"
+              [width]="'200'"
+              [options]="opcionesProveedores"
+              formControlName="ideProv"
+            />
+            <ui-combo-box
+              [label]="'Estado'"
+              [width]="'150'"
+              [options]="opcionesProvEstados"
+              formControlName="estadoEntr"
+            />
+            <ui-datetime-picker
+              [label]="'Desde'"
+              formControlName="fechaEntrDesde"
+            />
+            <ui-datetime-picker
+              [label]="'Hasta'"
+              formControlName="fechaEntrHasta"
+            />
+          </div>
+          <div class="filter_btn">
+            <ui-button [label]="'Filtrar'" [icon]="'filter_alt'" />
+          </div>
         </div>
-        <div class="card_table">
-            <ui-table-list #tableList [serviceApi]="'entregas/listar/entregas'" [serviceApiFilter]="'entregas/filtrar/entregas'" [serviceApiReal]="'entregas'" [columns]="config.columns" />
-        </div>
-    </ui-card>
+      </form>
+      <div class="btns_options">
+        <ui-button
+          [icon]="'refresh'"
+          [action]="'refresh'"
+          (evntClick)="refreshData($event)"
+        />
+      </div>
+    </div>
+    <div class="card_table">
+      <ui-table-list
+        #tableList
+        [serviceApi]="'entregas'"
+        [serviceApiFilter]="'entregas/filtrar'"
+        [serviceApiReal]="'entregas'"
+        [columns]="config.columns"
+      />
+    </div>
+  </ui-card>
 </div>
-
-
-
