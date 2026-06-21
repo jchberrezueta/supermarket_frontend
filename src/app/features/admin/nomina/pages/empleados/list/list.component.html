@@ -1,30 +1,72 @@
 <div class="div_container">
-    <ui-card [showHeader]="true" class="div_card">
-        <div class="card_top" card-header>
-            <form [formGroup]="formData" (ngSubmit)="filtrar()" class="card_form">
-                <div class="card_filters">
-                    <div class="selects">
-                        <ui-input-box [label]="'Rol'" [options]="opcionesRoles" [width]="'200'" formControlName="ideRol"/>
-                        <ui-input-box [label]="'Cedula'" [options]="opcionesEmplCedulas" [width]="'200'" [returnValue]="'label'" formControlName="cedulaEmpl"/>
-                        <ui-input-box [label]="'Primer Nombre'" [options]="opcionesEmplPrimerNombre" [width]="'200'" [returnValue]="'label'" formControlName="primerNombreEmpl"/>
-                        <ui-input-box [label]="'Apellido Paterno'" [options]="opcionesEmplApellidoPaterno" [width]="'200'" [returnValue]="'label'" formControlName="apellidoPaternoEmpl"/>
-                        <ui-input-box [label]="'Titulo'" [options]="opcionesEmplTitulos" [width]="'200'" [returnValue]="'label'" formControlName="tituloEmpl"/>
-                        <ui-input-box [label]="'Estado'" [options]="opcionesEmplEstados" [width]="'200'" [returnValue]="'label'" formControlName="estadoEmpl"/>
-                    </div>
-                    <div class="filter_btn">
-                        <ui-button [label]="'Filtrar'" [icon]="'filter_alt'"/>
-                    </div>
-                </div>
-            </form>
-            <div class="btns_options">
-                <ui-button [icon]="'refresh'" [action]="'refresh'" (evntClick)="refreshData($event)"/>
-            </div>
+  <ui-card [showHeader]="true" class="div_card">
+    <div class="card_top" card-header>
+      <form [formGroup]="formData" (ngSubmit)="filtrar()" class="card_form">
+        <div class="card_filters">
+          <div class="selects">
+            <ui-input-box
+              [label]="'Rol'"
+              [options]="opcionesRoles"
+              [width]="'200'"
+              formControlName="ideRol"
+            />
+            <ui-input-box
+              [label]="'Cedula'"
+              [options]="opcionesEmplCedulas"
+              [width]="'200'"
+              [returnValue]="'label'"
+              formControlName="cedulaEmpl"
+            />
+            <ui-input-box
+              [label]="'Primer Nombre'"
+              [options]="opcionesEmplPrimerNombre"
+              [width]="'200'"
+              [returnValue]="'label'"
+              formControlName="primerNombreEmpl"
+            />
+            <ui-input-box
+              [label]="'Apellido Paterno'"
+              [options]="opcionesEmplApellidoPaterno"
+              [width]="'200'"
+              [returnValue]="'label'"
+              formControlName="apellidoPaternoEmpl"
+            />
+            <ui-input-box
+              [label]="'Titulo'"
+              [options]="opcionesEmplTitulos"
+              [width]="'200'"
+              [returnValue]="'label'"
+              formControlName="tituloEmpl"
+            />
+            <ui-input-box
+              [label]="'Estado'"
+              [options]="opcionesEmplEstados"
+              [width]="'200'"
+              [returnValue]="'label'"
+              formControlName="estadoEmpl"
+            />
+          </div>
+          <div class="filter_btn">
+            <ui-button [label]="'Filtrar'" [icon]="'filter_alt'" />
+          </div>
         </div>
-        <div class="card_table">
-            <ui-table-list #tableList [serviceApi]="'empleados/listar/empleados'" [serviceApiFilter]="'empleados/filtrar/empleados'"  [serviceApiReal]="'empleados'"  [columns]="config.columns"/>
-        </div>
-    </ui-card>
+      </form>
+      <div class="btns_options">
+        <ui-button
+          [icon]="'refresh'"
+          [action]="'refresh'"
+          (evntClick)="refreshData($event)"
+        />
+      </div>
+    </div>
+    <div class="card_table">
+      <ui-table-list
+        #tableList
+        [serviceApi]="'empleados'"
+        [serviceApiFilter]="'empleados/filtrar'"
+        [serviceApiReal]="'empleados'"
+        [columns]="config.columns"
+      />
+    </div>
+  </ui-card>
 </div>
-
-
-

@@ -1,29 +1,64 @@
 <div class="div_container">
-    <ui-card [showHeader]="true" class="div_card">
-        <div class="card_top" card-header>
-            <form [formGroup]="formData" (ngSubmit)="filtrar()" class="card_form">
-                <div class="card_filters">
-                    <div class="selects">
-                        <ui-text-field [label]="'ID'" [width]="'50'" formControlName="ideEmpr"/>
-                        <ui-input-box [label]="'Cedula'" [options]="opcionesCedula" [width]="'200'" [returnValue]="'label'" formControlName="cedulaProv"/>
-                        <ui-input-box [label]="'PrimerNombre'" [options]="opcionesPrimerNombre" [width]="'200'" [returnValue]="'label'" formControlName="primerNombreProv"/>
-                        <ui-input-box [label]="'ApellidoPaterno'" [options]="opcionesApellidoPaterno" [width]="'200'" [returnValue]="'label'" formControlName="apellidoPaternoProv"/>
-                        <ui-input-box [label]="'Email'" [options]="opcionesEmail" [width]="'200'" [returnValue]="'label'" formControlName="emailProv"/>
-                    </div>
-                    <div class="filter_btn">
-                        <ui-button [label]="'Filtrar'" [icon]="'filter_alt'"/>
-                    </div>
-                </div>
-            </form>
-            <div class="btns_options">
-                <ui-button [icon]="'refresh'" [action]="'refresh'" (evntClick)="refreshData($event)"/>
-            </div>
+  <ui-card [showHeader]="true" class="div_card">
+    <div class="card_top" card-header>
+      <form [formGroup]="formData" (ngSubmit)="filtrar()" class="card_form">
+        <div class="card_filters">
+          <div class="selects">
+            <ui-text-field
+              [label]="'ID'"
+              [width]="'50'"
+              formControlName="ideEmpr"
+            />
+            <ui-input-box
+              [label]="'Cedula'"
+              [options]="opcionesCedula"
+              [width]="'200'"
+              [returnValue]="'label'"
+              formControlName="cedulaProv"
+            />
+            <ui-input-box
+              [label]="'PrimerNombre'"
+              [options]="opcionesPrimerNombre"
+              [width]="'200'"
+              [returnValue]="'label'"
+              formControlName="primerNombreProv"
+            />
+            <ui-input-box
+              [label]="'ApellidoPaterno'"
+              [options]="opcionesApellidoPaterno"
+              [width]="'200'"
+              [returnValue]="'label'"
+              formControlName="apellidoPaternoProv"
+            />
+            <ui-input-box
+              [label]="'Email'"
+              [options]="opcionesEmail"
+              [width]="'200'"
+              [returnValue]="'label'"
+              formControlName="emailProv"
+            />
+          </div>
+          <div class="filter_btn">
+            <ui-button [label]="'Filtrar'" [icon]="'filter_alt'" />
+          </div>
         </div>
-        <div class="card_table">
-            <ui-table-list #tableList [serviceApi]="'proveedores/listar/proveedores'" [serviceApiFilter]="'proveedores/filtrar/proveedores'" [serviceApiReal]="'proveedores'" [columns]="config.columns"/>
-        </div>
-    </ui-card>
+      </form>
+      <div class="btns_options">
+        <ui-button
+          [icon]="'refresh'"
+          [action]="'refresh'"
+          (evntClick)="refreshData($event)"
+        />
+      </div>
+    </div>
+    <div class="card_table">
+      <ui-table-list
+        #tableList
+        [serviceApi]="'proveedores'"
+        [serviceApiFilter]="'proveedores/filtrar'"
+        [serviceApiReal]="'proveedores'"
+        [columns]="config.columns"
+      />
+    </div>
+  </ui-card>
 </div>
-
-
-
