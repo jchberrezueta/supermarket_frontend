@@ -1,18 +1,20 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormBuilder , FormGroup , Validators , ReactiveFormsModule } from  '@angular/forms'; 
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { AuthService } from '@core/services/auth.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [
-    ReactiveFormsModule, 
-    CommonModule
-  ],
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.scss'
+  styleUrl: './login.component.scss',
 })
 export default class LoginComponent {
   private readonly _router = inject(Router);
@@ -21,7 +23,7 @@ export default class LoginComponent {
   protected loginForm!: FormGroup;
   protected contador = 0;
   protected errorMessage: string = '';
-  
+
   constructor() {
     this.configForm();
   }
@@ -39,20 +41,20 @@ export default class LoginComponent {
       const credencial = {
         usuario: credentials.usuario,
         clave: credentials.clave,
-        numIntentos: this.contador
-      }
+        numIntentos: this.contador,
+      };
       this._authService.login(credencial).subscribe({
-              next: (response) => {
-                const { access_token, user } = response;
-                this._authService.saveSession(access_token, user);
-                this._router.navigate(['/admin']);
-              },
-              error: (err) => {
-                this.contador++;
-                console.error('Error de login:', err);
-                this.errorMessage = 'Credenciales inválidas';
-              }
-            });;;
+        next: (response) => {
+          const { access_token, user } = response;
+          this._authService.saveSession(access_token, user);
+          this._router.navigate(['/admin']);
+        },
+        error: (err) => {
+          this.contador++;
+          console.error('Error de login:', err);
+          this.errorMessage = 'Credenciales inválidas';
+        },
+      });
     } else {
       this.loginForm.markAllAsTouched();
     }
