@@ -1,45 +1,150 @@
-<div class="container">
-  <div class="login-container">
-
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="form-login">
-      <h2>Iniciar sesión</h2>
-      <div class="inp-btns">
-        <div class="inputs">
-          <div class="input input-user">
-            <div class="user-input">
-              <label><i class='bx  bx-user'></i></label>
-              <input type="text" placeholder=" Usuario" formControlName="usuario"/>
-            </div>
-            <div class="error" *ngIf="loginForm.get('usuario')?.invalid && loginForm.get('usuario')?.touched">
-              Email inválido o requerido.
-            </div>
-          </div>
-          <div class="input input-password">
-            <div class="user-passwd">
-              <label><i class='bx  bx-lock'  ></i></label>
-              <input type="password" placeholder=" Contraseña" formControlName="clave"/>
-            </div>
-            
-            <div class="error" *ngIf="loginForm.get('clave')?.invalid && loginForm.get('clave')?.touched">
-              Mínimo 6 caracteres.
-            </div>
-          </div>
+<div class="login-page">
+  <div class="login-shell">
+    <section class="login-brand">
+      <div class="brand-content">
+        <div class="brand-badge">
+          <img src="/imgs/logo_supermarket.png" alt="SuperMarket" />
         </div>
-        <div class="button button-login">
-          <button type="submit"><i class='bx  bx-key-alt'  ></i> Entrar</button>
+
+        <div class="brand-text">
+          <p class="eyebrow">ERP SuperMarket</p>
+          <h1>Gestión inteligente para tu supermercado</h1>
+          <p class="description">
+            Controla productos, proveedores, inventario, ventas y decisiones
+            gerenciales desde una sola plataforma.
+          </p>
+        </div>
+
+        <div class="brand-highlights">
+          <div class="highlight">
+            <mat-icon>inventory_2</mat-icon>
+            <span>Inventario</span>
+          </div>
+
+          <div class="highlight">
+            <mat-icon>shopping_cart</mat-icon>
+            <span>Ventas</span>
+          </div>
+
+          <div class="highlight">
+            <mat-icon>monitoring</mat-icon>
+            <span>Indicadores</span>
+          </div>
         </div>
       </div>
-      
-    </form>
 
-    <div class="logo">
-    </div>
+      <div class="brand-illustration">
+        <img src="/imgs/tienda.png" alt="Ilustración de tienda" />
+      </div>
+    </section>
 
+    <section class="login-card">
+      <div class="login-panel">
+        <div class="login-header">
+          <div class="login-icon">
+            <mat-icon>lock</mat-icon>
+          </div>
+
+          <h2>Iniciar sesión</h2>
+          <p>Ingresa tus credenciales para acceder al sistema.</p>
+        </div>
+
+        <form
+          [formGroup]="loginForm"
+          (ngSubmit)="onSubmit()"
+          class="login-form"
+        >
+          <div class="field-group">
+            <label for="usuario">Usuario</label>
+
+            <div
+              class="field-control"
+              [class.invalid]="
+                loginForm.get('usuario')?.invalid &&
+                loginForm.get('usuario')?.touched
+              "
+            >
+              <mat-icon>person</mat-icon>
+
+              <input
+                id="usuario"
+                type="text"
+                placeholder="Ingresa tu usuario"
+                formControlName="usuario"
+                autocomplete="username"
+              />
+            </div>
+
+            <small
+              class="field-error"
+              *ngIf="
+                loginForm.get('usuario')?.invalid &&
+                loginForm.get('usuario')?.touched
+              "
+            >
+              El usuario es requerido.
+            </small>
+          </div>
+
+          <div class="field-group">
+            <label for="clave">Contraseña</label>
+
+            <div
+              class="field-control"
+              [class.invalid]="
+                loginForm.get('clave')?.invalid &&
+                loginForm.get('clave')?.touched
+              "
+            >
+              <mat-icon>key</mat-icon>
+
+              <input
+                id="clave"
+                [type]="showPassword ? 'text' : 'password'"
+                placeholder="Ingresa tu contraseña"
+                formControlName="clave"
+                autocomplete="current-password"
+              />
+
+              <button
+                type="button"
+                class="password-toggle"
+                (click)="togglePasswordVisibility()"
+                [attr.aria-pressed]="showPassword"
+                title="Mostrar u ocultar contraseña"
+              >
+                <mat-icon>{{
+                  showPassword ? "visibility_off" : "visibility"
+                }}</mat-icon>
+              </button>
+            </div>
+
+            <small
+              class="field-error"
+              *ngIf="
+                loginForm.get('clave')?.invalid &&
+                loginForm.get('clave')?.touched
+              "
+            >
+              La contraseña es requerida.
+            </small>
+          </div>
+
+          <div class="login-error" *ngIf="errorMessage">
+            <mat-icon>error</mat-icon>
+            <span>{{ errorMessage }}</span>
+          </div>
+
+          <button class="login-button" type="submit" [disabled]="isSubmitting">
+            <mat-icon>{{ isSubmitting ? "sync" : "login" }}</mat-icon>
+            <span>{{
+              isSubmitting ? "Validando..." : "Entrar al sistema"
+            }}</span>
+          </button>
+        </form>
+
+        <p class="login-footer">Sistema académico ERP / SIG · SuperMarket</p>
+      </div>
+    </section>
   </div>
 </div>
-
-
-
-
-
-
