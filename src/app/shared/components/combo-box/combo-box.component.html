@@ -11,7 +11,7 @@
       <label class="floating_label">{{ getLabel }}</label>
 
       <span class="selected_text" [class.placeholder]="!hasSelected">
-        {{ selectedLabel || getLabel }}
+        {{ selectedLabel || "" }}
       </span>
 
       <span class="select_arrow">⌄</span>
@@ -23,6 +23,10 @@
           <li (click)="emitValue(opt, $event)">
             {{ opt.label }}
           </li>
+        }
+
+        @if (getOptions.length === 0) {
+          <li class="empty-option">Sin opciones</li>
         }
       </ul>
     }
