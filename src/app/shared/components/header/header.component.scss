@@ -1,37 +1,77 @@
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 .div_container {
+  width: 100%;
+  height: 100%;
+
+  .header {
     width: 100%;
     height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 var(--sm-spacing-5);
+    gap: var(--sm-spacing-4);
+    background: var(--sm-color-surface);
 
-    .header {
-        width: 100%;
-        height: 100%;
+    .sidebar_options {
+      width: calc(var(--sm-sidebar-width) - var(--sm-spacing-5));
+      display: flex;
+      align-items: center;
+      gap: var(--sm-spacing-4);
+      min-width: 220px;
+
+      .div_toggle {
         display: flex;
+        align-items: center;
 
-        .sidebar_options {
-            width: 255px;
-            display: flex;
-            align-items: center;
-            gap: 30px;
+        .toggle_btn {
+          color: var(--sm-color-text);
+          border-radius: var(--sm-radius-md);
+          transition:
+            background-color 0.2s ease,
+            color 0.2s ease;
 
-            .logo {
-                width: 120px;
-                height: 120px;
-                cursor: pointer;
-
-                img {
-                    width: 100%;
-                    height: 100%;
-                    transition: filter 0.2s ease;
-
-                    &:hover {
-                        filter: brightness(1.2);
-                    }
-                }
-            }
+          &:hover {
+            background-color: var(--sm-color-primary-soft);
+            color: var(--sm-color-primary);
+          }
         }
+      }
 
-        .navbar_options {
-            flex: 1;
-        } 
+      .logo {
+        width: 112px;
+        height: 56px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+          transition:
+            transform 0.2s ease,
+            filter 0.2s ease;
+
+          &:hover {
+            transform: scale(1.03);
+            filter: saturate(1.08);
+          }
+        }
+      }
     }
+
+    .navbar_options {
+      flex: 1;
+      min-width: 0;
+      height: 100%;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+    }
+  }
 }

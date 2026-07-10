@@ -1,16 +1,34 @@
-<div class="div_container" clickOutside (clickOutside)="open = false" >
-  <div class="div_select" [class.active]="open" (click)="toggle()" [ngStyle]="{'width': width() !== '' ? width()+'px' : ''}">
-    <input type="text" #inp
+<div class="div_container" clickOutside (clickOutside)="open = false">
+  <div
+    class="div_select"
+    [class.active]="open"
+    [class.disabled]="isDisabled()"
+    [attr.data-estado]="hasSelected ? 'true' : 'false'"
+    [style.width]="controlWidth"
+    (click)="toggle()"
+  >
+    <input
+      type="text"
+      #inp
       [placeholder]="getPlaceholder"
-      [value]="selectedLabel" 
+      [value]="selectedLabel || getOptionsFiltered"
+      [disabled]="isDisabled()"
+      [class.has-value]="hasSelected || getOptionsFiltered !== ''"
       (input)="optionsFiltered.set(inp.value)"
-      [disabled]="disabled"
-    >
+    />
+
     <label>{{ getLabel }}</label>
-    @if(open){
+
+    @if (open) {
       <ul class="options">
-        @for(opt of filteredItems(); track $index) {
-          <li (click)="emitValue(opt, $event)">{{ opt.label }}</li>
+        @for (opt of filteredItems(); track $index) {
+          <li (click)="emitValue(opt, $event)">
+            {{ opt.label }}
+          </li>
+        }
+
+        @if (filteredItems().length === 0) {
+          <li class="empty-option">Sin resultados</li>
         }
       </ul>
     }

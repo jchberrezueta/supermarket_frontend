@@ -1,31 +1,44 @@
-@if (elem.hijas.length > 0) {
-    <mat-expansion-panel>
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            <mat-icon>{{elem.icono}}</mat-icon>
-            &nbsp;&nbsp;&nbsp;{{elem.titulo}}
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-    @for (child of elem.hijas; track $index) {
-        @if(child.hijas.length > 0) {
-            <ui-menu-item [item]="child"/>
-        }
-        @else {
-            <a mat-list-item (click)="navigateToUrl(child.ruta)">
-                <div class="div_item">
-                    <mat-icon>{{child.icono}}</mat-icon>
-                    &nbsp;&nbsp;&nbsp;{{ child.titulo }}
-                </div>
-            </a>
-        }
-    }
-    </mat-expansion-panel>
-}
-@else {
-    <a mat-list-item (click)="navigateToUrl(elem.ruta)">
-        <div class="div_item">
-            <mat-icon>{{elem.icono}}</mat-icon>
-            &nbsp;&nbsp;&nbsp;{{ elem.titulo }}
+@if (hasChildren(elem)) {
+  <mat-expansion-panel class="menu_panel" [class.active]="hasActiveChild(elem)">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <div class="panel_title">
+          <mat-icon>{{ elem.icono }}</mat-icon>
+          <span>{{ elem.titulo }}</span>
         </div>
-    </a>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <div class="children">
+      @for (child of elem.hijas; track child.id) {
+        @if (hasChildren(child)) {
+          <ui-menu-item [item]="child" />
+        } @else {
+          <a
+            mat-list-item
+            class="menu_link child_link"
+            [class.active]="isActiveUrl(child.ruta)"
+            (click)="navigateToUrl(child.ruta)"
+          >
+            <div class="div_item">
+              <mat-icon>{{ child.icono }}</mat-icon>
+              <span>{{ child.titulo }}</span>
+            </div>
+          </a>
+        }
+      }
+    </div>
+  </mat-expansion-panel>
+} @else {
+  <a
+    mat-list-item
+    class="menu_link"
+    [class.active]="isActiveUrl(elem.ruta)"
+    (click)="navigateToUrl(elem.ruta)"
+  >
+    <div class="div_item">
+      <mat-icon>{{ elem.icono }}</mat-icon>
+      <span>{{ elem.titulo }}</span>
+    </div>
+  </a>
 }

@@ -6,7 +6,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { IOpcionSidebar } from '@core/models/index';
-import { UiMenuItemComponent } from "../menu-item/menu-item.component";
+import { UiMenuItemComponent } from '../menu-item/menu-item.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -20,43 +20,47 @@ const MODULOS_MATERIAL = [
   MatExpansionModule,
 ];
 
-const COMPONENTES = [
-  UiMenuItemComponent,
-]
+const COMPONENTES = [UiMenuItemComponent];
 
 const IMPORTACIONES = [
-    RouterModule, 
-    CommonModule,
-    COMPONENTES,
-    MODULOS_MATERIAL,
+  RouterModule,
+  CommonModule,
+  COMPONENTES,
+  MODULOS_MATERIAL,
 ];
-
 
 @Component({
   selector: 'ui-sidebar',
   standalone: true,
   imports: IMPORTACIONES,
   templateUrl: './sidebar.component.html',
-  styleUrl: './sidebar.component.scss'
+  styleUrl: './sidebar.component.scss',
 })
 export class UiSidebarComponent {
   private readonly _authService = inject(AuthService);
-  protected opciones: IOpcionSidebar[] = [];
-  
-  constructor() {}
 
-  ngOnInit() {
-    const rutas: IOpcionSidebar[] = this._authService.getSidebarOptions();
-    if (rutas && this._authService.getUserPerfil() === 'padmin') {
+  protected opciones: IOpcionSidebar[] = [];
+
+  ngOnInit(): void {
+    const rutas: IOpcionSidebar[] = [
+      ...(this._authService.getSidebarOptions() ?? []),
+    ];
+
+    if (
+      rutas &&
+      this._authService.getUserPerfil() === 'padmin' &&
+      !rutas.some((ruta) => ruta.ruta === 'admin/home')
+    ) {
       rutas.unshift({
         id: 0,
-        titulo: 'DashBoard',
+        titulo: 'Dashboard',
         ruta: 'admin/home',
         icono: 'dashboard',
         activo: 'si',
-        hijas: []
+        hijas: [],
       });
     }
+
     this.opciones = rutas;
   }
 }

@@ -1,22 +1,29 @@
 <div class="div_container">
-    <div class="div_datetime" [ngStyle]="{'width': width()+'px'}">
-        @if(isTime()) {
-            <input type="datetime-local" required #inp_fecha
-                (input)="updateValue($event)"
-                (change)="updateValue($event)"
-                [disabled]="_isDisabled()"
-                [value]="innerValue()"
-                (blur)="onTouched()"
-            >
-        }@else{
-            <input type="date" required #inp_fecha
-                (input)="updateValue($event)"
-                [disabled]="_isDisabled()"
-                [value]="innerValue()"
-                (blur)="onTouched()"
-            >
-        }
-       
-        <label>{{getLabel}}</label>
-    </div>
+  <div class="div_datetime" [style.width]="controlWidth">
+    @if (isTime()) {
+      <input
+        type="datetime-local"
+        required
+        [disabled]="_isDisabled()"
+        [value]="innerValue()"
+        [class.has-value]="hasValue"
+        (input)="updateValue($event)"
+        (change)="emitValue($event)"
+        (blur)="onTouched()"
+      />
+    } @else {
+      <input
+        type="date"
+        required
+        [disabled]="_isDisabled()"
+        [value]="innerValue()"
+        [class.has-value]="hasValue"
+        (input)="updateValue($event)"
+        (change)="emitValue($event)"
+        (blur)="onTouched()"
+      />
+    }
+
+    <label>{{ getLabel }}</label>
+  </div>
 </div>

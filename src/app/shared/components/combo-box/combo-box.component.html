@@ -1,19 +1,28 @@
 <div class="div_container" clickOutside (clickOutside)="open = false">
-  <div class="div_select" [class.active]="open" (click)="toggle()" 
-    [attr.data-estado]="selectedLabel? 'true' : 'false'"
-    [ngStyle]="{'width': width()+'px'}"
+  <div
+    class="div_select"
+    [class.active]="open"
     [class.disabled]="isDisabled"
+    [attr.data-estado]="hasSelected ? 'true' : 'false'"
+    [style.width]="controlWidth"
+    (click)="toggle()"
   >
     <div class="selected">
-      <label class="label_0">{{ getLabel }}</label>
-      <label [ngStyle]="{'color': (selectedLabel? '':'#777')}">
-          {{ selectedLabel || getLabel }}
-      </label>
+      <label class="floating_label">{{ getLabel }}</label>
+
+      <span class="selected_text" [class.placeholder]="!hasSelected">
+        {{ selectedLabel || getLabel }}
+      </span>
+
+      <span class="select_arrow">⌄</span>
     </div>
-    @if(open){
+
+    @if (open) {
       <ul class="options">
-        @for(opt of getOptions; track $index) {
-          <li (click)="emitValue(opt, $event)">{{ opt.label }}</li>
+        @for (opt of getOptions; track $index) {
+          <li (click)="emitValue(opt, $event)">
+            {{ opt.label }}
+          </li>
         }
       </ul>
     }

@@ -1,18 +1,40 @@
 <div class="div_container" clickOutside (clickOutside)="open = false">
-    <div class="div_user">
-        <div class="logo_user" [class.active]="open" (click)="toggle()">
-            @if (genero === 'masculino') {
-                <img src="icons/avatares/hombre.png" alt="User">
-            } 
-            @else if (genero === 'femenino') {
-                <img src="icons/avatares/mujer.png" alt="User">
-            }
-        </div>
-        @if(open){
-            <ul class="options">
-                <li (click)="miProfile()">Mi Cuenta</li>
-                <li (click)="logout()">Cerrar Sesión</li>
-            </ul>
-        }
-    </div>
+  <div class="div_user">
+    <button
+      type="button"
+      class="user_trigger"
+      [class.active]="open"
+      (click)="toggle()"
+    >
+      <div class="avatar">
+        <span>{{ userInitials }}</span>
+      </div>
+
+      <div class="user_text">
+        <span class="user_name">{{ userName }}</span>
+        <span class="user_role">{{ userRole }}</span>
+      </div>
+
+      <mat-icon class="chevron">expand_more</mat-icon>
+    </button>
+
+    @if (open) {
+      <ul class="options">
+        <li class="user_summary">
+          <span class="summary_name">{{ userName }}</span>
+          <span class="summary_role">{{ userRole }}</span>
+        </li>
+
+        <li (click)="miProfile()">
+          <mat-icon>account_circle</mat-icon>
+          <span>Mi cuenta</span>
+        </li>
+
+        <li class="danger" (click)="logout()">
+          <mat-icon>logout</mat-icon>
+          <span>Cerrar sesión</span>
+        </li>
+      </ul>
+    }
+  </div>
 </div>

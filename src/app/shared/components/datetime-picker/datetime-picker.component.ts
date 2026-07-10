@@ -1,16 +1,24 @@
-import { Component, effect, forwardRef, input, output, signal, SimpleChanges } from '@angular/core';
-import {MatDatepickerModule} from '@angular/material/datepicker';
-import {MatInputModule} from '@angular/material/input';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {provideNativeDateAdapter} from '@angular/material/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import {
+  Component,
+  SimpleChanges,
+  effect,
+  forwardRef,
+  input,
+  output,
+  signal,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { provideNativeDateAdapter } from '@angular/material/core';
 
 const IMPORTS = [
-  MatFormFieldModule, 
-  MatInputModule, 
+  MatFormFieldModule,
+  MatInputModule,
   MatDatepickerModule,
-  CommonModule
+  CommonModule,
 ];
 
 const PROVIDERS = [
@@ -18,8 +26,8 @@ const PROVIDERS = [
   {
     provide: NG_VALUE_ACCESSOR,
     useExisting: forwardRef(() => UiDatetimePickerComponent),
-    multi: true
-  }
+    multi: true,
+  },
 ];
 
 @Component({
@@ -28,7 +36,7 @@ const PROVIDERS = [
   imports: IMPORTS,
   providers: PROVIDERS,
   templateUrl: './datetime-picker.component.html',
-  styleUrl: './datetime-picker.component.scss'
+  styleUrl: './datetime-picker.component.scss',
 })
 export class UiDatetimePickerComponent implements ControlValueAccessor {
   public label = input.required<string>();
@@ -37,19 +45,32 @@ export class UiDatetimePickerComponent implements ControlValueAccessor {
   public width = input<string>('auto');
   public isTime = input<boolean>(false);
   public showHint = input<boolean>(false);
-  public evntDateChange = output<Date>();
-  public onChange = (value: any) => {};
-  public onTouched = () => {};
+  public evntDateChange = output<any>();
+
   protected innerValue = signal<string>('');
   protected _isDisabled = signal(false);
 
+  public onChange = (_value: any) => {};
+  public onTouched = () => {};
+
   constructor() {
-    effect(() => {
-      if (this.value() !== undefined && this.value() !== '') {
-        this.writeValue(this.value());
-      }
-    },
-    { allowSignalWrites: true });
+    effect(
+      () => {
+        const externalValue = this.value();
+
+        if (externalValue !== undefined && externalValue !== '') {
+          this.writeValue(externalValue);
+        }
+      },
+      { allowSignalWrites: true },
+    );
+
+    effect(
+      () => {
+        this._isDisabled.set(this.disabled());
+      },
+      { allowSignalWrites: true },
+    );
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -58,63 +79,92 @@ export class UiDatetimePickerComponent implements ControlValueAccessor {
     }
   }
 
-  protected emitValue(event:any){
-    this.evntDateChange.emit(event.target.value);
+  protected emitValue(event: Event): void {
+    const value = (event.target as HTMLInputElement).value;
+    this.evntDateChange.emit(value);
   }
 
-  get getLabel(): string {
+  public get getLabel(): string {
     return this.label();
   }
-  get getShowHint(): boolean {
+
+  public get getShowHint(): boolean {
     return this.showHint();
   }
 
-  // Método llamado por el formulario cuando cambia el valor
-  public writeValue(value: string | null ): void {
+  public get hasValue(): boolean {
+    const value = this.innerValue();
+
+    return value !== null && value !== undefined && value !== '';
+  }
+
+  public get controlWidth(): string | null {
+    return this.resolveWidth(this.width());
+  }
+
+  public writeValue(value: string | null): void {
     if (!value) {
       this.innerValue.set('');
       return;
     }
-    
-    // Si ya viene en formato correcto YYYY-MM-DD o YYYY-MM-DDTHH:mm, usar directamente
+
     if (/^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2})?$/.test(value)) {
       this.innerValue.set(value);
       return;
     }
-    
-    // Convertir a Date
+
     let fecha = new Date(value);
-    // Validar fecha
-    if (isNaN(fecha.getTime())) {
-      console.warn("Fecha inválida recibida:", value);
+
+    if (Number.isNaN(fecha.getTime())) {
       this.innerValue.set('');
       return;
     }
-    // Ajuste de timezone para datetime-local
+
     fecha = new Date(fecha.getTime() - fecha.getTimezoneOffset() * 60000);
+
     const formatted = fecha.toISOString().slice(0, this.isTime() ? 16 : 10);
     this.innerValue.set(formatted);
   }
 
-
-  // Angular llama a este método y tú guardas el callback
   public registerOnChange(fn: any): void {
     this.onChange = fn;
   }
 
-  // Angular llama a este método para el “touched”
   public registerOnTouched(fn: any): void {
     this.onTouched = fn;
   }
 
-  // Si el formulario deshabilita el control
-  public setDisabledState(isDisabled: boolean) {
+  public setDisabledState(isDisabled: boolean): void {
     this._isDisabled.set(isDisabled);
   }
 
-  // Se ejecuta cuando el usuario escribe
-  public updateValue(event: any) {
-    this.innerValue.set(event.target.value);
-    this.onChange(event.target.value);   // notifica al formulario
+  public updateValue(event: Event): void {
+    const value = (event.target as HTMLInputElement).value;
+
+    this.innerValue.set(value);
+    this.onChange(value);
+  }
+
+  private resolveWidth(width: string): string | null {
+    if (!width || width === 'auto') {
+      return null;
+    }
+
+    const normalized = width.trim().toLowerCase();
+
+    if (
+      normalized.endsWith('px') ||
+      normalized.endsWith('%') ||
+      normalized.endsWith('rem') ||
+      normalized.endsWith('em') ||
+      normalized.endsWith('vw') ||
+      normalized.endsWith('vh') ||
+      normalized.startsWith('var(') ||
+      normalized.startsWith('calc(')
+    ) {
+      return width;
+    }
+
+    return `${width}px`;
   }
 }

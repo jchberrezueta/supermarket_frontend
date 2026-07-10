@@ -1,22 +1,95 @@
-// -----------------------------
-// COLORES
-// -----------------------------
-$color-primary: #4f46e5;   // color principal
-$color-accent: #f97316;    // acentos / botones
-$color-bg: #ffffff;        // fondo general
-$color-text: #1e293b;      // texto
+// ======================================================
+// SuperMarket UI Tokens
+// Base visual global del ERP
+// ======================================================
 
 // -----------------------------
-// TIPOGRAFÍA
+// SCSS tokens de compatibilidad
 // -----------------------------
-$font-family-base: 'Inter', sans-serif;
-$font-size-base: 16px;    // tamaño base para rem
+$color-primary: #2563eb;
+$color-primary-dark: #1d4ed8;
+$color-primary-soft: #dbeafe;
 
-// -----------------------------
-// ESPACIADO (padding / margin)
-// -----------------------------
+$color-secondary: #16a34a;
+$color-accent: #f97316;
+
+$color-bg: #f4f7fb;
+$color-surface: #ffffff;
+$color-surface-soft: #f8fafc;
+
+$color-text: #0f172a;
+$color-text-muted: #64748b;
+$color-border: #e2e8f0;
+
+$color-success: #16a34a;
+$color-warning: #f59e0b;
+$color-danger: #dc2626;
+$color-info: #0284c7;
+
+$font-family-base: "Inter", "Roboto", "Segoe UI", Arial, sans-serif;
+$font-size-base: 16px;
+
 $spacing-1: 4px;
 $spacing-2: 8px;
 $spacing-3: 12px;
 $spacing-4: 16px;
 $spacing-5: 24px;
+$spacing-6: 32px;
+
+$radius-sm: 6px;
+$radius-md: 10px;
+$radius-lg: 16px;
+$radius-xl: 22px;
+
+$shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
+$shadow-md: 0 8px 24px rgba(15, 23, 42, 0.08);
+$shadow-lg: 0 18px 45px rgba(15, 23, 42, 0.12);
+
+// -----------------------------
+// CSS custom properties globales
+// Se pueden usar en cualquier componente SCSS:
+// color: var(--sm-color-primary);
+// -----------------------------
+:root {
+  --sm-color-primary: #2563eb;
+  --sm-color-primary-dark: #1d4ed8;
+  --sm-color-primary-soft: #dbeafe;
+
+  --sm-color-secondary: #16a34a;
+  --sm-color-accent: #f97316;
+
+  --sm-color-bg: #f4f7fb;
+  --sm-color-surface: #ffffff;
+  --sm-color-surface-soft: #f8fafc;
+
+  --sm-color-text: #0f172a;
+  --sm-color-text-muted: #64748b;
+  --sm-color-border: #e2e8f0;
+
+  --sm-color-success: #16a34a;
+  --sm-color-warning: #f59e0b;
+  --sm-color-danger: #dc2626;
+  --sm-color-info: #0284c7;
+
+  --sm-font-family-base: "Inter", "Roboto", "Segoe UI", Arial, sans-serif;
+  --sm-font-size-base: 16px;
+
+  --sm-spacing-1: 4px;
+  --sm-spacing-2: 8px;
+  --sm-spacing-3: 12px;
+  --sm-spacing-4: 16px;
+  --sm-spacing-5: 24px;
+  --sm-spacing-6: 32px;
+
+  --sm-radius-sm: 6px;
+  --sm-radius-md: 10px;
+  --sm-radius-lg: 16px;
+  --sm-radius-xl: 22px;
+
+  --sm-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
+  --sm-shadow-md: 0 8px 24px rgba(15, 23, 42, 0.08);
+  --sm-shadow-lg: 0 18px 45px rgba(15, 23, 42, 0.12);
+
+  --sm-header-height: 72px;
+  --sm-sidebar-width: 280px;
+}

@@ -1,25 +1,35 @@
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 .div_container {
   width: 100%;
   height: 100%;
+  background: var(--sm-color-surface);
 
   .mat_sidenav_container {
     width: 100%;
     height: 100%;
-    
+    background: transparent;
+
     .mat_sidenav {
       width: 100%;
       height: 100%;
       border: none;
-      border-radius: 0; 
+      border-radius: 0;
+      background: transparent;
 
       .mat_nav_list {
         width: 100%;
         height: 100%;
-        padding: 8px;
+        padding: var(--sm-spacing-4) var(--sm-spacing-3);
         display: flex;
         flex-direction: column;
-        gap: 20px;
-        background-color: #FFFFFF;
+        gap: var(--sm-spacing-2);
+        background: transparent;
+        overflow-y: auto;
       }
     }
   }

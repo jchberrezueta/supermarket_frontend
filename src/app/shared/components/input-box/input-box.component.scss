@@ -1,49 +1,85 @@
 :host {
+  display: block;
   width: 100%;
-  height: 100%;
+  height: auto;
 }
 
 .div_container {
   width: 100%;
-  height: 100%;
+  height: auto;
 
   .div_select {
     position: relative;
-    width: 250px; //250px
-    font-family: sans-serif;
-    z-index: 1;
+    width: 100%;
+    min-width: 0;
+    z-index: 5;
+
+    &.disabled {
+      pointer-events: none;
+      opacity: 0.85;
+      user-select: none;
+    }
 
     &.active {
-      .options {
-        display: block;
+      z-index: 30;
+
+      input {
+        border-color: var(--sm-color-primary);
+        box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+      }
+    }
+
+    &.active,
+    &[data-estado="true"] {
+      label {
+        top: -8px;
+        font-size: 0.75rem;
+        color: var(--sm-color-primary);
+        background: var(--sm-color-surface);
       }
     }
 
     input {
       width: 100%;
+      min-height: 48px;
       padding: 14px 12px;
-      font-size: 16px;
-      border: 2px solid #ccc;
-      border-radius: 10px;
+      font-size: 0.95rem;
+      color: var(--sm-color-text);
+      border: 1.5px solid var(--sm-color-border);
+      border-radius: var(--sm-radius-md);
       outline: none;
-      background: white;
-      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      background: var(--sm-color-surface);
+      transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background-color 0.2s ease;
 
-      &:hover {
-        border-color: #F527E7;
+      &::placeholder {
+        color: transparent;
+      }
+
+      &:hover:not(:disabled) {
+        border-color: var(--sm-color-primary);
       }
 
       &:focus {
-        border-color: #F527E7;
-        box-shadow: 0 0 6px rgba(123, 75, 255, 0.4);
+        border-color: var(--sm-color-primary);
+        box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+      }
+
+      &:disabled {
+        cursor: not-allowed;
+        color: var(--sm-color-text-muted);
+        background: var(--sm-color-surface-soft);
       }
 
       &:focus + label,
+      &.has-value + label,
       &:not(:placeholder-shown) + label {
         top: -8px;
-        font-size: 12px;
-        color:#F527E7;
-        background: none;
+        font-size: 0.75rem;
+        color: var(--sm-color-primary);
+        background: var(--sm-color-surface);
       }
     }
 
@@ -52,37 +88,58 @@
       left: 12px;
       top: 50%;
       transform: translateY(-50%);
-      color: #777;
-      font-size: 16px;
-      background: white;
+      max-width: calc(100% - 24px);
       padding: 0 4px;
+      color: var(--sm-color-text-muted);
+      font-size: 0.95rem;
+      line-height: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
       pointer-events: none;
-      transition: 0.25s ease;
+      transition:
+        top 0.2s ease,
+        font-size 0.2s ease,
+        color 0.2s ease,
+        background-color 0.2s ease;
     }
 
     .options {
-      display: none;
       position: absolute;
-      top: 110%;
+      top: calc(100% + 6px);
       left: 0;
       width: 100%;
-      background: white;
-      border: 2px solid #ccc;
-      border-radius: 10px;
-      list-style: none;
-      padding: 5px 0;
-      margin: 0;
-      max-height: 180px;
+      max-height: 220px;
       overflow-y: auto;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+      padding: var(--sm-spacing-2) 0;
+      margin: 0;
+      list-style: none;
+      background: var(--sm-color-surface);
+      border: 1px solid var(--sm-color-border);
+      border-radius: var(--sm-radius-md);
+      box-shadow: var(--sm-shadow-md);
 
       li {
-        padding: 12px;
+        padding: 11px 12px;
+        color: var(--sm-color-text);
         cursor: pointer;
-        transition: background .2s;
+        transition:
+          background-color 0.15s ease,
+          color 0.15s ease;
 
         &:hover {
-          background: #f2f2ff;
+          color: var(--sm-color-primary);
+          background: var(--sm-color-primary-soft);
+        }
+
+        &.empty-option {
+          cursor: default;
+          color: var(--sm-color-text-muted);
+
+          &:hover {
+            color: var(--sm-color-text-muted);
+            background: transparent;
+          }
         }
       }
     }

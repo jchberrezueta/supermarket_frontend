@@ -1,24 +1,80 @@
 :host {
-    width: 100%;
-    height: auto;
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
 .div_container {
-    display: flex;
-    flex-direction: column;
-    gap: 1px;
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sm-spacing-3);
+
+  .div_table {
     width: 100%;
-    height: auto;
+    overflow: auto;
+    border: 1px solid var(--sm-color-border);
+    border-radius: var(--sm-radius-lg);
+    background: var(--sm-color-surface);
+    box-shadow: var(--sm-shadow-sm);
+  }
 
-    .td_btns {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        gap: 5px;
+  table {
+    width: 100%;
+    background: var(--sm-color-surface);
+    box-shadow: none !important;
+  }
+
+  th.mat-mdc-header-cell {
+    height: 48px;
+    background: var(--sm-color-surface-soft);
+    color: var(--sm-color-text);
+    font-weight: 750;
+    border-bottom: 1px solid var(--sm-color-border);
+    white-space: nowrap;
+  }
+
+  td.mat-mdc-cell {
+    height: 52px;
+    color: var(--sm-color-text);
+    border-bottom: 1px solid var(--sm-color-border);
+  }
+
+  .table_row {
+    cursor: pointer;
+    transition:
+      background-color 0.15s ease,
+      box-shadow 0.15s ease;
+
+    &:hover {
+      background: var(--sm-color-primary-soft);
     }
 
-    .table_row {
-        cursor: pointer;
+    &.selectable-row {
+      background: var(--sm-color-primary-soft);
     }
+  }
+
+  .td_btns {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--sm-spacing-2);
+  }
+
+  .div_paginator {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+
+    mat-paginator {
+      width: 100%;
+      border: 1px solid var(--sm-color-border);
+      border-radius: var(--sm-radius-lg);
+      box-shadow: var(--sm-shadow-sm) !important;
+      overflow: hidden;
+      background: var(--sm-color-surface);
+    }
+  }
 }
-

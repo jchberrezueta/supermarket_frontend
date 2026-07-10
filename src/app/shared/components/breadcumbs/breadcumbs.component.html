@@ -1,12 +1,22 @@
 <div class="div_container">
-    <div class="breadcumbs_container">
-        @for(item of breadcumbs(); track $index; let isFirst = $first;){
-            <div class="breadcumb_item">
-                @if(!isFirst){
-                    <mat-icon>chevron_right</mat-icon>
-                }
-                <a (click)="navigateToUrl(item.url)">{{item.label}}</a>
-            </div>
+  <nav class="breadcumbs_container" aria-label="breadcrumb">
+    @for (
+      item of breadcumbs();
+      track $index;
+      let isFirst = $first;
+      let isLast = $last
+    ) {
+      <div class="breadcumb_item" [class.active]="isLast">
+        @if (!isFirst) {
+          <mat-icon>chevron_right</mat-icon>
         }
-    </div>
+
+        @if (item.url && !isLast) {
+          <a (click)="navigateToUrl(item.url)">{{ item.label }}</a>
+        } @else {
+          <span>{{ item.label }}</span>
+        }
+      </div>
+    }
+  </nav>
 </div>

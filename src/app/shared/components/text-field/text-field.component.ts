@@ -1,23 +1,28 @@
-import { Component, forwardRef, input, output, signal, effect, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  SimpleChanges,
+  effect,
+  forwardRef,
+  input,
+  output,
+  signal,
+} from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { CommonModule } from '@angular/common';
 
+const IMPORTS = [MatFormFieldModule, MatInputModule, CommonModule];
 
-const IMPORTS = [
-  MatFormFieldModule, 
-  MatInputModule,
-  CommonModule
-];
-
-const PROVIDERS =[
+const PROVIDERS = [
   {
     provide: NG_VALUE_ACCESSOR,
     useExisting: forwardRef(() => UiTextFieldComponent),
-    multi: true
-  }
+    multi: true,
+  },
 ];
+
+type UiTextFieldType = 'string' | 'number' | 'password';
 
 @Component({
   selector: 'ui-text-field',
@@ -25,38 +30,41 @@ const PROVIDERS =[
   imports: IMPORTS,
   providers: PROVIDERS,
   templateUrl: './text-field.component.html',
-  styleUrl: './text-field.component.scss'
+  styleUrl: './text-field.component.scss',
 })
 export class UiTextFieldComponent implements ControlValueAccessor {
   public label = input.required<string>();
   public value = input<any>('');
-  public valueType = input<'string' | 'number' | 'password'>('string');
-  protected innerValue = signal<any>('');
+  public valueType = input<UiTextFieldType>('string');
   public disabled = input<boolean>(false);
-  protected _isDisabled = signal(false);
   public width = input<string>('auto');
   public placeholder = input<string>('...');
-  public evntChange = output<string>();
-  public onChange = (value: any) => {};
+  public evntChange = output<any>();
+
+  protected innerValue = signal<any>('');
+  protected _isDisabled = signal(false);
+
+  public onChange = (_value: any) => {};
   public onTouched = () => {};
-  
 
   constructor() {
-    effect(() => {
-      if (this.value() !== undefined && this.value() !== '') {
-        this.innerValue.set(this.value());
-      }
-    },
-    { allowSignalWrites: true });
+    effect(
+      () => {
+        const externalValue = this.value();
 
-    effect(() => {
-      if (this.disabled() !== undefined) {
-        if(this._isDisabled() === false){
-          this._isDisabled.set(this.disabled());
+        if (externalValue !== undefined) {
+          this.innerValue.set(externalValue ?? '');
         }
-      }
-    },
-    { allowSignalWrites: true });
+      },
+      { allowSignalWrites: true },
+    );
+
+    effect(
+      () => {
+        this._isDisabled.set(this.disabled());
+      },
+      { allowSignalWrites: true },
+    );
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -65,50 +73,93 @@ export class UiTextFieldComponent implements ControlValueAccessor {
     }
   }
 
-  protected emitValue(event:any) {
-    this.evntChange.emit(event.target.value);
+  protected emitValue(event: Event): void {
+    const rawValue = (event.target as HTMLInputElement).value;
+    this.evntChange.emit(this.parseValue(rawValue));
   }
 
-  get getLabel(): string {
+  public get getLabel(): string {
     return this.label();
   }
-  get getPlaceholder(): string {
+
+  public get getPlaceholder(): string {
     return this.placeholder();
   }
 
-  /* 
-    ControlValueAccesor
-  */
+  public get inputType(): string {
+    if (this.valueType() === 'password') {
+      return 'password';
+    }
 
-  // Método llamado por el formulario cuando cambia el valor
+    if (this.valueType() === 'number') {
+      return 'number';
+    }
+
+    return 'text';
+  }
+
+  public get hasValue(): boolean {
+    const value = this.innerValue();
+
+    return value !== null && value !== undefined && value !== '';
+  }
+
+  public get controlWidth(): string | null {
+    return this.resolveWidth(this.width());
+  }
+
   public writeValue(value: any): void {
     this.innerValue.set(value ?? '');
   }
 
-  // Angular llama a este método y tú guardas el callback
   public registerOnChange(fn: any): void {
     this.onChange = fn;
   }
 
-  // Angular llama a este método para el “touched”
   public registerOnTouched(fn: any): void {
     this.onTouched = fn;
   }
 
-  // Si el formulario deshabilita el control
-  public setDisabledState(isDisabled: boolean) {
+  public setDisabledState(isDisabled: boolean): void {
     this._isDisabled.set(isDisabled);
   }
 
-  // Se ejecuta cuando el usuario escribe
-  public updateValue(event: Event) {
+  public updateValue(event: Event): void {
     const rawValue = (event.target as HTMLInputElement).value;
-    let parsedValue: any = rawValue;
+    const parsedValue = this.parseValue(rawValue);
 
-    if (this.valueType() === 'number') {
-      parsedValue = rawValue === '' ? null : Number(rawValue);
-    }
     this.innerValue.set(parsedValue);
     this.onChange(parsedValue);
+  }
+
+  private parseValue(rawValue: string): any {
+    if (this.valueType() !== 'number') {
+      return rawValue;
+    }
+
+    return rawValue === '' ? null : Number(rawValue);
+  }
+
+  private resolveWidth(width: string): string | null {
+    if (!width || width === 'auto') {
+      return null;
+    }
+
+    const normalized = width.trim().toLowerCase();
+
+    if (
+      normalized.endsWith('px') ||
+      normalized.endsWith('%') ||
+      normalized.endsWith('rem') ||
+      normalized.endsWith('em') ||
+      normalized.endsWith('vw') ||
+      normalized.endsWith('vh') ||
+      normalized.startsWith('var(') ||
+      normalized.startsWith('calc(')
+    ) {
+      return width;
+    }
+
+    return `${width}px`;
   }
 }

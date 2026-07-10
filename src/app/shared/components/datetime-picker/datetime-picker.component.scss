@@ -1,54 +1,80 @@
+:host {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
 .div_container {
+  width: 100%;
+  height: auto;
+
+  .div_datetime {
+    position: relative;
     width: 100%;
-    height: 100%;
+    min-width: 0;
 
-    .div_datetime {
-      position: relative;
-      width: 250px;
-      font-family: sans-serif;
+    input[type="datetime-local"],
+    input[type="date"] {
+      width: 100%;
+      min-height: 48px;
+      padding: 14px 12px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      color: var(--sm-color-text);
+      border: 1.5px solid var(--sm-color-border);
+      border-radius: var(--sm-radius-md);
+      outline: none;
+      background: var(--sm-color-surface);
+      transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background-color 0.2s ease;
 
-      input[type="datetime-local"], input[type="date"] {
-        width: 100%;
-        padding: 14px 12px;
-        font-size: 16px;
-        border: 2px solid #ccc;
-        border-radius: 10px;
-        outline: none;
-        background: white;
-        transition: border-color 0.3s ease, box-shadow 0.3s ease;
-        font-family: sans-serif;
-
-        &:hover {
-          border-color: #F527E7;
-        }
-        
-        &:focus {
-          border-color: #F527E7;
-          box-shadow: 0 0 6px rgba(123, 75, 255, 0.4);
-        }
-
-        /* Cuando hay valor o cuando haces focus */
-        &:focus + label,
-        &:valid + label {
-          top: -8px;
-          font-size: 12px;
-          color: #F527E7;
-          background: none;
-        }
+      &:hover:not(:disabled) {
+        border-color: var(--sm-color-primary);
       }
 
-      label {
-        position: absolute;
-        width: 70%;
-        left: 12px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: #777;
-        font-size: 16px;
-        background: white;
-        padding: 0 4px;
-        pointer-events: none;
-        transition: 0.25s ease;
+      &:focus {
+        border-color: var(--sm-color-primary);
+        box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+      }
+
+      &:disabled {
+        cursor: not-allowed;
+        color: var(--sm-color-text-muted);
+        background: var(--sm-color-surface-soft);
+        opacity: 0.9;
+      }
+
+      &:focus + label,
+      &.has-value + label,
+      &:valid + label {
+        top: -8px;
+        font-size: 0.75rem;
+        color: var(--sm-color-primary);
+        background: var(--sm-color-surface);
       }
     }
+
+    label {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      max-width: calc(100% - 24px);
+      padding: 0 4px;
+      color: var(--sm-color-text-muted);
+      font-size: 0.95rem;
+      line-height: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      pointer-events: none;
+      transition:
+        top 0.2s ease,
+        font-size 0.2s ease,
+        color 0.2s ease,
+        background-color 0.2s ease;
+    }
+  }
 }

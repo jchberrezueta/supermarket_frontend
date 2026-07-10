@@ -1,15 +1,20 @@
 <div class="div_container">
-    <button mat-flat-button class="div_button" 
-        [ngStyle]="{'background-color': getColor, 'width': getWidth, 'color': getTextColor}"
-        (click)="emitClick($event)">
-        @if(getIcon) {
-            <mat-icon>{{getIcon}}</mat-icon>
-        }
-        @if(getLabel){
-            @if(getIcon){
-                &nbsp;
-            }
-            <span>{{getLabel}}</span>
-        }
-    </button>
+  <button
+    mat-flat-button
+    type="button"
+    class="ui-button"
+    [class.ui-button--icon-only]="!getLabel && getIcon"
+    [style.background]="buttonBackground"
+    [style.width]="buttonWidth"
+    [style.color]="buttonTextColor"
+    (click)="emitClick($event)"
+  >
+    @if (getIcon) {
+      <mat-icon>{{ getIcon }}</mat-icon>
+    }
+
+    @if (getLabel) {
+      <span>{{ getLabel }}</span>
+    }
+  </button>
 </div>

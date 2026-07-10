@@ -1,29 +1,28 @@
+import { SelectionModel } from '@angular/cdk/collections';
 import { CommonModule } from '@angular/common';
 import {
   Component,
   OnInit,
-  input,
-  signal,
-  output,
   SimpleChanges,
-  viewChild,
   inject,
+  input,
+  output,
+  signal,
+  viewChild,
 } from '@angular/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { Router } from '@angular/router';
+import { IResultData } from '@core/models';
+import { AuthService } from '@core/services/auth.service';
 import { RestService } from '@core/services/rest.service';
 import { ITableColumn } from '@shared/models/table_column.model';
-import { SelectionModel } from '@angular/cdk/collections';
 import { DashIfEmptyPipe } from '@shared/pipes/dashIfEmpty.pipe';
-import { UiButtonComponent } from '../button/button.component';
-import { Router } from '@angular/router';
-import { AuthService } from '@core/services/auth.service';
-
-import Swal from 'sweetalert2';
 import { LoadingService } from '@shared/services/loading.service';
-import { IResultData } from '@core/models';
+import Swal from 'sweetalert2';
+import { UiButtonComponent } from '../button/button.component';
 
 const IMPORTS = [
   MatPaginatorModule,
@@ -50,6 +49,7 @@ export class UiTableListComponent implements OnInit {
   public columns = input.required<ITableColumn[]>();
   public message = input<string>('!No tiene registros generados¡');
   public isSelection = input<boolean>(false);
+
   private data = signal<any[]>([]);
   protected matDatasource = new MatTableDataSource<any>();
 
@@ -72,49 +72,54 @@ export class UiTableListComponent implements OnInit {
   private rutaActual: string = '';
   private rutaUpdate: string = '';
   private rutaDetails: string = '';
+
   protected canUpdate: boolean = false;
   protected canDelete: boolean = false;
   protected canList: boolean = false;
 
-  constructor() {}
-
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges): void {
     if (changes['serviceApi'] && !changes['serviceApi'].isFirstChange()) {
-      console.log('ngONChangessss');
       this.refreshData();
     }
-  }
 
-  ngOnInit() {
-    this.selection = new SelectionModel<any>(this.isSelection(), []);
-    this.loadColumns();
-    if (this.serviceApi() !== '') {
-      this.requestData(this.serviceApi());
-      this.hasPermissionsUD();
-    } else if (this.inputData()) {
+    if (changes['inputData'] && !changes['inputData'].isFirstChange()) {
       this.setData();
     }
   }
 
-  public refreshData() {
+  ngOnInit(): void {
+    this.selection = new SelectionModel<any>(this.isSelection(), []);
+    this.loadColumns();
+
+    if (this.serviceApi() !== '') {
+      this.requestData(this.serviceApi());
+      this.hasPermissionsUD();
+      return;
+    }
+
+    if (this.inputData()) {
+      this.setData();
+    }
+  }
+
+  public refreshData(): void {
+    if (this.serviceApi() === '') {
+      this.setData();
+      return;
+    }
+
     this.requestData(this.serviceApi());
     this.hasPermissionsUD();
   }
 
-  private setData() {
-    /*this._loadingService.show();*/
-    this.data.set(this.inputData());
+  private setData(): void {
+    this.data.set(this.inputData() ?? []);
     this.matDatasource.data = this.data();
     this.resultsLength.set(this.matDatasource.data.length);
-
-    const s = this._matSort();
-    const p = this._matPaginator();
-    if (s) this.matDatasource.sort = s;
-    if (p) this.matDatasource.paginator = p;
-    /*this._loadingService.hide();*/
+    this.bindTableControls();
   }
 
-  private requestData(ruta: string) {
+  private requestData(ruta: string): void {
     this._loadingService.show();
 
     this._restService.get<IResultData>(ruta).subscribe({
@@ -122,61 +127,58 @@ export class UiTableListComponent implements OnInit {
         this.data.set(res.data ?? []);
         this.matDatasource.data = this.data();
         this.resultsLength.set(this.matDatasource.data.length);
-
-        const s = this._matSort();
-        const p = this._matPaginator();
-
-        if (s) this.matDatasource.sort = s;
-        if (p) this.matDatasource.paginator = p;
-
+        this.bindTableControls();
         this._loadingService.hide();
       },
-      error: (error) => {
-        console.error('Error al cargar datos de la tabla:', {
-          ruta,
-          error,
-        });
-
+      error: () => {
         this.data.set([]);
         this.matDatasource.data = [];
         this.resultsLength.set(0);
-
         this._loadingService.hide();
       },
     });
   }
 
-  public filterData(params: URLSearchParams) {
+  public filterData(params: URLSearchParams): void {
     if (this.serviceApiFilter() === '') {
-      this.requestData(this.serviceApi() + `/filtrar?${params.toString()}`);
-    } else if (this.serviceApiFilter()) {
-      this.requestData(this.serviceApiFilter() + `?${params.toString()}`);
+      this.requestData(`${this.serviceApi()}/filtrar?${params.toString()}`);
+      return;
+    }
+
+    if (this.serviceApiFilter()) {
+      this.requestData(`${this.serviceApiFilter()}?${params.toString()}`);
     }
   }
 
-  private loadColumns() {
+  private loadColumns(): void {
     this.displayedColumns.set(
       this.columns()
         .filter((column) => !column.visible)
         .map((column) => column.property),
     );
-    if (this.isSelection()) this.displayedColumns().unshift('check');
+
+    if (this.isSelection()) {
+      this.displayedColumns().unshift('check');
+    }
   }
 
   public emitClickAction(action: string, row: any): void {
     this.rowClickAction.emit({ action, row });
   }
 
-  public selectCheckBox(action: string, row: any) {
+  public selectCheckBox(action: string, row: any): void {
     if (!this.selection.isSelected(row)) {
       this.selection.clear();
     }
+
     this.selection.toggle(row);
+
     if (this.selection.isSelected(row)) {
       this.rowClickAction.emit({ action, row });
-    } else {
-      this.rowClickAction.emit(null);
+      return;
     }
+
+    this.rowClickAction.emit(null);
   }
 
   public selectItem(row: any): void {
@@ -186,17 +188,19 @@ export class UiTableListComponent implements OnInit {
     }
   }
 
-  public toggleAllRows() {
-    /*if (!this.isAllSelected()) {
+  public toggleAllRows(): void {
+    if (!this.isAllSelected()) {
       this.selection.select(...this.matDatasource.data);
-    } else {
-      this.selection.clear();
-    }*/
+      return;
+    }
+
+    this.selection.clear();
   }
 
   public isAllSelected(): boolean {
     const numSelected = this.selection.selected.length;
     const numRows = this.matDatasource.data.length;
+
     return numSelected === numRows;
   }
 
@@ -204,84 +208,131 @@ export class UiTableListComponent implements OnInit {
     if (!row) {
       return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
     }
-    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
+
+    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row`;
   }
 
-  protected hasPermissionsUD() {
-    this.rutaActual = this.getSegmentsRoute()
-      .map((p) => p)
-      .join('/');
+  protected hasPermissionsUD(): void {
+    this.rutaActual = this.getSegmentsRoute().join('/');
     this.canUpdate = this._authService.canUpdate(this.rutaActual);
     this.canDelete = this._authService.canDelete(this.rutaActual);
     this.canList = this._authService.canList(this.rutaActual);
   }
 
-  protected redirectUD(clickAction: string, id: number) {
+  protected redirectUD(clickAction: string, id: number): void {
     if (clickAction === 'update' && this.canUpdate) {
       this.generateUpdateRoute(this.getSegmentsRoute(), id);
       this._router.navigate([this.rutaUpdate]);
-    } else if (clickAction === 'delete' && this.canDelete) {
+      return;
+    }
+
+    if (clickAction === 'delete' && this.canDelete) {
       Swal.fire({
-        title: 'Esta seguro de eliminar este elemento?',
-        text: 'No se podra revertir esta accion!',
+        title: '¿Está seguro de eliminar este elemento?',
+        text: 'No se podrá revertir esta acción.',
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Si, eliminar!',
+        confirmButtonColor: this.getCssVariable(
+          '--sm-color-primary',
+          '#2563eb',
+        ),
+        cancelButtonColor: this.getCssVariable('--sm-color-danger', '#dc2626'),
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar',
       }).then((result) => {
         if (result.isConfirmed) {
-          this._restService
-            .delete<any>(
-              (this.serviceApiReal() !== ''
-                ? this.serviceApiReal()
-                : this.serviceApi()) + `/eliminar/${id}`,
-            )
-            .subscribe((res) => {
-              Swal.fire({
-                title: 'Eliminado Exitosamente!',
-                text: 'El elemento ha sido eliminado',
-                icon: 'success',
-              });
-              this.requestData(this.serviceApi());
-            });
+          this.deleteRow(id);
         }
       });
     }
   }
 
-  protected viewDetails(clickAction: string, id: number) {
-    console.log(this.canList);
+  protected viewDetails(clickAction: string, id: number): void {
     if (clickAction === 'details' && this.canList) {
       this.generateDetailsRoute(this.getSegmentsRoute(), id);
       this._router.navigate([this.rutaDetails]);
     }
   }
 
-  protected redirectToUrl(clickAction: string, url: string = '') {
+  protected redirectToUrl(clickAction: string, url: string = ''): void {
     if (clickAction === 'redirect') {
       this._router.navigate([url]);
     }
   }
 
-  private generateUpdateRoute(segments: string[], id: number) {
-    segments.push('update');
-    segments.push(id + '');
-    this.rutaUpdate = segments.map((p) => p).join('/');
+  private deleteRow(id: number): void {
+    const baseUrl =
+      this.serviceApiReal() !== '' ? this.serviceApiReal() : this.serviceApi();
+
+    this._restService.delete<any>(`${baseUrl}/eliminar/${id}`).subscribe({
+      next: () => {
+        Swal.fire({
+          title: 'Eliminado correctamente',
+          text: 'El elemento ha sido eliminado.',
+          icon: 'success',
+          confirmButtonColor: this.getCssVariable(
+            '--sm-color-primary',
+            '#2563eb',
+          ),
+        });
+
+        this.requestData(this.serviceApi());
+      },
+      error: () => {
+        Swal.fire({
+          title: 'No se pudo eliminar',
+          text: 'Revise si el registro está relacionado con otros procesos.',
+          icon: 'error',
+          confirmButtonColor: this.getCssVariable(
+            '--sm-color-danger',
+            '#dc2626',
+          ),
+        });
+      },
+    });
   }
 
-  private generateDetailsRoute(segments: string[], id: number) {
+  private generateUpdateRoute(segments: string[], id: number): void {
+    segments.push('update');
+    segments.push(id.toString());
+    this.rutaUpdate = segments.join('/');
+  }
+
+  private generateDetailsRoute(segments: string[], id: number): void {
     segments.push('details');
-    segments.push(id + '');
-    this.rutaDetails = segments.map((p) => p).join('/');
+    segments.push(id.toString());
+    this.rutaDetails = segments.join('/');
   }
 
   private getSegmentsRoute(): string[] {
     const segments = this._router.url.split('/');
     const posFinal = segments.length - 1;
+
     if (segments[posFinal] === 'list') {
       segments.pop();
     }
+
     return segments;
+  }
+
+  private bindTableControls(): void {
+    const sort = this._matSort();
+    const paginator = this._matPaginator();
+
+    if (sort) {
+      this.matDatasource.sort = sort;
+    }
+
+    if (paginator) {
+      this.matDatasource.paginator = paginator;
+    }
+  }
+
+  private getCssVariable(name: string, fallback: string): string {
+    const value = getComputedStyle(document.documentElement)
+      .getPropertyValue(name)
+      .trim();
+
+    return value || fallback;
   }
 }

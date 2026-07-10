@@ -1,5 +1,118 @@
-.div_item {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+:host {
+  display: block;
+  width: 100%;
+}
+
+.div_item,
+.panel_title {
+  display: flex;
+  align-items: center;
+  gap: var(--sm-spacing-3);
+  min-width: 0;
+
+  mat-icon {
+    width: 22px;
+    height: 22px;
+    min-width: 22px;
+    font-size: 22px;
+    color: var(--sm-color-text-muted);
+    transition: color 0.15s ease;
+  }
+
+  span {
+    min-width: 0;
+    color: var(--sm-color-text);
+    font-size: 0.92rem;
+    font-weight: 650;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.15s ease;
+  }
+}
+
+.menu_link {
+  width: 100%;
+  height: 44px !important;
+  border-radius: var(--sm-radius-md);
+  color: var(--sm-color-text);
+  overflow: hidden;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+
+  &:hover {
+    background: var(--sm-color-primary-soft);
+
+    .div_item {
+      mat-icon,
+      span {
+        color: var(--sm-color-primary);
+      }
+    }
+  }
+
+  &.active {
+    background: var(--sm-color-primary);
+    box-shadow: var(--sm-shadow-sm);
+
+    .div_item {
+      mat-icon,
+      span {
+        color: #ffffff;
+      }
+    }
+  }
+
+  &.child_link {
+    margin-left: var(--sm-spacing-2);
+    width: calc(100% - var(--sm-spacing-2));
+  }
+}
+
+.children {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sm-spacing-1);
+  padding: 0 0 var(--sm-spacing-2) 0;
+}
+
+.menu_panel {
+  width: 100%;
+  border-radius: var(--sm-radius-md) !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  overflow: hidden;
+
+  &.active {
+    background: var(--sm-color-surface-soft) !important;
+  }
+
+  ::ng-deep {
+    .mat-expansion-panel-body {
+      padding: 0 !important;
+    }
+
+    .mat-expansion-panel-header {
+      height: 44px;
+      padding: 0 12px;
+      border-radius: var(--sm-radius-md);
+      transition: background-color 0.15s ease;
+
+      &:hover {
+        background: var(--sm-color-primary-soft);
+
+        .panel_title {
+          mat-icon,
+          span {
+            color: var(--sm-color-primary);
+          }
+        }
+      }
+    }
+
+    .mat-expansion-indicator::after {
+      color: var(--sm-color-text-muted);
+    }
+  }
 }

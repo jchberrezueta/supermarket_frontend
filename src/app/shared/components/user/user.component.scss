@@ -1,68 +1,206 @@
 :host {
-    width: 100%;
-    height: 100%;
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .div_container {
+  width: 100%;
+  height: 100%;
+
+  .div_user {
+    position: relative;
     width: 100%;
     height: 100%;
-    /*display: flex;
-    justify-content: center;
-    align-items: center;*/
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
 
-    .div_user {
-        position: relative;
-        width: 100%;
-        
-        .logo_user {
-            width: 60px;
-            height: 60px;
-            cursor: pointer;
-            
-            img {
-                width: 100%;
-                height: 100%;
-                transition: filter 0.2s ease;
+    .user_trigger {
+      width: 100%;
+      min-height: 48px;
+      padding: 6px 10px 6px 6px;
+      border: 1px solid transparent;
+      border-radius: var(--sm-radius-lg);
+      background: transparent;
+      display: flex;
+      align-items: center;
+      gap: var(--sm-spacing-2);
+      cursor: pointer;
+      color: var(--sm-color-text);
+      transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
 
-                &:hover {
-                    filter: brightness(1.2);
-                }
-            }
+      &:hover,
+      &.active {
+        background: var(--sm-color-surface-soft);
+        border-color: var(--sm-color-border);
+        box-shadow: var(--sm-shadow-sm);
+      }
 
-            &.active {
-                .options {
-                    display: block;
-                }
-            }
+      &.active {
+        .chevron {
+          transform: rotate(180deg);
+        }
+      }
+
+      .avatar {
+        width: 38px;
+        height: 38px;
+        min-width: 38px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        color: #ffffff;
+        background: linear-gradient(
+          135deg,
+          var(--sm-color-primary),
+          var(--sm-color-secondary)
+        );
+        box-shadow: var(--sm-shadow-sm);
+
+        span {
+          font-size: 0.85rem;
+          font-weight: 800;
+          letter-spacing: 0.03em;
+          text-transform: uppercase;
+        }
+      }
+
+      .user_text {
+        min-width: 0;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+
+        .user_name {
+          width: 100%;
+          color: var(--sm-color-text);
+          font-size: 0.9rem;
+          font-weight: 750;
+          line-height: 1.15;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          text-align: left;
         }
 
-        .options {
-            /*display: none;*/
-            z-index: 5;
-            position: absolute;
-            top: 110%;
-            left: 0;
-            width: 100%;
-            background: white;
-            border: 2px solid #ccc;
-            border-radius: 10px;
-            list-style: none;
-            padding: 5px 0;
-            margin: 0;
-            max-height: 180px;
-            overflow-y: auto;
-            box-shadow: 0 6px 18px rgba(0,0,0,0.1);
-
-            li {
-                padding: 12px;
-                cursor: pointer;
-                transition: background .2s;
-
-                &:hover {
-                    background: #f2f2ff;
-                }
-            }
+        .user_role {
+          width: 100%;
+          color: var(--sm-color-text-muted);
+          font-size: 0.76rem;
+          font-weight: 600;
+          line-height: 1.15;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          text-align: left;
+          text-transform: uppercase;
         }
+      }
+
+      .chevron {
+        width: 20px;
+        height: 20px;
+        font-size: 20px;
+        color: var(--sm-color-text-muted);
+        transition: transform 0.2s ease;
+      }
     }
-}
 
+    .options {
+      z-index: 50;
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      width: 240px;
+      padding: var(--sm-spacing-2);
+      margin: 0;
+      list-style: none;
+      background: var(--sm-color-surface);
+      border: 1px solid var(--sm-color-border);
+      border-radius: var(--sm-radius-lg);
+      box-shadow: var(--sm-shadow-lg);
+
+      li {
+        min-height: 42px;
+        padding: 10px 12px;
+        border-radius: var(--sm-radius-md);
+        display: flex;
+        align-items: center;
+        gap: var(--sm-spacing-2);
+        color: var(--sm-color-text);
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition:
+          background-color 0.15s ease,
+          color 0.15s ease;
+
+        mat-icon {
+          width: 20px;
+          height: 20px;
+          font-size: 20px;
+          color: var(--sm-color-text-muted);
+        }
+
+        &:hover {
+          color: var(--sm-color-primary);
+          background: var(--sm-color-primary-soft);
+
+          mat-icon {
+            color: var(--sm-color-primary);
+          }
+        }
+
+        &.danger {
+          color: var(--sm-color-danger);
+
+          mat-icon {
+            color: var(--sm-color-danger);
+          }
+
+          &:hover {
+            background: rgba(220, 38, 38, 0.1);
+          }
+        }
+
+        &.user_summary {
+          min-height: auto;
+          padding-bottom: var(--sm-spacing-3);
+          margin-bottom: var(--sm-spacing-2);
+          border-bottom: 1px solid var(--sm-color-border);
+          border-radius: 0;
+          cursor: default;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 2px;
+
+          &:hover {
+            color: var(--sm-color-text);
+            background: transparent;
+          }
+
+          .summary_name {
+            color: var(--sm-color-text);
+            font-weight: 800;
+            max-width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+
+          .summary_role {
+            color: var(--sm-color-text-muted);
+            font-size: 0.78rem;
+            font-weight: 650;
+            text-transform: uppercase;
+          }
+        }
+      }
+    }
+  }
+}

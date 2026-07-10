@@ -1,31 +1,66 @@
-@use './styles/styles-custom' as *;
+@use "./styles/styles-custom" as *;
 
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
-  position: static;
-  margin: 0;
-  padding: 0;
 }
 
-html { 
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
-  
-  body {
-    width: 100%;
-    height: 100%;
-    font-family: $font-family-base;
-    font-size: $font-size-base;
-    overflow: hidden;
+html {
+  width: 100%;
+  height: 100%;
+  font-size: $font-size-base;
+  background: var(--sm-color-bg);
+}
 
-    app-root, app-login, app-layout-admin, app-container, app-list, app-details, app-form {
-      display: block;
-      width: 100%;
-      height: 100%;
-    }
-    mat-icon {
-      margin: 0 !important;
-    }
-  }
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  font-family: $font-family-base;
+  color: var(--sm-color-text);
+  background: var(--sm-color-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+app-root,
+app-login,
+app-layout-admin,
+app-container,
+app-list,
+app-details,
+app-form {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+button,
+input,
+textarea,
+select {
+  font-family: inherit;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+mat-icon {
+  margin: 0 !important;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.mat-mdc-menu-panel,
+.cdk-overlay-pane,
+.cdk-overlay-container {
+  position: absolute;
 }

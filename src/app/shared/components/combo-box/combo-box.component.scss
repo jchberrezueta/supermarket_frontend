@@ -1,93 +1,146 @@
-/*:host {
+:host {
+  display: block;
   width: 100%;
-  height: 100%;
-}*/
+  height: auto;
+}
 
 .div_container {
   width: 100%;
-  height: 100%;
+  height: auto;
 
   .div_select {
     position: relative;
-    width: 250px;
-    font-family: sans-serif;
-    z-index: 1;
+    width: 100%;
+    min-width: 0;
+    z-index: 5;
 
     &.disabled {
-      pointer-events: none;   // bloquea clics
-      opacity: 0.8;           // efecto visual
+      pointer-events: none;
+      opacity: 0.85;
       user-select: none;
+
+      .selected {
+        cursor: not-allowed;
+        background: var(--sm-color-surface-soft);
+      }
     }
 
     &.active {
+      z-index: 30;
+
       .selected {
-        border-color: #F527E7;
-        box-shadow: 0 0 6px rgba(123, 75, 255, 0.4);
+        border-color: var(--sm-color-primary);
+        box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
       }
-      .options {
-        //mostrarlas
-        display: block;
+
+      .select_arrow {
+        transform: rotate(180deg);
       }
     }
 
     &.active,
     &[data-estado="true"] {
-      .label_0 {
-        top: -14px;
-        font-size: 12px;
-        color:#F527E7;
-        background: none;
+      .floating_label {
+        top: -8px;
+        font-size: 0.75rem;
+        color: var(--sm-color-primary);
+        background: var(--sm-color-surface);
       }
     }
 
     .selected {
-      padding: 14px 12px;
-      border: 2px solid #ccc;
-      border-radius: 10px;
-      background: white;
+      position: relative;
+      min-height: 48px;
+      padding: 14px 40px 14px 12px;
+      border: 1.5px solid var(--sm-color-border);
+      border-radius: var(--sm-radius-md);
+      background: var(--sm-color-surface);
       cursor: pointer;
-      transition: border-color .3s, box-shadow .3s;
-      
-      
+      transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background-color 0.2s ease;
 
       &:hover {
-        border-color: #F527E7;
+        border-color: var(--sm-color-primary);
       }
 
-      .label_0 {
+      .floating_label {
         position: absolute;
-        z-index: -1;
-        transition: 0.25s ease;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        max-width: calc(100% - 48px);
+        padding: 0 4px;
+        color: var(--sm-color-text-muted);
+        font-size: 0.95rem;
+        line-height: 1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        pointer-events: none;
+        transition:
+          top 0.2s ease,
+          font-size 0.2s ease,
+          color 0.2s ease,
+          background-color 0.2s ease;
+      }
+
+      .selected_text {
+        display: block;
+        max-width: 100%;
+        color: var(--sm-color-text);
+        font-size: 0.95rem;
+        line-height: 1.25;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        &.placeholder {
+          color: var(--sm-color-text-muted);
+        }
+      }
+
+      .select_arrow {
+        position: absolute;
+        right: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--sm-color-text-muted);
+        font-size: 1.2rem;
+        line-height: 1;
+        transition: transform 0.2s ease;
       }
     }
 
     .options {
       position: absolute;
-      top: 110%;
+      top: calc(100% + 6px);
       left: 0;
       width: 100%;
-      background: white;
-      border: 2px solid #ccc;
-      border-radius: 10px;
-      list-style: none;
-      padding: 5px 0;
-      margin: 0;
-      display: none;
-      max-height: 180px;
+      max-height: 220px;
       overflow-y: auto;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+      padding: var(--sm-spacing-2) 0;
+      margin: 0;
+      list-style: none;
+      background: var(--sm-color-surface);
+      border: 1px solid var(--sm-color-border);
+      border-radius: var(--sm-radius-md);
+      box-shadow: var(--sm-shadow-md);
 
       li {
-        padding: 12px;
+        padding: 11px 12px;
+        color: var(--sm-color-text);
         cursor: pointer;
-        transition: background .2s;
+        transition:
+          background-color 0.15s ease,
+          color 0.15s ease;
 
         &:hover {
-          background: #f2f2ff;
+          color: var(--sm-color-primary);
+          background: var(--sm-color-primary-soft);
         }
       }
     }
   }
 }
-
-

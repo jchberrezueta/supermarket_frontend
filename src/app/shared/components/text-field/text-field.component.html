@@ -1,13 +1,17 @@
 <div class="div_container">
-    <div class="div_input" [ngStyle]="{'width': width()+'px'}">
-        <input [type]="valueType() === 'password' ? 'password' : valueType() === 'number' ? 'number' : 'text'" required
-            [placeholder]="getPlaceholder" 
-            (change)="emitValue($event)"
-            [disabled]="_isDisabled()"
-            [value]="innerValue()"
-            (input)="updateValue($event)"
-            (blur)="onTouched()"
-        >
-        <label>{{getLabel}}</label>
-    </div>
+  <div class="div_input" [style.width]="controlWidth">
+    <input
+      [type]="inputType"
+      required
+      [placeholder]="getPlaceholder"
+      [disabled]="_isDisabled()"
+      [value]="innerValue()"
+      [class.has-value]="hasValue"
+      (change)="emitValue($event)"
+      (input)="updateValue($event)"
+      (blur)="onTouched()"
+    />
+
+    <label>{{ getLabel }}</label>
+  </div>
 </div>
