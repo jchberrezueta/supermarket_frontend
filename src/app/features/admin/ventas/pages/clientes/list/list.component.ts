@@ -1,17 +1,15 @@
 import { Component, inject, viewChild } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { UiTableListComponent } from '@shared/components/index';
-import { UiButtonComponent } from "@shared/components/button/button.component";
-import { IComboBoxOption } from '@shared/models/combo_box_option';
+import { FormGroupOf } from '@core/utils/utilities';
+import { ClientesService } from '@services/clientes.service';
+import { UiButtonComponent } from '@shared/components/button/button.component';
+import { UiCardComponent } from '@shared/components/card/card.component';
 import { UiComboBoxComponent } from '@shared/components/combo-box/combo-box.component';
-import { isValidStringValue, FormGroupOf } from '@core/utils/utilities';
+import { UiInputBoxComponent } from '@shared/components/input-box/input-box.component';
+import { UiTableListComponent } from '@shared/components/index';
+import { IComboBoxOption } from '@shared/models/combo_box_option';
 import { IFiltroCliente } from 'app/models';
 import { ListClientesConfig } from './list_clientes.config';
-import { ClientesService } from '@services/clientes.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { UiCardComponent } from '@shared/components/card/card.component';
-import { UiTextFieldComponent } from '@shared/components/text-field/text-field.component';
-import { UiInputBoxComponent } from "@shared/components/input-box/input-box.component";
 
 const IMPORTS = [
   UiTableListComponent,
@@ -19,116 +17,135 @@ const IMPORTS = [
   UiCardComponent,
   ReactiveFormsModule,
   UiComboBoxComponent,
-  UiInputBoxComponent
+  UiInputBoxComponent,
 ];
 
-
-type filterClienteFormGroup = FormGroupOf<IFiltroCliente>;
+type FilterClienteFormGroup = FormGroupOf<IFiltroCliente>;
 
 @Component({
   selector: 'app-list',
   standalone: true,
   imports: IMPORTS,
   templateUrl: './list.component.html',
-  styleUrl: './list.component.scss'
+  styleUrl: './list.component.scss',
 })
 export default class ListComponent {
-  private readonly _tableList = viewChild.required<UiTableListComponent>(UiTableListComponent);
-  protected readonly config = ListClientesConfig;
+  private readonly _tableList =
+    viewChild.required<UiTableListComponent>(UiTableListComponent);
+
   private readonly _clientesService = inject(ClientesService);
-  private formBuilder = inject(FormBuilder);
-  protected opcionesCedulas!: IComboBoxOption[];
-  protected opcionesNombre!: IComboBoxOption[];
-  protected opcionesApellido!: IComboBoxOption[];
-  protected opcionesSocio!: IComboBoxOption[];
-  protected opcionesTerceraEdad!: IComboBoxOption[];
-  
-  protected formData!: filterClienteFormGroup;
+  private readonly formBuilder = inject(FormBuilder);
+
+  protected readonly config = ListClientesConfig;
+
+  protected opcionesCedulas: IComboBoxOption[] = [];
+  protected opcionesNombre: IComboBoxOption[] = [];
+  protected opcionesApellido: IComboBoxOption[] = [];
+  protected opcionesSocio: IComboBoxOption[] = [];
+  protected opcionesTerceraEdad: IComboBoxOption[] = [];
+
+  protected formData!: FilterClienteFormGroup;
+
   private initialFormValue!: IFiltroCliente;
 
   constructor() {
+    this.configForm();
     this.loadComboApellidoPaterno();
     this.loadComboCedulas();
     this.loadComboPrimerNombre();
     this.loadComboSocio();
     this.loadComboTerceraEdad();
-    this.configForm();
   }
 
-  protected configForm() {
+  protected configForm(): void {
     this.formData = this.formBuilder.group({
       cedulaClie: ['', [], []],
       primerNombreClie: ['', [], []],
       apellidoPaternoClie: ['', [], []],
       esSocio: ['', [], []],
-      esTerceraEdad: ['', [], []]
-    }) as filterClienteFormGroup;
+      esTerceraEdad: ['', [], []],
+    }) as FilterClienteFormGroup;
+
     this.initialFormValue = this.formData.getRawValue();
   }
 
-  private loadComboCedulas() {
-    this._clientesService.listarComboCedulas().subscribe(
-      (res) => {
-        this.opcionesCedulas = res;
-      }
-    );
-  }
-  private loadComboPrimerNombre() {
-    this._clientesService.listarComboNombres().subscribe(
-      (res) => {
-        this.opcionesNombre = res;
-      }
-    );
-  }
-  private loadComboApellidoPaterno() {
-    this._clientesService.listarComboApellidos().subscribe(
-      (res) => {
-        this.opcionesApellido = res;
-      }
-    );
-  }
-  private loadComboSocio() {
-    this._clientesService.listarComboSocio().subscribe(
-      (res) => {
-        this.opcionesSocio = res;
-      }
-    );
-  }
-  private loadComboTerceraEdad() {
-    this._clientesService.listarComboTerceraEdad().subscribe(
-      (res) => {
-        this.opcionesTerceraEdad = res;
-      }
-    );
+  private loadComboCedulas(): void {
+    this._clientesService.listarComboCedulas().subscribe((res) => {
+      this.opcionesCedulas = res ?? [];
+    });
   }
 
-  protected filtrar() {
+  private loadComboPrimerNombre(): void {
+    this._clientesService.listarComboNombres().subscribe((res) => {
+      this.opcionesNombre = res ?? [];
+    });
+  }
+
+  private loadComboApellidoPaterno(): void {
+    this._clientesService.listarComboApellidos().subscribe((res) => {
+      this.opcionesApellido = res ?? [];
+    });
+  }
+
+  private loadComboSocio(): void {
+    this._clientesService.listarComboSocio().subscribe((res) => {
+      this.opcionesSocio = res ?? [];
+    });
+  }
+
+  private loadComboTerceraEdad(): void {
+    this._clientesService.listarComboTerceraEdad().subscribe((res) => {
+      this.opcionesTerceraEdad = res ?? [];
+    });
+  }
+
+  protected filtrar(): void {
     const tableListInstance = this._tableList();
     tableListInstance.filterData(this.getParams());
+  }
+
+  protected refreshData(actionClick: string): void {
+    if (actionClick !== 'refresh') {
+      return;
+    }
+
+    const tableListInstance = this._tableList();
+    tableListInstance.refreshData();
+    this.resetForm();
+  }
+
+  protected resetForm(): void {
+    this.formData.reset(this.initialFormValue);
   }
 
   private getParams(): URLSearchParams {
     const params = new URLSearchParams();
     const filtro = this.formData.value as IFiltroCliente;
-    if (isValidStringValue(filtro.cedulaClie)) params.append('cedulaClie', filtro.cedulaClie);
-    if (isValidStringValue(filtro.primerNombreClie)) params.append('primerNombreClie', filtro.primerNombreClie);
-    if (isValidStringValue(filtro.apellidoPaternoClie)) params.append('apellidoPaternoClie', filtro.apellidoPaternoClie);
-    if (isValidStringValue(filtro.esSocio)) params.append('esSocio', filtro.esSocio);
-    if (isValidStringValue(filtro.esTerceraEdad)) params.append('esTerceraEdad', filtro.esTerceraEdad);
+
+    this.appendParam(params, 'cedulaClie', filtro.cedulaClie);
+    this.appendParam(params, 'primerNombreClie', filtro.primerNombreClie);
+    this.appendParam(params, 'apellidoPaternoClie', filtro.apellidoPaternoClie);
+    this.appendParam(params, 'esSocio', filtro.esSocio);
+    this.appendParam(params, 'esTerceraEdad', filtro.esTerceraEdad);
+
     return params;
   }
 
-  protected limpiar() {
-    this.resetForm();
-    this._tableList().refreshData();
-  }
+  private appendParam(
+    params: URLSearchParams,
+    key: string,
+    value: unknown,
+  ): void {
+    if (value === null || value === undefined) {
+      return;
+    }
 
-  protected refreshData(event: any) {
-    this._tableList().refreshData();
-    this.resetForm();
-  }
+    const stringValue = String(value).trim();
 
-  protected resetForm() {
-    this.formData.reset(this.initialFormValue);
+    if (stringValue === '') {
+      return;
+    }
+
+    params.append(key, stringValue);
   }
 }

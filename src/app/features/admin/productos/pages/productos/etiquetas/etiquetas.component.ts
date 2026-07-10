@@ -154,7 +154,6 @@ export default class EtiquetasComponent {
 
       this.successMessage = 'Hoja de etiquetas generada correctamente.';
     } catch (error) {
-      console.error(error);
       this.errorMessage = 'No se pudieron generar las etiquetas.';
     } finally {
       this.imprimiendo = false;

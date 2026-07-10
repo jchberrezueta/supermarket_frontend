@@ -78,7 +78,6 @@ export default class HomeComponent implements OnInit, OnDestroy {
         this.loading = false;
       },
       error: (err) => {
-        console.error('Error cargando dashboard:', err);
         this.loading = false;
       },
     });
@@ -98,7 +97,6 @@ export default class HomeComponent implements OnInit, OnDestroy {
         this.iotResumen = res.data;
       },
       error: (err) => {
-        console.error('Error cargando resumen IoT:', err);
       },
     });
   }

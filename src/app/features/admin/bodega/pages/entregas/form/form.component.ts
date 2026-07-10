@@ -91,7 +91,6 @@ export default class FormComponent {
         }
       },
       error: (err) => {
-        console.error('Error cargando combos:', err);
       }
     });
   }

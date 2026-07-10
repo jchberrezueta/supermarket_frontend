@@ -1,16 +1,14 @@
-import { Component, inject, viewChild } from '@angular/core';
+import { Component, viewChild } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { UiTableListComponent } from '@shared/components/index';
-import { UiButtonComponent } from "@shared/components/button/button.component";
-import { IComboBoxOption } from '@shared/models/combo_box_option';
-import { UiComboBoxComponent } from '@shared/components/combo-box/combo-box.component';
-import { isValidStringValue, FormGroupOf } from '@core/utils/utilities';
-import { ListVentasConfig } from './list_ventas.config';
-import { VentasService } from '@services/ventas.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { FormGroupOf } from '@core/utils/utilities';
+import { UiButtonComponent } from '@shared/components/button/button.component';
 import { UiCardComponent } from '@shared/components/card/card.component';
-import { UiTextFieldComponent } from '@shared/components/text-field/text-field.component';
+import { UiComboBoxComponent } from '@shared/components/combo-box/combo-box.component';
 import { UiDatetimePickerComponent } from '@shared/components/datetime-picker/datetime-picker.component';
+import { UiTextFieldComponent } from '@shared/components/text-field/text-field.component';
+import { UiTableListComponent } from '@shared/components/index';
+import { IComboBoxOption } from '@shared/models/combo_box_option';
+import { ListVentasConfig } from './list_ventas.config';
 
 const IMPORTS = [
   UiTableListComponent,
@@ -19,7 +17,7 @@ const IMPORTS = [
   ReactiveFormsModule,
   UiComboBoxComponent,
   UiTextFieldComponent,
-  UiDatetimePickerComponent
+  UiDatetimePickerComponent,
 ];
 
 interface IFiltroVentaForm {
@@ -29,66 +27,95 @@ interface IFiltroVentaForm {
   fechaVentHasta: string;
 }
 
-type filterVentaFormGroup = FormGroupOf<IFiltroVentaForm>;
+type FilterVentaFormGroup = FormGroupOf<IFiltroVentaForm>;
 
 @Component({
   selector: 'app-list',
   standalone: true,
   imports: IMPORTS,
   templateUrl: './list.component.html',
-  styleUrl: './list.component.scss'
+  styleUrl: './list.component.scss',
 })
 export default class ListComponent {
-  private readonly _tableList = viewChild.required<UiTableListComponent>(UiTableListComponent);
+  private readonly _tableList =
+    viewChild.required<UiTableListComponent>(UiTableListComponent);
+
+  private readonly formBuilder = new FormBuilder();
+
   protected readonly config = ListVentasConfig;
-  private readonly _ventasService = inject(VentasService);
-  private readonly _router = inject(Router);
-  private readonly _route = inject(ActivatedRoute);
-  private formBuilder = inject(FormBuilder);
+
   protected opcionesEstado: IComboBoxOption[] = [
     { label: 'Todos', value: '' },
     { label: 'Completado', value: 'completado' },
     { label: 'Cancelado', value: 'cancelado' },
-    { label: 'Devuelto', value: 'devuelto' }
+    { label: 'Devuelto', value: 'devuelto' },
   ];
-  protected formData!: filterVentaFormGroup;
+
+  protected formData!: FilterVentaFormGroup;
+
   private initialFormValue!: IFiltroVentaForm;
 
   constructor() {
     this.configForm();
   }
 
-  protected configForm() {
+  protected configForm(): void {
     this.formData = this.formBuilder.group({
       numFacturaVent: ['', [], []],
       estadoVent: ['', [], []],
       fechaVentDesde: ['', [], []],
-      fechaVentHasta: ['', [], []]
-    }) as filterVentaFormGroup;
+      fechaVentHasta: ['', [], []],
+    }) as FilterVentaFormGroup;
+
     this.initialFormValue = this.formData.getRawValue();
   }
 
-  protected filtrar() {
+  protected filtrar(): void {
     const tableListInstance = this._tableList();
     tableListInstance.filterData(this.getParams());
+  }
+
+  protected refreshData(actionClick: string): void {
+    if (actionClick !== 'refresh') {
+      return;
+    }
+
+    const tableListInstance = this._tableList();
+    tableListInstance.refreshData();
+    this.resetForm();
+  }
+
+  protected resetForm(): void {
+    this.formData.reset(this.initialFormValue);
   }
 
   private getParams(): URLSearchParams {
     const params = new URLSearchParams();
     const filtro = this.formData.value as IFiltroVentaForm;
-    if (isValidStringValue(filtro.numFacturaVent)) params.append('numFacturaVent', filtro.numFacturaVent);
-    if (isValidStringValue(filtro.estadoVent)) params.append('estadoVent', filtro.estadoVent);
-    if (isValidStringValue(filtro.fechaVentDesde)) params.append('fechaVentDesde', filtro.fechaVentDesde);
-    if (isValidStringValue(filtro.fechaVentHasta)) params.append('fechaVentHasta', filtro.fechaVentHasta);
+
+    this.appendParam(params, 'numFacturaVent', filtro.numFacturaVent);
+    this.appendParam(params, 'estadoVent', filtro.estadoVent);
+    this.appendParam(params, 'fechaVentDesde', filtro.fechaVentDesde);
+    this.appendParam(params, 'fechaVentHasta', filtro.fechaVentHasta);
+
     return params;
   }
 
-  protected limpiar() {
-    this.formData.reset(this.initialFormValue);
-    this._tableList().refreshData();
-  }
+  private appendParam(
+    params: URLSearchParams,
+    key: string,
+    value: unknown,
+  ): void {
+    if (value === null || value === undefined) {
+      return;
+    }
 
-  protected refreshData(event: any) {
-    this._tableList().refreshData();
+    const stringValue = String(value).trim();
+
+    if (stringValue === '') {
+      return;
+    }
+
+    params.append(key, stringValue);
   }
 }

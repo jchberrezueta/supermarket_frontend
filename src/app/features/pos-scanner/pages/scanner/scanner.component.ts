@@ -85,7 +85,6 @@ export default class ScannerComponent implements AfterViewInit, OnDestroy {
       this.camaraActiva = true;
       this.cameraMessage = 'Cámara activa. Acerque el QR del producto.';
     } catch (error) {
-      console.error(error);
       this.errorMessage =
         'No se pudo iniciar la cámara. Verifique permisos o use HTTPS/red local confiable.';
       this.camaraActiva = false;
@@ -108,7 +107,6 @@ export default class ScannerComponent implements AfterViewInit, OnDestroy {
 
       await this.html5QrCode.clear();
     } catch (error) {
-      console.warn('No se pudo detener/limpiar el scanner', error);
     } finally {
       this.html5QrCode = undefined;
       this.camaraActiva = false;

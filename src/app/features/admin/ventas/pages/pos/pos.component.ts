@@ -399,7 +399,6 @@ export default class PosComponent implements OnInit, OnDestroy {
         errorCorrectionLevel: 'M',
       });
     } catch (error) {
-      console.error('No se pudo generar el QR de vinculación', error);
       this.scannerQrDataUrl = '';
     }
   }

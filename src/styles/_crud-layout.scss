@@ -1,0 +1,209 @@
+// ======================================================
+// SuperMarket CRUD Layout
+// Clases reutilizables para pantallas de listado, filtros y tablas
+// ======================================================
+
+.sm-crud-list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.sm-crud-card {
+  width: 100%;
+  height: auto;
+}
+
+.sm-crud-toolbar {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sm-spacing-4);
+  margin-bottom: var(--sm-spacing-4);
+}
+
+.sm-crud-form {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.sm-crud-filter-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--sm-spacing-3);
+}
+
+.sm-crud-filters {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: var(--sm-spacing-3);
+  overflow: visible;
+
+  ui-text-field,
+  ui-input-box,
+  ui-combo-box,
+  ui-datetime-picker {
+    display: block;
+    min-width: 0;
+    flex-grow: 0 !important;
+    flex-shrink: 0 !important;
+  }
+}
+
+.sm-crud-filter-button {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+}
+
+.sm-crud-actions {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--sm-spacing-2);
+}
+
+.sm-crud-table {
+  width: 100%;
+  margin-top: var(--sm-spacing-2);
+}
+
+// ======================================================
+// Tamaños reutilizables
+// Se usa !important porque varios UI components tienen
+// :host { width: 100%; } dentro de su propio SCSS.
+// ======================================================
+
+.sm-crud-filters > .sm-field-xs {
+  width: 110px !important;
+  flex-basis: 110px !important;
+  max-width: 110px !important;
+}
+
+.sm-crud-filters > .sm-field-sm {
+  width: 150px !important;
+  flex-basis: 150px !important;
+  max-width: 150px !important;
+}
+
+.sm-crud-filters > .sm-field-md {
+  width: 180px !important;
+  flex-basis: 180px !important;
+  max-width: 180px !important;
+}
+
+.sm-crud-filters > .sm-field-lg {
+  width: 220px !important;
+  flex-basis: 220px !important;
+  max-width: 220px !important;
+}
+
+.sm-crud-filters > .sm-field-xl {
+  width: 280px !important;
+  flex-basis: 280px !important;
+  max-width: 280px !important;
+}
+
+.sm-crud-filters > .sm-field-date {
+  width: 175px !important;
+  flex-basis: 175px !important;
+  max-width: 175px !important;
+}
+
+@media (max-width: 1280px) {
+  .sm-crud-toolbar {
+    align-items: flex-start;
+  }
+
+  .sm-crud-filter-row {
+    align-items: flex-start;
+  }
+
+  .sm-crud-filters {
+    flex-wrap: wrap;
+  }
+
+  .sm-crud-filters > .sm-field-xs {
+    width: 120px !important;
+    flex-basis: 120px !important;
+    max-width: 120px !important;
+  }
+
+  .sm-crud-filters > .sm-field-sm {
+    width: 160px !important;
+    flex-basis: 160px !important;
+    max-width: 160px !important;
+  }
+
+  .sm-crud-filters > .sm-field-md {
+    width: 180px !important;
+    flex-basis: 180px !important;
+    max-width: 180px !important;
+  }
+
+  .sm-crud-filters > .sm-field-lg {
+    width: 220px !important;
+    flex-basis: 220px !important;
+    max-width: 220px !important;
+  }
+
+  .sm-crud-filters > .sm-field-xl {
+    width: 260px !important;
+    flex-basis: 260px !important;
+    max-width: 260px !important;
+  }
+
+  .sm-crud-filters > .sm-field-date {
+    width: 180px !important;
+    flex-basis: 180px !important;
+    max-width: 180px !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .sm-crud-toolbar {
+    flex-direction: column;
+  }
+
+  .sm-crud-form {
+    width: 100%;
+  }
+
+  .sm-crud-filter-row {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .sm-crud-filters {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .sm-crud-filters > .sm-field-xs,
+  .sm-crud-filters > .sm-field-sm,
+  .sm-crud-filters > .sm-field-md,
+  .sm-crud-filters > .sm-field-lg,
+  .sm-crud-filters > .sm-field-xl,
+  .sm-crud-filters > .sm-field-date {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex-basis: auto !important;
+  }
+
+  .sm-crud-filter-button {
+    width: 100%;
+  }
+
+  .sm-crud-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}

@@ -1,62 +1,64 @@
 import { Component, inject, viewChild } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { UiTableListComponent } from '@shared/components/index';
-import { UiButtonComponent } from "@shared/components/button/button.component";
-import { IComboBoxOption } from '@shared/models/combo_box_option';
-import { UiComboBoxComponent } from '@shared/components/combo-box/combo-box.component';
-import { UiTextFieldComponent } from "@shared/components/text-field/text-field.component";
-import { isValidStringValue, FormGroupOf } from '@core/utils/utilities';
-import { IFiltroCategoria, IFiltroEmpleado, IFiltroEmpresa } from 'app/models';
-import { ListEmpleadosConfig } from './list_empleados.config';
-import { CategoriasService, EmpleadosService, RolesService } from '@services/index';
-import { ActivatedRoute, Router } from '@angular/router';
+import { FormGroupOf } from '@core/utils/utilities';
+import { EmpleadosService, RolesService } from '@services/index';
+import { UiButtonComponent } from '@shared/components/button/button.component';
 import { UiCardComponent } from '@shared/components/card/card.component';
 import { UiInputBoxComponent } from '@shared/components/input-box/input-box.component';
+import { UiTableListComponent } from '@shared/components/index';
+import { IComboBoxOption } from '@shared/models/combo_box_option';
+import { IFiltroEmpleado } from 'app/models';
+import { ListEmpleadosConfig } from './list_empleados.config';
 
 const IMPORTS = [
   UiTableListComponent,
   UiButtonComponent,
   UiCardComponent,
   ReactiveFormsModule,
-  UiInputBoxComponent
+  UiInputBoxComponent,
 ];
 
-type filterEmpleadoFormGroup = FormGroupOf<IFiltroEmpleado>;
+type FilterEmpleadoFormGroup = FormGroupOf<IFiltroEmpleado>;
 
 @Component({
   selector: 'app-list',
   standalone: true,
   imports: IMPORTS,
   templateUrl: './list.component.html',
-  styleUrl: './list.component.scss'
+  styleUrl: './list.component.scss',
 })
 export default class ListComponent {
-  private readonly _tableList = viewChild.required<UiTableListComponent>(UiTableListComponent);
-  protected readonly config = ListEmpleadosConfig;
+  private readonly _tableList =
+    viewChild.required<UiTableListComponent>(UiTableListComponent);
+
   private readonly _empleadosService = inject(EmpleadosService);
   private readonly _rolesService = inject(RolesService);
-  private formBuilder= inject(FormBuilder);
-  protected opcionesRoles!: IComboBoxOption[];
-  protected opcionesEmplCedulas!: IComboBoxOption[];
-  protected opcionesEmplPrimerNombre!: IComboBoxOption[];
-  protected opcionesEmplApellidoPaterno!: IComboBoxOption[];
-  protected opcionesEmplTitulos!: IComboBoxOption[];
-  protected opcionesEmplEstados!: IComboBoxOption[];
-  protected formData!: filterEmpleadoFormGroup;
+  private readonly formBuilder = inject(FormBuilder);
+
+  protected readonly config = ListEmpleadosConfig;
+
+  protected opcionesRoles: IComboBoxOption[] = [];
+  protected opcionesEmplCedulas: IComboBoxOption[] = [];
+  protected opcionesEmplPrimerNombre: IComboBoxOption[] = [];
+  protected opcionesEmplApellidoPaterno: IComboBoxOption[] = [];
+  protected opcionesEmplTitulos: IComboBoxOption[] = [];
+  protected opcionesEmplEstados: IComboBoxOption[] = [];
+
+  protected formData!: FilterEmpleadoFormGroup;
+
   private initialFormValue!: IFiltroEmpleado;
 
-
   constructor() {
+    this.configForm();
     this.loadComboRoles();
     this.loadComboCedulas();
     this.loadComboPrimerNombre();
     this.loadComboApellidoPaterno();
     this.loadComboTitulos();
     this.loadComboEstados();
-    this.configForm();
   }
 
-  protected configForm() {
+  protected configForm(): void {
     this.formData = this.formBuilder.group({
       ideRol: ['', [], []],
       cedulaEmpl: ['', [], []],
@@ -64,84 +66,95 @@ export default class ListComponent {
       apellidoPaternoEmpl: ['', [], []],
       tituloEmpl: ['', [], []],
       estadoEmpl: ['', [], []],
-    }) as filterEmpleadoFormGroup;
-    //snapshot inicial
+    }) as FilterEmpleadoFormGroup;
+
     this.initialFormValue = this.formData.getRawValue();
   }
 
-  private loadComboRoles() {
-    this._rolesService.listarComboRoles().subscribe(
-      (res) => {
-        this.opcionesRoles = res;
-      }
-    );
-  }
-  private loadComboCedulas() {
-    this._empleadosService.listarComboCedulas().subscribe(
-      (res) => {
-        this.opcionesEmplCedulas = res;
-      }
-    );
-  }
-  private loadComboPrimerNombre() {
-    this._empleadosService.listarComboPrimerNombre().subscribe(
-      (res) => {
-        this.opcionesEmplPrimerNombre = res;
-      }
-    );
-  }
-  private loadComboApellidoPaterno() {
-    this._empleadosService.listarComboApellidoPaterno().subscribe(
-      (res) => {
-        this.opcionesEmplApellidoPaterno = res;
-      }
-    );
-  }
-  private loadComboTitulos() {
-    this._empleadosService.listarComboTitulos().subscribe(
-      (res) => {
-        this.opcionesEmplTitulos = res;
-      }
-    );
-  }
-  private loadComboEstados() {
-    this._empleadosService.listarComboEstados().subscribe(
-      (res) => {
-        this.opcionesEmplEstados = res;
-      }
-    );
+  private loadComboRoles(): void {
+    this._rolesService.listarComboRoles().subscribe((res) => {
+      this.opcionesRoles = res ?? [];
+    });
   }
 
-  protected filtrar() {
+  private loadComboCedulas(): void {
+    this._empleadosService.listarComboCedulas().subscribe((res) => {
+      this.opcionesEmplCedulas = res ?? [];
+    });
+  }
+
+  private loadComboPrimerNombre(): void {
+    this._empleadosService.listarComboPrimerNombre().subscribe((res) => {
+      this.opcionesEmplPrimerNombre = res ?? [];
+    });
+  }
+
+  private loadComboApellidoPaterno(): void {
+    this._empleadosService.listarComboApellidoPaterno().subscribe((res) => {
+      this.opcionesEmplApellidoPaterno = res ?? [];
+    });
+  }
+
+  private loadComboTitulos(): void {
+    this._empleadosService.listarComboTitulos().subscribe((res) => {
+      this.opcionesEmplTitulos = res ?? [];
+    });
+  }
+
+  private loadComboEstados(): void {
+    this._empleadosService.listarComboEstados().subscribe((res) => {
+      this.opcionesEmplEstados = res ?? [];
+    });
+  }
+
+  protected filtrar(): void {
     const tableListInstance = this._tableList();
     tableListInstance.filterData(this.getParams());
   }
 
+  protected refreshData(actionClick: string): void {
+    if (actionClick !== 'refresh') {
+      return;
+    }
+
+    const tableListInstance = this._tableList();
+    tableListInstance.refreshData();
+    this.resetForm();
+  }
+
+  protected resetForm(): void {
+    this.formData.reset(this.initialFormValue);
+  }
+
   private getParams(): URLSearchParams {
     const params = new URLSearchParams();
-   
     const filtro = this.formData.value as IFiltroEmpleado;
-     console.log(filtro);
-    if (isValidStringValue(filtro.ideRol+'')) params.append('ideRol', filtro.ideRol+'' );
-    if (isValidStringValue(filtro.cedulaEmpl)) params.append('cedulaEmpl', filtro.cedulaEmpl );
-    if (isValidStringValue(filtro.primerNombreEmpl)) params.append('primerNombreEmpl', filtro.primerNombreEmpl );
-    if (isValidStringValue(filtro.apellidoPaternoEmpl)) params.append('apellidoPaternoEmpl', filtro.apellidoPaternoEmpl );
-    if (isValidStringValue(filtro.tituloEmpl)) params.append('tituloEmpl', filtro.tituloEmpl );
-    if (isValidStringValue(filtro.estadoEmpl)) params.append('estadoEmpl', filtro.estadoEmpl );
-    console.log(params);
+
+    this.appendParam(params, 'ideRol', filtro.ideRol);
+    this.appendParam(params, 'cedulaEmpl', filtro.cedulaEmpl);
+    this.appendParam(params, 'primerNombreEmpl', filtro.primerNombreEmpl);
+    this.appendParam(params, 'apellidoPaternoEmpl', filtro.apellidoPaternoEmpl);
+    this.appendParam(params, 'tituloEmpl', filtro.tituloEmpl);
+    this.appendParam(params, 'estadoEmpl', filtro.estadoEmpl);
+
     return params;
   }
 
-
-  protected refreshData(actionClick: string){
-    if(actionClick === 'refresh'){
-      const tableListInstance = this._tableList();
-      tableListInstance.refreshData();
-      this.resetForm();
+  private appendParam(
+    params: URLSearchParams,
+    key: string,
+    value: unknown,
+  ): void {
+    if (value === null || value === undefined) {
+      return;
     }
-  }
 
-  protected resetForm() {
-    this.formData.reset(this.initialFormValue);
+    const stringValue = String(value).trim();
+
+    if (stringValue === '') {
+      return;
+    }
+
+    params.append(key, stringValue);
   }
 }

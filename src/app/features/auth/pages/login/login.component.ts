@@ -51,7 +51,6 @@ export default class LoginComponent {
         },
         error: (err) => {
           this.contador++;
-          console.error('Error de login:', err);
           this.errorMessage = 'Credenciales inválidas';
         },
       });

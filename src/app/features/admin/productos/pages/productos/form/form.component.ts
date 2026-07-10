@@ -121,7 +121,6 @@ export default class FormComponent {
 
   private setData(id: number) {
     this._productosService.buscar(id).subscribe(res => {
-      console.log(res);
       const p = res.data[0] as IProductoResult;
 
       this.formData.patchValue({
@@ -143,7 +142,6 @@ export default class FormComponent {
   }
 
   protected guardar() {
-    console.log(this.formData.getRawValue());
     if (!this.formData.valid) {
       Swal.fire('Oops...', 'Faltan datos por completar', 'info');
       return;

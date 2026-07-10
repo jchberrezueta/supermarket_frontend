@@ -1,102 +1,119 @@
 import { Component, inject, viewChild } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { UiTableListComponent } from '@shared/components/index';
-import { UiButtonComponent } from "@shared/components/button/button.component";
-import { IComboBoxOption } from '@shared/models/combo_box_option';
-import { UiComboBoxComponent } from '@shared/components/combo-box/combo-box.component';
-import { UiTextFieldComponent } from "@shared/components/text-field/text-field.component";
-import { isValidStringValue, FormGroupOf } from '@core/utils/utilities';
-import { IFiltroCategoria, IFiltroEmpresa } from 'app/models';
-import { ListConfig } from './list_empresas.config';
+import { FormGroupOf } from '@core/utils/utilities';
 import { CategoriasService } from '@services/index';
-import { ActivatedRoute, Router } from '@angular/router';
+import { UiButtonComponent } from '@shared/components/button/button.component';
 import { UiCardComponent } from '@shared/components/card/card.component';
 import { UiInputBoxComponent } from '@shared/components/input-box/input-box.component';
+import { UiTableListComponent } from '@shared/components/index';
+import { IComboBoxOption } from '@shared/models/combo_box_option';
+import { IFiltroCategoria } from 'app/models';
+import { ListConfig } from './list_empresas.config';
 
 const IMPORTS = [
   UiTableListComponent,
   UiButtonComponent,
   UiCardComponent,
   ReactiveFormsModule,
-  UiInputBoxComponent
+  UiInputBoxComponent,
 ];
 
-type filterCategoriaFormGroup = FormGroupOf<IFiltroCategoria>;
+type FilterCategoriaFormGroup = FormGroupOf<IFiltroCategoria>;
 
 @Component({
   selector: 'app-list',
   standalone: true,
   imports: IMPORTS,
   templateUrl: './list.component.html',
-  styleUrl: './list.component.scss'
+  styleUrl: './list.component.scss',
 })
 export default class ListComponent {
-  private readonly _tableList = viewChild.required<UiTableListComponent>(UiTableListComponent);
-  protected readonly config = ListConfig;
+  private readonly _tableList =
+    viewChild.required<UiTableListComponent>(UiTableListComponent);
+
   private readonly _categoriasService = inject(CategoriasService);
-  private readonly _router = inject(Router);
-  private readonly _route = inject(ActivatedRoute);
-  private formBuilder= inject(FormBuilder);
-  protected opcionesNombres!: IComboBoxOption[];
-  protected opcionesDescripcion!: IComboBoxOption[];
-  protected formData!: filterCategoriaFormGroup;
+  private readonly formBuilder = inject(FormBuilder);
+
+  protected readonly config = ListConfig;
+
+  protected opcionesNombres: IComboBoxOption[] = [];
+  protected opcionesDescripcion: IComboBoxOption[] = [];
+
+  protected formData!: FilterCategoriaFormGroup;
+
   private initialFormValue!: IFiltroCategoria;
 
-
   constructor() {
+    this.configForm();
     this.loadComboNombres();
     this.loadComboDescripcion();
-    this.configForm();
   }
 
-  protected configForm() {
+  protected configForm(): void {
     this.formData = this.formBuilder.group({
       nombreCate: ['', [], []],
       descripcionCate: ['', [], []],
-    }) as filterCategoriaFormGroup;
-    //snapshot inicial
+    }) as FilterCategoriaFormGroup;
+
     this.initialFormValue = this.formData.getRawValue();
   }
 
-  private loadComboNombres() {
-    this._categoriasService.listarComboNombres().subscribe(
-      (res) => {
-        this.opcionesNombres = res;
-      }
-    );
-  }
-  private loadComboDescripcion() {
-    this._categoriasService.listarComboDescripcion().subscribe(
-      (res) => {
-        this.opcionesDescripcion = res;
-      }
-    );
+  private loadComboNombres(): void {
+    this._categoriasService.listarComboNombres().subscribe((res) => {
+      this.opcionesNombres = res ?? [];
+    });
   }
 
-  protected filtrar() {
+  private loadComboDescripcion(): void {
+    this._categoriasService.listarComboDescripcion().subscribe((res) => {
+      this.opcionesDescripcion = res ?? [];
+    });
+  }
+
+  protected filtrar(): void {
     const tableListInstance = this._tableList();
     tableListInstance.filterData(this.getParams());
+  }
+
+  protected refreshData(actionClick: string): void {
+    if (actionClick !== 'refresh') {
+      return;
+    }
+
+    const tableListInstance = this._tableList();
+    tableListInstance.refreshData();
+    this.resetForm();
+  }
+
+  protected resetForm(): void {
+    this.formData.reset(this.initialFormValue);
   }
 
   private getParams(): URLSearchParams {
     const params = new URLSearchParams();
     const filtro = this.formData.value as IFiltroCategoria;
-    if (isValidStringValue(filtro.nombreCate)) params.append('nombreCate', filtro.nombreCate );
-    if (isValidStringValue(filtro.descripcionCate)) params.append('descripcionCate', filtro.descripcionCate );
-    console.log(params);
+
+    this.appendParam(params, 'nombreCate', filtro.nombreCate);
+    this.appendParam(params, 'descripcionCate', filtro.descripcionCate);
+
     return params;
   }
 
-
-  protected refreshData(actionClick: string){
-    if(actionClick === 'refresh'){
-      const tableListInstance = this._tableList();
-      tableListInstance.refreshData();
-      this.resetForm();
+  private appendParam(
+    params: URLSearchParams,
+    key: string,
+    value: unknown,
+  ): void {
+    if (value === null || value === undefined) {
+      return;
     }
-  }
 
-  protected resetForm() {
-    this.formData.reset(this.initialFormValue);
+    const stringValue = String(value).trim();
+
+    if (stringValue === '') {
+      return;
+    }
+
+    params.append(key, stringValue);
   }
 }

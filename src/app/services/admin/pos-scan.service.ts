@@ -83,11 +83,9 @@ export class PosScanService {
     });
 
     this.socket.on('pos-session-joined', () => {
-      console.log('POS conectado a sesión de escaneo:', sessionId);
     });
 
     this.socket.on('pos-session-error', (error) => {
-      console.error('Error en sesión POS:', error);
     });
 
     this.socket.on('producto-escaneado', (payload: IProductoEscaneadoEvent) => {
@@ -95,7 +93,6 @@ export class PosScanService {
     });
 
     this.socket.on('disconnect', () => {
-      console.warn('Socket POS desconectado');
     });
   }
 

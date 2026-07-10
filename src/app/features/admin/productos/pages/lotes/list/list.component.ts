@@ -1,17 +1,15 @@
 import { Component, inject, viewChild } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { UiTableListComponent } from '@shared/components/index';
-import { UiButtonComponent } from "@shared/components/button/button.component";
-import { IComboBoxOption } from '@shared/models/combo_box_option';
-import { UiComboBoxComponent } from '@shared/components/combo-box/combo-box.component';
-import { isValidStringValue, FormGroupOf } from '@core/utils/utilities';
-import { IFiltroLote } from 'app/models';
-import { ListLotesConfig } from './list_lotes.config';
+import { FormGroupOf, isValidStringValue } from '@core/utils/utilities';
 import { LotesService } from '@services/lotes.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { UiButtonComponent } from '@shared/components/button/button.component';
 import { UiCardComponent } from '@shared/components/card/card.component';
-import { UiInputBoxComponent } from '@shared/components/input-box/input-box.component';
+import { UiComboBoxComponent } from '@shared/components/combo-box/combo-box.component';
 import { UiDatetimePickerComponent } from '@shared/components/datetime-picker/datetime-picker.component';
+import { UiInputBoxComponent } from '@shared/components/input-box/input-box.component';
+import { UiTableListComponent } from '@shared/components/index';
+import { IComboBoxOption } from '@shared/models/combo_box_option';
+import { ListLotesConfig } from './list_lotes.config';
 
 const IMPORTS = [
   UiTableListComponent,
@@ -20,93 +18,122 @@ const IMPORTS = [
   ReactiveFormsModule,
   UiInputBoxComponent,
   UiComboBoxComponent,
-  UiDatetimePickerComponent
+  UiDatetimePickerComponent,
 ];
 
 interface IFiltroLoteForm {
-  ideProd: number;
+  ideProd: number | string;
   estadoLote: string;
   fechaCaducidadDesde: string;
   fechaCaducidadHasta: string;
 }
 
-type filterLoteFormGroup = FormGroupOf<IFiltroLoteForm>;
+type FilterLoteFormGroup = FormGroupOf<IFiltroLoteForm>;
 
 @Component({
   selector: 'app-list',
   standalone: true,
   imports: IMPORTS,
   templateUrl: './list.component.html',
-  styleUrl: './list.component.scss'
+  styleUrl: './list.component.scss',
 })
 export default class ListComponent {
-  private readonly _tableList = viewChild.required<UiTableListComponent>(UiTableListComponent);
-  protected readonly config = ListLotesConfig;
+  private readonly _tableList =
+    viewChild.required<UiTableListComponent>(UiTableListComponent);
+
   private readonly _lotesService = inject(LotesService);
-  private readonly _router = inject(Router);
-  private readonly _route = inject(ActivatedRoute);
-  private formBuilder = inject(FormBuilder);
-  protected opcionesProductos!: IComboBoxOption[];
-  protected opcionesEstados!: IComboBoxOption[];
-  protected formData!: filterLoteFormGroup;
+  private readonly formBuilder = inject(FormBuilder);
+
+  protected readonly config = ListLotesConfig;
+
+  protected opcionesProductos: IComboBoxOption[] = [];
+  protected opcionesEstados: IComboBoxOption[] = [];
+
+  protected formData!: FilterLoteFormGroup;
+
   private initialFormValue!: IFiltroLoteForm;
 
   constructor() {
+    this.configForm();
     this.loadComboProductos();
     this.loadComboEstados();
-    this.configForm();
   }
 
-  protected configForm() {
+  protected configForm(): void {
     this.formData = this.formBuilder.group({
       ideProd: [-1, [], []],
       estadoLote: ['', [], []],
       fechaCaducidadDesde: ['', [], []],
-      fechaCaducidadHasta: ['', [], []]
-    }) as filterLoteFormGroup;
+      fechaCaducidadHasta: ['', [], []],
+    }) as FilterLoteFormGroup;
+
     this.initialFormValue = this.formData.getRawValue();
   }
 
-  private loadComboProductos() {
-    this._lotesService.listarComboProductos().subscribe(
-      (res) => {
-        this.opcionesProductos = res;
-      }
-    );
+  private loadComboProductos(): void {
+    this._lotesService.listarComboProductos().subscribe((res) => {
+      this.opcionesProductos = res ?? [];
+    });
   }
 
-  private loadComboEstados() {
-    this._lotesService.listarComboEstados().subscribe(
-      (res) => {
-        this.opcionesEstados = res;
-      }
-    );
+  private loadComboEstados(): void {
+    this._lotesService.listarComboEstados().subscribe((res) => {
+      this.opcionesEstados = res ?? [];
+    });
   }
 
-  protected filtrar() {
+  protected filtrar(): void {
     const tableListInstance = this._tableList();
     tableListInstance.filterData(this.getParams());
+  }
+
+  protected refreshData(actionClick: string): void {
+    if (actionClick !== 'refresh') {
+      return;
+    }
+
+    const tableListInstance = this._tableList();
+    tableListInstance.refreshData();
+    this.resetForm();
+  }
+
+  protected resetForm(): void {
+    this.formData.reset(this.initialFormValue);
   }
 
   private getParams(): URLSearchParams {
     const params = new URLSearchParams();
     const filtro = this.formData.value as IFiltroLoteForm;
-    if (filtro.ideProd && filtro.ideProd > 0) params.append('ideProd', filtro.ideProd + '');
-    if (isValidStringValue(filtro.estadoLote)) params.append('estadoLote', filtro.estadoLote);
-    if (isValidStringValue(filtro.fechaCaducidadDesde)) params.append('fechaCaducidadLoteDesde', filtro.fechaCaducidadDesde);
-    if (isValidStringValue(filtro.fechaCaducidadHasta)) params.append('fechaCaducidadLoteHasta', filtro.fechaCaducidadHasta);
+
+    this.appendParam(params, 'ideProd', filtro.ideProd);
+    this.appendParam(params, 'estadoLote', filtro.estadoLote);
+
+    if (isValidStringValue(filtro.fechaCaducidadDesde)) {
+      params.append('fechaCaducidadLoteDesde', filtro.fechaCaducidadDesde);
+    }
+
+    if (isValidStringValue(filtro.fechaCaducidadHasta)) {
+      params.append('fechaCaducidadLoteHasta', filtro.fechaCaducidadHasta);
+    }
+
     return params;
   }
 
-  protected refreshData(actionClick: string) {
-    if (actionClick === 'refresh') {
-      const tableListInstance = this._tableList();
-      tableListInstance.refreshData();
-      this.resetForm();
+  private appendParam(
+    params: URLSearchParams,
+    key: string,
+    value: unknown,
+  ): void {
+    if (value === null || value === undefined || value === -1) {
+      return;
     }
-  }
 
-  protected resetForm() {
-    this.formData.reset(this.initialFormValue);
+    const stringValue = String(value).trim();
+
+    if (stringValue === '') {
+      return;
+    }
+
+    params.append(key, stringValue);
   }
 }

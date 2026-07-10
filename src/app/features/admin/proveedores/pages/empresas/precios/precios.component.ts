@@ -142,7 +142,6 @@ export default class PreciosComponent {
 
   protected guardar() {
     const data = this.formData.getRawValue() as IEmpresaPrecios;  
-    console.log(data);
     if(this.formData.valid){
       if (this.isAdd) {
         this._empresasService.insertarPrecio(data).subscribe(

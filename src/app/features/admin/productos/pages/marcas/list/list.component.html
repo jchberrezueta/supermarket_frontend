@@ -1,30 +1,61 @@
-<div class="div_container">
-    <ui-card [showHeader]="true" class="div_card">
-        <div class="card_top" card-header>
-            <form [formGroup]="formData" (ngSubmit)="filtrar()" class="card_form">
-                <div class="card_filters">
-                    <div class="selects">
-                        <ui-input-box [label]="'Marca'" [options]="opcionesNombres" [width]="'200'" [returnValue]="'label'" formControlName="nombreMarc"/>
-                        <ui-input-box [label]="'Pais Origen'" [options]="opcionesPais" [width]="'200'" [returnValue]="'label'" formControlName="paisOrigenMarc"/>
-                        <ui-combo-box [label]="'Calidad'" [options]="opcionesCalidad"  formControlName="calidadMarc"/>
-                    </div>
-                    <div class="filter_btn">
-                        <ui-button [label]="'Filtrar'" [icon]="'filter_alt'"/>
-                    </div>
-                </div>
-            </form>
-            <div class="btns_options">
-                <ui-button [icon]="'refresh'" [action]="'refresh'" (evntClick)="refreshData($event)"/>
-            </div>
-        </div>
-        <div class="card_table">
-            <ui-table-list #tableList 
-                [serviceApi]="'marcas'" 
-                [columns]="config.columns" 
+<div class="sm-crud-list">
+  <ui-card [showHeader]="true" class="sm-crud-card">
+    <div class="sm-crud-toolbar" card-header>
+      <form class="sm-crud-form" [formGroup]="formData" (ngSubmit)="filtrar()">
+        <div class="sm-crud-filter-row">
+          <div class="sm-crud-filters">
+            <ui-input-box
+              class="sm-field-lg"
+              [label]="'Marca'"
+              [options]="opcionesNombres"
+              [returnValue]="'label'"
+              formControlName="nombreMarc"
             />
+
+            <ui-input-box
+              class="sm-field-lg"
+              [label]="'País origen'"
+              [options]="opcionesPais"
+              [returnValue]="'label'"
+              formControlName="paisOrigenMarc"
+            />
+
+            <ui-combo-box
+              class="sm-field-sm"
+              [label]="'Calidad'"
+              [options]="opcionesCalidad"
+              formControlName="calidadMarc"
+            />
+          </div>
+
+          <div class="sm-crud-filter-button">
+            <ui-button
+              [label]="'Filtrar'"
+              [icon]="'filter_alt'"
+              [action]="'filter'"
+              (evntClick)="filtrar()"
+            />
+          </div>
         </div>
-    </ui-card>
+      </form>
+
+      <div class="sm-crud-actions">
+        <ui-button
+          [icon]="'refresh'"
+          [action]="'refresh'"
+          (evntClick)="refreshData($event)"
+        />
+      </div>
+    </div>
+
+    <div class="sm-crud-table">
+      <ui-table-list
+        #tableList
+        [serviceApi]="'marcas'"
+        [serviceApiFilter]="'marcas/filtrar'"
+        [serviceApiReal]="'marcas'"
+        [columns]="config.columns"
+      />
+    </div>
+  </ui-card>
 </div>
-
-
-

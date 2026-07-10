@@ -1,38 +1,50 @@
-<div class="div_container">
-  <ui-card [showHeader]="true" class="div_card">
-    <div class="card_top" card-header>
-      <form [formGroup]="formData" (ngSubmit)="filtrar()" class="card_form">
-        <div class="card_filters">
-          <div class="selects">
+<div class="sm-crud-list">
+  <ui-card [showHeader]="true" class="sm-crud-card">
+    <div class="sm-crud-toolbar" card-header>
+      <form class="sm-crud-form" [formGroup]="formData" (ngSubmit)="filtrar()">
+        <div class="sm-crud-filter-row">
+          <div class="sm-crud-filters">
             <ui-input-box
+              class="sm-field-lg"
               [label]="'Producto'"
               [options]="opcionesProductos"
-              [width]="'200'"
               formControlName="ideProd"
             />
+
             <ui-combo-box
+              class="sm-field-sm"
               [label]="'Estado'"
               [options]="opcionesEstados"
-              [width]="'150'"
               formControlName="estadoLote"
             />
+
             <ui-datetime-picker
-              [label]="'Fecha Desde'"
+              class="sm-field-date"
+              [label]="'Desde'"
               formControlName="fechaCaducidadDesde"
               [isTime]="false"
             />
+
             <ui-datetime-picker
-              [label]="'Fecha Hasta'"
+              class="sm-field-date"
+              [label]="'Hasta'"
               formControlName="fechaCaducidadHasta"
               [isTime]="false"
             />
           </div>
-          <div class="filter_btn">
-            <ui-button [label]="'Filtrar'" [icon]="'filter_alt'" />
+
+          <div class="sm-crud-filter-button">
+            <ui-button
+              [label]="'Filtrar'"
+              [icon]="'filter_alt'"
+              [action]="'filter'"
+              (evntClick)="filtrar()"
+            />
           </div>
         </div>
       </form>
-      <div class="btns_options">
+
+      <div class="sm-crud-actions">
         <ui-button
           [icon]="'refresh'"
           [action]="'refresh'"
@@ -40,7 +52,8 @@
         />
       </div>
     </div>
-    <div class="card_table">
+
+    <div class="sm-crud-table">
       <ui-table-list
         #tableList
         [serviceApi]="'lotes'"

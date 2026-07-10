@@ -1,17 +1,15 @@
 import { Component, inject, viewChild } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { UiTableListComponent } from '@shared/components/index';
-import { UiButtonComponent } from "@shared/components/button/button.component";
-import { IComboBoxOption } from '@shared/models/combo_box_option';
-import { UiComboBoxComponent } from '@shared/components/combo-box/combo-box.component';
-import { isValidStringValue, FormGroupOf } from '@core/utils/utilities';
-import { IFiltroAccesoUsuario, IFiltroRol } from 'app/models';
-import { ListAccesosUsuarioConfig } from './list_accesos.config';
-import { AccesosService, CategoriasService, CuentasService, RolesService } from '@services/index';
-import { ActivatedRoute, Router } from '@angular/router';
+import { FormGroupOf } from '@core/utils/utilities';
+import { AccesosService, CuentasService } from '@services/index';
+import { UiButtonComponent } from '@shared/components/button/button.component';
 import { UiCardComponent } from '@shared/components/card/card.component';
-import { UiInputBoxComponent } from '@shared/components/input-box/input-box.component';
 import { UiDatetimePickerComponent } from '@shared/components/datetime-picker/datetime-picker.component';
+import { UiInputBoxComponent } from '@shared/components/input-box/input-box.component';
+import { UiTableListComponent } from '@shared/components/index';
+import { IComboBoxOption } from '@shared/models/combo_box_option';
+import { IFiltroAccesoUsuario } from 'app/models';
+import { ListAccesosUsuarioConfig } from './list_accesos.config';
 
 const IMPORTS = [
   UiTableListComponent,
@@ -19,98 +17,120 @@ const IMPORTS = [
   UiCardComponent,
   ReactiveFormsModule,
   UiInputBoxComponent,
-  UiDatetimePickerComponent
+  UiDatetimePickerComponent,
 ];
 
-type filterAccesoUsuarioFormGroup = FormGroupOf<IFiltroAccesoUsuario>;
+type FilterAccesoUsuarioFormGroup = FormGroupOf<IFiltroAccesoUsuario>;
 
 @Component({
   selector: 'app-list',
   standalone: true,
   imports: IMPORTS,
   templateUrl: './list.component.html',
-  styleUrl: './list.component.scss'
+  styleUrl: './list.component.scss',
 })
 export default class ListComponent {
-  private readonly _tableList = viewChild.required<UiTableListComponent>(UiTableListComponent);
-  protected readonly config = ListAccesosUsuarioConfig;
+  private readonly _tableList =
+    viewChild.required<UiTableListComponent>(UiTableListComponent);
+
   private readonly _accesosService = inject(AccesosService);
   private readonly _cuentasService = inject(CuentasService);
-  private formBuilder= inject(FormBuilder);
-  protected opcionesCuentas!: IComboBoxOption[];
-  protected opcionesIps!: IComboBoxOption[];
-  protected opcionesNavegadores!: IComboBoxOption[];
-  protected formData!: filterAccesoUsuarioFormGroup;
+  private readonly formBuilder = inject(FormBuilder);
+
+  protected readonly config = ListAccesosUsuarioConfig;
+
+  protected opcionesCuentas: IComboBoxOption[] = [];
+  protected opcionesIps: IComboBoxOption[] = [];
+  protected opcionesNavegadores: IComboBoxOption[] = [];
+
+  protected formData!: FilterAccesoUsuarioFormGroup;
+
   private initialFormValue!: IFiltroAccesoUsuario;
 
-
   constructor() {
+    this.configForm();
     this.loadComboCuentas();
     this.loadComboIps();
     this.loadComboNavegador();
-    this.configForm();
   }
 
-  protected configForm() {
+  protected configForm(): void {
     this.formData = this.formBuilder.group({
       ideCuen: ['', [], []],
       ipAcce: ['', [], []],
       navegadorAcce: ['', [], []],
       fechaAcceDesde: ['', [], []],
       fechaAcceHasta: ['', [], []],
-    }) as filterAccesoUsuarioFormGroup;
-    //snapshot inicial
+    }) as FilterAccesoUsuarioFormGroup;
+
     this.initialFormValue = this.formData.getRawValue();
   }
 
-  private loadComboCuentas() {
-    this._cuentasService.listarComboCuentas().subscribe(
-      (res) => {
-        this.opcionesCuentas = res;
-      }
-    );
-  }
-  private loadComboIps() {
-    this._accesosService.listarComboIps().subscribe(
-      (res) => {
-        this.opcionesIps = res;
-      }
-    );
-  }
-  private loadComboNavegador() {
-    this._accesosService.listarComboNavegador().subscribe(
-      (res) => {
-        this.opcionesNavegadores = res;
-      }
-    );
+  private loadComboCuentas(): void {
+    this._cuentasService.listarComboCuentas().subscribe((res) => {
+      this.opcionesCuentas = res ?? [];
+    });
   }
 
-  protected filtrar() {
+  private loadComboIps(): void {
+    this._accesosService.listarComboIps().subscribe((res) => {
+      this.opcionesIps = res ?? [];
+    });
+  }
+
+  private loadComboNavegador(): void {
+    this._accesosService.listarComboNavegador().subscribe((res) => {
+      this.opcionesNavegadores = res ?? [];
+    });
+  }
+
+  protected filtrar(): void {
     const tableListInstance = this._tableList();
     tableListInstance.filterData(this.getParams());
+  }
+
+  protected refreshData(actionClick: string): void {
+    if (actionClick !== 'refresh') {
+      return;
+    }
+
+    const tableListInstance = this._tableList();
+    tableListInstance.refreshData();
+    this.resetForm();
+  }
+
+  protected resetForm(): void {
+    this.formData.reset(this.initialFormValue);
   }
 
   private getParams(): URLSearchParams {
     const params = new URLSearchParams();
     const filtro = this.formData.value as IFiltroAccesoUsuario;
-    if (isValidStringValue(filtro.ideCuen+'')) params.append('ideCuen', filtro.ideCuen+'' );
-    if (isValidStringValue(filtro.ipAcce)) params.append('ipAcce', filtro.ipAcce );
-    if (isValidStringValue(filtro.navegadorAcce)) params.append('navegadorAcce', encodeURIComponent(filtro.navegadorAcce) );
-    if (isValidStringValue(filtro.fechaAcceDesde)) params.append('fechaAcceDesde', filtro.fechaAcceDesde );
-    if (isValidStringValue(filtro.fechaAcceHasta)) params.append('fechaAcceHasta', filtro.fechaAcceHasta );
+
+    this.appendParam(params, 'ideCuen', filtro.ideCuen);
+    this.appendParam(params, 'ipAcce', filtro.ipAcce);
+    this.appendParam(params, 'navegadorAcce', filtro.navegadorAcce);
+    this.appendParam(params, 'fechaAcceDesde', filtro.fechaAcceDesde);
+    this.appendParam(params, 'fechaAcceHasta', filtro.fechaAcceHasta);
+
     return params;
   }
 
-
-  protected refreshData(actionClick: string){
-    if(actionClick === 'refresh'){
-      const tableListInstance = this._tableList();
-      tableListInstance.refreshData();
-      this.resetForm();
+  private appendParam(
+    params: URLSearchParams,
+    key: string,
+    value: unknown,
+  ): void {
+    if (value === null || value === undefined) {
+      return;
     }
-  }
 
-  protected resetForm() {
-    this.formData.reset(this.initialFormValue);
+    const stringValue = String(value).trim();
+
+    if (stringValue === '') {
+      return;
+    }
+
+    params.append(key, stringValue);
   }
 }

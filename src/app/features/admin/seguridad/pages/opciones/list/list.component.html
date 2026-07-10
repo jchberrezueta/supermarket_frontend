@@ -1,27 +1,62 @@
-<div class="div_container">
-    <ui-card [showHeader]="true" class="div_card">
-        <div class="card_top" card-header>
-            <form [formGroup]="formData" (ngSubmit)="filtrar()" class="card_form">
-                <div class="card_filters">
-                    <div class="selects">
-                        <ui-input-box [label]="'Nombre'" [options]="opcionesNombres" [returnValue]="'label'" formControlName="nombreOpci"/>
-                        <ui-input-box [label]="'Ruta'" [options]="opcionesRutas" [returnValue]="'label'" formControlName="rutaOpci"/>
-                        <ui-combo-box [label]="'Estado'" [options]="opcionesActividad" [returnValue]="'label'" formControlName="activoOpci"/>
-                    </div>
-                    <div class="filter_btn">
-                        <ui-button [label]="'Filtrar'" [icon]="'filter_alt'"/>
-                    </div>
-                </div>
-            </form>
-            <div class="btns_options">
-                <ui-button [icon]="'refresh'" [action]="'refresh'" (evntClick)="refreshData($event)"/>
-            </div>
+<div class="sm-crud-list">
+  <ui-card [showHeader]="true" class="sm-crud-card">
+    <div class="sm-crud-toolbar" card-header>
+      <form class="sm-crud-form" [formGroup]="formData" (ngSubmit)="filtrar()">
+        <div class="sm-crud-filter-row">
+          <div class="sm-crud-filters">
+            <ui-input-box
+              class="sm-field-lg"
+              [label]="'Nombre'"
+              [options]="opcionesNombres"
+              [returnValue]="'label'"
+              formControlName="nombreOpci"
+            />
+
+            <ui-input-box
+              class="sm-field-xl"
+              [label]="'Ruta'"
+              [options]="opcionesRutas"
+              [returnValue]="'label'"
+              formControlName="rutaOpci"
+            />
+
+            <ui-combo-box
+              class="sm-field-sm"
+              [label]="'Estado'"
+              [options]="opcionesActividad"
+              [returnValue]="'label'"
+              formControlName="activoOpci"
+            />
+          </div>
+
+          <div class="sm-crud-filter-button">
+            <ui-button
+              [label]="'Filtrar'"
+              [icon]="'filter_alt'"
+              [action]="'filter'"
+              (evntClick)="filtrar()"
+            />
+          </div>
         </div>
-        <div class="card_table">
-            <ui-table-list #tableList [serviceApi]="'opciones'" [columns]="config.columns"/>
-        </div>
-    </ui-card>
+      </form>
+
+      <div class="sm-crud-actions">
+        <ui-button
+          [icon]="'refresh'"
+          [action]="'refresh'"
+          (evntClick)="refreshData($event)"
+        />
+      </div>
+    </div>
+
+    <div class="sm-crud-table">
+      <ui-table-list
+        #tableList
+        [serviceApi]="'opciones'"
+        [serviceApiFilter]="'opciones/filtrar'"
+        [serviceApiReal]="'opciones'"
+        [columns]="config.columns"
+      />
+    </div>
+  </ui-card>
 </div>
-
-
-

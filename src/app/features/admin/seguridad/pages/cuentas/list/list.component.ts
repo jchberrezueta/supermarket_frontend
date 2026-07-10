@@ -1,16 +1,19 @@
 import { Component, inject, viewChild } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { UiTableListComponent } from '@shared/components/index';
-import { UiButtonComponent } from "@shared/components/button/button.component";
-import { IComboBoxOption } from '@shared/models/combo_box_option';
-import { UiComboBoxComponent } from '@shared/components/combo-box/combo-box.component';
-import { isValidStringValue, FormGroupOf } from '@core/utils/utilities';
-import { IFiltroCuenta, IFiltroRol } from 'app/models';
-import { ListCuentasConfig } from './list_cuentas.config';
-import { CategoriasService, CuentasService, EmpleadosService, PerfilesService, RolesService } from '@services/index';
-import { ActivatedRoute, Router } from '@angular/router';
+import { FormGroupOf } from '@core/utils/utilities';
+import {
+  CuentasService,
+  EmpleadosService,
+  PerfilesService,
+} from '@services/index';
+import { UiButtonComponent } from '@shared/components/button/button.component';
 import { UiCardComponent } from '@shared/components/card/card.component';
+import { UiComboBoxComponent } from '@shared/components/combo-box/combo-box.component';
 import { UiInputBoxComponent } from '@shared/components/input-box/input-box.component';
+import { UiTableListComponent } from '@shared/components/index';
+import { IComboBoxOption } from '@shared/models/combo_box_option';
+import { IFiltroCuenta } from 'app/models';
+import { ListCuentasConfig } from './list_cuentas.config';
 
 const IMPORTS = [
   UiTableListComponent,
@@ -18,107 +21,127 @@ const IMPORTS = [
   UiCardComponent,
   ReactiveFormsModule,
   UiInputBoxComponent,
-  UiComboBoxComponent
+  UiComboBoxComponent,
 ];
 
-type filterCuentaFormGroup = FormGroupOf<IFiltroCuenta>;
+type FilterCuentaFormGroup = FormGroupOf<IFiltroCuenta>;
 
 @Component({
   selector: 'app-list',
   standalone: true,
   imports: IMPORTS,
   templateUrl: './list.component.html',
-  styleUrl: './list.component.scss'
+  styleUrl: './list.component.scss',
 })
 export default class ListComponent {
-  private readonly _tableList = viewChild.required<UiTableListComponent>(UiTableListComponent);
-  protected readonly config = ListCuentasConfig;
+  private readonly _tableList =
+    viewChild.required<UiTableListComponent>(UiTableListComponent);
+
   private readonly _cuentasService = inject(CuentasService);
   private readonly _empleadosService = inject(EmpleadosService);
   private readonly _perfilesService = inject(PerfilesService);
-  private formBuilder= inject(FormBuilder);
-  protected opcionesEmpleados!: IComboBoxOption[];
-  protected opcionesPerfiles!: IComboBoxOption[];
-  protected opcionesCuenUsuarios!: IComboBoxOption[];
-  protected opcionesCuenEstados!: IComboBoxOption[];
-  protected formData!: filterCuentaFormGroup;
+  private readonly formBuilder = inject(FormBuilder);
+
+  protected readonly config = ListCuentasConfig;
+
+  protected opcionesEmpleados: IComboBoxOption[] = [];
+  protected opcionesPerfiles: IComboBoxOption[] = [];
+  protected opcionesCuenUsuarios: IComboBoxOption[] = [];
+  protected opcionesCuenEstados: IComboBoxOption[] = [];
+
+  protected formData!: FilterCuentaFormGroup;
+
   private initialFormValue!: IFiltroCuenta;
 
-
   constructor() {
+    this.configForm();
     this.loadComboEmpleados();
     this.loadComboPerfiles();
     this.loadComboUsuarios();
     this.loadComboEstados();
-    this.configForm();
   }
 
-  protected configForm() {
+  protected configForm(): void {
     this.formData = this.formBuilder.group({
       ideEmpl: ['', [], []],
       idePerf: ['', [], []],
       usuarioCuen: ['', [], []],
       estadoCuen: ['', [], []],
-    }) as filterCuentaFormGroup;
-    //snapshot inicial
+    }) as FilterCuentaFormGroup;
+
     this.initialFormValue = this.formData.getRawValue();
   }
 
-  private loadComboEmpleados() {
-    this._empleadosService.listarComboEmpleados().subscribe(
-      (res) => {
-        this.opcionesEmpleados = res;
-      }
-    );
-  }
-   private loadComboPerfiles() {
-    this._perfilesService.listarComboPerfiles().subscribe(
-      (res) => {
-        this.opcionesPerfiles = res;
-      }
-    );
-  }
-  private loadComboUsuarios() {
-    this._cuentasService.listarComboUsuarios().subscribe(
-      (res) => {
-        this.opcionesCuenUsuarios = res;
-      }
-    );
-  }
-  private loadComboEstados() {
-    this._cuentasService.listarComboEstados().subscribe(
-      (res) => {
-        this.opcionesCuenEstados = res;
-      }
-    );
+  private loadComboEmpleados(): void {
+    this._empleadosService.listarComboEmpleados().subscribe((res) => {
+      this.opcionesEmpleados = res ?? [];
+    });
   }
 
-  protected filtrar() {
+  private loadComboPerfiles(): void {
+    this._perfilesService.listarComboPerfiles().subscribe((res) => {
+      this.opcionesPerfiles = res ?? [];
+    });
+  }
+
+  private loadComboUsuarios(): void {
+    this._cuentasService.listarComboUsuarios().subscribe((res) => {
+      this.opcionesCuenUsuarios = res ?? [];
+    });
+  }
+
+  private loadComboEstados(): void {
+    this._cuentasService.listarComboEstados().subscribe((res) => {
+      this.opcionesCuenEstados = res ?? [];
+    });
+  }
+
+  protected filtrar(): void {
     const tableListInstance = this._tableList();
     tableListInstance.filterData(this.getParams());
+  }
+
+  protected refreshData(actionClick: string): void {
+    if (actionClick !== 'refresh') {
+      return;
+    }
+
+    const tableListInstance = this._tableList();
+    tableListInstance.refreshData();
+    this.resetForm();
+  }
+
+  protected resetForm(): void {
+    this.formData.reset(this.initialFormValue);
   }
 
   private getParams(): URLSearchParams {
     const params = new URLSearchParams();
     const filtro = this.formData.value as IFiltroCuenta;
-    if (isValidStringValue(filtro.ideEmpl+'')) params.append('ideEmpl', filtro.ideEmpl+'' );
-    if (isValidStringValue(filtro.idePerf+'')) params.append('idePerf', filtro.idePerf+'' );
-    if (isValidStringValue(filtro.usuarioCuen)) params.append('usuarioCuen', filtro.usuarioCuen );
-    if (isValidStringValue(filtro.estadoCuen)) params.append('estadoCuen', filtro.estadoCuen );
-    console.log(params);
+
+    this.appendParam(params, 'ideEmpl', filtro.ideEmpl);
+    this.appendParam(params, 'idePerf', filtro.idePerf);
+    this.appendParam(params, 'usuarioCuen', filtro.usuarioCuen);
+    this.appendParam(params, 'estadoCuen', filtro.estadoCuen);
+
     return params;
   }
 
-
-  protected refreshData(actionClick: string){
-    if(actionClick === 'refresh'){
-      const tableListInstance = this._tableList();
-      tableListInstance.refreshData();
-      this.resetForm();
+  private appendParam(
+    params: URLSearchParams,
+    key: string,
+    value: unknown,
+  ): void {
+    if (value === null || value === undefined) {
+      return;
     }
-  }
 
-  protected resetForm() {
-    this.formData.reset(this.initialFormValue);
+    const stringValue = String(value).trim();
+
+    if (stringValue === '') {
+      return;
+    }
+
+    params.append(key, stringValue);
   }
 }

@@ -100,7 +100,6 @@ export default class DetailsComponent {
         errorCorrectionLevel: 'M',
       });
     } catch (error) {
-      console.error('No se pudo generar el QR del producto', error);
     }
   }
 

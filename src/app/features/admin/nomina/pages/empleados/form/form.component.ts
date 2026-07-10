@@ -115,7 +115,6 @@ export default class FormComponent {
         estadoEmpl: e.estado_empl
       });
       
-      console.log('Datos cargados:', this.formData.value);
     });
   }
 

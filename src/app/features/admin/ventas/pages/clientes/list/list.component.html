@@ -1,29 +1,78 @@
-<div class="div_container">
-    <ui-card [showHeader]="true" class="div_card">
-        <div class="card_top" card-header>
-            <form [formGroup]="formData" (ngSubmit)="filtrar()" class="card_form">
-                <div class="card_filters">
-                    <div class="selects">
-                        <ui-input-box [label]="'Cédula'" [options]="opcionesCedulas" [returnValue]="'label'" formControlName="cedulaClie" [width]="'180'"/>
-                        <ui-input-box [label]="'nombre'" [options]="opcionesNombre" [returnValue]="'label'" formControlName="primerNombreClie" [width]="'180'"/>
-                        <ui-input-box [label]="'Apellido'" [options]="opcionesApellido" [returnValue]="'label'" formControlName="apellidoPaternoClie" [width]="'180'"/>
-                        <ui-combo-box [label]="'Es Socio'" [options]="opcionesSocio" [returnValue]="'label'" formControlName="esSocio" [width]="'180'"/>
-                        <ui-combo-box [label]="'Es Tercera Edad'" [options]="opcionesTerceraEdad" [returnValue]="'label'" formControlName="esTerceraEdad" [width]="'180'"/>
-                    </div>
-                    <div class="filter_btn">
-                        <ui-button [label]="'Filtrar'" [icon]="'filter_alt'"/>
-                    </div>
-                </div>
-            </form>
-            <div class="btns_options">
-                <ui-button [icon]="'refresh'" [action]="'refresh'" (evntClick)="refreshData($event)"/>
-            </div>
-        </div>
-        <div class="card_table">
-            <ui-table-list #tableList 
-                [serviceApi]="'clientes'" 
-                [columns]="config.columns" 
+<div class="sm-crud-list">
+  <ui-card [showHeader]="true" class="sm-crud-card">
+    <div class="sm-crud-toolbar" card-header>
+      <form class="sm-crud-form" [formGroup]="formData" (ngSubmit)="filtrar()">
+        <div class="sm-crud-filter-row">
+          <div class="sm-crud-filters">
+            <ui-input-box
+              class="sm-field-md"
+              [label]="'Cédula'"
+              [options]="opcionesCedulas"
+              [returnValue]="'label'"
+              formControlName="cedulaClie"
             />
+
+            <ui-input-box
+              class="sm-field-md"
+              [label]="'Nombre'"
+              [options]="opcionesNombre"
+              [returnValue]="'label'"
+              formControlName="primerNombreClie"
+            />
+
+            <ui-input-box
+              class="sm-field-md"
+              [label]="'Apellido'"
+              [options]="opcionesApellido"
+              [returnValue]="'label'"
+              formControlName="apellidoPaternoClie"
+            />
+
+            <ui-combo-box
+              class="sm-field-sm"
+              [label]="'Socio'"
+              [options]="opcionesSocio"
+              [returnValue]="'label'"
+              formControlName="esSocio"
+            />
+
+            <ui-combo-box
+              class="sm-field-md"
+              [label]="'Tercera edad'"
+              [options]="opcionesTerceraEdad"
+              [returnValue]="'label'"
+              formControlName="esTerceraEdad"
+            />
+          </div>
+
+          <div class="sm-crud-filter-button">
+            <ui-button
+              [label]="'Filtrar'"
+              [icon]="'filter_alt'"
+              [action]="'filter'"
+              (evntClick)="filtrar()"
+            />
+          </div>
         </div>
-    </ui-card>
+      </form>
+
+      <div class="sm-crud-actions">
+        <ui-button
+          [icon]="'refresh'"
+          [action]="'refresh'"
+          (evntClick)="refreshData($event)"
+        />
+      </div>
+    </div>
+
+    <div class="sm-crud-table">
+      <ui-table-list
+        #tableList
+        [serviceApi]="'clientes'"
+        [serviceApiFilter]="'clientes/filtrar'"
+        [serviceApiReal]="'clientes'"
+        [columns]="config.columns"
+      />
+    </div>
+  </ui-card>
 </div>
