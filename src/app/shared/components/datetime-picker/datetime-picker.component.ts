@@ -58,9 +58,7 @@ export class UiDatetimePickerComponent implements ControlValueAccessor {
       () => {
         const externalValue = this.value();
 
-        if (externalValue !== undefined && externalValue !== '') {
-          this.writeValue(externalValue);
-        }
+        this.writeValue(externalValue ?? '');
       },
       { allowSignalWrites: true },
     );

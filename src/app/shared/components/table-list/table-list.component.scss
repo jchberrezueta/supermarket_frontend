@@ -56,6 +56,10 @@
     }
   }
 
+  .table_row.row-click-disabled {
+    cursor: default;
+  }
+
   .td_btns {
     display: flex;
     flex-direction: row;

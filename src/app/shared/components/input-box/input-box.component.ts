@@ -135,7 +135,7 @@ export class UiInputBoxComponent implements ControlValueAccessor {
   }
 
   public writeValue(value: any): void {
-    if (value === -1 || value === '') {
+    if (value === -1 || value === '' || value === null || value === undefined) {
       this.selectedValue = null;
       this.selectedLabel = null;
       this.optionsFiltered.set('');
@@ -150,6 +150,7 @@ export class UiInputBoxComponent implements ControlValueAccessor {
     const options = this.options?.();
 
     if (!options || !options.length) {
+      this.selectedLabel = null;
       return;
     }
 
@@ -157,13 +158,13 @@ export class UiInputBoxComponent implements ControlValueAccessor {
       return;
     }
 
-    const labelFound = options.find(
-      (option) => option.value == this.selectedValue,
-    )?.label;
+    const selectedOption = options.find((option) =>
+      this.returnValue() === 'label'
+        ? option.label === this.selectedValue
+        : option.value == this.selectedValue,
+    );
 
-    if (labelFound) {
-      this.selectedLabel = labelFound;
-    }
+    this.selectedLabel = selectedOption?.label ?? null;
   }
 
   public registerOnChange(fn: any): void {

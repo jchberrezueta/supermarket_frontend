@@ -19,6 +19,7 @@ import { IResultData } from '@core/models';
 import { AuthService } from '@core/services/auth.service';
 import { RestService } from '@core/services/rest.service';
 import { ITableColumn } from '@shared/models/table_column.model';
+import { IButtonItem, TableRow } from '@shared/models/button_item.model';
 import { DashIfEmptyPipe } from '@shared/pipes/dashIfEmpty.pipe';
 import { LoadingService } from '@shared/services/loading.service';
 import Swal from 'sweetalert2';
@@ -49,6 +50,9 @@ export class UiTableListComponent implements OnInit {
   public columns = input.required<ITableColumn[]>();
   public message = input<string>('!No tiene registros generados¡');
   public isSelection = input<boolean>(false);
+  public rowClickEnabled = input<boolean>(true);
+  public rowDoubleClickEnabled = input<boolean>(true);
+  public rowDoubleClickAction = input<string>('edit');
 
   private data = signal<any[]>([]);
   protected matDatasource = new MatTableDataSource<any>();
@@ -57,6 +61,7 @@ export class UiTableListComponent implements OnInit {
 
   public onSelectRow = output<any>();
   public rowClickAction = output<any>();
+  public actionClick = output<{ action: string; row: TableRow }>();
 
   public resultsLength = signal(0);
   public displayedColumns = signal<string[]>([]);
@@ -166,6 +171,48 @@ export class UiTableListComponent implements OnInit {
     this.rowClickAction.emit({ action, row });
   }
 
+  protected handleRowClick(row: any): void {
+    if (this.rowClickEnabled()) {
+      this.selectItem(row);
+    }
+  }
+
+  protected handleRowDoubleClick(row: any): void {
+    if (this.rowDoubleClickEnabled()) {
+      this.emitClickAction(this.rowDoubleClickAction(), row);
+    }
+  }
+
+  protected isButtonVisible(button: IButtonItem, row: TableRow): boolean {
+    const rule = button.visible ?? button.condition;
+
+    if (typeof rule === 'function') {
+      return rule(row);
+    }
+
+    if (typeof rule === 'boolean') {
+      return rule;
+    }
+
+    return true;
+  }
+
+  protected isButtonDisabled(button: IButtonItem, row: TableRow): boolean {
+    return typeof button.disable === 'function'
+      ? button.disable(row)
+      : Boolean(button.disable);
+  }
+
+  protected emitCustomAction(button: IButtonItem, row: TableRow): void {
+    if (!this.isButtonVisible(button, row) || this.isButtonDisabled(button, row)) {
+      return;
+    }
+
+    const event = { action: button.action, row };
+    this.actionClick.emit(event);
+    this.rowClickAction.emit(event);
+  }
+
   public selectCheckBox(action: string, row: any): void {
     if (!this.selection.isSelected(row)) {
       this.selection.clear();
@@ -234,7 +281,7 @@ export class UiTableListComponent implements OnInit {
         showCancelButton: true,
         confirmButtonColor: this.getCssVariable(
           '--sm-color-primary',
-          '#2563eb',
+          '#15803d',
         ),
         cancelButtonColor: this.getCssVariable('--sm-color-danger', '#dc2626'),
         confirmButtonText: 'Sí, eliminar',
@@ -272,7 +319,7 @@ export class UiTableListComponent implements OnInit {
           icon: 'success',
           confirmButtonColor: this.getCssVariable(
             '--sm-color-primary',
-            '#2563eb',
+            '#15803d',
           ),
         });
 

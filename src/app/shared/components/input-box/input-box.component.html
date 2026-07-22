@@ -2,8 +2,8 @@
   <div
     class="div_select"
     [class.active]="open"
+    [class.has-value]="hasSelected || getOptionsFiltered !== ''"
     [class.disabled]="isDisabled()"
-    [attr.data-estado]="hasSelected ? 'true' : 'false'"
     [style.width]="controlWidth"
     (click)="toggle()"
   >
@@ -13,11 +13,15 @@
       [placeholder]="getPlaceholder"
       [value]="selectedLabel || getOptionsFiltered"
       [disabled]="isDisabled()"
+      [attr.aria-label]="getLabel"
+      role="combobox"
+      [attr.aria-expanded]="open"
+      aria-autocomplete="list"
       [class.has-value]="hasSelected || getOptionsFiltered !== ''"
       (input)="optionsFiltered.set(inp.value)"
     />
 
-    <label>{{ getLabel }}</label>
+    <label aria-hidden="true">{{ getLabel }}</label>
 
     @if (open) {
       <ul class="options">

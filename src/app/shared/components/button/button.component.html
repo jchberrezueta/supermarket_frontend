@@ -7,6 +7,9 @@
     [style.background]="buttonBackground"
     [style.width]="buttonWidth"
     [style.color]="buttonTextColor"
+    [disabled]="disabled()"
+    [attr.title]="tooltip() || (!getLabel && getIcon ? accessibleLabel : null)"
+    [attr.aria-label]="accessibleLabel"
     (click)="emitClick($event)"
   >
     @if (getIcon) {

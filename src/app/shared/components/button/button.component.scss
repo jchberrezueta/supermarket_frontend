@@ -27,15 +27,21 @@
     box-shadow 0.15s ease,
     filter 0.15s ease;
 
-  &:hover {
+  &:hover:not(:disabled) {
     transform: translateY(-1px);
     box-shadow: var(--sm-shadow-md);
     filter: brightness(1.03);
   }
 
-  &:active {
+  &:active:not(:disabled) {
     transform: translateY(0);
     box-shadow: var(--sm-shadow-sm);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+    box-shadow: none;
   }
 
   mat-icon {

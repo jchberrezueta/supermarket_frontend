@@ -67,6 +67,15 @@ export class UiComboBoxComponent implements ControlValueAccessor {
     this.open = !this.open;
   }
 
+  protected handleKeydown(event: KeyboardEvent): void {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      this.toggle();
+    } else if (event.key === 'Escape') {
+      this.open = false;
+    }
+  }
+
   protected emitValue(opt: IComboBoxOption, event: MouseEvent): void {
     event.stopPropagation();
 
@@ -105,7 +114,7 @@ export class UiComboBoxComponent implements ControlValueAccessor {
   }
 
   public writeValue(value: any): void {
-    if (value === -1 || value === '') {
+    if (value === -1 || value === '' || value === null || value === undefined) {
       this.selectedValue = null;
       this.selectedLabel = null;
       return;
@@ -119,6 +128,7 @@ export class UiComboBoxComponent implements ControlValueAccessor {
     const options = this.options?.();
 
     if (!options || !options.length) {
+      this.selectedLabel = null;
       return;
     }
 
@@ -126,13 +136,13 @@ export class UiComboBoxComponent implements ControlValueAccessor {
       return;
     }
 
-    const labelFound = options.find(
-      (option) => option.value == this.selectedValue,
-    )?.label;
+    const selectedOption = options.find((option) =>
+      this.returnValue() === 'label'
+        ? option.label === this.selectedValue
+        : option.value == this.selectedValue,
+    );
 
-    if (labelFound) {
-      this.selectedLabel = labelFound;
-    }
+    this.selectedLabel = selectedOption?.label ?? null;
   }
 
   public registerOnChange(fn: any): void {

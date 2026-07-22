@@ -1,5 +1,5 @@
 <div class="div_container">
-  <div class="div_input" [style.width]="controlWidth">
+  <div class="div_input" [class.has-value]="hasValue" [style.width]="controlWidth">
     <input
       [type]="inputType"
       required
@@ -7,11 +7,12 @@
       [disabled]="_isDisabled()"
       [value]="innerValue()"
       [class.has-value]="hasValue"
+      [attr.aria-label]="getLabel"
       (change)="emitValue($event)"
       (input)="updateValue($event)"
       (blur)="onTouched()"
     />
 
-    <label>{{ getLabel }}</label>
+    <label aria-hidden="true">{{ getLabel }}</label>
   </div>
 </div>

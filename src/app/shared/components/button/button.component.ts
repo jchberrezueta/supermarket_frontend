@@ -7,7 +7,7 @@ const IMPORTS = [MatButtonModule, MatIconModule, CommonModule];
 
 const COLOR_MAP: Record<string, string> = {
   primary: 'var(--sm-color-primary)',
-  blue: 'var(--sm-color-primary)',
+  blue: 'var(--sm-color-edit)',
 
   secondary: 'var(--sm-color-secondary)',
   success: 'var(--sm-color-success)',
@@ -20,14 +20,29 @@ const COLOR_MAP: Record<string, string> = {
   warning: 'var(--sm-color-warning)',
   yellow: 'var(--sm-color-warning)',
 
-  info: 'var(--sm-color-info)',
-  purple: '#7c3aed',
+  info: 'var(--sm-color-edit)',
+  purple: 'var(--sm-color-secondary)',
 
   accent: 'var(--sm-color-accent)',
   orange: 'var(--sm-color-accent)',
 
   neutral: 'var(--sm-color-text-muted)',
   gray: 'var(--sm-color-text-muted)',
+};
+
+const ACTION_COLOR_MAP: Record<string, string> = {
+  add: 'var(--sm-color-success)',
+  create: 'var(--sm-color-success)',
+  save: 'var(--sm-color-success)',
+  confirm: 'var(--sm-color-success)',
+  update: 'var(--sm-color-edit)',
+  edit: 'var(--sm-color-edit)',
+  delete: 'var(--sm-color-danger)',
+  remove: 'var(--sm-color-danger)',
+  details: 'var(--sm-color-secondary)',
+  view: 'var(--sm-color-secondary)',
+  filter: 'var(--sm-color-filter)',
+  search: 'var(--sm-color-filter)',
 };
 
 const TEXT_COLOR_MAP: Record<string, string> = {
@@ -51,11 +66,17 @@ export class UiButtonComponent {
   public color = input<string>('primary');
   public textColor = input<string>('white');
   public width = input<string>('auto');
+  public disabled = input<boolean>(false);
+  public tooltip = input<string>();
+  public ariaLabel = input<string>();
 
   public evntClick = output<string>();
 
   protected emitClick(event: MouseEvent): void {
     event.stopPropagation();
+    if (this.disabled()) {
+      return;
+    }
     this.evntClick.emit(this.getAction);
   }
 
@@ -93,12 +114,28 @@ export class UiButtonComponent {
     return `${width}px`;
   }
 
+  public get accessibleLabel(): string {
+    return (
+      this.ariaLabel() ||
+      this.tooltip() ||
+      this.getLabel ||
+      this.getIcon ||
+      this.getAction
+    );
+  }
+
   private resolveColor(color: string | undefined): string {
+    const actionColor = ACTION_COLOR_MAP[this.semanticAction];
+
     if (!color) {
-      return COLOR_MAP['primary'];
+      return actionColor || COLOR_MAP['primary'];
     }
 
     const normalized = color.trim().toLowerCase();
+
+    if (actionColor && normalized === 'primary') {
+      return actionColor;
+    }
 
     if (COLOR_MAP[normalized]) {
       return COLOR_MAP[normalized];
@@ -109,6 +146,42 @@ export class UiButtonComponent {
     }
 
     return color;
+  }
+
+  private get semanticAction(): string {
+    const action = this.getAction.trim().toLowerCase();
+
+    if (ACTION_COLOR_MAP[action]) {
+      return action;
+    }
+
+    const label = this.getLabel?.trim().toLowerCase() ?? '';
+    const labelActions: Array<[string, string]> = [
+      ['agregar', 'add'],
+      ['crear', 'create'],
+      ['guardar', 'save'],
+      ['confirmar', 'confirm'],
+      ['actualizar', 'update'],
+      ['modificar', 'edit'],
+      ['editar', 'edit'],
+      ['eliminar', 'delete'],
+      ['ver', 'view'],
+      ['detalle', 'details'],
+      ['filtrar', 'filter'],
+      ['buscar', 'search'],
+    ];
+
+    const labelAction = labelActions.find(([prefix]) =>
+      label.startsWith(prefix),
+    )?.[1];
+
+    if (labelAction) {
+      return labelAction;
+    }
+
+    const icon = this.getIcon?.trim().toLowerCase() ?? '';
+
+    return ACTION_COLOR_MAP[icon] ? icon : action;
   }
 
   private resolveTextColor(color: string | undefined): string {

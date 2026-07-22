@@ -1,5 +1,5 @@
 <div class="div_container">
-  <div class="div_datetime" [style.width]="controlWidth">
+  <div class="div_datetime" [class.has-value]="hasValue" [style.width]="controlWidth">
     @if (isTime()) {
       <input
         type="datetime-local"
@@ -7,6 +7,7 @@
         [disabled]="_isDisabled()"
         [value]="innerValue()"
         [class.has-value]="hasValue"
+        [attr.aria-label]="getLabel"
         (input)="updateValue($event)"
         (change)="emitValue($event)"
         (blur)="onTouched()"
@@ -18,12 +19,13 @@
         [disabled]="_isDisabled()"
         [value]="innerValue()"
         [class.has-value]="hasValue"
+        [attr.aria-label]="getLabel"
         (input)="updateValue($event)"
         (change)="emitValue($event)"
         (blur)="onTouched()"
       />
     }
 
-    <label>{{ getLabel }}</label>
+    <label aria-hidden="true">{{ getLabel }}</label>
   </div>
 </div>

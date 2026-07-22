@@ -6,25 +6,27 @@
 // -----------------------------
 // SCSS tokens de compatibilidad
 // -----------------------------
-$color-primary: #2563eb;
-$color-primary-dark: #1d4ed8;
-$color-primary-soft: #dbeafe;
+$color-primary: #15803d;
+$color-primary-dark: #166534;
+$color-primary-soft: #dcfce7;
 
-$color-secondary: #16a34a;
-$color-accent: #f97316;
+$color-secondary: #6d28d9;
+$color-accent: #b45309;
 
-$color-bg: #f4f7fb;
+$color-bg: #f5f7f4;
 $color-surface: #ffffff;
 $color-surface-soft: #f8fafc;
 
 $color-text: #0f172a;
 $color-text-muted: #64748b;
-$color-border: #e2e8f0;
+$color-border: #d9e2da;
 
 $color-success: #16a34a;
 $color-warning: #f59e0b;
 $color-danger: #dc2626;
 $color-info: #0284c7;
+$color-edit: #2563a7;
+$color-filter: #a16207;
 
 $font-family-base: "Inter", "Roboto", "Segoe UI", Arial, sans-serif;
 $font-size-base: 16px;
@@ -51,25 +53,28 @@ $shadow-lg: 0 18px 45px rgba(15, 23, 42, 0.12);
 // color: var(--sm-color-primary);
 // -----------------------------
 :root {
-  --sm-color-primary: #2563eb;
-  --sm-color-primary-dark: #1d4ed8;
-  --sm-color-primary-soft: #dbeafe;
+  --sm-color-primary: #15803d;
+  --sm-color-primary-dark: #166534;
+  --sm-color-primary-soft: #dcfce7;
 
-  --sm-color-secondary: #16a34a;
-  --sm-color-accent: #f97316;
+  --sm-color-secondary: #6d28d9;
+  --sm-color-accent: #b45309;
 
-  --sm-color-bg: #f4f7fb;
+  --sm-color-bg: #f5f7f4;
   --sm-color-surface: #ffffff;
   --sm-color-surface-soft: #f8fafc;
 
   --sm-color-text: #0f172a;
   --sm-color-text-muted: #64748b;
-  --sm-color-border: #e2e8f0;
+  --sm-color-border: #d9e2da;
+  --sm-color-focus-ring: rgba(21, 128, 61, 0.16);
 
   --sm-color-success: #16a34a;
   --sm-color-warning: #f59e0b;
   --sm-color-danger: #dc2626;
   --sm-color-info: #0284c7;
+  --sm-color-edit: #2563a7;
+  --sm-color-filter: #a16207;
 
   --sm-font-family-base: "Inter", "Roboto", "Segoe UI", Arial, sans-serif;
   --sm-font-size-base: 16px;
@@ -89,6 +94,8 @@ $shadow-lg: 0 18px 45px rgba(15, 23, 42, 0.12);
   --sm-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
   --sm-shadow-md: 0 8px 24px rgba(15, 23, 42, 0.08);
   --sm-shadow-lg: 0 18px 45px rgba(15, 23, 42, 0.12);
+
+  --sm-z-dropdown: 100;
 
   --sm-header-height: 72px;
   --sm-sidebar-width: 280px;

@@ -25,17 +25,7 @@
 
       input {
         border-color: var(--sm-color-primary);
-        box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
-      }
-    }
-
-    &.active,
-    &[data-estado="true"] {
-      label {
-        top: -8px;
-        font-size: 0.75rem;
-        color: var(--sm-color-primary);
-        background: var(--sm-color-surface);
+        box-shadow: 0 0 0 4px var(--sm-color-focus-ring);
       }
     }
 
@@ -64,7 +54,7 @@
 
       &:focus {
         border-color: var(--sm-color-primary);
-        box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+        box-shadow: 0 0 0 4px var(--sm-color-focus-ring);
       }
 
       &:disabled {
@@ -73,14 +63,6 @@
         background: var(--sm-color-surface-soft);
       }
 
-      &:focus + label,
-      &.has-value + label,
-      &:not(:placeholder-shown) + label {
-        top: -8px;
-        font-size: 0.75rem;
-        color: var(--sm-color-primary);
-        background: var(--sm-color-surface);
-      }
     }
 
     label {
@@ -99,12 +81,35 @@
       pointer-events: none;
       transition:
         top 0.2s ease,
+        transform 0.2s ease,
         font-size 0.2s ease,
         color 0.2s ease,
         background-color 0.2s ease;
     }
 
+    &.active,
+    &.has-value,
+    &:focus-within {
+      input {
+        padding-top: 17px;
+        padding-bottom: 11px;
+      }
+
+      label {
+        top: -7px;
+        transform: none;
+        font-size: 0.75rem;
+        color: var(--sm-color-primary);
+        background: var(--sm-color-surface);
+      }
+    }
+
+    &.disabled.has-value label {
+      background: var(--sm-color-surface-soft);
+    }
+
     .options {
+      z-index: var(--sm-z-dropdown);
       position: absolute;
       top: calc(100% + 6px);
       left: 0;

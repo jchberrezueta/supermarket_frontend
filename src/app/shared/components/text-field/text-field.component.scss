@@ -38,7 +38,7 @@
 
       &:focus {
         border-color: var(--sm-color-primary);
-        box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+        box-shadow: 0 0 0 4px var(--sm-color-focus-ring);
       }
 
       &:disabled {
@@ -48,14 +48,6 @@
         opacity: 0.9;
       }
 
-      &:focus + label,
-      &.has-value + label,
-      &:not(:placeholder-shown) + label {
-        top: -8px;
-        font-size: 0.75rem;
-        color: var(--sm-color-primary);
-        background: var(--sm-color-surface);
-      }
     }
 
     label {
@@ -74,9 +66,30 @@
       pointer-events: none;
       transition:
         top 0.2s ease,
+        transform 0.2s ease,
         font-size 0.2s ease,
         color 0.2s ease,
         background-color 0.2s ease;
+    }
+
+    &.has-value,
+    &:focus-within {
+      input {
+        padding-top: 17px;
+        padding-bottom: 11px;
+      }
+
+      label {
+        top: -7px;
+        transform: none;
+        font-size: 0.75rem;
+        color: var(--sm-color-primary);
+        background: var(--sm-color-surface);
+      }
+    }
+
+    &.has-value input:disabled + label {
+      background: var(--sm-color-surface-soft);
     }
   }
 }

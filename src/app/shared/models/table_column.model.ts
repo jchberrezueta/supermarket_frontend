@@ -28,6 +28,7 @@ export interface ITableColumn {
     | 'edit'
     | 'redirect'
     | 'sendMail'
+    | 'actions'
     | 'details';
   label: string;
   buttonItems?: IButtonItem[];

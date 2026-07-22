@@ -2,10 +2,16 @@
   <div
     class="div_select"
     [class.active]="open"
+    [class.has-value]="hasSelected"
     [class.disabled]="isDisabled"
-    [attr.data-estado]="hasSelected ? 'true' : 'false'"
     [style.width]="controlWidth"
+    role="combobox"
+    [attr.tabindex]="isDisabled ? -1 : 0"
+    [attr.aria-label]="getLabel"
+    [attr.aria-expanded]="open"
+    [attr.aria-disabled]="isDisabled"
     (click)="toggle()"
+    (keydown)="handleKeydown($event)"
   >
     <div class="selected">
       <label class="floating_label">{{ getLabel }}</label>

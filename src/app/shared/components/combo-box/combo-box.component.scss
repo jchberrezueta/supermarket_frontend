@@ -30,28 +30,13 @@
 
       .selected {
         border-color: var(--sm-color-primary);
-        box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+        box-shadow: 0 0 0 4px var(--sm-color-focus-ring);
       }
 
       .select_arrow {
         transform: translateY(-50%) rotate(180deg);
       }
 
-      .floating_label {
-        top: -8px;
-        font-size: 0.75rem;
-        color: var(--sm-color-primary);
-        background: var(--sm-color-surface);
-      }
-    }
-
-    &[data-estado="true"] {
-      .floating_label {
-        top: -8px;
-        font-size: 0.75rem;
-        color: var(--sm-color-primary);
-        background: var(--sm-color-surface);
-      }
     }
 
     .selected {
@@ -116,7 +101,26 @@
       }
     }
 
+    &.active .selected,
+    &.has-value .selected {
+      padding-top: 17px;
+      padding-bottom: 11px;
+
+      .floating_label {
+        top: -7px;
+        transform: none;
+        font-size: 0.75rem;
+        color: var(--sm-color-primary);
+        background: var(--sm-color-surface);
+      }
+    }
+
+    &.disabled.has-value .selected .floating_label {
+      background: var(--sm-color-surface-soft);
+    }
+
     .options {
+      z-index: var(--sm-z-dropdown);
       position: absolute;
       top: calc(100% + 6px);
       left: 0;

@@ -20,30 +20,34 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--sm-spacing-4);
+  flex-wrap: wrap;
   margin-bottom: var(--sm-spacing-4);
 }
 
 .sm-crud-form {
   flex: 1 1 auto;
   min-width: 0;
+  max-width: 100%;
 }
 
 .sm-crud-filter-row {
   width: 100%;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--sm-spacing-3);
 }
 
 .sm-crud-filters {
-  flex: 1 1 auto;
+  flex: 1 1 720px;
   min-width: 0;
   display: flex;
   flex-direction: row;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--sm-spacing-3);
   overflow: visible;
+  max-width: 100%;
 
   ui-text-field,
   ui-input-box,
@@ -60,6 +64,7 @@
   flex: 0 0 auto;
   display: flex;
   align-items: center;
+  max-width: 100%;
 }
 
 .sm-crud-actions {
@@ -124,10 +129,6 @@
 
   .sm-crud-filter-row {
     align-items: flex-start;
-  }
-
-  .sm-crud-filters {
-    flex-wrap: wrap;
   }
 
   .sm-crud-filters > .sm-field-xs {
@@ -200,6 +201,10 @@
 
   .sm-crud-filter-button {
     width: 100%;
+
+    ui-button {
+      max-width: 100%;
+    }
   }
 
   .sm-crud-actions {
