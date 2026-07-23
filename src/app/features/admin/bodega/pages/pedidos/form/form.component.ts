@@ -255,6 +255,7 @@ export default class FormComponent implements OnInit {
   }
 
   protected get cantidadTotal(): number { return this.detalles.reduce((sum, d) => sum + d.cantidadProd, 0); }
+  protected get esDevolucion(): boolean { return this.formData.controls.motivoPedi.value === EnumMotivosPedido.DEVOLUCION; }
   protected get subtotalTotal(): number { return this.redondear(this.detalles.reduce((sum, d) => sum + d.subtotalProd, 0)); }
   protected get descuentosTotal(): number { return this.redondear(this.detalles.reduce((sum, d) => sum + d.dctoCompraProd + d.dctoCaducProd, 0)); }
   protected get ivaTotal(): number { return this.redondear(this.detalles.reduce((sum, d) => sum + d.ivaProd, 0)); }

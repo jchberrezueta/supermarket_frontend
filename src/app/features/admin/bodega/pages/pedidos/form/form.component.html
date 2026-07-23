@@ -48,7 +48,9 @@
       <ui-text-field label="Precio" [value]="preview.precioUnitarioProd | number:'1.2-2'" [disabled]="true" />
       <ui-text-field label="IVA" [value]="preview.ivaProd | number:'1.2-2'" [disabled]="true" />
       <ui-text-field label="Dcto. compra" [value]="preview.dctoCompraProd | number:'1.2-2'" [disabled]="true" />
-      <ui-text-field label="Dcto. canje" [value]="preview.dctoCaducProd | number:'1.2-2'" [disabled]="true" />
+      @if (esDevolucion) {
+        <ui-text-field label="Dcto. canje" [value]="preview.dctoCaducProd | number:'1.2-2'" [disabled]="true" />
+      }
       <ui-text-field label="Total" [value]="preview.totalProd | number:'1.2-2'" [disabled]="true" />
       <div class="entry-actions">
         <ui-button class="add-button" [label]="claveEdicion ? 'Guardar cambios' : 'Agregar'" [icon]="claveEdicion ? 'save' : 'add'" color="green" [disabled]="!cabeceraConfirmada" (evntClick)="agregarProducto()" />
@@ -60,22 +62,22 @@
 
     <div class="table-wrap">
       <table>
-        <thead><tr><th>Producto</th><th>Cant.</th><th>Precio unit.</th><th>Subtotal bruto</th><th>Dcto. compra</th><th>Dcto. canje</th><th>IVA</th><th>Total</th><th></th></tr></thead>
+        <thead><tr><th>Producto</th><th>Cant.</th><th>Precio unit.</th><th>Subtotal bruto</th><th>Dcto. compra</th>@if (esDevolucion) { <th>Dcto. canje</th> }<th>IVA</th><th>Total</th><th></th></tr></thead>
         <tbody>
           @for (detalle of detalles; track detalle.claveLocal) {
             <tr [class.editing-row]="detalle.claveLocal === claveEdicion">
               <td>{{ detalle.nombreProd }}</td><td>{{ detalle.cantidadProd }}</td>
               <td>{{ detalle.precioUnitarioProd | number:'1.2-2' }}</td><td>{{ detalle.subtotalProd | number:'1.2-2' }}</td>
-              <td>{{ detalle.dctoCompraProd | number:'1.2-2' }}</td><td>{{ detalle.dctoCaducProd | number:'1.2-2' }}</td>
+              <td>{{ detalle.dctoCompraProd | number:'1.2-2' }}</td>@if (esDevolucion) { <td>{{ detalle.dctoCaducProd | number:'1.2-2' }}</td> }
               <td>{{ detalle.ivaProd | number:'1.2-2' }}</td><td class="money-strong">{{ detalle.totalProd | number:'1.2-2' }}</td>
               <td><div class="row-actions">
                 <ui-button label="Editar" icon="edit" color="blue" tooltip="Editar producto" ariaLabel="Editar producto" (evntClick)="editarProducto(detalle)" />
                 <ui-button label="Eliminar" icon="delete" color="red" tooltip="Eliminar producto" ariaLabel="Eliminar producto" (evntClick)="eliminarProducto(detalle.claveLocal)" />
               </div></td>
             </tr>
-          } @empty { <tr><td colspan="9" class="empty-row">Aún no hay productos agregados.</td></tr> }
+          } @empty { <tr><td [attr.colspan]="esDevolucion ? 9 : 8" class="empty-row">Aún no hay productos agregados.</td></tr> }
         </tbody>
-        <tfoot><tr><td>Totales</td><td>{{ cantidadTotal }}</td><td></td><td>{{ subtotalTotal | number:'1.2-2' }}</td><td colspan="2">- {{ descuentosTotal | number:'1.2-2' }}</td><td>{{ ivaTotal | number:'1.2-2' }}</td><td>{{ totalGeneral | number:'1.2-2' }}</td><td></td></tr></tfoot>
+        <tfoot><tr><td>Totales</td><td>{{ cantidadTotal }}</td><td></td><td>{{ subtotalTotal | number:'1.2-2' }}</td><td [attr.colspan]="esDevolucion ? 2 : 1">- {{ descuentosTotal | number:'1.2-2' }}</td><td>{{ ivaTotal | number:'1.2-2' }}</td><td>{{ totalGeneral | number:'1.2-2' }}</td><td></td></tr></tfoot>
       </table>
     </div>
   </section>
