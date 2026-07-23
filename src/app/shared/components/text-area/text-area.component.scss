@@ -51,6 +51,19 @@
         opacity: 0.9;
       }
 
+      &.is-readonly {
+        cursor: default;
+        user-select: text;
+        resize: none;
+        background: var(--sm-color-surface);
+      }
+
+      &.is-readonly:hover,
+      &.is-readonly:focus {
+        border-color: var(--sm-color-border);
+        box-shadow: none;
+      }
+
       &:focus + label,
       &.has-value + label,
       &:not(:placeholder-shown) + label {

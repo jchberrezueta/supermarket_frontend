@@ -34,6 +34,7 @@ export class UiTextAreaComponent implements ControlValueAccessor {
   public value = input<any>('');
   public valueType = input<'string' | 'number'>('string');
   public disabled = input<boolean>(false);
+  public readonly = input<boolean>(false);
   public width = input<string>('auto');
   public placeholder = input<string>('...');
   public rows = input<number>(4);

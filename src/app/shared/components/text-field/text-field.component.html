@@ -5,6 +5,8 @@
       required
       [placeholder]="getPlaceholder"
       [disabled]="_isDisabled()"
+      [readOnly]="readonly()"
+      [class.is-readonly]="readonly()"
       [value]="innerValue()"
       [class.has-value]="hasValue"
       [attr.aria-label]="getLabel"

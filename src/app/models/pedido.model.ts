@@ -1,9 +1,12 @@
 import { IDetallePedido } from "./detalle_pedido.model";
 
 export enum EnumEstadosPedido {
-    PROGRESO = 'progreso',
+    BORRADOR = 'borrador',
+    EMITIDO = 'emitido',
+    PARCIAL = 'parcial',
     COMPLETADO = 'completado',
-    INCOMPLETO = 'incompleto'
+    CERRADO_INCOMPLETO = 'cerrado_incompleto',
+    CANCELADO = 'cancelado'
 }
 
 export enum EnumMotivosPedido {
@@ -15,12 +18,12 @@ export interface IPedido {
     idePedi: number;
     ideEmpr: number;
     fechaPedi: string;
-    fechaEntrPedi: string;
+    fechaEntrPedi: string | null;
     cantidadTotalPedi: number;
     totalPedi: number;
     estadoPedi: EnumEstadosPedido;
     motivoPedi: EnumMotivosPedido;
-    observacionPedi: string;
+    observacionPedi: string | null;
 }
 
 export class CPedido implements IPedido {
@@ -29,12 +32,12 @@ export class CPedido implements IPedido {
         private _idePedi: number,
         private _ideEmpr: number,
         private _fechaPedi: string,
-        private _fechaEntrPedi: string,
+        private _fechaEntrPedi: string | null,
         private _cantidadTotalPedi: number,
         private _totalPedi: number,
         private _estadoPedi: EnumEstadosPedido,
         private _motivoPedi: EnumMotivosPedido,
-        private _observacionPedi: string
+        private _observacionPedi: string | null
     ) {}
 
     // --- Getters / Setters ---
@@ -63,7 +66,7 @@ export class CPedido implements IPedido {
     get fechaEntrPedi() {
         return this._fechaEntrPedi;
     }
-    set fechaEntrPedi(value: string) {
+    set fechaEntrPedi(value: string | null) {
         this._fechaEntrPedi = value;
     }
 
@@ -98,7 +101,7 @@ export class CPedido implements IPedido {
     get observacionPedi() {
         return this._observacionPedi;
     }
-    set observacionPedi(value: string) {
+    set observacionPedi(value: string | null) {
         this._observacionPedi = value;
     }
 }
@@ -107,12 +110,12 @@ export interface IPedidoResult {
     ide_pedi: number;
     ide_empr: number;
     fecha_pedi: string;
-    fecha_entr_pedi: string;
+    fecha_entr_pedi: string | null;
     cantidad_total_pedi: number;
     total_pedi: number;
     estado_pedi: EnumEstadosPedido;
     motivo_pedi: EnumMotivosPedido;
-    observacion_pedi: string;
+    observacion_pedi: string | null;
 }
 
 export interface IResultDataPedido {
@@ -130,6 +133,12 @@ export interface IFiltroPedido {
 }
 
 export interface IPedidoCompleto {
-    cabeceraPedido: IPedido;
-    detallePedido: IDetallePedido;
+    cabeceraPedido: {
+        idePedi?: number;
+        ideEmpr: number;
+        motivoPedi: EnumMotivosPedido;
+        fechaEntrPedi: string;
+        observacionPedi?: string | null;
+    };
+    detallePedido: Pick<IDetallePedido, 'ideProd' | 'cantidadProd'>[];
 }

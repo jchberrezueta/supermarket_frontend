@@ -42,6 +42,7 @@ export class UiDatetimePickerComponent implements ControlValueAccessor {
   public label = input.required<string>();
   public value = input<string>('');
   public disabled = input<boolean>(false);
+  public min = input<string | null>(null);
   public width = input<string>('auto');
   public isTime = input<boolean>(false);
   public showHint = input<boolean>(false);

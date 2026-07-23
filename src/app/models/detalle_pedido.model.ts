@@ -1,6 +1,9 @@
 export enum EnumEstadoDetallePedido {
-    COMPLETADO = 'completado',
-    INCOMPLETO = 'incompleto'
+    PENDIENTE = 'pendiente',
+    PARCIAL = 'parcial',
+    COMPLETO = 'completo',
+    CERRADO_INCOMPLETO = 'cerrado_incompleto',
+    CANCELADO = 'cancelado'
 }
 
 export interface IDetallePedido {
@@ -117,6 +120,7 @@ export interface IDetallePedidoResult {
     ide_deta_pedi: number;
     ide_pedi: number;
     ide_prod: number;
+    nombre_prod?: string | null;
     cantidad_prod: number;
     precio_unitario_prod: number;
     subtotal_prod: number;

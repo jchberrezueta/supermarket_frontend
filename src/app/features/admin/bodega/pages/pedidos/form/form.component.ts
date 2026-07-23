@@ -1,24 +1,22 @@
+import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, FormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-import { Location, CommonModule } from '@angular/common';
-import { forkJoin } from 'rxjs';
-
-import { UiTextFieldComponent } from "@shared/components/text-field/text-field.component";
-import { UiButtonComponent } from "@shared/components/button/button.component";
-import { UiDatetimePickerComponent } from "@shared/components/datetime-picker/datetime-picker.component";
-import { UiTextAreaComponent } from "@shared/components/text-area/text-area.component";
-import { UiComboBoxComponent } from '@shared/components/combo-box/combo-box.component';
-import { IComboBoxOption } from '@shared/models/combo_box_option';
-
-import { FormGroupOf } from '@core/utils/utilities';
-import { IPedido, IPedidoResult, IDetallePedido, EnumEstadoDetallePedido } from '@models';
-import { PedidosService, EmpresasService, ProductosService } from '@services/index';
-import { LoadingService } from '@shared/services/loading.service';
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { finalize } from 'rxjs';
 import Swal from 'sweetalert2';
 
-// Interfaz para el detalle en la tabla
+import { EnumMotivosPedido, IDetallePedidoResult, IEmpresaPreciosResult, IPedidoCompleto, IPedidoResult } from '@models';
+import { EmpresasService, PedidosService } from '@services/index';
+import { UiButtonComponent } from '@shared/components/button/button.component';
+import { UiComboBoxComponent } from '@shared/components/combo-box/combo-box.component';
+import { UiTextAreaComponent } from '@shared/components/text-area/text-area.component';
+import { UiTextFieldComponent } from '@shared/components/text-field/text-field.component';
+import { UiDatetimePickerComponent } from '@shared/components/datetime-picker/datetime-picker.component';
+import { IComboBoxOption } from '@shared/models/combo_box_option';
+import { LoadingService } from '@shared/services/loading.service';
+
 interface IDetalleTabla {
+  claveLocal: string;
   ideProd: number;
   nombreProd: string;
   cantidadProd: number;
@@ -30,327 +28,365 @@ interface IDetalleTabla {
   totalProd: number;
 }
 
-const IMPORTS = [
-  CommonModule,
-  FormsModule,
-  UiTextFieldComponent, 
-  UiTextAreaComponent,
-  UiDatetimePickerComponent,
-  UiComboBoxComponent,
-  UiButtonComponent,
-  ReactiveFormsModule, 
-];
+interface IPrevisualizacion extends Omit<IDetalleTabla, 'claveLocal' | 'ideProd' | 'nombreProd' | 'cantidadProd'> {}
 
-type PedidoFormGroup = FormGroupOf<IPedido>;
+const VACIO: IPrevisualizacion = {
+  precioUnitarioProd: 0,
+  subtotalProd: 0,
+  ivaProd: 0,
+  dctoCompraProd: 0,
+  dctoCaducProd: 0,
+  totalProd: 0,
+};
 
 @Component({
   selector: 'app-form',
   standalone: true,
-  imports: IMPORTS,
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, UiTextFieldComponent, UiTextAreaComponent, UiComboBoxComponent, UiButtonComponent, UiDatetimePickerComponent],
   templateUrl: './form.component.html',
-  styleUrl: './form.component.scss'
+  styleUrl: './form.component.scss',
 })
 export default class FormComponent implements OnInit {
-  
-  protected empresas!: IComboBoxOption[];
-  protected estados!: IComboBoxOption[];
-  protected motivos!: IComboBoxOption[];
-  protected productos!: IComboBoxOption[];
-  
-  // Detalle del pedido
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly pedidosService = inject(PedidosService);
+  private readonly empresasService = inject(EmpresasService);
+  private readonly loadingService = inject(LoadingService);
+  private readonly fb = inject(FormBuilder);
+
+  protected readonly motivos: IComboBoxOption[] = [
+    { value: EnumMotivosPedido.PETICION, label: 'Petición' },
+    { value: EnumMotivosPedido.DEVOLUCION, label: 'Devolución' },
+  ];
+  protected empresas: IComboBoxOption[] = [];
+  protected productos: IComboBoxOption[] = [];
+  protected preciosEmpresa: IEmpresaPreciosResult[] = [];
   protected detalles: IDetalleTabla[] = [];
-  protected productoSeleccionado: number = -1;
-  protected cantidadProducto: number = 1;
-  protected precioUnitario: number = 0;
-  protected ivaProd: number = 0;
-  protected dctoCompraProd: number = 0;
-  protected dctoCaducProd: number = 0;
-  
-  private readonly _route = inject(ActivatedRoute);
-  private readonly _pedidosService = inject(PedidosService);
-  private readonly _empresasService = inject(EmpresasService);
-  private readonly _productosService = inject(ProductosService);
-  private readonly _loadingService = inject(LoadingService);
-  private readonly formBuilder = inject(FormBuilder);
-  public location = inject(Location);
-  
-  protected formData!: PedidoFormGroup;
-  private initialFormValue!: IPedido;
-  protected isAdd: boolean = true;
-  private idParam: number = -1;
-  private productosLoaded: boolean = false;
+  protected productoSeleccionado = -1;
+  protected cantidadProducto = 1;
+  protected preview: IPrevisualizacion = { ...VACIO };
+  protected fechaPedidoVisible = this.formatearFecha(new Date());
+  protected fechaPedidoCalendario = this.fechaCalendarioLocal(new Date());
+  protected cabeceraConfirmada = false;
+  protected cargandoProductos = false;
+  protected guardando = false;
+  protected isAdd = true;
+  protected idPedido = -1;
+  protected claveEdicion: string | null = null;
+  private secuenciaLocal = 0;
 
-  constructor() {
-    this.loadCombos();
-  }
+  protected readonly formData = this.fb.group({
+    ideEmpr: [-1, [Validators.required, Validators.min(1)]],
+    motivoPedi: ['', Validators.required],
+    fechaEntrPedi: ['', Validators.required],
+    observacionPedi: [''],
+  });
 
-  ngOnInit() {
-    const idParam = this._route.snapshot.params['id'];
-    this.initForm();
-    if(idParam){
-      this.setData(idParam);
+  ngOnInit(): void {
+    this.empresasService.listarComboEmpresas().subscribe((res) => this.empresas = res ?? []);
+    const id = Number(this.route.snapshot.params['id']);
+    if (Number.isInteger(id) && id > 0) {
+      this.cargarBorrador(id);
     }
   }
 
-  private initForm(): void {
-    this.formData = this.formBuilder.group({
-      idePedi: [{ value: -1, disabled: true }, [Validators.required]],        
-      ideEmpr: [-1, [Validators.required]],
-      fechaPedi: ['', [Validators.required]],
-      fechaEntrPedi: ['', [Validators.required]],
-      cantidadTotalPedi: [0, [Validators.required, Validators.min(0)]],
-      totalPedi: [0, [Validators.required, Validators.min(0)]],
-      estadoPedi: ['', [Validators.required]],
-      motivoPedi: ['', [Validators.required]],
-      observacionPedi: ['']
-    }) as PedidoFormGroup;
-
-    this.initialFormValue = this.formData.getRawValue();
+  protected seleccionarEmpresa(value: string | number): void {
+    if (this.cabeceraConfirmada || this.detalles.length > 0) return;
+    const ideEmpr = Number(value);
+    this.formData.controls.ideEmpr.setValue(ideEmpr);
+    this.limpiarSeleccionProducto();
+    this.cargarProductosEmpresa(ideEmpr);
   }
 
-  private setData(idParam: number) {
-    this._loadingService.show();
-    this._pedidosService.buscar(idParam).subscribe({
-      next: (res) => {
-        const pedido = res.data[0] as IPedidoResult;
-        this.idParam = pedido.ide_pedi;
-        this.isAdd = false;
-        this.formData.patchValue({
-          idePedi: pedido.ide_pedi,
-          ideEmpr: pedido.ide_empr,
-          fechaPedi: pedido.fecha_pedi,
-          fechaEntrPedi: pedido.fecha_entr_pedi,
-          cantidadTotalPedi: pedido.cantidad_total_pedi,
-          totalPedi: pedido.total_pedi,
-          estadoPedi: pedido.estado_pedi,
-          motivoPedi: pedido.motivo_pedi,
-          observacionPedi: pedido.observacion_pedi
-        });
-        // Cargar detalles del pedido
-        this.loadDetallesPedido(pedido.ide_pedi);
-      },
-      error: () => this._loadingService.hide()
-    });
+  protected seleccionarMotivo(value: string): void {
+    if (this.cabeceraConfirmada || this.detalles.length > 0) return;
+    this.formData.controls.motivoPedi.setValue(value);
+    this.actualizarPreview();
   }
 
-  private loadDetallesPedido(idPedido: number): void {
-    this._pedidosService.listarDetallesPedido(idPedido).subscribe({
-      next: (res: any) => {
-        if (res.data && res.data.length > 0) {
-          this.detalles = res.data.map((d: any) => {
-            const nombreProd = this.productos?.find(p => +p.value === d.ide_prod)?.label || '';
-            return {
-              ideProd: d.ide_prod,
-              nombreProd: nombreProd,
-              cantidadProd: d.cantidad_prod,
-              precioUnitarioProd: d.precio_unitario_prod,
-              subtotalProd: d.subtotal_prod,
-              ivaProd: d.iva_prod || 0,
-              dctoCompraProd: d.dcto_compra_prod || 0,
-              dctoCaducProd: d.dcto_caduc_prod || 0,
-              totalProd: d.total_prod || d.subtotal_prod
-            };
-          });
-        }
-        this._loadingService.hide();
-      },
-      error: () => this._loadingService.hide()
-    });
+  protected confirmarCabecera(): void {
+    if (this.formData.controls.ideEmpr.invalid || this.formData.controls.motivoPedi.invalid || this.formData.controls.fechaEntrPedi.invalid) {
+      this.alerta('Cabecera incompleta', 'Seleccione la empresa proveedora, el motivo y la fecha esperada de entrega.');
+      return;
+    }
+    if (this.formData.controls.fechaEntrPedi.value! < this.fechaPedidoCalendario) {
+      this.alerta('Fecha esperada inválida', 'La fecha esperada de entrega no puede ser anterior a la fecha del pedido.');
+      return;
+    }
+    this.cabeceraConfirmada = true;
   }
 
-  private loadCombos() {
-    forkJoin({
-      empresas: this._empresasService.listarComboEmpresas(),
-      estados: this._pedidosService.listarComboEstados(),
-      motivos: this._pedidosService.listarComboMotivos(),
-      productos: this._productosService.listarComboProductos()
-    }).subscribe({
-      next: (res) => {
-        this.empresas = res.empresas;
-        this.estados = res.estados;
-        this.motivos = res.motivos;
-        this.productos = res.productos;
-        this.productosLoaded = true;
-      }
-    });
+  protected editarCabecera(): void {
+    this.cabeceraConfirmada = false;
   }
 
-  // Métodos para manejar el detalle
+  protected seleccionarProducto(value: string | number): void {
+    this.productoSeleccionado = Number(value);
+    this.actualizarPreview();
+  }
+
+  protected cambiarCantidad(value: number): void {
+    this.cantidadProducto = Number(value);
+    this.actualizarPreview();
+  }
+
   protected agregarProducto(): void {
-    if (this.productoSeleccionado <= 0 || this.cantidadProducto <= 0) {
-      Swal.fire({
-        icon: "warning",
-        title: "Datos incompletos",
-        text: "Seleccione un producto y cantidad válida"
-      });
+    if (this.claveEdicion) {
+      this.guardarCambiosProducto();
       return;
     }
-
-    // Verificar si el producto ya existe
-    const existente = this.detalles.find(d => d.ideProd === this.productoSeleccionado);
-    if (existente) {
-      Swal.fire({
-        icon: "warning",
-        title: "Producto duplicado",
-        text: "Este producto ya está en la lista"
-      });
+    if (!this.cabeceraConfirmada) this.confirmarCabecera();
+    if (!this.cabeceraConfirmada) return;
+    if (!Number.isInteger(this.cantidadProducto) || this.cantidadProducto <= 0) {
+      this.alerta('Cantidad inválida', 'Ingrese una cantidad entera mayor que cero.');
       return;
     }
-
-    const subtotal = this.cantidadProducto * this.precioUnitario;
-    const total = subtotal + this.ivaProd - this.dctoCompraProd - this.dctoCaducProd;
-    
-    const nombreProd = this.productos.find(p => +p.value === this.productoSeleccionado)?.label || '';
-    
-    this.detalles.push({
-      ideProd: this.productoSeleccionado,
-      nombreProd: nombreProd,
+    const precio = this.precioSeleccionado;
+    if (!precio || Number(precio.ide_empr) !== Number(this.formData.controls.ideEmpr.value)) {
+      this.alerta('Producto inválido', 'Seleccione un producto ofrecido por la empresa.');
+      return;
+    }
+    if (this.detalles.some((detalle) => detalle.ideProd === precio.ide_prod)) {
+      this.alerta('Producto duplicado', 'Cada producto solo puede aparecer una vez en el pedido.');
+      return;
+    }
+    if (this.preview.dctoCompraProd + this.preview.dctoCaducProd > this.preview.subtotalProd) {
+      this.alerta('Descuentos inválidos', 'Los descuentos no pueden superar el subtotal bruto.');
+      return;
+    }
+    this.detalles = [...this.detalles, {
+      claveLocal: this.crearClaveLocal(),
+      ideProd: precio.ide_prod,
+      nombreProd: precio.nombre_prod ?? `Producto #${precio.ide_prod}`,
       cantidadProd: this.cantidadProducto,
-      precioUnitarioProd: this.precioUnitario,
-      subtotalProd: subtotal,
-      ivaProd: this.ivaProd,
-      dctoCompraProd: this.dctoCompraProd,
-      dctoCaducProd: this.dctoCaducProd,
-      totalProd: total
-    });
-
-    this.actualizarTotales();
-    this.limpiarFormProducto();
+      ...this.preview,
+    }];
+    this.cabeceraConfirmada = true;
+    this.limpiarSeleccionProducto();
   }
 
-  protected eliminarProducto(index: number): void {
-    this.detalles.splice(index, 1);
-    this.actualizarTotales();
+  protected editarProducto(detalle: IDetalleTabla): void {
+    this.claveEdicion = detalle.claveLocal;
+    this.productoSeleccionado = detalle.ideProd;
+    this.cantidadProducto = detalle.cantidadProd;
+    this.actualizarPreview();
   }
 
-  private actualizarTotales(): void {
-    const cantidadTotal = this.detalles.reduce((sum, d) => sum + d.cantidadProd, 0);
-    const total = this.detalles.reduce((sum, d) => sum + d.totalProd, 0);
-    
-    this.formData.patchValue({
-      cantidadTotalPedi: cantidadTotal,
-      totalPedi: total
-    });
+  protected guardarCambiosProducto(): void {
+    const clave = this.claveEdicion;
+    if (!clave) return;
+    const indice = this.detalles.findIndex((detalle) => detalle.claveLocal === clave);
+    if (indice < 0) {
+      this.cancelarEdicionProducto();
+      return;
+    }
+    if (!Number.isInteger(this.cantidadProducto) || this.cantidadProducto <= 0) {
+      this.alerta('Cantidad inválida', 'Ingrese una cantidad entera mayor que cero.');
+      return;
+    }
+    const precio = this.precioSeleccionado;
+    if (!precio || Number(precio.ide_empr) !== Number(this.formData.controls.ideEmpr.value)) {
+      this.alerta('Producto inválido', 'Seleccione un producto ofrecido por la empresa.');
+      return;
+    }
+    if (this.detalles.some((detalle) => detalle.claveLocal !== clave && detalle.ideProd === precio.ide_prod)) {
+      this.alerta('Producto duplicado', 'Cada producto solo puede aparecer una vez en el pedido.');
+      return;
+    }
+    if (this.preview.dctoCompraProd + this.preview.dctoCaducProd > this.preview.subtotalProd) {
+      this.alerta('Descuentos inválidos', 'Los descuentos no pueden superar el subtotal bruto.');
+      return;
+    }
+    const actualizado: IDetalleTabla = {
+      claveLocal: clave,
+      ideProd: precio.ide_prod,
+      nombreProd: precio.nombre_prod ?? `Producto #${precio.ide_prod}`,
+      cantidadProd: this.cantidadProducto,
+      ...this.preview,
+    };
+    this.detalles = this.detalles.map((detalle, itemIndex) => itemIndex === indice ? actualizado : detalle);
+    this.cancelarEdicionProducto();
   }
 
-  private limpiarFormProducto(): void {
-    this.productoSeleccionado = -1;
-    this.cantidadProducto = 1;
-    this.precioUnitario = 0;
-    this.ivaProd = 0;
-    this.dctoCompraProd = 0;
-    this.dctoCaducProd = 0;
+  protected cancelarEdicionProducto(): void {
+    this.claveEdicion = null;
+    this.limpiarSeleccionProducto();
+  }
+
+  protected eliminarProducto(claveLocal: string): void {
+    this.detalles = this.detalles.filter((detalle) => detalle.claveLocal !== claveLocal);
+    if (this.claveEdicion === claveLocal) this.cancelarEdicionProducto();
   }
 
   protected guardar(): void {
-    if(this.formData.invalid){
-      Swal.fire({
-        icon: "info",
-        title: "Oops... Faltan datos",
-        text: "Revise por favor la información ingresada"
-      });
+    if (this.claveEdicion) {
+      this.alerta('Edición de producto pendiente', 'Guarde o cancele la edición del producto antes de continuar.');
       return;
     }
-
-    if(this.detalles.length === 0){
-      Swal.fire({
-        icon: "warning",
-        title: "Sin productos",
-        text: "Debe agregar al menos un producto al pedido"
-      });
+    this.confirmarCabecera();
+    if (!this.cabeceraConfirmada || !this.detalles.length || this.guardando) {
+      if (!this.detalles.length) this.alerta('Sin productos', 'Debe agregar al menos un producto al pedido.');
       return;
     }
-
-    const pedido = this.formData.getRawValue() as IPedido;
-    
-    // Convertir detalles al formato esperado por el backend
-    const detallePedido = this.detalles.map(d => ({
-      ideProd: d.ideProd,
-      cantidadProd: d.cantidadProd,
-      precioUnitarioProd: d.precioUnitarioProd,
-      subtotalProd: d.subtotalProd,
-      ivaProd: d.ivaProd,
-      dctoCompraProd: d.dctoCompraProd,
-      dctoCaducProd: d.dctoCaducProd,
-      totalProd: d.totalProd,
-      estadoDetaPedi: EnumEstadoDetallePedido.INCOMPLETO
-    }));
-
-    const pedidoCompleto: any = {
-      cabeceraPedido: {
-        ...pedido,
-        ideEmpr: +pedido.ideEmpr,
-        cantidadTotalPedi: +pedido.cantidadTotalPedi,
-        totalPedi: +pedido.totalPedi
-      },
-      detallePedido: detallePedido
-    };
-    
-    if(this.isAdd){
-      pedidoCompleto.cabeceraPedido.idePedi = -1;
-      this._loadingService.show();
-      this._pedidosService.insertar(pedidoCompleto).subscribe({
-        next: () => {
-          this._loadingService.hide();
-          Swal.fire({
-            title: "Pedido registrado :)",
-            text: "El pedido fue guardado correctamente",
-            icon: "success"
-          });
-          this.location.back();
-          this.resetForm();
-        },
-        error: () => this._loadingService.hide()
-      });
-    }else{
-      Swal.fire({
-        title: "¿Está seguro de modificar este pedido?",
-        text: "Los cambios realizados se registrarán!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Sí, de acuerdo"
-      }).then((result) => {
-        if (result.isConfirmed) {
-          pedidoCompleto.cabeceraPedido.idePedi = this.idParam;
-          this._loadingService.show();
-          this._pedidosService.actualizar(this.idParam, pedidoCompleto).subscribe({
-            next: () => {
-              this._loadingService.hide();
-              Swal.fire({
-                title: "Pedido actualizado :)",
-                text: "El pedido fue actualizado correctamente",
-                icon: "success"
-              });
-              this.location.back();
-              this.resetForm();
-            },
-            error: () => this._loadingService.hide()
-          });
+    const payload = this.construirPayload();
+    const request = this.isAdd
+      ? this.pedidosService.insertar(payload)
+      : this.pedidosService.actualizar(this.idPedido, payload);
+    this.guardando = true;
+    this.loadingService.show();
+    request.pipe(finalize(() => {
+      this.guardando = false;
+      this.loadingService.hide();
+    })).subscribe({
+      next: (res) => {
+        if (Number(res?.p_result) !== 1) {
+          this.alerta('No se pudo guardar', this.mensajeRespuesta(res?.p_response, 'Revise la información del pedido.'), 'error');
+          return;
         }
-      });
-    }
-  }
-
-  protected cancelar(): void {
-    Swal.fire({
-      title: "¿Está Seguro de Cancelar?",
-      text: "Los cambios realizados no se guardarán!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Sí, Cancelar!"
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.resetForm();
-        this.location.back();
-      }
+        Swal.fire({ icon: 'success', title: this.isAdd ? 'Borrador guardado' : 'Borrador actualizado' })
+          .then(() => this.router.navigate(['/admin/bodega/pedidos/list']));
+      },
+      error: (error) => this.alerta('No se pudo guardar', error?.error?.message ?? 'Ocurrió un error al guardar el borrador.', 'error'),
     });
   }
 
-  protected resetForm() {
-    this.formData.reset(this.initialFormValue);
+  protected cancelar(): void {
+    this.router.navigate(['/admin/bodega/pedidos/list']);
+  }
+
+  protected get cantidadTotal(): number { return this.detalles.reduce((sum, d) => sum + d.cantidadProd, 0); }
+  protected get subtotalTotal(): number { return this.redondear(this.detalles.reduce((sum, d) => sum + d.subtotalProd, 0)); }
+  protected get descuentosTotal(): number { return this.redondear(this.detalles.reduce((sum, d) => sum + d.dctoCompraProd + d.dctoCaducProd, 0)); }
+  protected get ivaTotal(): number { return this.redondear(this.detalles.reduce((sum, d) => sum + d.ivaProd, 0)); }
+  protected get totalGeneral(): number { return this.redondear(this.detalles.reduce((sum, d) => sum + d.totalProd, 0)); }
+
+  private cargarBorrador(id: number): void {
+    this.isAdd = false;
+    this.idPedido = id;
+    this.loadingService.show();
+    this.pedidosService.buscar(id).subscribe({
+      next: (res) => {
+        const pedido = res.data?.[0] as IPedidoResult | undefined;
+        if (!pedido || pedido.estado_pedi !== 'borrador') {
+          this.loadingService.hide();
+          this.alerta('Pedido no editable', 'Solo los pedidos en borrador pueden editarse.', 'error');
+          this.router.navigate(['/admin/bodega/pedidos/list']);
+          return;
+        }
+        this.fechaPedidoVisible = pedido.fecha_pedi;
+        this.fechaPedidoCalendario = this.extraerFechaCalendario(pedido.fecha_pedi);
+        this.formData.patchValue({ ideEmpr: pedido.ide_empr, motivoPedi: pedido.motivo_pedi, fechaEntrPedi: pedido.fecha_entr_pedi ?? '', observacionPedi: pedido.observacion_pedi ?? '' });
+        this.cargarProductosEmpresa(pedido.ide_empr, () => this.cargarDetalles(id));
+      },
+      error: () => this.loadingService.hide(),
+    });
+  }
+
+  private cargarProductosEmpresa(ideEmpr: number, completado?: () => void): void {
+    if (!Number.isInteger(ideEmpr) || ideEmpr <= 0) return;
+    this.cargandoProductos = true;
+    this.empresasService.listarPreciosProductosEmpresa(ideEmpr).pipe(finalize(() => this.cargandoProductos = false)).subscribe({
+      next: (res) => {
+        const unicos = new Map<number, IEmpresaPreciosResult>();
+        for (const precio of res.data ?? []) {
+          if (precio.ide_prod > 0 && precio.nombre_prod && precio.estado_prod === 'activo' && !unicos.has(precio.ide_prod)) unicos.set(precio.ide_prod, precio);
+        }
+        this.preciosEmpresa = [...unicos.values()];
+        this.productos = this.preciosEmpresa.map((precio) => ({ value: precio.ide_prod, label: precio.nombre_prod! }));
+        completado?.();
+      },
+      error: () => {
+        this.preciosEmpresa = [];
+        this.productos = [];
+        completado?.();
+      },
+    });
+  }
+
+  private cargarDetalles(id: number): void {
+    this.pedidosService.listarDetallesPedido(id).pipe(finalize(() => this.loadingService.hide())).subscribe({
+      next: (res) => {
+        this.detalles = ((res.data ?? []) as unknown as IDetallePedidoResult[]).map((detalle) => ({
+          claveLocal: `persistida-${detalle.ide_deta_pedi}`,
+          ideProd: detalle.ide_prod,
+          nombreProd: detalle.nombre_prod ?? this.preciosEmpresa.find((p) => p.ide_prod === detalle.ide_prod)?.nombre_prod ?? `Producto #${detalle.ide_prod}`,
+          cantidadProd: detalle.cantidad_prod,
+          precioUnitarioProd: detalle.precio_unitario_prod,
+          subtotalProd: this.redondear(detalle.precio_unitario_prod * detalle.cantidad_prod),
+          ivaProd: detalle.iva_prod,
+          dctoCompraProd: detalle.dcto_compra_prod,
+          dctoCaducProd: detalle.dcto_caduc_prod,
+          totalProd: detalle.total_prod,
+        }));
+        this.cabeceraConfirmada = this.detalles.length > 0;
+      },
+    });
+  }
+
+  private get precioSeleccionado(): IEmpresaPreciosResult | undefined {
+    return this.preciosEmpresa.find((precio) => precio.ide_prod === this.productoSeleccionado);
+  }
+
+  private actualizarPreview(): void {
+    const precio = this.precioSeleccionado;
+    const cantidad = Number(this.cantidadProducto);
+    if (!precio || !Number.isFinite(cantidad) || cantidad <= 0) {
+      this.preview = { ...VACIO };
+      return;
+    }
+    const subtotal = this.redondear(Number(precio.precio_compra_prod) * cantidad);
+    const dctoCompra = this.redondear(Number(precio.dcto_compra_prod) * cantidad);
+    const dctoCaduc = this.formData.controls.motivoPedi.value === EnumMotivosPedido.DEVOLUCION
+      ? this.redondear(Number(precio.dcto_caducidad_prod) * cantidad) : 0;
+    const neto = this.redondear(subtotal - dctoCompra - dctoCaduc);
+    const iva = this.redondear(neto * Number(precio.iva_prod));
+    this.preview = {
+      precioUnitarioProd: this.redondear(Number(precio.precio_compra_prod)), subtotalProd: subtotal,
+      dctoCompraProd: dctoCompra, dctoCaducProd: dctoCaduc, ivaProd: iva, totalProd: this.redondear(neto + iva),
+    };
+  }
+
+  private construirPayload(): IPedidoCompleto {
+    return {
+      cabeceraPedido: {
+        ...(this.isAdd ? {} : { idePedi: this.idPedido }),
+        ideEmpr: Number(this.formData.controls.ideEmpr.value),
+        motivoPedi: this.formData.controls.motivoPedi.value as EnumMotivosPedido,
+        fechaEntrPedi: this.formData.controls.fechaEntrPedi.value!,
+        observacionPedi: this.formData.controls.observacionPedi.value?.trim() || null,
+      },
+      detallePedido: this.detalles.map(({ ideProd, cantidadProd }) => ({ ideProd, cantidadProd })),
+    };
+  }
+
+  private limpiarSeleccionProducto(): void {
+    this.productoSeleccionado = -1;
+    this.cantidadProducto = 1;
+    this.preview = { ...VACIO };
+  }
+
+  private crearClaveLocal(): string {
+    this.secuenciaLocal += 1;
+    return `nueva-${this.secuenciaLocal}`;
+  }
+
+  private redondear(valor: number): number { return Math.round((valor + Number.EPSILON) * 100) / 100; }
+  private formatearFecha(fecha: Date): string { return new Intl.DateTimeFormat('es-EC', { dateStyle: 'short', timeStyle: 'short' }).format(fecha); }
+  private fechaCalendarioLocal(fecha: Date): string {
+    const year = fecha.getFullYear();
+    const month = String(fecha.getMonth() + 1).padStart(2, '0');
+    const day = String(fecha.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+  private extraerFechaCalendario(value: string): string {
+    const iso = /^(\d{4})-(\d{2})-(\d{2})/.exec(value);
+    if (iso) return `${iso[1]}-${iso[2]}-${iso[3]}`;
+    const local = /^(\d{2})\/(\d{2})\/(\d{4})/.exec(value);
+    return local ? `${local[3]}-${local[2]}-${local[1]}` : this.fechaCalendarioLocal(new Date());
+  }
+  private alerta(title: string, text: string, icon: 'warning' | 'error' = 'warning'): void { void Swal.fire({ icon, title, text }); }
+  private mensajeRespuesta(response: string | undefined, fallback: string): string {
+    if (!response) return fallback;
+    try { return JSON.parse(response).message ?? fallback; } catch { return response; }
   }
 }

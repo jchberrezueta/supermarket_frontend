@@ -7,7 +7,7 @@
         <ui-text-field
           [label]="'ID Pedido'"
           [value]="idPedido"
-          [disabled]="true"
+          [readonly]="true"
         />
       </div>
 
@@ -28,17 +28,17 @@
     <div class="card_info">
 
       <div class="info_row">
-        <ui-text-field [label]="'Empresa'" [value]="pedido?.nombreEmpr"/>
-        <ui-text-field [label]="'Fecha Pedido'" [value]="pedido?.fechaPedi | date:'dd/MM/yyyy'"/>
-        <ui-text-field [label]="'Fecha Entrega'" [value]="pedido?.fechaEntrPedi | date:'dd/MM/yyyy'"/>
-        <ui-text-field [label]="'Estado'" [value]="pedido?.estadoPedi"/>
+        <ui-text-field [label]="'Empresa'" [value]="pedido?.nombreEmpr" [readonly]="true"/>
+        <ui-text-field [label]="'Fecha del pedido'" [value]="pedido?.fechaPedi" [readonly]="true"/>
+        <ui-text-field [label]="'Fecha esperada de entrega'" [value]="pedido?.fechaEntrPedi || 'Sin fecha esperada'" [readonly]="true"/>
+        <ui-text-field [label]="'Estado'" [value]="pedido?.estadoPedi" [readonly]="true"/>
       </div>
 
       <div class="info_row">
-        <ui-text-field [label]="'Motivo'" [value]="pedido?.motivoPedi"/>
-        <ui-text-field [label]="'Cantidad Total'" [value]="pedido?.cantidadTotalPedi"/>
-        <ui-text-field [label]="'Total'" [value]="pedido?.totalPedi | currency:'$'"/>
-        <ui-text-field [label]="'Observación'" [value]="pedido?.observacionPedi"/>
+        <ui-text-field [label]="'Motivo'" [value]="pedido?.motivoPedi" [readonly]="true"/>
+        <ui-text-field [label]="'Cantidad Total'" [value]="pedido?.cantidadTotalPedi" [readonly]="true"/>
+        <ui-text-field [label]="'Total'" [value]="pedido?.totalPedi | currency:'$'" [readonly]="true"/>
+        <ui-text-field [label]="'Observación'" [value]="pedido?.observacionPedi" [readonly]="true"/>
       </div>
 
     </div>
@@ -52,7 +52,7 @@
             <th>Producto</th>
             <th>Cantidad</th>
             <th>Precio Unit.</th>
-            <th>Subtotal</th>
+            <th>Subtotal bruto</th>
             <th>IVA</th>
             <th>Dcto. Compra</th>
             <th>Dcto. Caduc.</th>

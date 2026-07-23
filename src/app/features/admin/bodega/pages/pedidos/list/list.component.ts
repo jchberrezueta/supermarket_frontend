@@ -11,6 +11,10 @@ import { EmpresasService, PedidosService } from '@services/index';
 import { UiCardComponent } from '@shared/components/card/card.component';
 import { UiInputBoxComponent } from '@shared/components/input-box/input-box.component';
 import { UiDatetimePickerComponent } from '@shared/components/datetime-picker/datetime-picker.component';
+import { Router } from '@angular/router';
+import { TableRow } from '@shared/models/button_item.model';
+import { finalize } from 'rxjs';
+import Swal from 'sweetalert2';
 
 const IMPORTS = [
   UiTableListComponent,
@@ -38,6 +42,8 @@ export default class ListComponent {
   private readonly _empresasService = inject(EmpresasService);
   private readonly _pedidosService = inject(PedidosService);
   private readonly formBuilder = inject(FormBuilder);
+  private readonly router = inject(Router);
+  private ejecutandoAccion = false;
 
   protected readonly config = ListPedidoConfig;
 
@@ -103,6 +109,46 @@ export default class ListComponent {
 
   protected resetForm(): void {
     this.formData.reset(this.initialFormValue);
+  }
+
+  protected manejarAccion(event: { action: string; row: TableRow }): void {
+    const id = Number(event.row['ide_pedi']);
+    if (!Number.isInteger(id) || id <= 0) return;
+    if (event.action === 'view') {
+      void this.router.navigate(['/admin/bodega/pedidos/details', id]);
+    } else if (event.action === 'edit' && event.row['estado_pedi'] === 'borrador') {
+      void this.router.navigate(['/admin/bodega/pedidos/update', id]);
+    } else if (event.action === 'delete' && event.row['estado_pedi'] === 'borrador') {
+      this.confirmarAccion(id, 'Eliminar borrador', 'El borrador se eliminará de forma permanente.', 'delete');
+    } else if (event.action === 'emit' && event.row['estado_pedi'] === 'borrador') {
+      this.confirmarAccion(id, 'Emitir pedido', 'Después de emitirlo ya no podrá editarse como borrador.', 'emit');
+    }
+  }
+
+  private confirmarAccion(id: number, title: string, text: string, action: 'delete' | 'emit'): void {
+    if (this.ejecutandoAccion) return;
+    void Swal.fire({ title, text, icon: 'warning', showCancelButton: true, confirmButtonText: action === 'emit' ? 'Sí, emitir' : 'Sí, eliminar', cancelButtonText: 'Cancelar' })
+      .then((result) => { if (result.isConfirmed) this.ejecutarAccion(id, action); });
+  }
+
+  private ejecutarAccion(id: number, action: 'delete' | 'emit'): void {
+    if (this.ejecutandoAccion) return;
+    this.ejecutandoAccion = true;
+    const request = action === 'emit' ? this._pedidosService.emitir(id) : this._pedidosService.eliminar(id);
+    request.pipe(finalize(() => this.ejecutandoAccion = false)).subscribe({
+      next: (res) => {
+        const success = Number(res?.p_result) === 1;
+        const message = this.mensajeRespuesta(res?.p_response, success ? 'Operación completada.' : 'No se pudo completar la operación.');
+        void Swal.fire({ icon: success ? 'success' : 'error', title: success ? (action === 'emit' ? 'Pedido emitido' : 'Borrador eliminado') : 'Operación rechazada', text: message });
+        if (success) this._tableList().refreshData();
+      },
+      error: (error) => void Swal.fire({ icon: 'error', title: 'No se pudo completar la operación', text: error?.error?.message ?? 'Revise el estado del pedido e intente nuevamente.' }),
+    });
+  }
+
+  private mensajeRespuesta(response: string | undefined, fallback: string): string {
+    if (!response) return fallback;
+    try { return JSON.parse(response).message ?? fallback; } catch { return response; }
   }
 
   private getParams(): URLSearchParams {

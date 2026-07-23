@@ -3,10 +3,9 @@ import { ActivatedRoute } from '@angular/router';
 import { UiCardComponent } from '@shared/components/card/card.component';
 import { UiTextFieldComponent } from '@shared/components/text-field/text-field.component';
 import { UiButtonComponent } from '@shared/components/button/button.component';
-import { Location, CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
+import { Location, CommonModule, CurrencyPipe } from '@angular/common';
 import { PedidosService } from '@services/pedidos.service';
 import { EmpresasService } from '@services/empresas.service';
-import { ProductosService } from '@services/productos.service';
 import { LoadingService } from '@shared/services/loading.service';
 
 interface IPedidoView {
@@ -14,12 +13,12 @@ interface IPedidoView {
   ideEmpr: number;
   nombreEmpr: string;
   fechaPedi: string;
-  fechaEntrPedi: string;
+  fechaEntrPedi: string | null;
   cantidadTotalPedi: number;
   totalPedi: number;
   estadoPedi: string;
   motivoPedi: string;
-  observacionPedi: string;
+  observacionPedi: string | null;
 }
 
 interface IDetalleView {
@@ -43,7 +42,7 @@ interface IDetalleView {
     UiTextFieldComponent,
     UiButtonComponent
   ],
-  providers: [CurrencyPipe, DatePipe],
+  providers: [CurrencyPipe],
   templateUrl: './details.component.html',
   styleUrl: './details.component.scss'
 })
@@ -52,31 +51,19 @@ export default class DetailsComponent {
   private readonly _route = inject(ActivatedRoute);
   private readonly _pedidosService = inject(PedidosService);
   private readonly _empresasService = inject(EmpresasService);
-  private readonly _productosService = inject(ProductosService);
   private readonly _loadingService = inject(LoadingService);
   public location = inject(Location);
 
   protected pedido: IPedidoView | null = null;
   protected detalles: IDetalleView[] = [];
   protected idPedido!: number;
-  private productos: { value: string; label: string }[] = [];
 
   constructor() {
     const idParam = this._route.snapshot.params['id'];
     if (idParam) {
       this.idPedido = +idParam;
-      this.loadProductos();
       this.loadPedido();
     }
-  }
-
-  private loadProductos(): void {
-    this._productosService.listarComboProductos().subscribe((res: any) => {
-      this.productos = res.map((item: any) => ({
-        value: item.value.toString(),
-        label: item.label
-      }));
-    });
   }
 
   protected loadPedido(): void {
@@ -120,13 +107,12 @@ export default class DetailsComponent {
       next: (res) => {
         if (res.data && res.data.length > 0) {
           this.detalles = res.data.map((d: any) => {
-            const nombreProd = this.productos.find(p => +p.value === d.ide_prod)?.label || `Producto #${d.ide_prod}`;
             return {
               ideProd: d.ide_prod,
-              nombreProd: nombreProd,
+              nombreProd: d.nombre_prod || `Producto #${d.ide_prod}`,
               cantidadProd: d.cantidad_prod,
               precioUnitarioProd: d.precio_unitario_prod,
-              subtotalProd: d.subtotal_prod,
+              subtotalProd: d.precio_unitario_prod * d.cantidad_prod,
               ivaProd: d.iva_prod || 0,
               dctoCompraProd: d.dcto_compra_prod || 0,
               dctoCaducProd: d.dcto_caduc_prod || 0,

@@ -68,6 +68,9 @@
         [serviceApiFilter]="'pedidos/filtrar'"
         [serviceApiReal]="'pedidos'"
         [columns]="config.columns"
+        [rowClickEnabled]="false"
+        [rowDoubleClickEnabled]="false"
+        (actionClick)="manejarAccion($event)"
       />
     </div>
   </ui-card>

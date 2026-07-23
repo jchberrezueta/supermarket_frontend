@@ -5,6 +5,7 @@
         type="datetime-local"
         required
         [disabled]="_isDisabled()"
+        [attr.min]="min()"
         [value]="innerValue()"
         [class.has-value]="hasValue"
         [attr.aria-label]="getLabel"
@@ -17,6 +18,7 @@
         type="date"
         required
         [disabled]="_isDisabled()"
+        [attr.min]="min()"
         [value]="innerValue()"
         [class.has-value]="hasValue"
         [attr.aria-label]="getLabel"

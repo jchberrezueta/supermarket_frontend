@@ -80,6 +80,8 @@ export interface IEmpresaPreciosResult {
     dcto_compra_prod: number;
     dcto_caducidad_prod: number;
     iva_prod: number;
+    nombre_prod?: string | null;
+    estado_prod?: string | null;
 }
 
 export interface IResultDataEmpresaPrecios {

@@ -1,99 +1,87 @@
-<div class="div_container">
-    <div class="div_card">
-        <div class="panel_1">
-            <div class="card_form">
-                <!-- CABECERA DEL PEDIDO -->
-                <div class="section_title">Información del Pedido</div>
-                <form [formGroup]="formData" class="form">
-                    <div class="div_form">
-                        @if (!isAdd) {
-                            <div class="div_id">
-                                <ui-text-field [label]="'ID'" formControlName="idePedi"/>
-                            </div>
-                        }
-                        <div class="form_info">
-                            <div class="form_div form_div_1">                       
-                                <ui-combo-box [label]="'Empresa'" [options]="empresas" formControlName="ideEmpr"/>
-                                <ui-datetime-picker [label]="'Fecha Pedido'" [isTime]="false" formControlName="fechaPedi"/>
-                                <ui-combo-box [label]="'Motivo'" [options]="motivos" formControlName="motivoPedi"/>
-                            </div>
-                            <div class="form_div form_div_2">
-                                <ui-combo-box [label]="'Estado'" [options]="estados" formControlName="estadoPedi"/>
-                                <ui-datetime-picker [label]="'Fecha Entrega'" [isTime]="false" formControlName="fechaEntrPedi"/>
-                                <ui-text-area [label]="'Observación'" formControlName="observacionPedi"/>
-                            </div>
-                        </div>
-                    </div>
-                </form>
+<div class="pedido-page">
+  <section class="pedido-card">
+    <header class="card-heading">
+      <div>
+        <span class="eyebrow">{{ isAdd ? 'Nuevo pedido' : 'Editar pedido #' + idPedido }}</span>
+        <h2>{{ isAdd ? 'Crear borrador' : 'Actualizar borrador' }}</h2>
+      </div>
+      <span class="status-badge">Borrador</span>
+    </header>
 
-                <!-- AGREGAR PRODUCTOS -->
-                <div class="section_title">Agregar Productos</div>
-                <div class="productos_form">
-                    <div class="productos_row">
-                        <ui-combo-box [label]="'Producto'" [options]="productos" [(ngModel)]="productoSeleccionado"/>
-                        <ui-text-field [label]="'Cantidad'" [(ngModel)]="cantidadProducto" valueType="number"/>
-                        <ui-text-field [label]="'Precio Unit.'" [(ngModel)]="precioUnitario" valueType="number"/>
-                    </div>
-                    <div class="productos_row">
-                        <ui-text-field [label]="'IVA'" [(ngModel)]="ivaProd" valueType="number"/>
-                        <ui-text-field [label]="'Dcto Compra'" [(ngModel)]="dctoCompraProd" valueType="number"/>
-                        <ui-text-field [label]="'Dcto Caduc.'" [(ngModel)]="dctoCaducProd" valueType="number"/>
-                        <ui-button [label]="'Agregar'" [icon]="'add'" (evntClick)="agregarProducto()"/>
-                    </div>
-                </div>
+    <form [formGroup]="formData" class="header-grid">
+      <ui-combo-box label="Empresa proveedora" [options]="empresas" formControlName="ideEmpr"
+        [disabled]="cabeceraConfirmada || detalles.length > 0" (evntSelectOption)="seleccionarEmpresa($event)" />
+      <ui-combo-box label="Motivo" [options]="motivos" formControlName="motivoPedi"
+        [disabled]="cabeceraConfirmada || detalles.length > 0" (evntSelectOption)="seleccionarMotivo($event)" />
+      <ui-text-field label="Fecha del pedido" [value]="fechaPedidoVisible" [disabled]="true" />
+      <ui-datetime-picker label="Fecha esperada de entrega" formControlName="fechaEntrPedi"
+        [min]="fechaPedidoCalendario" [disabled]="cabeceraConfirmada" />
+      <ui-text-area class="observation" label="Observación (opcional)" formControlName="observacionPedi"
+        [disabled]="cabeceraConfirmada" />
+    </form>
 
-                <!-- TABLA DE PRODUCTOS -->
-                <div class="section_title">Productos del Pedido</div>
-                <div class="tabla_productos">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Producto</th>
-                                <th>Cantidad</th>
-                                <th>P. Unit.</th>
-                                <th>Subtotal</th>
-                                <th>IVA</th>
-                                <th>Dcto</th>
-                                <th>Total</th>
-                                <th>Acción</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @for (detalle of detalles; track detalle.ideProd; let i = $index) {
-                                <tr>
-                                    <td>{{ detalle.nombreProd }}</td>
-                                    <td>{{ detalle.cantidadProd }}</td>
-                                    <td>{{ detalle.precioUnitarioProd | number:'1.2-2' }}</td>
-                                    <td>{{ detalle.subtotalProd | number:'1.2-2' }}</td>
-                                    <td>{{ detalle.ivaProd | number:'1.2-2' }}</td>
-                                    <td>{{ detalle.dctoCompraProd + detalle.dctoCaducProd | number:'1.2-2' }}</td>
-                                    <td>{{ detalle.totalProd | number:'1.2-2' }}</td>
-                                    <td>
-                                        <ui-button [icon]="'delete'" [color]="'red'" (evntClick)="eliminarProducto(i)"/>
-                                    </td>
-                                </tr>
-                            } @empty {
-                                <tr>
-                                    <td colspan="8" class="empty_row">No hay productos agregados</td>
-                                </tr>
-                            }
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <td colspan="6" class="total_label">TOTALES:</td>
-                                <td>{{ formData.get('totalPedi')?.value | number:'1.2-2' }}</td>
-                                <td></td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-
-                <!-- BOTONES -->
-                <div class="form_buttons">
-                    <ui-button [label]="isAdd ? 'Guardar Pedido' : 'Actualizar Pedido'" (evntClick)="guardar()"/>
-                    <ui-button [label]="'Cancelar'" (evntClick)="cancelar()" [color]="'red'"/>
-                </div>
-            </div>
-        </div>
+    <div class="header-actions">
+      @if (!cabeceraConfirmada) {
+        <ui-button label="Confirmar cabecera" icon="check" color="green" (evntClick)="confirmarCabecera()" />
+        @if (detalles.length > 0) {
+          <span class="confirmed-copy">Empresa y motivo no pueden modificarse mientras existan productos agregados.</span>
+        }
+      } @else {
+        <ui-button label="Editar cabecera" icon="edit" color="neutral" (evntClick)="editarCabecera()" />
+      }
     </div>
+  </section>
+
+  <section class="pedido-card products-card" [class.disabled-section]="!cabeceraConfirmada">
+    <div class="section-heading">
+      <div><span class="eyebrow">Detalle</span><h3>Agregar productos</h3></div>
+      @if (cargandoProductos) { <span class="helper">Cargando productos…</span> }
+      @else if (cabeceraConfirmada && !productos.length) { <span class="helper warning">La empresa no ofrece productos activos.</span> }
+    </div>
+
+    @if (claveEdicion) { <span class="editing-copy">Editando producto</span> }
+    <div class="product-entry">
+      <ui-combo-box class="product-field" label="Producto" [options]="productos" [disabled]="!cabeceraConfirmada || cargandoProductos"
+        [(ngModel)]="productoSeleccionado" [ngModelOptions]="{standalone: true}" (evntSelectOption)="seleccionarProducto($event)" />
+      <ui-text-field class="quantity-field" label="Cantidad" valueType="number" [disabled]="!cabeceraConfirmada"
+        [(ngModel)]="cantidadProducto" [ngModelOptions]="{standalone: true}" (evntChange)="cambiarCantidad($event)" />
+      <ui-text-field label="Precio" [value]="preview.precioUnitarioProd | number:'1.2-2'" [disabled]="true" />
+      <ui-text-field label="IVA" [value]="preview.ivaProd | number:'1.2-2'" [disabled]="true" />
+      <ui-text-field label="Dcto. compra" [value]="preview.dctoCompraProd | number:'1.2-2'" [disabled]="true" />
+      <ui-text-field label="Dcto. canje" [value]="preview.dctoCaducProd | number:'1.2-2'" [disabled]="true" />
+      <ui-text-field label="Total" [value]="preview.totalProd | number:'1.2-2'" [disabled]="true" />
+      <div class="entry-actions">
+        <ui-button class="add-button" [label]="claveEdicion ? 'Guardar cambios' : 'Agregar'" [icon]="claveEdicion ? 'save' : 'add'" color="green" [disabled]="!cabeceraConfirmada" (evntClick)="agregarProducto()" />
+        @if (claveEdicion) {
+          <ui-button label="Cancelar edición" icon="close" color="neutral" (evntClick)="cancelarEdicionProducto()" />
+        }
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Producto</th><th>Cant.</th><th>Precio unit.</th><th>Subtotal bruto</th><th>Dcto. compra</th><th>Dcto. canje</th><th>IVA</th><th>Total</th><th></th></tr></thead>
+        <tbody>
+          @for (detalle of detalles; track detalle.claveLocal) {
+            <tr [class.editing-row]="detalle.claveLocal === claveEdicion">
+              <td>{{ detalle.nombreProd }}</td><td>{{ detalle.cantidadProd }}</td>
+              <td>{{ detalle.precioUnitarioProd | number:'1.2-2' }}</td><td>{{ detalle.subtotalProd | number:'1.2-2' }}</td>
+              <td>{{ detalle.dctoCompraProd | number:'1.2-2' }}</td><td>{{ detalle.dctoCaducProd | number:'1.2-2' }}</td>
+              <td>{{ detalle.ivaProd | number:'1.2-2' }}</td><td class="money-strong">{{ detalle.totalProd | number:'1.2-2' }}</td>
+              <td><div class="row-actions">
+                <ui-button label="Editar" icon="edit" color="blue" tooltip="Editar producto" ariaLabel="Editar producto" (evntClick)="editarProducto(detalle)" />
+                <ui-button label="Eliminar" icon="delete" color="red" tooltip="Eliminar producto" ariaLabel="Eliminar producto" (evntClick)="eliminarProducto(detalle.claveLocal)" />
+              </div></td>
+            </tr>
+          } @empty { <tr><td colspan="9" class="empty-row">Aún no hay productos agregados.</td></tr> }
+        </tbody>
+        <tfoot><tr><td>Totales</td><td>{{ cantidadTotal }}</td><td></td><td>{{ subtotalTotal | number:'1.2-2' }}</td><td colspan="2">- {{ descuentosTotal | number:'1.2-2' }}</td><td>{{ ivaTotal | number:'1.2-2' }}</td><td>{{ totalGeneral | number:'1.2-2' }}</td><td></td></tr></tfoot>
+      </table>
+    </div>
+  </section>
+
+  <div class="final-actions">
+    <ui-button [label]="isAdd ? 'Guardar borrador' : 'Actualizar borrador'" icon="save" color="green" [disabled]="guardando" (evntClick)="guardar()" />
+    <ui-button label="Cancelar" icon="close" color="red" [disabled]="guardando" (evntClick)="cancelar()" />
+  </div>
 </div>

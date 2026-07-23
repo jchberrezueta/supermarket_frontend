@@ -32,6 +32,10 @@ export class PedidosService {
     return this._restService.delete<any>(`${this.apiUrl}/eliminar/${id}`);
   }
 
+  public emitir(id: number) {
+    return this._restService.put<any>(`${this.apiUrl}/emitir/${id}`, {});
+  }
+
   public listarDetallesPedido(idPedido: number): Observable<IResultData> {
     return this._restService.get<IResultData>(`${this.apiUrl}/listar/detalles/${idPedido}`);
   }

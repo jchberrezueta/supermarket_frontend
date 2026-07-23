@@ -52,8 +52,8 @@ export class EmpresasService {
     return this._restService.get<IResultDataEmpresaPrecios>(`${this.apiUrl}/listar/precios`);
   }
 
-  public listarPreciosProductosEmpresa(id: number): Observable<any> {
-    return this._restService.get<any>(`${this.apiUrl}/listar/precios/${id}`);
+  public listarPreciosProductosEmpresa(id: number): Observable<IResultDataEmpresaPrecios> {
+    return this._restService.get<IResultDataEmpresaPrecios>(`${this.apiUrl}/listar/precios/${id}`);
   }
 
   public insertarPrecio(body: IEmpresaPrecios) {
