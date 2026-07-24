@@ -47,7 +47,8 @@ export const ListEntregasConfig: ITableListConfig = {
           icon: 'edit',
           router: true,
           key: 'ide_entr',
-          color: 'primary',
+          color: 'blue',
+          visible: (row) => row['estado_entr'] === 'borrador',
         },
         {
           action: 'delete',
@@ -55,6 +56,7 @@ export const ListEntregasConfig: ITableListConfig = {
           icon: 'delete',
           key: 'ide_entr',
           color: 'red',
+          visible: (row) => row['estado_entr'] === 'borrador',
         },
       ],
     },

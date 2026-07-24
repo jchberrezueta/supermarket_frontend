@@ -1,118 +1,70 @@
-import { IDetalleEntrega } from "./detalle_entrega.model";
+import { IDetalleEntrega, IDetalleEntregaResult, ILineaPedidoPendiente } from './detalle_entrega.model';
 
 export enum EnumEstadoEntrega {
-    COMPLETO = 'completo',
-    INCOMPLETO = 'incompleto'
+  BORRADOR = 'borrador',
+  PARCIAL = 'parcial',
+  COMPLETA = 'completa',
+  ANULADA = 'anulada',
 }
 
-export interface IEntrega {
-    ideEntr: number;
-    idePedi: number;
-    ideProv: number;
-    fechaEntr: string;
-    cantidadTotalEntr: number;
-    totalEntr: number;
-    estadoEntr: EnumEstadoEntrega;
-    observacionEntr: string;
-}
-
-export class CEntrega implements IEntrega {
-
-    constructor(
-        private _ideEntr: number,
-        private _idePedi: number,
-        private _ideProv: number,
-        private _fechaEntr: string,
-        private _cantidadTotalEntr: number,
-        private _totalEntr: number,
-        private _estadoEntr: EnumEstadoEntrega,
-        private _observacionEntr: string
-    ) {}
-
-    // --- Getters / Setters ---
-
-    get ideEntr() {
-        return this._ideEntr;
-    }
-    set ideEntr(value: number) {
-        this._ideEntr = value;
-    }
-
-    get idePedi() {
-        return this._idePedi;
-    }
-    set idePedi(value: number) {
-        this._idePedi = value;
-    }
-
-    get ideProv() {
-        return this._ideProv;
-    }
-    set ideProv(value: number) {
-        this._ideProv = value;
-    }
-
-    get fechaEntr() {
-        return this._fechaEntr;
-    }
-    set fechaEntr(value: string) {
-        this._fechaEntr = value;
-    }
-
-    get cantidadTotalEntr() {
-        return this._cantidadTotalEntr;
-    }
-    set cantidadTotalEntr(value: number) {
-        this._cantidadTotalEntr = value;
-    }
-
-    get totalEntr() {
-        return this._totalEntr;
-    }
-    set totalEntr(value: number) {
-        this._totalEntr = value;
-    }
-
-    get estadoEntr() {
-        return this._estadoEntr;
-    }
-    set estadoEntr(value: EnumEstadoEntrega) {
-        this._estadoEntr = value;
-    }
-
-    get observacionEntr() {
-        return this._observacionEntr;
-    }
-    set observacionEntr(value: string) {
-        this._observacionEntr = value;
-    }
-}
-
-export interface IEntregaResult {
-    ide_entr: number;
-    ide_pedi: number;
-    ide_prov: number;
-    fecha_entr: string;
-    cantidad_total_entr: number;
-    total_entr: number;
-    estado_entr: EnumEstadoEntrega;
-    observacion_entr: string;
-}
-
-export interface IResultDataEntrega {
-  data: IEntregaResult[];
-  response: string;
-}
-
-export interface IFiltroEntrega {
-    idePedi: string;
-    ideProv: string;
-    estadoEntr: EnumEstadoEntrega;
-    fechaEntrDesde: string;
-    fechaEntrHasta: string;
+export interface IEntregaCabeceraPayload {
+  idePedi: number;
+  ideProv: number;
+  fechaEntr: string;
+  observacionEntr?: string | null;
 }
 
 export interface IEntregaCompleta {
-    cabeceraEntrega: IEntrega;
-    detalleEntrega: IDetalleEntrega[];
+  cabeceraEntrega: IEntregaCabeceraPayload;
+  detalleEntrega: IDetalleEntrega[];
+}
+
+export interface IEntregaResult {
+  ide_entr: number;
+  ide_pedi: number;
+  ide_prov: number;
+  nombre_proveedor?: string | null;
+  ide_empr?: number | null;
+  nombre_empr?: string | null;
+  fecha_pedi?: string | null;
+  fecha_entr_pedi?: string | null;
+  fecha_entr: string;
+  cantidad_total_entr: number;
+  total_entr: number;
+  estado_entr: EnumEstadoEntrega;
+  observacion_entr: string | null;
+  detalles?: IDetalleEntregaResult[];
+}
+
+export interface IResultDataEntrega { data: IEntregaResult[]; response: string; }
+
+export interface IPedidoEntregaDisponible {
+  ide_pedi: number;
+  label: string;
+  ide_empr: number;
+  nombre_empr: string | null;
+  responsable_empr: string | null;
+  fecha_pedi: string;
+  fecha_entr_pedi: string | null;
+  estado_pedi: string;
+}
+
+export interface IPedidoEntregaPendiente {
+  idePedi: number;
+  ideEmpr: number;
+  nombreEmpr: string | null;
+  responsableEmpr: string | null;
+  fechaPedi: string;
+  fechaEntrPedi: string | null;
+  estadoPedi: string;
+  motivoPedi: string;
+  detalles: ILineaPedidoPendiente[];
+}
+
+export interface IFiltroEntrega {
+  idePedi: string;
+  ideProv: string;
+  estadoEntr: EnumEstadoEntrega | '';
+  fechaEntrDesde: string;
+  fechaEntrHasta: string;
 }

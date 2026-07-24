@@ -18,7 +18,7 @@ interface IEntregaView {
   cantidadTotalEntr: number;
   totalEntr: number;
   estadoEntr: string;
-  observacionEntr: string;
+  observacionEntr: string | null;
   nombreProveedor?: string;
 }
 

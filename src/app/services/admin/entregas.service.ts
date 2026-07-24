@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { IResultData } from '@core/models';
 import { RestService } from '@core/services/rest.service';
-import { IEntregaCompleta, IResultDataEntrega } from '@models';
+import { IEntregaCompleta, IPedidoEntregaDisponible, IPedidoEntregaPendiente, IResultDataEntrega } from '@models';
 import { IComboBoxOption } from '@shared/models/combo_box_option';
 import { Observable } from 'rxjs';
 
@@ -30,6 +30,18 @@ export class EntregasService {
 
   public eliminar(id: number) {
     return this._restService.delete<any>(`${this.apiUrl}/eliminar/${id}`);
+  }
+
+  public listarPedidosDisponibles(): Observable<{ data: IPedidoEntregaDisponible[] }> {
+    return this._restService.get<{ data: IPedidoEntregaDisponible[] }>(`${this.apiUrl}/pedidos/disponibles`);
+  }
+
+  public obtenerPedidoPendiente(id: number): Observable<{ data: IPedidoEntregaPendiente[] }> {
+    return this._restService.get<{ data: IPedidoEntregaPendiente[] }>(`${this.apiUrl}/pedidos/${id}/pendientes`);
+  }
+
+  public listarProveedoresEmpresa(idEmpresa: number): Observable<IComboBoxOption[]> {
+    return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/proveedores/empresa/${idEmpresa}`);
   }
 
   /**
