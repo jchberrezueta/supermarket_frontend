@@ -1,6 +1,5 @@
 <div class="div_container">
   <ui-card [showHeader]="true" class="div_card">
-
     <!-- CABECERA -->
     <div card-header class="card_header">
       <div class="header_left">
@@ -12,10 +11,7 @@
       </div>
 
       <div class="header_right">
-        <ui-button
-          [icon]="'refresh'"
-          (evntClick)="loadPedido()"
-        />
+        <ui-button [icon]="'refresh'" (evntClick)="loadPedido()" />
         <ui-button
           [label]="'Volver'"
           [icon]="'arrow_back'"
@@ -26,21 +22,51 @@
 
     <!-- INFO PEDIDO -->
     <div class="card_info">
-
       <div class="info_row">
-        <ui-text-field [label]="'Empresa'" [value]="pedido?.nombreEmpr" [readonly]="true"/>
-        <ui-text-field [label]="'Fecha del pedido'" [value]="pedido?.fechaPedi" [readonly]="true"/>
-        <ui-text-field [label]="'Fecha esperada de entrega'" [value]="pedido?.fechaEntrPedi || 'Sin fecha esperada'" [readonly]="true"/>
-        <ui-text-field [label]="'Estado'" [value]="pedido?.estadoPedi" [readonly]="true"/>
+        <ui-text-field
+          [label]="'Empresa'"
+          [value]="pedido?.nombreEmpr"
+          [readonly]="true"
+        />
+        <ui-text-field
+          [label]="'Fecha del pedido'"
+          [value]="pedido?.fechaPedi"
+          [readonly]="true"
+        />
+        <ui-text-field
+          [label]="'Fecha esperada de entrega'"
+          [value]="pedido?.fechaEntrPedi || 'Sin fecha esperada'"
+          [readonly]="true"
+        />
+        <ui-text-field
+          [label]="'Estado'"
+          [value]="pedido?.estadoPedi"
+          [readonly]="true"
+        />
       </div>
 
       <div class="info_row">
-        <ui-text-field [label]="'Motivo'" [value]="pedido?.motivoPedi" [readonly]="true"/>
-        <ui-text-field [label]="'Cantidad Total'" [value]="pedido?.cantidadTotalPedi" [readonly]="true"/>
-        <ui-text-field [label]="'Total'" [value]="pedido?.totalPedi | currency:'$'" [readonly]="true"/>
-        <ui-text-field [label]="'Observación'" [value]="pedido?.observacionPedi" [readonly]="true"/>
+        <ui-text-field
+          [label]="'Motivo'"
+          [value]="pedido?.motivoPedi"
+          [readonly]="true"
+        />
+        <ui-text-field
+          [label]="'Cantidad Total'"
+          [value]="pedido?.cantidadTotalPedi"
+          [readonly]="true"
+        />
+        <ui-text-field
+          [label]="'Total'"
+          [value]="pedido?.totalPedi | currency: '$'"
+          [readonly]="true"
+        />
+        <ui-text-field
+          [label]="'Observación'"
+          [value]="pedido?.observacionPedi"
+          [readonly]="true"
+        />
       </div>
-
     </div>
 
     <!-- TABLA PRODUCTOS -->
@@ -62,24 +88,25 @@
         <tbody>
           @if (detalles.length === 0) {
             <tr>
-              <td colspan="8" class="empty_row">No hay productos en este pedido</td>
+              <td colspan="8" class="empty_row">
+                No hay productos en este pedido
+              </td>
             </tr>
           }
           @for (detalle of detalles; track detalle.ideProd) {
             <tr>
               <td>{{ detalle.nombreProd }}</td>
               <td>{{ detalle.cantidadProd }}</td>
-              <td>{{ detalle.precioUnitarioProd | currency:'$' }}</td>
-              <td>{{ detalle.subtotalProd | currency:'$' }}</td>
-              <td>{{ detalle.ivaProd | currency:'$' }}</td>
-              <td>{{ detalle.dctoCompraProd | currency:'$' }}</td>
-              <td>{{ detalle.dctoCaducProd | currency:'$' }}</td>
-              <td>{{ detalle.totalProd | currency:'$' }}</td>
+              <td>{{ detalle.precioUnitarioProd | currency: "$" }}</td>
+              <td>{{ detalle.subtotalProd | currency: "$" }}</td>
+              <td>{{ detalle.ivaProd | currency: "$" }}</td>
+              <td>{{ detalle.dctoCompraProd | currency: "$" }}</td>
+              <td>{{ detalle.dctoCaducProd | currency: "$" }}</td>
+              <td>{{ detalle.totalProd | currency: "$" }}</td>
             </tr>
           }
         </tbody>
       </table>
     </div>
-
   </ui-card>
 </div>

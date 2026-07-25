@@ -9,6 +9,7 @@ import { EmpresasService } from '@services/empresas.service';
 import { IEmpresa } from '@models';
 import { PreciosEmpresaConfig } from './precios.config';
 import { LoadingService } from '@shared/services/loading.service';
+import { UiDatetimePickerComponent } from '../../../../../../shared/components/datetime-picker/datetime-picker.component';
 
 @Component({
   selector: 'app-details',
@@ -17,13 +18,13 @@ import { LoadingService } from '@shared/services/loading.service';
     UiCardComponent,
     UiTableListComponent,
     UiTextFieldComponent,
-    UiButtonComponent
+    UiButtonComponent,
+    UiDatetimePickerComponent,
   ],
   templateUrl: './details.component.html',
-  styleUrl: './details.component.scss'
+  styleUrl: './details.component.scss',
 })
 export default class DetailsComponent {
-
   private readonly _route = inject(ActivatedRoute);
   private readonly _empresasService = inject(EmpresasService);
   private readonly _loadingService = inject(LoadingService);
@@ -54,7 +55,7 @@ export default class DetailsComponent {
         telefonoEmp: data.telefono_empr,
         emailEmp: data.email_empr,
         estadoEmp: data.estado_empr,
-        descripcionEmp: data.descripcion_empr
+        descripcionEmp: data.descripcion_empr,
       };
       this._loadingService.hide();
     });

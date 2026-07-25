@@ -6,18 +6,17 @@ import { EmpresasService } from '@services/index';
 import { UiButtonComponent } from '@shared/components/button/button.component';
 import { UiCardComponent } from '@shared/components/card/card.component';
 import { UiComboBoxComponent } from '@shared/components/combo-box/combo-box.component';
-import { UiTextFieldComponent } from '@shared/components/text-field/text-field.component';
 import { UiTableListComponent } from '@shared/components/index';
 import { IComboBoxOption } from '@shared/models/combo_box_option';
 import { IFiltroEmpresa } from 'app/models';
 import { ListEmpresasConfig } from './list_empresas.config';
 import { UiInputBoxComponent } from '@shared/components/input-box/input-box.component';
+import Swal from 'sweetalert2';
 
 const IMPORTS = [
   UiTableListComponent,
   UiButtonComponent,
   UiComboBoxComponent,
-  UiTextFieldComponent,
   UiInputBoxComponent,
   UiCardComponent,
   ReactiveFormsModule,
@@ -96,10 +95,17 @@ export default class ListComponent {
     if (clickAction !== 'redirect') {
       return;
     }
-    console.log(clickAction, this.idEmpresa);
     if (this.idEmpresa > -1) {
       this._router.navigate(['../precios', this.idEmpresa], {
         relativeTo: this._route,
+      });
+    } else {
+      Swal.fire({
+        title: 'Empresa no seleccionada',
+        text: 'Seleccione una empresa de la lista para acceder a la gestión de precios de sus productos.',
+        icon: 'info',
+        confirmButtonColor: 'var(--sm-color-primary)',
+        confirmButtonText: 'Aceptar',
       });
     }
   }

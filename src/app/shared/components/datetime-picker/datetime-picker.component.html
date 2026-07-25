@@ -1,5 +1,9 @@
 <div class="div_container">
-  <div class="div_datetime" [class.has-value]="hasValue" [style.width]="controlWidth">
+  <div
+    class="div_datetime"
+    [class.has-value]="hasValue"
+    [style.width]="controlWidth"
+  >
     @if (isTime()) {
       <input
         type="datetime-local"
@@ -7,6 +11,7 @@
         [disabled]="_isDisabled()"
         [attr.min]="min()"
         [value]="innerValue()"
+        [readOnly]="readonly()"
         [class.has-value]="hasValue"
         [attr.aria-label]="getLabel"
         (input)="updateValue($event)"
@@ -20,6 +25,7 @@
         [disabled]="_isDisabled()"
         [attr.min]="min()"
         [value]="innerValue()"
+        [readOnly]="readonly()"
         [class.has-value]="hasValue"
         [attr.aria-label]="getLabel"
         (input)="updateValue($event)"
