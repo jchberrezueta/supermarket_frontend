@@ -4,10 +4,15 @@ import { Observable } from 'rxjs';
 
 import { IComboBoxOption } from '@shared/models/combo_box_option';
 import { IResultData } from '@core/models';
-import { IEmpresa, IEmpresaPrecios, IResultDataEmpresa, IResultDataEmpresaPrecios } from '@models';
+import {
+  IEmpresa,
+  IEmpresaPrecios,
+  IResultDataEmpresa,
+  IResultDataEmpresaPrecios,
+} from '@models';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class EmpresasService {
   private readonly _restService = inject(RestService);
@@ -18,7 +23,9 @@ export class EmpresasService {
   }
 
   public buscar(id: number): Observable<IResultDataEmpresa> {
-    return this._restService.get<IResultDataEmpresa>(`${this.apiUrl}/buscar/${id}`);
+    return this._restService.get<IResultDataEmpresa>(
+      `${this.apiUrl}/buscar/${id}`,
+    );
   }
 
   public insertar(body: IEmpresa) {
@@ -38,22 +45,38 @@ export class EmpresasService {
    */
 
   public listarEstados(): Observable<IComboBoxOption[]> {
-    return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/combo/empresas/estados`);
+    return this._restService.get<IComboBoxOption[]>(
+      `${this.apiUrl}/listar/combo/empresas/estados`,
+    );
   }
 
   public listarComboEmpresas(): Observable<IComboBoxOption[]> {
-    return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/combo/empresas`);
+    return this._restService.get<IComboBoxOption[]>(
+      `${this.apiUrl}/listar/combo/empresas`,
+    );
+  }
+
+  public listarComboResponsable(): Observable<IComboBoxOption[]> {
+    return this._restService.get<IComboBoxOption[]>(
+      `${this.apiUrl}/listar/combo/empresas/responsables`,
+    );
   }
 
   /**
    * Empresas Precios
    */
   public listarPrecios(): Observable<IResultDataEmpresaPrecios> {
-    return this._restService.get<IResultDataEmpresaPrecios>(`${this.apiUrl}/listar/precios`);
+    return this._restService.get<IResultDataEmpresaPrecios>(
+      `${this.apiUrl}/listar/precios`,
+    );
   }
 
-  public listarPreciosProductosEmpresa(id: number): Observable<IResultDataEmpresaPrecios> {
-    return this._restService.get<IResultDataEmpresaPrecios>(`${this.apiUrl}/listar/precios/${id}`);
+  public listarPreciosProductosEmpresa(
+    id: number,
+  ): Observable<IResultDataEmpresaPrecios> {
+    return this._restService.get<IResultDataEmpresaPrecios>(
+      `${this.apiUrl}/listar/precios/${id}`,
+    );
   }
 
   public insertarPrecio(body: IEmpresaPrecios) {
@@ -61,6 +84,9 @@ export class EmpresasService {
   }
 
   public actualizarPrecio(id: number, body: IEmpresaPrecios) {
-    return this._restService.put<any>(`${this.apiUrl}/actualizar/precio/${id}`, body);
+    return this._restService.put<any>(
+      `${this.apiUrl}/actualizar/precio/${id}`,
+      body,
+    );
   }
 }

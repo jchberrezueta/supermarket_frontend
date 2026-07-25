@@ -4,15 +4,19 @@
       <form class="sm-crud-form" [formGroup]="formData" (ngSubmit)="filtrar()">
         <div class="sm-crud-filter-row">
           <div class="sm-crud-filters">
-            <ui-text-field
-              class="sm-field-lg"
+            <ui-input-box
+              class="sm-field-md"
               [label]="'Empresa'"
+              [options]="opcionesEmpresa"
+              [returnValue]="'label'"
               formControlName="nombreEmp"
             />
 
-            <ui-text-field
-              class="sm-field-lg"
+            <ui-input-box
+              class="sm-field-md"
               [label]="'Responsable'"
+              [options]="opcionesResponsable"
+              [returnValue]="'label'"
               formControlName="responsableEmp"
             />
 

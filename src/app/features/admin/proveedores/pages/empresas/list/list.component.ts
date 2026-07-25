@@ -11,12 +11,14 @@ import { UiTableListComponent } from '@shared/components/index';
 import { IComboBoxOption } from '@shared/models/combo_box_option';
 import { IFiltroEmpresa } from 'app/models';
 import { ListEmpresasConfig } from './list_empresas.config';
+import { UiInputBoxComponent } from '@shared/components/input-box/input-box.component';
 
 const IMPORTS = [
   UiTableListComponent,
   UiButtonComponent,
   UiComboBoxComponent,
   UiTextFieldComponent,
+  UiInputBoxComponent,
   UiCardComponent,
   ReactiveFormsModule,
 ];
@@ -47,9 +49,14 @@ export default class ListComponent {
   private initialFormValue!: IFiltroEmpresa;
   private idEmpresa = -1;
 
+  protected opcionesEmpresa: IComboBoxOption[] = [];
+  protected opcionesResponsable: IComboBoxOption[] = [];
+
   constructor() {
     this.configForm();
     this.loadEstadosEmpresa();
+    this.loadComboEmpresa();
+    this.loadComboResponsable();
   }
 
   protected configForm(): void {
@@ -68,6 +75,18 @@ export default class ListComponent {
     });
   }
 
+  private loadComboEmpresa(): void {
+    this._empresasService.listarComboEmpresas().subscribe((res) => {
+      this.opcionesEmpresa = res ?? [];
+    });
+  }
+
+  private loadComboResponsable(): void {
+    this._empresasService.listarComboResponsable().subscribe((res) => {
+      this.opcionesResponsable = res ?? [];
+    });
+  }
+
   protected filtrar(): void {
     const tableListInstance = this._tableList();
     tableListInstance.filterData(this.getParams());
@@ -77,7 +96,7 @@ export default class ListComponent {
     if (clickAction !== 'redirect') {
       return;
     }
-
+    console.log(clickAction, this.idEmpresa);
     if (this.idEmpresa > -1) {
       this._router.navigate(['../precios', this.idEmpresa], {
         relativeTo: this._route,

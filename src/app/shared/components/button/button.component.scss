@@ -15,13 +15,17 @@
   min-height: 40px;
   border-radius: var(--sm-radius-md);
   padding: 0 var(--sm-spacing-4);
+
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: var(--sm-spacing-2);
+
   font-weight: 600;
   letter-spacing: 0.01em;
+
   box-shadow: var(--sm-shadow-sm);
+
   transition:
     transform 0.15s ease,
     box-shadow 0.15s ease,
@@ -51,15 +55,20 @@
     line-height: 20px;
   }
 
-  span {
+  .ui-button__label {
     line-height: 1;
     white-space: nowrap;
   }
 
-  &.ui-button--icon-only {
-    width: 40px !important;
+  &--icon-only {
+    width: 40px;
+    height: 40px;
     min-width: 40px;
     padding: 0;
     border-radius: var(--sm-radius-md);
+
+    mat-icon {
+      margin: 0;
+    }
   }
 }

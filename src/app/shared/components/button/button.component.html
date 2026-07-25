@@ -1,23 +1,39 @@
 <div class="div_container">
-  <button
-    mat-flat-button
-    type="button"
-    class="ui-button"
-    [class.ui-button--icon-only]="!getLabel && getIcon"
-    [style.background]="buttonBackground"
-    [style.width]="buttonWidth"
-    [style.color]="buttonTextColor"
-    [disabled]="disabled()"
-    [attr.title]="tooltip() || (!getLabel && getIcon ? accessibleLabel : null)"
-    [attr.aria-label]="accessibleLabel"
-    (click)="emitClick($event)"
-  >
-    @if (getIcon) {
+  @if (!getLabel && getIcon) {
+    <button
+      mat-icon-button
+      type="button"
+      class="ui-button ui-button--icon-only"
+      [style.background]="buttonBackground"
+      [style.width]="buttonWidth"
+      [style.color]="buttonTextColor"
+      [disabled]="disabled()"
+      [attr.title]="tooltip() || accessibleLabel"
+      [attr.aria-label]="accessibleLabel"
+      (click)="emitClick($event)"
+    >
       <mat-icon>{{ getIcon }}</mat-icon>
-    }
+    </button>
+  } @else {
+    <button
+      mat-flat-button
+      type="button"
+      class="ui-button"
+      [style.background]="buttonBackground"
+      [style.width]="buttonWidth"
+      [style.color]="buttonTextColor"
+      [disabled]="disabled()"
+      [attr.title]="tooltip()"
+      [attr.aria-label]="accessibleLabel"
+      (click)="emitClick($event)"
+    >
+      @if (getIcon) {
+        <mat-icon>{{ getIcon }}</mat-icon>
+      }
 
-    @if (getLabel) {
-      <span>{{ getLabel }}</span>
-    }
-  </button>
+      @if (getLabel) {
+        <span class="ui-button__label">{{ getLabel }}</span>
+      }
+    </button>
+  }
 </div>

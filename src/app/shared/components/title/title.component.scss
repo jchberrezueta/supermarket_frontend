@@ -1,17 +1,18 @@
 :host {
   display: block;
   width: 100%;
-  height: auto;
+  height: 100%;
 }
 
 .div_container {
   width: 100%;
-  min-height: 56px;
+  height: 100%;
+  /*min-height: 38px;*/
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--sm-spacing-4);
-  margin-bottom: var(--sm-spacing-4);
+  /*margin-bottom: var(--sm-spacing-4);*/
 
   .div_title {
     min-width: 0;

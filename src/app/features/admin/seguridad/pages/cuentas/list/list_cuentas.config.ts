@@ -1,4 +1,4 @@
-import { ITableListConfig } from "@shared/models/table-list.model";
+import { ITableListConfig } from '@shared/models/table-list.model';
 
 export const ListCuentasConfig: ITableListConfig = {
   dataKey: 'ide_cuen',
@@ -14,44 +14,51 @@ export const ListCuentasConfig: ITableListConfig = {
           icon: 'visibility',
           router: true,
           key: 'ide_cuen',
-          color: 'purple'
-        }
-      ]
+          color: 'purple',
+        },
+      ],
     },
 
-    { 
-      label: 'ID', 
-      property: 'ide_cuen', 
-      type: 'text', 
-      sortable: true 
+    {
+      label: 'ID',
+      property: 'ide_cuen',
+      type: 'text',
+      sortable: true,
     },
 
-    { 
-      label: 'Usuario', 
-      property: 'usuario_cuen', 
-      type: 'text', 
-      sortable: true 
+    {
+      label: 'Usuario',
+      property: 'usuario_cuen',
+      type: 'text',
+      sortable: true,
     },
 
-    { 
-      label: 'Empleado', 
-      property: 'nombre_empleado', 
-      type: 'text', 
-      sortable: true 
+    {
+      label: 'Empleado',
+      property: 'nombre_empleado',
+      type: 'text',
+      sortable: true,
     },
 
-    { 
-      label: 'Perfil', 
-      property: 'nombre_perf', 
-      type: 'text', 
-      sortable: true 
+    {
+      label: 'Perfil',
+      property: 'nombre_perf',
+      type: 'text',
+      sortable: true,
     },
 
-    { 
-      label: 'Estado', 
-      property: 'estado_cuen', 
+    {
+      label: 'Estado',
+      property: 'estado_cuen',
       type: 'badge',
-      sortable: true 
+      sortable: true,
+    },
+
+    {
+      label: 'Cambio Clave',
+      property: 'debe_cambiar_clave',
+      type: 'text',
+      sortable: true,
     },
 
     {
@@ -65,16 +72,16 @@ export const ListCuentasConfig: ITableListConfig = {
           icon: 'edit',
           router: true,
           key: 'ide_cuen',
-          color: 'primary'
+          color: 'primary',
         },
         {
           action: 'delete',
           label: 'Eliminar',
           icon: 'delete',
           key: 'ide_cuen',
-          color: 'red'
-        }
-      ]
-    }
-  ]
+          color: 'red',
+        },
+      ],
+    },
+  ],
 };
