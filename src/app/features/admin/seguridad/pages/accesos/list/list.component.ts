@@ -57,6 +57,7 @@ export default class ListComponent {
   protected configForm(): void {
     this.formData = this.formBuilder.group({
       ideCuen: ['', [], []],
+      usuarioCuen: ['', [], []],
       ipAcce: ['', [], []],
       navegadorAcce: ['', [], []],
       fechaAcceDesde: ['', [], []],
@@ -108,10 +109,16 @@ export default class ListComponent {
     const filtro = this.formData.value as IFiltroAccesoUsuario;
 
     this.appendParam(params, 'ideCuen', filtro.ideCuen);
+    this.appendParam(params, 'usuarioCuen', filtro.usuarioCuen);
     this.appendParam(params, 'ipAcce', filtro.ipAcce);
     this.appendParam(params, 'navegadorAcce', filtro.navegadorAcce);
     this.appendParam(params, 'fechaAcceDesde', filtro.fechaAcceDesde);
-    this.appendParam(params, 'fechaAcceHasta', filtro.fechaAcceHasta);
+
+    const fechaHasta = filtro.fechaAcceHasta
+      ? filtro.fechaAcceHasta.replace(/T\d{2}:\d{2}(:\d{2})?/, 'T23:59:59')
+      : filtro.fechaAcceHasta;
+
+    this.appendParam(params, 'fechaAcceHasta', fechaHasta);
 
     return params;
   }

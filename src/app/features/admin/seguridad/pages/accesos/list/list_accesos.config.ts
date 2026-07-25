@@ -38,7 +38,7 @@ export const ListAccesosUsuarioConfig: ITableListConfig = {
     {
       label: 'Fecha Acceso',
       property: 'fecha_acce',
-      type: 'text',
+      type: 'date',
       sortable: true,
     },
 

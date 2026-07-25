@@ -21,17 +21,12 @@ interface IAccesoView {
 @Component({
   selector: 'app-details',
   standalone: true,
-  imports: [
-    CommonModule,
-    UiTextFieldComponent,
-    UiButtonComponent
-  ],
+  imports: [CommonModule, UiTextFieldComponent, UiButtonComponent],
   providers: [DatePipe],
   templateUrl: './details.component.html',
-  styleUrl: './details.component.scss'
+  styleUrl: './details.component.scss',
 })
 export default class DetailsComponent {
-
   private readonly _route = inject(ActivatedRoute);
   private readonly _accesosService = inject(AccesosService);
   private readonly _loadingService = inject(LoadingService);
@@ -62,11 +57,11 @@ export default class DetailsComponent {
           numIntFallAcce: data.num_int_fall_acce,
           ipAcce: data.ip_acce,
           latitudAcce: data.latitud_acce,
-          longitudAcce: data.longitud_acce
+          longitudAcce: data.longitud_acce,
         };
         this._loadingService.hide();
       },
-      error: () => this._loadingService.hide()
+      error: () => this._loadingService.hide(),
     });
   }
 
