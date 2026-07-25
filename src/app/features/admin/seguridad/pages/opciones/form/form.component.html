@@ -1,30 +1,23 @@
 <div class="div_container">
   <div class="div_card">
-
     <div class="panel_1">
       <div class="card_form">
         <form [formGroup]="formData" class="form">
-
           @if (!isAdd) {
             <div class="div_id">
               <ui-text-field
                 [label]="'ID'"
                 formControlName="ideOpci"
+                [readonly]="true"
               />
               <div class="input_falso"></div>
             </div>
           }
 
           <div class="form_info">
-            <ui-text-field
-              [label]="'Nombre'"
-              formControlName="nombreOpci"
-            />
+            <ui-text-field [label]="'Nombre'" formControlName="nombreOpci" />
 
-            <ui-text-field
-              [label]="'Ruta'"
-              formControlName="rutaOpci"
-            />
+            <ui-text-field [label]="'Ruta'" formControlName="rutaOpci" />
 
             <ui-text-field
               [label]="'Nivel'"
@@ -38,10 +31,7 @@
               formControlName="padreOpci"
             />
 
-            <ui-text-field
-              [label]="'Icono'"
-              formControlName="iconoOpci"
-            />
+            <ui-text-field [label]="'Icono'" formControlName="iconoOpci" />
 
             <ui-combo-box
               [label]="'Estado'"
@@ -66,7 +56,6 @@
               (evntClick)="cancelar()"
             />
           </div>
-
         </form>
       </div>
     </div>
@@ -74,6 +63,5 @@
     <div class="panel_2">
       <div class="panel_2_img"></div>
     </div>
-
   </div>
 </div>

@@ -1,13 +1,15 @@
 .div_container {
   width: 100%;
-  height: 100%;
+  height: 650px;
 }
 
 .div_card {
   display: flex;
   height: 100%;
-  background: #fff;
-  border-radius: 10px;
+  background: var(--sm-color-surface, #fff);
+  border: 1px solid var(--sm-color-border, #dce6df);
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgb(31 65 48 / 7%);
 }
 
 .panel_1 {
@@ -16,7 +18,7 @@
 }
 
 .card_form {
-  background: rgba(241,245,249);
+  /*background: rgba(241, 245, 249);*/
   border-radius: 20px;
   padding: 40px;
 }
@@ -56,6 +58,6 @@
 .panel_2_img {
   width: 100%;
   height: 100%;
-  background-image: url('/imgs/img_roles.jpg');
+  background-image: url("/imgs/img_perfiles.jpg");
   background-size: cover;
 }

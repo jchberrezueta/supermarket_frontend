@@ -28,13 +28,12 @@ type PerfilFormGroup = FormGroupOf<IPerfil>;
     UiTextAreaComponent,
     UiComboBoxComponent,
     UiButtonComponent,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
   templateUrl: './form.component.html',
-  styleUrl: './form.component.scss'
+  styleUrl: './form.component.scss',
 })
 export default class FormComponent implements OnInit {
-
   private readonly _route = inject(ActivatedRoute);
   private readonly _fb = inject(FormBuilder);
   private readonly _perfilesService = inject(PerfilesService);
@@ -70,7 +69,7 @@ export default class FormComponent implements OnInit {
     this._rolesService.listarComboRoles().subscribe({
       next: (res) => {
         this.roles = res;
-      }
+      },
     });
   }
 
@@ -79,7 +78,7 @@ export default class FormComponent implements OnInit {
       idePerf: [{ value: -1, disabled: true }, Validators.required],
       ideRol: [-1, Validators.required],
       nombrePerf: ['', Validators.required],
-      descripcionPerf: ['', Validators.required]
+      descripcionPerf: ['', Validators.required],
     }) as PerfilFormGroup;
 
     this.initialFormValue = this.formData.getRawValue();
@@ -94,11 +93,11 @@ export default class FormComponent implements OnInit {
           idePerf: p.ide_perf,
           ideRol: p.ide_rol,
           nombrePerf: p.nombre_perf,
-          descripcionPerf: p.descripcion_perf
+          descripcionPerf: p.descripcion_perf,
         });
         this._loadingService.hide();
       },
-      error: () => this._loadingService.hide()
+      error: () => this._loadingService.hide(),
     });
   }
 
@@ -116,15 +115,15 @@ export default class FormComponent implements OnInit {
             this.location.back();
             this.resetForm();
           },
-          error: () => this._loadingService.hide()
+          error: () => this._loadingService.hide(),
         });
       } else {
         Swal.fire({
           title: '¿Actualizar Perfil?',
           icon: 'warning',
           showCancelButton: true,
-          confirmButtonText: 'Sí'
-        }).then(r => {
+          confirmButtonText: 'Sí',
+        }).then((r) => {
           if (r.isConfirmed) {
             data.idePerf = this.idParam;
             this._loadingService.show();
@@ -135,7 +134,7 @@ export default class FormComponent implements OnInit {
                 this.location.back();
                 this.resetForm();
               },
-              error: () => this._loadingService.hide()
+              error: () => this._loadingService.hide(),
             });
           }
         });
@@ -145,13 +144,13 @@ export default class FormComponent implements OnInit {
 
   protected cancelar() {
     Swal.fire({
-      title: "Esta Seguro de Cancelar?",
-      text: "Los cambios realizados no se guardaran!",
-      icon: "warning",
+      title: 'Esta Seguro de Cancelar?',
+      text: 'Los cambios realizados no se guardaran!',
+      icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Si, Cancelar!"
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si, Cancelar!',
     }).then((result) => {
       if (result.isConfirmed) {
         this.resetForm();

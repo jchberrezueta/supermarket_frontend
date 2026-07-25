@@ -55,6 +55,7 @@ export default class ListComponent {
   protected configForm(): void {
     this.formData = this.formBuilder.group({
       ideRol: ['', [], []],
+      nombreRol: ['', [], []],
       nombrePerf: ['', [], []],
       descripcionPerf: ['', [], []],
     }) as FilterPerfilFormGroup;
@@ -102,8 +103,8 @@ export default class ListComponent {
   private getParams(): URLSearchParams {
     const params = new URLSearchParams();
     const filtro = this.formData.value as IFiltroPerfil;
-
     this.appendParam(params, 'ideRol', filtro.ideRol);
+    this.appendParam(params, 'nombreRol', filtro.nombreRol);
     this.appendParam(params, 'nombrePerf', filtro.nombrePerf);
     this.appendParam(params, 'descripcionPerf', filtro.descripcionPerf);
 
