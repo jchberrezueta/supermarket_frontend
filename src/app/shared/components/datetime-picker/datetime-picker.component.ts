@@ -80,7 +80,22 @@ export class UiDatetimePickerComponent implements ControlValueAccessor {
 
   protected emitValue(event: Event): void {
     const value = (event.target as HTMLInputElement).value;
+
     this.evntDateChange.emit(value);
+  }
+
+  private normalizeDate(value: string): string {
+    if (!value) {
+      return value;
+    }
+
+    // Ya viene con hora
+    if (value.includes('T')) {
+      return value;
+    }
+
+    // Solo fecha
+    return `${value}T00:00:00`;
   }
 
   public get getLabel(): string {
@@ -139,7 +154,13 @@ export class UiDatetimePickerComponent implements ControlValueAccessor {
     const value = (event.target as HTMLInputElement).value;
 
     this.innerValue.set(value);
-    this.onChange(value);
+
+    if (this.isTime()) {
+      this.onChange(value);
+    } else {
+      this.onChange(this.normalizeDate(value));
+    }
+    this.onTouched();
   }
 
   private resolveWidth(width: string): string | null {

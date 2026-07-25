@@ -99,6 +99,7 @@ export default class FormComponent {
   protected guardar(): void {
     if (!this.formData.invalid) {
       const data = this.formData.getRawValue() as IEmpresa;
+      console.log(data);
       if (this.isAdd) {
         data.ideEmp = -1;
         this._empresasService.insertar(data).subscribe((res) => {
