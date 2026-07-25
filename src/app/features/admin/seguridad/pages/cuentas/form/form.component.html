@@ -1,50 +1,75 @@
 <div class="div_container">
   <div class="div_card">
-
     <div class="panel_1">
       <div class="card_form">
         <form [formGroup]="formData" class="form">
-
           <div class="div_form">
-            @if (!isAdd) {
-              <div class="div_id">
-                <ui-text-field [label]="'ID'" formControlName="ideCuen" />
-                <div class="input_falso"></div>
-              </div>
-            }
-
             <div class="form_info">
+              @if (!isAdd) {
+                <div class="form_row">
+                  <div class="form_div">
+                    <ui-text-field
+                      [label]="'ID'"
+                      formControlName="ideCuen"
+                      [readonly]="true"
+                    />
+                  </div>
 
-              <div class="form_div form_div_1">
-                <ui-combo-box [label]="'Empleado'" [options]="empleados" formControlName="ideEmpl" />
-                <ui-text-field [label]="'Usuario'" formControlName="usuarioCuen" />
+                  <div class="form_div"></div>
+                </div>
+              }
+              <div class="form_row">
+                <div class="form_div form_div_1">
+                  <ui-combo-box
+                    [label]="'Empleado'"
+                    [options]="empleados"
+                    formControlName="ideEmpl"
+                  />
+                  <ui-text-field
+                    [label]="'Usuario'"
+                    formControlName="usuarioCuen"
+                  />
+                </div>
+
+                <div class="form_div form_div_2">
+                  <ui-combo-box
+                    [label]="'Perfil'"
+                    [options]="perfiles"
+                    formControlName="idePerf"
+                  />
+                  <ui-text-field
+                    [label]="
+                      isAdd
+                        ? 'Contraseña'
+                        : 'Nueva Contraseña (dejar vacío para mantener)'
+                    "
+                    [valueType]="'password'"
+                    formControlName="passwordCuen"
+                  />
+                </div>
+
+                <div class="form_div form_div_3">
+                  <ui-combo-box
+                    [label]="'Estado'"
+                    [options]="estadosCuenta"
+                    formControlName="estadoCuen"
+                  />
+                </div>
               </div>
-
-              <div class="form_div form_div_2">
-                <ui-combo-box [label]="'Perfil'" [options]="perfiles" formControlName="idePerf" />
-                <ui-text-field 
-                  [label]="isAdd ? 'Contraseña' : 'Nueva Contraseña (dejar vacío para mantener)'"
-                  [valueType]="'password'"
-                  formControlName="passwordCuen" 
-                />
-              </div>
-
-              <div class="form_div form_div_3">
-                <ui-combo-box
-                  [label]="'Estado'"
-                  [options]="estadosCuenta"
-                  formControlName="estadoCuen"
-                />
-              </div>
-
             </div>
           </div>
 
           <div class="form_buttons">
-            <ui-button [label]="isAdd ? 'Guardar' : 'Actualizar'" (evntClick)="guardar()" />
-            <ui-button [label]="'Cancelar'" (evntClick)="cancelar()" [color]="'red'" />
+            <ui-button
+              [label]="isAdd ? 'Guardar' : 'Actualizar'"
+              (evntClick)="guardar()"
+            />
+            <ui-button
+              [label]="'Cancelar'"
+              (evntClick)="cancelar()"
+              [color]="'red'"
+            />
           </div>
-
         </form>
       </div>
     </div>
@@ -52,6 +77,5 @@
     <div class="panel_2">
       <div class="panel_2_img"></div>
     </div>
-
   </div>
 </div>

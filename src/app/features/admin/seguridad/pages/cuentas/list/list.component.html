@@ -8,14 +8,16 @@
               class="sm-field-lg"
               [label]="'Perfil'"
               [options]="opcionesPerfiles"
-              formControlName="idePerf"
+              [returnValue]="'label'"
+              formControlName="nombrePerf"
             />
 
             <ui-input-box
               class="sm-field-lg"
               [label]="'Empleado'"
               [options]="opcionesEmpleados"
-              formControlName="ideEmpl"
+              [returnValue]="'label'"
+              formControlName="nombreCompletoEmpl"
             />
 
             <ui-input-box

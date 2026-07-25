@@ -65,6 +65,8 @@ export default class ListComponent {
     this.formData = this.formBuilder.group({
       ideEmpl: ['', [], []],
       idePerf: ['', [], []],
+      nombrePerf: ['', [], []],
+      nombreCompletoEmpl: ['', [], []],
       usuarioCuen: ['', [], []],
       estadoCuen: ['', [], []],
     }) as FilterCuentaFormGroup;
@@ -118,9 +120,10 @@ export default class ListComponent {
   private getParams(): URLSearchParams {
     const params = new URLSearchParams();
     const filtro = this.formData.value as IFiltroCuenta;
-
     this.appendParam(params, 'ideEmpl', filtro.ideEmpl);
     this.appendParam(params, 'idePerf', filtro.idePerf);
+    this.appendParam(params, 'nombrePerf', filtro.nombrePerf);
+    this.appendParam(params, 'nombreCompletoEmpl', filtro.nombreCompletoEmpl);
     this.appendParam(params, 'usuarioCuen', filtro.usuarioCuen);
     this.appendParam(params, 'estadoCuen', filtro.estadoCuen);
 
