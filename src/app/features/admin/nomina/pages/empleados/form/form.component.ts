@@ -25,13 +25,12 @@ type EmpleadoFormGroup = FormGroupOf<IEmpleado>;
     UiComboBoxComponent,
     UiDatetimePickerComponent,
     UiButtonComponent,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
   templateUrl: './form.component.html',
-  styleUrl: './form.component.scss'
+  styleUrl: './form.component.scss',
 })
 export default class FormComponent {
-
   private readonly _fb = inject(FormBuilder);
   private readonly _route = inject(ActivatedRoute);
   private readonly _empleadosService = inject(EmpleadosService);
@@ -80,15 +79,15 @@ export default class FormComponent {
   }
 
   private loadRoles() {
-    this._rolesService.listarComboRoles().subscribe(res => {
+    this._rolesService.listarComboRoles().subscribe((res) => {
       this.roles = res;
     });
   }
 
   private setData(id: number) {
-    this._empleadosService.buscar(id).subscribe(res => {
+    this._empleadosService.buscar(id).subscribe((res) => {
       const e = res.data[0] as IEmpleadoResult;
-      
+
       // Formatear fechas correctamente para datetime-picker
       const formatDate = (dateStr: string | null | undefined): string => {
         if (!dateStr) return '';
@@ -112,9 +111,8 @@ export default class FormComponent {
         fechaTerminoEmpl: formatDate(e.fecha_termino_empl),
         tituloEmpl: e.titulo_empl,
         rmuEmpl: Number(e.rmu_empl) || 1,
-        estadoEmpl: e.estado_empl
+        estadoEmpl: e.estado_empl,
       });
-      
     });
   }
 
@@ -135,73 +133,69 @@ export default class FormComponent {
   }
 
   protected guardar(): void {
-    if(!this.formData.invalid){
+    if (!this.formData.invalid) {
       const data = this.formData.getRawValue() as IEmpleado;
-      if(this.isAdd){
+      if (this.isAdd) {
         data.ideEmpl = -1;
-        this._empleadosService.insertar(data).subscribe(
-          (res) => {
-            Swal.fire({
-              title: "Empleado registrado :)",
-              text: "El empleado fue guardado correctamente",
-              icon: "success"
-            });
-            this.location.back();
-            this.resetForm();
-          }
-        );
-      }else{
+        this._empleadosService.insertar(data).subscribe((res) => {
+          Swal.fire({
+            title: 'Empleado registrado :)',
+            text: 'El empleado fue guardado correctamente',
+            icon: 'success',
+          });
+          this.location.back();
+          this.resetForm();
+        });
+      } else {
         Swal.fire({
-          title: "¿Está seguro de modificar este empleado?",
-          text: "Los cambios realizados se registrarán!",
-          icon: "warning",
+          title: '¿Está seguro de modificar este empleado?',
+          text: 'Los cambios realizados se registrarán!',
+          icon: 'warning',
           showCancelButton: true,
-          confirmButtonColor: "#3085d6",
-          cancelButtonColor: "#d33",
-          confirmButtonText: "Sí, de acuerdo"
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Sí, de acuerdo',
         }).then((result) => {
           if (result.isConfirmed) {
             data.ideEmpl = this.idParam;
-            this._empleadosService.actualizar(this.idParam, data).subscribe(
-              (res) => {
+            this._empleadosService
+              .actualizar(this.idParam, data)
+              .subscribe((res) => {
                 Swal.fire({
-                  title: "Empleado actualizado :)",
-                  text: "El empleado fue actualizado correctamente",
-                  icon: "success"
+                  title: 'Empleado actualizado :)',
+                  text: 'El empleado fue actualizado correctamente',
+                  icon: 'success',
                 });
                 this.location.back();
                 this.resetForm();
-              }
-            );
+              });
           }
         });
-        
       }
-    }else{
+    } else {
       Swal.fire({
-        icon: "info",
-        title: "Oops... Faltan datos",
-        text: "Revise por favor la información ingresada"
+        icon: 'info',
+        title: 'Oops... Faltan datos',
+        text: 'Revise por favor la información ingresada',
       });
     }
   }
 
   protected cancelar(): void {
     Swal.fire({
-      title: "¿Está Seguro de Cancelar?",
-      text: "Los cambios realizados no se guardarán!",
-      icon: "warning",
+      title: '¿Está Seguro de Cancelar?',
+      text: 'Los cambios realizados no se guardarán!',
+      icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Sí, Cancelar!"
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, Cancelar!',
     }).then((result) => {
       if (result.isConfirmed) {
         this.resetForm();
         this.location.back();
       }
     });
-    
   }
 
   protected resetForm() {

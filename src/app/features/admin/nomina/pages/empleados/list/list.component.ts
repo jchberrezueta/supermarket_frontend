@@ -9,6 +9,7 @@ import { UiTableListComponent } from '@shared/components/index';
 import { IComboBoxOption } from '@shared/models/combo_box_option';
 import { IFiltroEmpleado } from 'app/models';
 import { ListEmpleadosConfig } from './list_empleados.config';
+import { UiComboBoxComponent } from '../../../../../../shared/components/combo-box/combo-box.component';
 
 const IMPORTS = [
   UiTableListComponent,
@@ -16,6 +17,7 @@ const IMPORTS = [
   UiCardComponent,
   ReactiveFormsModule,
   UiInputBoxComponent,
+  UiComboBoxComponent,
 ];
 
 type FilterEmpleadoFormGroup = FormGroupOf<IFiltroEmpleado>;
@@ -129,7 +131,7 @@ export default class ListComponent {
   private getParams(): URLSearchParams {
     const params = new URLSearchParams();
     const filtro = this.formData.value as IFiltroEmpleado;
-
+    console.log(filtro);
     this.appendParam(params, 'ideRol', filtro.ideRol);
     this.appendParam(params, 'cedulaEmpl', filtro.cedulaEmpl);
     this.appendParam(params, 'primerNombreEmpl', filtro.primerNombreEmpl);

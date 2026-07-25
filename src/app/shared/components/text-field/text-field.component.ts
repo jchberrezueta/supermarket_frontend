@@ -138,8 +138,6 @@ export class UiTextFieldComponent implements ControlValueAccessor {
   }
 
   private parseValue(rawValue: string): any {
-    console.log('parsedValue');
-    console.log(this.parseValue);
     if (this.valueType() !== 'number') {
       return rawValue;
     }

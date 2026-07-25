@@ -5,7 +5,11 @@
         <form [formGroup]="formData" class="form">
           @if (!isAdd) {
             <div class="div_id">
-              <ui-text-field [label]="'ID'" formControlName="ideRol" />
+              <ui-text-field
+                [label]="'ID'"
+                formControlName="ideRol"
+                [readonly]="true"
+              />
               <div class="input_falso"></div>
             </div>
           }
