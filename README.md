@@ -25,3 +25,13 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+
+COMANDO PARA EJECUTAR FRONTEND CON HTTTPS
+
+ng serve \
+--host 0.0.0.0 \
+--port 4200 \
+--configuration=development \
+--ssl true \
+--ssl-cert certs/localhost+2.pem \
+--ssl-key certs/localhost+2-key.pem

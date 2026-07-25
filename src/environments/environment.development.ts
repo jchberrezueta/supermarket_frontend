@@ -7,8 +7,8 @@ export const environment = {
 /*
 export const environment = {
   production: false,
-  api_url: 'http://192.168.1.105:3001/api',
-  posScanSocketUrl: 'http://192.168.1.105:3001/pos-scan',
-  appBaseUrl: 'http://192.168.1.105:4200',
+  api_url: 'https://192.168.1.105:3001/api',
+  posScanSocketUrl: 'https://192.168.1.105:3001/pos-scan',
+  appBaseUrl: 'https://192.168.1.105:4200',
 };
 */
