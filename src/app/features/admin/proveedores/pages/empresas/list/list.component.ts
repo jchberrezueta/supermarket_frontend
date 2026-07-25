@@ -137,7 +137,6 @@ export default class ListComponent {
   private getParams(): URLSearchParams {
     const params = new URLSearchParams();
     const filtro = this.formData.value as IFiltroEmpresa;
-
     this.appendParam(params, 'nombreEmp', filtro.nombreEmp);
     this.appendParam(params, 'estadoEmp', filtro.estadoEmp);
     this.appendParam(params, 'responsableEmp', filtro.responsableEmp);

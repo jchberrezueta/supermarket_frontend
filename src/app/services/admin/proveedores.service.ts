@@ -6,7 +6,7 @@ import { IComboBoxOption } from '@shared/models/combo_box_option';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ProveedoresService {
   private readonly _restService = inject(RestService);
@@ -17,7 +17,9 @@ export class ProveedoresService {
   }
 
   public buscar(id: number): Observable<IResultDataProveedor> {
-    return this._restService.get<IResultDataProveedor>(`${this.apiUrl}/buscar/${id}`);
+    return this._restService.get<IResultDataProveedor>(
+      `${this.apiUrl}/buscar/${id}`,
+    );
   }
 
   public insertar(body: IProveedor) {
@@ -37,13 +39,19 @@ export class ProveedoresService {
    */
 
   public listarProveedores(): Observable<IResultData> {
-    return this._restService.get<IResultData>(`${this.apiUrl}/listar/proveedores`);
+    return this._restService.get<IResultData>(
+      `${this.apiUrl}/listar/proveedores`,
+    );
   }
   public filtrarProveedores(): Observable<IResultData> {
-    return this._restService.get<IResultData>(`${this.apiUrl}/filtrar/proveedores`);
+    return this._restService.get<IResultData>(
+      `${this.apiUrl}/filtrar/proveedores`,
+    );
   }
   public buscarProveedor(id: number): Observable<IResultData> {
-    return this._restService.get<IResultData>(`${this.apiUrl}/buscar/proveedor/${id}`);
+    return this._restService.get<IResultData>(
+      `${this.apiUrl}/buscar/proveedor/${id}`,
+    );
   }
 
   /**
@@ -51,18 +59,33 @@ export class ProveedoresService {
    */
 
   public listarComboProveedores(): Observable<IComboBoxOption[]> {
-    return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/proveedores/combo/proveedores`);
+    return this._restService.get<IComboBoxOption[]>(
+      `${this.apiUrl}/listar/proveedores/combo/proveedores`,
+    );
+  }
+  public listarEstadosProveedor(): Observable<IComboBoxOption[]> {
+    return this._restService.get<IComboBoxOption[]>(
+      `${this.apiUrl}/listar/proveedores/combo/estados`,
+    );
   }
   public listarComboCedula(): Observable<IComboBoxOption[]> {
-    return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/proveedores/combo/cedula`);
+    return this._restService.get<IComboBoxOption[]>(
+      `${this.apiUrl}/listar/proveedores/combo/cedula`,
+    );
   }
   public listarComboPrimerNombre(): Observable<IComboBoxOption[]> {
-    return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/proveedores/combo/primer/nombre`);
+    return this._restService.get<IComboBoxOption[]>(
+      `${this.apiUrl}/listar/proveedores/combo/primer/nombre`,
+    );
   }
   public listarComboApellidoPaterno(): Observable<IComboBoxOption[]> {
-    return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/proveedores/combo/apellido/paterno`);
+    return this._restService.get<IComboBoxOption[]>(
+      `${this.apiUrl}/listar/proveedores/combo/apellido/paterno`,
+    );
   }
   public listarComboEmail(): Observable<IComboBoxOption[]> {
-    return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/proveedores/combo/email`);
+    return this._restService.get<IComboBoxOption[]>(
+      `${this.apiUrl}/listar/proveedores/combo/email`,
+    );
   }
 }

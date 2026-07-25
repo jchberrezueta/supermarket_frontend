@@ -1,3 +1,8 @@
+export enum EnumEstadosProveedor {
+  ACTIVO = 'activo',
+  INACTIVO = 'inactivo',
+}
+
 export interface IProveedor {
   ideProv: number;
   ideEmpr: number;
@@ -10,6 +15,8 @@ export interface IProveedor {
   apellidoPaternoProv: string;
   segundoNombreProv?: string | null;
   apellidoMaternoProv?: string | null;
+  estadoProv?: EnumEstadosProveedor;
+  cargoProv?: string;
 }
 
 export class CProveedor implements IProveedor {
@@ -119,6 +126,8 @@ export interface IProveedorResult {
   apellido_paterno_prov: string;
   segundo_nombre_prov: string | null;
   apellido_materno_prov: string | null;
+  estado_prov: EnumEstadosProveedor;
+  cargo_prov: string;
 }
 
 export interface IResultDataProveedor {

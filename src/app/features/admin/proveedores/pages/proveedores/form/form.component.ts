@@ -11,8 +11,7 @@ import { UiTextFieldComponent } from '../../../../../../shared/components/text-f
 import { UiComboBoxComponent } from '../../../../../../shared/components/combo-box/combo-box.component';
 import { UiDatetimePickerComponent } from '../../../../../../shared/components/datetime-picker/datetime-picker.component';
 import { UiButtonComponent } from '../../../../../../shared/components/button/button.component';
-import Swal from 'sweetalert2'
-
+import Swal from 'sweetalert2';
 
 type ProveedorFormGroup = FormGroupOf<IProveedor>;
 
@@ -24,12 +23,13 @@ type ProveedorFormGroup = FormGroupOf<IProveedor>;
     UiComboBoxComponent,
     UiDatetimePickerComponent,
     UiButtonComponent,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
   templateUrl: './form.component.html',
-  styleUrl: './form.component.scss'
+  styleUrl: './form.component.scss',
 })
 export default class FormComponent {
+  protected estadosProveedor!: IComboBoxOption[];
 
   private readonly _route = inject(ActivatedRoute);
   private readonly _fb = inject(FormBuilder);
@@ -40,19 +40,20 @@ export default class FormComponent {
   protected formData!: ProveedorFormGroup;
   private initialFormValue!: IProveedor;
   protected empresas!: IComboBoxOption[];
-  
+
   protected isAdd = true;
   private idParam = -1;
 
   constructor() {
     this.loadEmpresas();
+    this.loadEstadosProveedor();
   }
 
   ngOnInit(): void {
     this.initForm();
-    this.formData.get('fechaNacimientoProv')!
-      .valueChanges
-      .subscribe(value => {
+    this.formData
+      .get('fechaNacimientoProv')!
+      .valueChanges.subscribe((value) => {
         const edad = this.calcularEdad(value);
         this.formData.get('edadProv')?.setValue(edad, { emitEvent: false });
       });
@@ -78,19 +79,27 @@ export default class FormComponent {
       edadProv: [0, Validators.required],
       telefonoProv: ['', Validators.required],
       emailProv: ['', Validators.required],
+      estadoProv: [''],
+      cargoProv: [''],
     }) as ProveedorFormGroup;
     // snapshot inicial
     this.initialFormValue = this.formData.getRawValue();
   }
 
+  private loadEstadosProveedor() {
+    this._proveedoresService.listarEstadosProveedor().subscribe((res) => {
+      this.estadosProveedor = res;
+    });
+  }
+
   private loadEmpresas() {
-    this._empresasService.listarComboEmpresas().subscribe(res => {
+    this._empresasService.listarComboEmpresas().subscribe((res) => {
       this.empresas = res;
     });
   }
 
   private setData(id: number) {
-    this._proveedoresService.buscar(id).subscribe(res => {
+    this._proveedoresService.buscar(id).subscribe((res) => {
       const p = res.data[0] as IProveedorResult;
       this.formData.patchValue({
         ideProv: p.ide_prov,
@@ -103,71 +112,71 @@ export default class FormComponent {
         fechaNacimientoProv: p.fecha_nacimiento_prov,
         edadProv: p.edad_prov,
         telefonoProv: p.telefono_prov,
-        emailProv: p.email_prov
+        emailProv: p.email_prov,
+        estadoProv: p.estado_prov,
+        cargoProv: p.cargo_prov,
       });
     });
   }
 
   protected guardar() {
     const data = this.formData.getRawValue() as IProveedor;
-    if(this.formData.valid){
+    if (this.formData.valid) {
       if (this.isAdd) {
         data.ideProv = -1;
-        this._proveedoresService.insertar(data).subscribe(
-          (res) => {
-            Swal.fire({
-              title: "Proveedor registrado :)",
-              text: "El Proveedor fue guardado correctamente",
-              icon: "success"
-            });
-            this.location.back();
-            this.resetForm();
-          }
-        );
+        this._proveedoresService.insertar(data).subscribe((res) => {
+          Swal.fire({
+            title: 'Proveedor registrado :)',
+            text: 'El Proveedor fue guardado correctamente',
+            icon: 'success',
+          });
+          this.location.back();
+          this.resetForm();
+        });
       } else {
         Swal.fire({
-          title: "Esta seguro de modificar este Proveedor?",
-          text: "Los cambios realizados se registraran!",
-          icon: "warning",
+          title: 'Esta seguro de modificar este Proveedor?',
+          text: 'Los cambios realizados se registraran!',
+          icon: 'warning',
           showCancelButton: true,
-          confirmButtonColor: "#3085d6",
-          cancelButtonColor: "#d33",
-          confirmButtonText: "Si, de acuerdo"
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Si, de acuerdo',
         }).then((result) => {
           if (result.isConfirmed) {
             data.ideProv = this.idParam;
-            this._proveedoresService.actualizar(this.idParam, data).subscribe(
-              (res) => {
+            this._proveedoresService
+              .actualizar(this.idParam, data)
+              .subscribe((res) => {
                 Swal.fire({
-                  title: "Proveedor actualizado :)",
-                  text: "El Proveedor fue actualizado correctamente",
-                  icon: "success"
+                  title: 'Proveedor actualizado :)',
+                  text: 'El Proveedor fue actualizado correctamente',
+                  icon: 'success',
                 });
                 this.location.back();
                 this.resetForm();
-              }
-            );
+              });
           }
         });
-    }
-    }else{
+      }
+    } else {
       Swal.fire({
-        icon: "info",
-        title: "Oops... Faltan datos",
-        text: "Revise porfavor la información ingresada"
+        icon: 'info',
+        title: 'Oops... Faltan datos',
+        text: 'Revise porfavor la información ingresada',
       });
     }
   }
 
   protected cancelar() {
     Swal.fire({
-      title: "Esta Seguro de Cancelar?",
-      text: "Los cambios realizados no se guardaran!",
-      icon: "warning",
+      title: 'Esta Seguro de Cancelar?',
+      text: 'Los cambios realizados no se guardaran!',
+      icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Si, Cancelar!"
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si, Cancelar!',
     }).then((result) => {
       if (result.isConfirmed) {
         this.resetForm();
@@ -180,21 +189,19 @@ export default class FormComponent {
     this.formData.reset(this.initialFormValue);
   }
 
-
   protected calcularEdad(fecha: string | Date): number {
-  if (!fecha) return 0;
+    if (!fecha) return 0;
 
-  const fechaNac = new Date(fecha);
-  const hoy = new Date();
+    const fechaNac = new Date(fecha);
+    const hoy = new Date();
 
-  let edad = hoy.getFullYear() - fechaNac.getFullYear();
-  const mes = hoy.getMonth() - fechaNac.getMonth();
+    let edad = hoy.getFullYear() - fechaNac.getFullYear();
+    const mes = hoy.getMonth() - fechaNac.getMonth();
 
-  if (mes < 0 || (mes === 0 && hoy.getDate() < fechaNac.getDate())) {
-    edad--;
+    if (mes < 0 || (mes === 0 && hoy.getDate() < fechaNac.getDate())) {
+      edad--;
+    }
+
+    return edad;
   }
-
-  return edad;
-}
-
 }
