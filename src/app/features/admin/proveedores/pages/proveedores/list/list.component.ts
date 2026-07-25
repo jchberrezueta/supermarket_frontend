@@ -1,11 +1,10 @@
 import { Component, inject, viewChild } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { FormGroupOf } from '@core/utils/utilities';
-import { ProveedoresService } from '@services/index';
+import { EmpresasService, ProveedoresService } from '@services/index';
 import { UiButtonComponent } from '@shared/components/button/button.component';
 import { UiCardComponent } from '@shared/components/card/card.component';
 import { UiInputBoxComponent } from '@shared/components/input-box/input-box.component';
-import { UiTextFieldComponent } from '@shared/components/text-field/text-field.component';
 import { UiTableListComponent } from '@shared/components/index';
 import { IComboBoxOption } from '@shared/models/combo_box_option';
 import { IFiltroProveedor } from 'app/models';
@@ -15,7 +14,6 @@ const IMPORTS = [
   UiTableListComponent,
   UiButtonComponent,
   UiInputBoxComponent,
-  UiTextFieldComponent,
   UiCardComponent,
   ReactiveFormsModule,
 ];
@@ -34,6 +32,7 @@ export default class ListComponent {
     viewChild.required<UiTableListComponent>(UiTableListComponent);
 
   private readonly _proveedoresService = inject(ProveedoresService);
+  private readonly _empresasService = inject(EmpresasService);
   private readonly formBuilder = inject(FormBuilder);
 
   protected readonly config = ListProveedoresConfig;
@@ -47,8 +46,11 @@ export default class ListComponent {
 
   private initialFormValue!: IFiltroProveedor;
 
+  protected opcionesEmpresa: IComboBoxOption[] = [];
+
   constructor() {
     this.configForm();
+    this.loadComboEmpresa();
     this.loadComboCedulas();
     this.loadComboPrimerNombre();
     this.loadComboApellidoPaterno();
@@ -58,6 +60,7 @@ export default class ListComponent {
   protected configForm(): void {
     this.formData = this.formBuilder.group({
       ideEmpr: ['', [], []],
+      nombreEmp: ['', [], []],
       cedulaProv: ['', [], []],
       primerNombreProv: ['', [], []],
       apellidoPaternoProv: ['', [], []],
@@ -65,6 +68,12 @@ export default class ListComponent {
     }) as FilterProveedorFormGroup;
 
     this.initialFormValue = this.formData.getRawValue();
+  }
+
+  private loadComboEmpresa(): void {
+    this._empresasService.listarComboEmpresas().subscribe((res) => {
+      this.opcionesEmpresa = res ?? [];
+    });
   }
 
   private loadComboCedulas(): void {
@@ -113,8 +122,8 @@ export default class ListComponent {
   private getParams(): URLSearchParams {
     const params = new URLSearchParams();
     const filtro = this.formData.value as IFiltroProveedor;
-
     this.appendParam(params, 'ideEmpr', filtro.ideEmpr);
+    this.appendParam(params, 'nombreEmp', filtro.nombreEmp);
     this.appendParam(params, 'cedulaProv', filtro.cedulaProv);
     this.appendParam(params, 'primerNombreProv', filtro.primerNombreProv);
     this.appendParam(params, 'apellidoPaternoProv', filtro.apellidoPaternoProv);

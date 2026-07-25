@@ -2,15 +2,18 @@
   <div class="div_card">
     <div class="panel_1">
       <div class="card_form">
-        
         <!-- CABECERA -->
         <div class="header_actions">
           <div class="header_title">
             <h2>Detalle del Empleado #{{ idEmpleado }}</h2>
           </div>
           <div class="header_buttons">
-            <ui-button [icon]="'refresh'" (evntClick)="loadEmpleado()"/>
-            <ui-button [label]="'Volver'" [icon]="'arrow_back'" (evntClick)="volver()"/>
+            <ui-button [icon]="'refresh'" (evntClick)="loadEmpleado()" />
+            <ui-button
+              [label]="'Volver'"
+              [icon]="'arrow_back'"
+              (evntClick)="volver()"
+            />
           </div>
         </div>
 
@@ -20,11 +23,25 @@
             <span class="material-icons">person</span>
           </div>
           <div class="empleado_info_principal">
-            <h3>{{ empleado?.primerNombreEmpl }} {{ empleado?.segundoNombreEmpl }} {{ empleado?.apellidoPaternoEmpl }} {{ empleado?.apellidoMaternoEmpl }}</h3>
-            <p class="cedula"><span class="material-icons">badge</span> {{ empleado?.cedulaEmpl }}</p>
-            <p class="titulo"><span class="material-icons">school</span> {{ empleado?.tituloEmpl }}</p>
+            <h3>
+              {{ empleado?.primerNombreEmpl }} {{ empleado?.segundoNombreEmpl }}
+              {{ empleado?.apellidoPaternoEmpl }}
+              {{ empleado?.apellidoMaternoEmpl }}
+            </h3>
+            <p class="cedula">
+              <span class="material-icons">badge</span>
+              {{ empleado?.cedulaEmpl }}
+            </p>
+            <p class="titulo">
+              <span class="material-icons">school</span>
+              {{ empleado?.tituloEmpl }}
+            </p>
           </div>
-          <div class="estado_badge" [class.activo]="$any(empleado?.estadoEmpl) === 'Activo'" [class.inactivo]="$any(empleado?.estadoEmpl) !== 'Activo'">
+          <div
+            class="estado_badge"
+            [class.activo]="$any(empleado?.estadoEmpl) === 'activo'"
+            [class.inactivo]="$any(empleado?.estadoEmpl) !== 'activo'"
+          >
             {{ empleado?.estadoEmpl }}
           </div>
         </div>
@@ -33,20 +50,52 @@
         <div class="section_title">Información Personal</div>
         <div class="info_grid">
           <div class="info_row">
-            <ui-text-field [label]="'ID'" [value]="empleado?.ideEmpl" [disabled]="true"/>
-            <ui-text-field [label]="'Cédula'" [value]="empleado?.cedulaEmpl" [disabled]="true"/>
+            <ui-text-field
+              [label]="'ID'"
+              [value]="empleado?.ideEmpl"
+              [disabled]="true"
+            />
+            <ui-text-field
+              [label]="'Cédula'"
+              [value]="empleado?.cedulaEmpl"
+              [disabled]="true"
+            />
           </div>
           <div class="info_row">
-            <ui-text-field [label]="'Primer Nombre'" [value]="empleado?.primerNombreEmpl" [disabled]="true"/>
-            <ui-text-field [label]="'Segundo Nombre'" [value]="empleado?.segundoNombreEmpl" [disabled]="true"/>
+            <ui-text-field
+              [label]="'Primer Nombre'"
+              [value]="empleado?.primerNombreEmpl"
+              [disabled]="true"
+            />
+            <ui-text-field
+              [label]="'Segundo Nombre'"
+              [value]="empleado?.segundoNombreEmpl"
+              [disabled]="true"
+            />
           </div>
           <div class="info_row">
-            <ui-text-field [label]="'Apellido Paterno'" [value]="empleado?.apellidoPaternoEmpl" [disabled]="true"/>
-            <ui-text-field [label]="'Apellido Materno'" [value]="empleado?.apellidoMaternoEmpl" [disabled]="true"/>
+            <ui-text-field
+              [label]="'Apellido Paterno'"
+              [value]="empleado?.apellidoPaternoEmpl"
+              [disabled]="true"
+            />
+            <ui-text-field
+              [label]="'Apellido Materno'"
+              [value]="empleado?.apellidoMaternoEmpl"
+              [disabled]="true"
+            />
           </div>
           <div class="info_row">
-            <ui-text-field [label]="'Fecha Nacimiento'" [value]="empleado?.fechaNacimientoEmpl" [disabled]="true"/>
-            <ui-text-field [label]="'Edad'" [value]="empleado?.edadEmpl" [disabled]="true"/>
+            <ui-text-field
+              [label]="'Fecha Nacimiento'"
+              [value]="empleado?.fechaNacimientoEmpl"
+              [disabled]="true"
+            />
+            <ui-text-field
+              [label]="'Edad'"
+              [value]="empleado?.edadEmpl"
+              [disabled]="true"
+            />
           </div>
         </div>
 
@@ -54,18 +103,37 @@
         <div class="section_title">Información Laboral</div>
         <div class="info_grid">
           <div class="info_row">
-            <ui-text-field [label]="'Título'" [value]="empleado?.tituloEmpl" [disabled]="true"/>
-            <ui-text-field [label]="'RMU (Salario)'" [value]="empleado?.rmuEmpl" [disabled]="true"/>
+            <ui-text-field
+              [label]="'Título'"
+              [value]="empleado?.tituloEmpl"
+              [disabled]="true"
+            />
+            <ui-text-field
+              [label]="'RMU (Salario)'"
+              [value]="empleado?.rmuEmpl"
+              [disabled]="true"
+            />
           </div>
           <div class="info_row">
-            <ui-text-field [label]="'Fecha de Inicio'" [value]="empleado?.fechaInicioEmpl" [disabled]="true"/>
-            <ui-text-field [label]="'Fecha de Término'" [value]="empleado?.fechaTerminoEmpl" [disabled]="true"/>
+            <ui-text-field
+              [label]="'Fecha de Inicio'"
+              [value]="empleado?.fechaInicioEmpl"
+              [disabled]="true"
+            />
+            <ui-text-field
+              [label]="'Fecha de Término'"
+              [value]="empleado?.fechaTerminoEmpl"
+              [disabled]="true"
+            />
           </div>
           <div class="info_row">
-            <ui-text-field [label]="'Estado'" [value]="empleado?.estadoEmpl" [disabled]="true"/>
+            <ui-text-field
+              [label]="'Estado'"
+              [value]="empleado?.estadoEmpl"
+              [disabled]="true"
+            />
           </div>
         </div>
-
       </div>
     </div>
   </div>

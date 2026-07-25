@@ -4,12 +4,13 @@
       <form class="sm-crud-form" [formGroup]="formData" (ngSubmit)="filtrar()">
         <div class="sm-crud-filter-row">
           <div class="sm-crud-filters">
-            <ui-text-field
-              class="sm-field-xs"
-              [label]="'Empresa ID'"
-              formControlName="ideEmpr"
+            <ui-input-box
+              class="sm-field-md"
+              [label]="'Empresa'"
+              [options]="opcionesEmpresa"
+              [returnValue]="'label'"
+              formControlName="nombreEmp"
             />
-
             <ui-input-box
               class="sm-field-md"
               [label]="'Cédula'"

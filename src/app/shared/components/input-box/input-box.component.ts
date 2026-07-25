@@ -110,6 +110,16 @@ export class UiInputBoxComponent implements ControlValueAccessor {
     this.onTouched();
   }
 
+  protected onInput(value: string): void {
+    this.optionsFiltered.set(value);
+
+    if (this.returnValue() === 'label') {
+      this.onChange(value);
+    } else {
+      this.onChange(null);
+    }
+  }
+
   public get getPlaceholder(): string {
     return this.placeholder();
   }

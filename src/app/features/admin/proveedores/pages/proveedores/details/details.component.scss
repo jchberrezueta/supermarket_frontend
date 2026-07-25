@@ -55,6 +55,7 @@
   padding: 30px;
   margin-bottom: 30px;
   color: white;
+  position: relative;
 
   .avatar {
     width: 100px;
@@ -93,6 +94,26 @@
       .material-icons {
         font-size: 18px;
       }
+    }
+  }
+
+  .estado_badge {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 0.9rem;
+
+    &.activo {
+      background: rgba(255, 255, 255, 0.95);
+      color: #047857;
+    }
+
+    &.inactivo {
+      background: rgba(239, 68, 68, 0.9);
+      color: white;
     }
   }
 }

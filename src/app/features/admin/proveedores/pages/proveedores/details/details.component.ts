@@ -11,16 +11,11 @@ import { UiButtonComponent } from '@shared/components/button/button.component';
 @Component({
   selector: 'app-details',
   standalone: true,
-  imports: [
-    CommonModule,
-    UiTextFieldComponent,
-    UiButtonComponent
-  ],
+  imports: [CommonModule, UiTextFieldComponent, UiButtonComponent],
   templateUrl: './details.component.html',
-  styleUrl: './details.component.scss'
+  styleUrl: './details.component.scss',
 })
 export default class DetailsComponent {
-
   private readonly _route = inject(ActivatedRoute);
   private readonly _proveedoresService = inject(ProveedoresService);
   private readonly _loadingService = inject(LoadingService);
@@ -41,10 +36,11 @@ export default class DetailsComponent {
     this._loadingService.show();
     this._proveedoresService.buscarProveedor(this.idProv).subscribe({
       next: (res) => {
+        console.log(res.data[0]);
         this.proveedor = res.data[0];
         this._loadingService.hide();
       },
-      error: () => this._loadingService.hide()
+      error: () => this._loadingService.hide(),
     });
   }
 

@@ -18,7 +18,7 @@
       [attr.aria-expanded]="open"
       aria-autocomplete="list"
       [class.has-value]="hasSelected || getOptionsFiltered !== ''"
-      (input)="optionsFiltered.set(inp.value)"
+      (input)="onInput(inp.value)"
     />
 
     <label aria-hidden="true">{{ getLabel }}</label>
