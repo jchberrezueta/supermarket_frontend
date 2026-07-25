@@ -21,6 +21,7 @@ import { RestService } from '@core/services/rest.service';
 import { ITableColumn } from '@shared/models/table_column.model';
 import { IButtonItem, TableRow } from '@shared/models/button_item.model';
 import { DashIfEmptyPipe } from '@shared/pipes/dashIfEmpty.pipe';
+import { DateFormatPipe } from '../../pipes/dateFormat.pipe';
 import { LoadingService } from '@shared/services/loading.service';
 import Swal from 'sweetalert2';
 import { UiButtonComponent } from '../button/button.component';
@@ -32,6 +33,7 @@ const IMPORTS = [
   MatCheckboxModule,
   UiButtonComponent,
   DashIfEmptyPipe,
+  DateFormatPipe,
   CommonModule,
 ];
 
@@ -204,7 +206,10 @@ export class UiTableListComponent implements OnInit {
   }
 
   protected emitCustomAction(button: IButtonItem, row: TableRow): void {
-    if (!this.isButtonVisible(button, row) || this.isButtonDisabled(button, row)) {
+    if (
+      !this.isButtonVisible(button, row) ||
+      this.isButtonDisabled(button, row)
+    ) {
       return;
     }
 

@@ -1,117 +1,194 @@
 <div class="div_container">
-    <div class="div_table">
-        <table mat-table matSort [dataSource]="matDatasource" class="mat-elevation-z8">
-            <!--Columns (header, celda)-->
-            @if(isSelection()){
-                <ng-container matColumnDef="check">
-                    <th mat-header-cell *matHeaderCellDef>
-                        <!--<mat-checkbox (change)="$event ? toggleAllRows() : null" [checked]="selection.hasValue() && isAllSelected()" (click)="$event.stopPropagation()" [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkBoxLabel()" color="primary"/>-->
-                    </th>
-                    <td mat-cell *matCellDef="let element">
-                        <mat-checkbox (change)="$event ? selectCheckBox('select', element) : null" [checked]="selection.isSelected(element)" (click)="$event.stopPropagation()" [aria-label]="checkBoxLabel(element)" color="primary"/>
-                    </td>
-                </ng-container>
-            }
-            @for(column of columns(); track $index){
-                <ng-container [matColumnDef]="column.property">
-                    @if(column.sortable){
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header> 
-                            {{column.label}} 
-                        </th>
+  <div class="div_table">
+    <table
+      mat-table
+      matSort
+      [dataSource]="matDatasource"
+      class="mat-elevation-z8"
+    >
+      <!--Columns (header, celda)-->
+      @if (isSelection()) {
+        <ng-container matColumnDef="check">
+          <th mat-header-cell *matHeaderCellDef>
+            <!--<mat-checkbox (change)="$event ? toggleAllRows() : null" [checked]="selection.hasValue() && isAllSelected()" (click)="$event.stopPropagation()" [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkBoxLabel()" color="primary"/>-->
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <mat-checkbox
+              (change)="$event ? selectCheckBox('select', element) : null"
+              [checked]="selection.isSelected(element)"
+              (click)="$event.stopPropagation()"
+              [aria-label]="checkBoxLabel(element)"
+              color="primary"
+            />
+          </td>
+        </ng-container>
+      }
+      @for (column of columns(); track $index) {
+        <ng-container [matColumnDef]="column.property">
+          @if (column.sortable) {
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              {{ column.label }}
+            </th>
+          } @else {
+            <th mat-header-cell *matHeaderCellDef>
+              {{ column.label }}
+            </th>
+          }
+          @switch (column.type) {
+            @case ("ud") {
+              <td mat-cell *matCellDef="let element">
+                <div class="td_btns">
+                  @for (btn of column.buttonItems; track $index) {
+                    @if (
+                      (btn.action === "update" && canUpdate) ||
+                      (btn.action === "delete" && canDelete)
+                    ) {
+                      <ui-button
+                        (dblclick)="$event.stopPropagation()"
+                        [icon]="btn.icon"
+                        [color]="btn.color"
+                        [action]="btn.action"
+                        [disabled]="isButtonDisabled(btn, element)"
+                        [tooltip]="btn.tooltip || btn.label || btn.action"
+                        (evntClick)="redirectUD($event, element[btn.key])"
+                      />
                     }
-                    @else{
-                        <th mat-header-cell *matHeaderCellDef>
-                            {{column.label}} 
-                        </th>
+                  }
+                </div>
+              </td>
+            }
+            @case ("details") {
+              <td mat-cell *matCellDef="let element">
+                <div class="td_btns">
+                  @for (btn of column.buttonItems; track $index) {
+                    @if (btn.action === "details" && canList) {
+                      @if (btn.router) {
+                        <ui-button
+                          (dblclick)="$event.stopPropagation()"
+                          [icon]="btn.icon"
+                          [color]="btn.color"
+                          [action]="btn.action"
+                          [disabled]="isButtonDisabled(btn, element)"
+                          [tooltip]="btn.tooltip || btn.label || btn.action"
+                          (evntClick)="viewDetails($event, element[btn.key])"
+                        />
+                      } @else {
+                        <ui-button
+                          (dblclick)="$event.stopPropagation()"
+                          [icon]="btn.icon"
+                          [color]="btn.color"
+                          [action]="btn.action"
+                          [disabled]="isButtonDisabled(btn, element)"
+                          [tooltip]="btn.tooltip || btn.label || btn.action"
+                          (evntClick)="emitClickAction(btn.action, element)"
+                        />
+                      }
                     }
-                    @switch (column.type) {
-                        @case('ud') {
-                            <td mat-cell *matCellDef="let element">
-                                <div class="td_btns">
-                                    @for (btn of column.buttonItems; track $index) {
-                                        @if((btn.action === 'update' && canUpdate) || (btn.action === 'delete' && canDelete)){
-                                            <ui-button (dblclick)="$event.stopPropagation()" [icon]="btn.icon" [color]="btn.color" [action]="btn.action" [disabled]="isButtonDisabled(btn, element)" [tooltip]="btn.tooltip || btn.label || btn.action" (evntClick)="redirectUD($event, element[btn.key])"/>
-                                        }
-                                    }
-                                </div>
-                            </td>
-                        }
-                        @case('details'){
-                            <td mat-cell *matCellDef="let element">
-                                <div class="td_btns">
-                                    @for (btn of column.buttonItems; track $index) {
-                                        @if(btn.action === 'details' && canList){
-                                            @if(btn.router){
-                                                <ui-button (dblclick)="$event.stopPropagation()" [icon]="btn.icon" [color]="btn.color" [action]="btn.action" [disabled]="isButtonDisabled(btn, element)" [tooltip]="btn.tooltip || btn.label || btn.action" (evntClick)="viewDetails($event, element[btn.key])"/>
-                                            }
-                                            @else {
-                                                <ui-button (dblclick)="$event.stopPropagation()" [icon]="btn.icon" [color]="btn.color" [action]="btn.action" [disabled]="isButtonDisabled(btn, element)" [tooltip]="btn.tooltip || btn.label || btn.action" (evntClick)="emitClickAction(btn.action, element)"/>
-                                            }
-                                        }
-                                    }
-                                </div>
-                            </td>
-                        }
-                        @case('redirect'){
-                            <td mat-cell *matCellDef="let element">
-                                <div class="td_btns">
-                                    @for (btn of column.buttonItems; track $index) {
-                                        @if(btn.action === 'redirect'){
-                                            @if(btn.router){
-                                                <ui-button (dblclick)="$event.stopPropagation()" [icon]="btn.icon" [color]="btn.color" [action]="btn.action" [disabled]="isButtonDisabled(btn, element)" [tooltip]="btn.tooltip || btn.label || btn.action" (evntClick)="redirectToUrl($event, btn.url)"/>
-                                            }
-                                            @else {
-                                                <ui-button (dblclick)="$event.stopPropagation()" [icon]="btn.icon" [color]="btn.color" [action]="btn.action" [disabled]="isButtonDisabled(btn, element)" [tooltip]="btn.tooltip || btn.label || btn.action" (evntClick)="emitClickAction(btn.action, element)"/>
-                                            }
-                                        }
-                                    }
-                                </div>
-                            </td>
-                        }
-                        @case('actions') {
-                            <td mat-cell *matCellDef="let element">
-                                <div class="td_btns">
-                                    @for (btn of column.buttonItems; track btn.action) {
-                                        @if (isButtonVisible(btn, element)) {
-                                            <ui-button
-                                                (dblclick)="$event.stopPropagation()"
-                                                [icon]="btn.icon"
-                                                [label]="btn.label"
-                                                [color]="btn.color"
-                                                [action]="btn.action"
-                                                [disabled]="isButtonDisabled(btn, element)"
-                                                [tooltip]="btn.tooltip || btn.label || btn.action"
-                                                [ariaLabel]="btn.tooltip || btn.label || btn.action"
-                                                (evntClick)="emitCustomAction(btn, element)"
-                                            />
-                                        }
-                                    }
-                                </div>
-                            </td>
-                        }
-                        @default {
-                            <td mat-cell *matCellDef="let element">
-                                <div>
-                                    {{ (element[column.property]) | dashIfEmpty }}
-                                </div>
-                            </td>
-                        }
+                  }
+                </div>
+              </td>
+            }
+            @case ("redirect") {
+              <td mat-cell *matCellDef="let element">
+                <div class="td_btns">
+                  @for (btn of column.buttonItems; track $index) {
+                    @if (btn.action === "redirect") {
+                      @if (btn.router) {
+                        <ui-button
+                          (dblclick)="$event.stopPropagation()"
+                          [icon]="btn.icon"
+                          [color]="btn.color"
+                          [action]="btn.action"
+                          [disabled]="isButtonDisabled(btn, element)"
+                          [tooltip]="btn.tooltip || btn.label || btn.action"
+                          (evntClick)="redirectToUrl($event, btn.url)"
+                        />
+                      } @else {
+                        <ui-button
+                          (dblclick)="$event.stopPropagation()"
+                          [icon]="btn.icon"
+                          [color]="btn.color"
+                          [action]="btn.action"
+                          [disabled]="isButtonDisabled(btn, element)"
+                          [tooltip]="btn.tooltip || btn.label || btn.action"
+                          (evntClick)="emitClickAction(btn.action, element)"
+                        />
+                      }
                     }
-                </ng-container>
+                  }
+                </div>
+              </td>
             }
-            <!--Header Row-->
-            <tr mat-header-row *matHeaderRowDef="displayedColumns()"></tr>
-            <!--Data Row-->
-            @if(isSelection()){
-                <tr mat-row *matRowDef="let row; columns: displayedColumns();" [class.selectable-row]="selection.isSelected(row)" (click)="selectCheckBox('select', row)" class="table_row">
+            @case ("actions") {
+              <td mat-cell *matCellDef="let element">
+                <div class="td_btns">
+                  @for (btn of column.buttonItems; track btn.action) {
+                    @if (isButtonVisible(btn, element)) {
+                      <ui-button
+                        (dblclick)="$event.stopPropagation()"
+                        [icon]="btn.icon"
+                        [label]="btn.label"
+                        [color]="btn.color"
+                        [action]="btn.action"
+                        [disabled]="isButtonDisabled(btn, element)"
+                        [tooltip]="btn.tooltip || btn.label || btn.action"
+                        [ariaLabel]="btn.tooltip || btn.label || btn.action"
+                        (evntClick)="emitCustomAction(btn, element)"
+                      />
+                    }
+                  }
+                </div>
+              </td>
             }
-            @else{
-                <tr mat-row *matRowDef="let row; columns: displayedColumns();" [class.selectable-row]="selection.isSelected(row)" [class.row-click-disabled]="!rowClickEnabled()" (click)="handleRowClick(row)" (dblclick)="handleRowDoubleClick(row)" class="table_row">
-                </tr>
+            @case ("date") {
+              <td mat-cell *matCellDef="let element">
+                <div>
+                  {{ element[column.property] | dateFormat }}
+                </div>
+              </td>
             }
-        </table>
-    </div>
-    <div class="div_paginator">
-        <mat-paginator [showFirstLastButtons]="true" [hidePageSize]="true" [length]="resultsLength()" [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="5" class="mat-elevation-z8"/>
-    </div>
+            @default {
+              <td mat-cell *matCellDef="let element">
+                <div>
+                  {{ element[column.property] | dashIfEmpty }}
+                </div>
+              </td>
+            }
+          }
+        </ng-container>
+      }
+      <!--Header Row-->
+      <tr mat-header-row *matHeaderRowDef="displayedColumns()"></tr>
+      <!--Data Row-->
+      @if (isSelection()) {
+        <tr
+          mat-row
+          *matRowDef="let row; columns: displayedColumns()"
+          [class.selectable-row]="selection.isSelected(row)"
+          (click)="selectCheckBox('select', row)"
+          class="table_row"
+        ></tr>
+      } @else {
+        <tr
+          mat-row
+          *matRowDef="let row; columns: displayedColumns()"
+          [class.selectable-row]="selection.isSelected(row)"
+          [class.row-click-disabled]="!rowClickEnabled()"
+          (click)="handleRowClick(row)"
+          (dblclick)="handleRowDoubleClick(row)"
+          class="table_row"
+        ></tr>
+      }
+    </table>
+  </div>
+  <div class="div_paginator">
+    <mat-paginator
+      [showFirstLastButtons]="true"
+      [hidePageSize]="true"
+      [length]="resultsLength()"
+      [pageSizeOptions]="[5, 10, 25, 100]"
+      [pageSize]="5"
+      class="mat-elevation-z8"
+    />
+  </div>
 </div>

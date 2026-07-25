@@ -106,14 +106,12 @@ export class UiDatetimePickerComponent implements ControlValueAccessor {
       this.innerValue.set('');
       return;
     }
-
     if (/^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2})?$/.test(value)) {
       this.innerValue.set(value);
       return;
     }
 
     let fecha = new Date(value);
-
     if (Number.isNaN(fecha.getTime())) {
       this.innerValue.set('');
       return;

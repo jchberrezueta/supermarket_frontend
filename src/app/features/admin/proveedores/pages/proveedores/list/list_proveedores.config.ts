@@ -30,7 +30,7 @@ export const ListProveedoresConfig: ITableListConfig = {
     {
       label: 'Fecha/Nacimiento',
       property: 'fecha_nacimiento_prov',
-      type: 'text',
+      type: 'date',
       sortable: true,
     },
     { label: 'Edad', property: 'edad_prov', type: 'text', sortable: true },

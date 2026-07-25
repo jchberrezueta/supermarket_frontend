@@ -16,7 +16,7 @@
 }
 
 .card_form {
-  background: rgba(241,245,249);
+  background: rgba(241, 245, 249);
   border-radius: 20px;
   padding: 40px;
 }
@@ -56,6 +56,8 @@
 .panel_2_img {
   width: 100%;
   height: 100%;
-  background-image: url('/imgs/img_roles.jpg');
+  background-image: url("/imgs/img_roles.jpg");
   background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
 }
