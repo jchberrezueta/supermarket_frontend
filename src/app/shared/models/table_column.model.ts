@@ -1,4 +1,4 @@
-import { IButtonItem } from "./button_item.model";
+import { IButtonItem } from './button_item.model';
 
 export interface ITableColumn {
   property: string;
@@ -29,7 +29,8 @@ export interface ITableColumn {
     | 'redirect'
     | 'sendMail'
     | 'actions'
-    | 'details';
+    | 'details'
+    | 'boolean';
   label: string;
   buttonItems?: IButtonItem[];
   visible?: boolean;

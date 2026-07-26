@@ -41,7 +41,12 @@ export const ListProveedoresConfig: ITableListConfig = {
       sortable: true,
     },
     { label: 'Email', property: 'email_prov', type: 'text', sortable: true },
-    { label: 'Estado', property: 'estado_prov', type: 'text', sortable: true },
+    {
+      label: 'Estado',
+      property: 'estado_prov',
+      type: 'boolean',
+      sortable: true,
+    },
     { label: 'Cargo', property: 'cargo_prov', type: 'text', sortable: true },
     {
       label: '',

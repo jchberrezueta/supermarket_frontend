@@ -45,7 +45,12 @@ export const ListEmpresasConfig: ITableListConfig = {
       sortable: true,
     },
     { label: 'Email', property: 'email_empr', type: 'text', sortable: true },
-    { label: 'Estado', property: 'estado_empr', type: 'text', sortable: true },
+    {
+      label: 'Estado',
+      property: 'estado_empr',
+      type: 'boolean',
+      sortable: true,
+    },
     {
       label: 'Descripcion',
       property: 'descripcion_empr',
