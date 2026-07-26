@@ -70,18 +70,29 @@
         </div>
 
         <div class="form_buttons">
-          <ui-button
-            [label]="isAdd ? 'Agregar' : 'Actualizar'"
-            [color]="isAdd ? 'primary' : 'yellow'"
-            [textColor]="isAdd ? 'white' : 'black'"
-            (evntClick)="guardar()"
-          />
-
-          <ui-button
-            [label]="'Volver'"
-            [color]="'red'"
-            (evntClick)="volver()"
-          />
+          <div class="d1">
+            <ui-button
+              [label]="isAdd ? 'Agregar' : 'Actualizar'"
+              [color]="isAdd ? 'primary' : 'yellow'"
+              [textColor]="isAdd ? 'white' : 'black'"
+              icon="save"
+              (evntClick)="guardar()"
+            />
+          </div>
+          <div class="d2">
+            <ui-button
+              [label]="'Volver'"
+              [color]="'red'"
+              icon="close"
+              (evntClick)="volver()"
+            />
+            <ui-combo-box
+              [label]="'Estado'"
+              [options]="estadosPreciosProds"
+              class="ui-combo-box"
+              formControlName="estadoEmprProd"
+            />
+          </div>
         </div>
       </form>
     </div>

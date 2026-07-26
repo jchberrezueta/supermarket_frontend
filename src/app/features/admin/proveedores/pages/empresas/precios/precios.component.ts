@@ -15,6 +15,7 @@ import { EmpresasService } from '@services/empresas.service';
 import { Location } from '@angular/common';
 
 import Swal from 'sweetalert2';
+import { UiComboBoxComponent } from '@shared/components/combo-box/combo-box.component';
 
 type EmpresaPrecioFormGroup = FormGroupOf<IEmpresaPrecios>;
 
@@ -28,6 +29,7 @@ type EmpresaPrecioFormGroup = FormGroupOf<IEmpresaPrecios>;
     UiTextFieldComponent,
     UiButtonComponent,
     ReactiveFormsModule,
+    UiComboBoxComponent,
   ],
   templateUrl: './precios.component.html',
   styleUrl: './precios.component.scss',
@@ -42,6 +44,7 @@ export default class PreciosComponent {
   public location = inject(Location);
   protected readonly config = PreciosEmpresaConfig;
   protected productos!: IComboBoxOption[];
+  protected estadosPreciosProds!: IComboBoxOption[];
   protected empresa!: IEmpresa;
   protected nombreEmpresa: string = '';
 
@@ -59,6 +62,7 @@ export default class PreciosComponent {
       this.initForm();
       this.loadEmpresa();
       this.loadProductos();
+      this.loadEstadosPrecProds();
     }
   }
 
@@ -71,6 +75,7 @@ export default class PreciosComponent {
       dctoCompraProd: [0, [Validators.required], []],
       dctoCaducidadProd: [0, [Validators.required], []],
       ivaProd: [0, [Validators.required], []],
+      estadoEmprProd: ['', []],
     }) as EmpresaPrecioFormGroup;
 
     // snapshot inicial
@@ -85,6 +90,7 @@ export default class PreciosComponent {
       dctoCompraProd: this.precioEmp?.dcto_compra_prod,
       dctoCaducidadProd: this.precioEmp?.dcto_caducidad_prod,
       ivaProd: this.precioEmp?.iva_prod,
+      estadoEmprProd: this.precioEmp?.estado_empr_prod,
     });
   }
 
@@ -95,6 +101,13 @@ export default class PreciosComponent {
         this.productos = res;
       });
   }
+
+  private loadEstadosPrecProds() {
+    this._empresasService.listarPreciosEstados().subscribe((res) => {
+      this.estadosPreciosProds = res;
+    });
+  }
+
   private loadEmpresa() {
     this._empresasService.buscarActiva(this.idEmpresa).subscribe((res) => {
       const data = res.data[0];

@@ -83,6 +83,12 @@ export class EmpresasService {
     );
   }
 
+  public listarPreciosEstados(): Observable<IComboBoxOption[]> {
+    return this._restService.get<IComboBoxOption[]>(
+      `${this.apiUrl}/listar/precios/estados`,
+    );
+  }
+
   public listarPreciosProductosEmpresa(
     id: number,
   ): Observable<IResultDataEmpresaPrecios> {
