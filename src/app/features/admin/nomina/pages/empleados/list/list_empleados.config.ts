@@ -22,7 +22,7 @@ export const ListEmpleadosConfig: ITableListConfig = {
     { label: 'ID', property: 'ide_empl', type: 'text', sortable: true },
     { label: 'Cédula', property: 'cedula_empl', type: 'text', sortable: true },
     {
-      label: 'Empleado',
+      label: 'Nombres/Apellidos',
       property: 'nombre_completo',
       type: 'text',
       sortable: true,

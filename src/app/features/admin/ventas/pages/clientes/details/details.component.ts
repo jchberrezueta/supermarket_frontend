@@ -5,6 +5,7 @@ import { UiButtonComponent } from '@shared/components/button/button.component';
 import { Location, CommonModule, DatePipe } from '@angular/common';
 import { ClientesService } from '@services/clientes.service';
 import { LoadingService } from '@shared/services/loading.service';
+import { UiCardComponent } from '../../../../../../shared/components/card/card.component';
 
 interface IClienteView {
   ideClie: number;
@@ -27,14 +28,14 @@ interface IClienteView {
   imports: [
     CommonModule,
     UiTextFieldComponent,
-    UiButtonComponent
+    UiButtonComponent,
+    UiCardComponent,
   ],
   providers: [DatePipe],
   templateUrl: './details.component.html',
-  styleUrl: './details.component.scss'
+  styleUrl: './details.component.scss',
 })
 export default class DetailsComponent {
-
   private readonly _route = inject(ActivatedRoute);
   private readonly _clientesService = inject(ClientesService);
   private readonly _loadingService = inject(LoadingService);
@@ -69,11 +70,11 @@ export default class DetailsComponent {
           apellidoMaternoClie: data.apellido_materno_clie || '',
           emailClie: data.email_clie,
           esSocio: data.es_socio,
-          esTerceraEdad: data.es_tercera_edad
+          esTerceraEdad: data.es_tercera_edad,
         };
         this._loadingService.hide();
       },
-      error: () => this._loadingService.hide()
+      error: () => this._loadingService.hide(),
     });
   }
 
@@ -91,8 +92,8 @@ export default class DetailsComponent {
       this.cliente.primerNombreClie,
       this.cliente.segundoNombreClie,
       this.cliente.apellidoPaternoClie,
-      this.cliente.apellidoMaternoClie
-    ].filter(n => n);
+      this.cliente.apellidoMaternoClie,
+    ].filter((n) => n);
     return nombres.join(' ');
   }
 }

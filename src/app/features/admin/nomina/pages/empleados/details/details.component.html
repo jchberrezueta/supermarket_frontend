@@ -51,13 +51,13 @@
         <div class="info_grid">
           <div class="info_row">
             <ui-text-field
-              [label]="'ID'"
-              [value]="empleado?.ideEmpl"
+              [label]="'Cédula'"
+              [value]="empleado?.cedulaEmpl"
               [readonly]="true"
             />
             <ui-text-field
-              [label]="'Cédula'"
-              [value]="empleado?.cedulaEmpl"
+              [label]="'Edad'"
+              [value]="empleado?.edadEmpl"
               [readonly]="true"
             />
           </div>
@@ -89,11 +89,6 @@
             <ui-datetime-picker
               [label]="'Fecha Nacimiento'"
               [value]="empleado ? empleado.fechaNacimientoEmpl : null"
-              [readonly]="true"
-            />
-            <ui-text-field
-              [label]="'Edad'"
-              [value]="empleado?.edadEmpl"
               [readonly]="true"
             />
           </div>

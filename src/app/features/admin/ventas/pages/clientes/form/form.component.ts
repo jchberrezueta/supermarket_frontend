@@ -26,13 +26,12 @@ type ClienteFormGroup = FormGroupOf<ICliente>;
     UiComboBoxComponent,
     UiButtonComponent,
     UiDatetimePickerComponent,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
   templateUrl: './form.component.html',
-  styleUrl: './form.component.scss'
+  styleUrl: './form.component.scss',
 })
 export default class FormComponent {
-
   private readonly _route = inject(ActivatedRoute);
   private readonly _fb = inject(FormBuilder);
   private readonly _clientesService = inject(ClientesService);
@@ -44,7 +43,7 @@ export default class FormComponent {
 
   protected opcionesSiNo: IComboBoxOption[] = [
     { label: 'Sí', value: 'si' },
-    { label: 'No', value: 'no' }
+    { label: 'No', value: 'no' },
   ];
 
   protected isAdd = true;
@@ -52,6 +51,13 @@ export default class FormComponent {
 
   ngOnInit(): void {
     this.initForm();
+
+    this.formData
+      .get('fechaNacimientoClie')!
+      .valueChanges.subscribe((value) => {
+        const edad = this.calcularEdad(value);
+        this.formData.get('edadClie')?.setValue(edad, { emitEvent: false });
+      });
 
     const id = this._route.snapshot.params['id'];
     if (id) {
@@ -74,7 +80,7 @@ export default class FormComponent {
       esSocio: ['no', Validators.required],
       esTerceraEdad: ['no', Validators.required],
       segundoNombreClie: [''],
-      apellidoMaternoClie: ['']
+      apellidoMaternoClie: [''],
     }) as ClienteFormGroup;
 
     this.initialFormValue = this.formData.getRawValue();
@@ -97,11 +103,11 @@ export default class FormComponent {
           esSocio: c.es_socio,
           esTerceraEdad: c.es_tercera_edad,
           segundoNombreClie: c.segundo_nombre_clie || '',
-          apellidoMaternoClie: c.apellido_materno_clie || ''
+          apellidoMaternoClie: c.apellido_materno_clie || '',
         });
         this._loadingService.hide();
       },
-      error: () => this._loadingService.hide()
+      error: () => this._loadingService.hide(),
     });
   }
 
@@ -119,19 +125,23 @@ export default class FormComponent {
       this._clientesService.insertar(data).subscribe({
         next: () => {
           this._loadingService.hide();
-          Swal.fire('Cliente registrado', 'El cliente fue guardado correctamente', 'success');
+          Swal.fire(
+            'Cliente registrado',
+            'El cliente fue guardado correctamente',
+            'success',
+          );
           this.location.back();
           this.resetForm();
         },
-        error: () => this._loadingService.hide()
+        error: () => this._loadingService.hide(),
       });
     } else {
       Swal.fire({
         title: '¿Actualizar cliente?',
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonText: 'Sí, actualizar'
-      }).then(r => {
+        confirmButtonText: 'Sí, actualizar',
+      }).then((r) => {
         if (r.isConfirmed) {
           data.ideClie = this.idParam;
           this._loadingService.show();
@@ -142,11 +152,27 @@ export default class FormComponent {
               this.location.back();
               this.resetForm();
             },
-            error: () => this._loadingService.hide()
+            error: () => this._loadingService.hide(),
           });
         }
       });
     }
+  }
+
+  protected calcularEdad(fecha: string | Date): number {
+    if (!fecha) return 0;
+
+    const fechaNac = new Date(fecha);
+    const hoy = new Date();
+
+    let edad = hoy.getFullYear() - fechaNac.getFullYear();
+    const mes = hoy.getMonth() - fechaNac.getMonth();
+
+    if (mes < 0 || (mes === 0 && hoy.getDate() < fechaNac.getDate())) {
+      edad--;
+    }
+
+    return edad;
   }
 
   protected cancelar() {
@@ -154,8 +180,8 @@ export default class FormComponent {
       title: '¿Cancelar?',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Sí'
-    }).then(r => {
+      confirmButtonText: 'Sí',
+    }).then((r) => {
       if (r.isConfirmed) {
         this.resetForm();
         this.location.back();
