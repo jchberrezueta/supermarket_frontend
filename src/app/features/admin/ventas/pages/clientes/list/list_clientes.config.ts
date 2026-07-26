@@ -21,7 +21,7 @@ export const ListClientesConfig: ITableListConfig = {
     { label: 'ID', property: 'ide_clie', type: 'text', sortable: true },
     { label: 'Cédula', property: 'cedula_clie', type: 'text', sortable: true },
     {
-      label: 'Nombres/Completos',
+      label: 'Nombres/Apellidos',
       property: 'nombre_completo',
       type: 'text',
       sortable: true,

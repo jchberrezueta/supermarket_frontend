@@ -43,6 +43,7 @@ export default class ListComponent {
   protected opcionesApellido: IComboBoxOption[] = [];
   protected opcionesSocio: IComboBoxOption[] = [];
   protected opcionesTerceraEdad: IComboBoxOption[] = [];
+  protected opcionesClientes: IComboBoxOption[] = [];
 
   protected formData!: FilterClienteFormGroup;
 
@@ -55,13 +56,13 @@ export default class ListComponent {
     this.loadComboPrimerNombre();
     this.loadComboSocio();
     this.loadComboTerceraEdad();
+    this.loadComboNombresClientes();
   }
 
   protected configForm(): void {
     this.formData = this.formBuilder.group({
       cedulaClie: ['', [], []],
-      primerNombreClie: ['', [], []],
-      apellidoPaternoClie: ['', [], []],
+      nombreCompletoClie: ['', [], []],
       esSocio: ['', [], []],
       esTerceraEdad: ['', [], []],
     }) as FilterClienteFormGroup;
@@ -78,6 +79,12 @@ export default class ListComponent {
   private loadComboPrimerNombre(): void {
     this._clientesService.listarComboNombres().subscribe((res) => {
       this.opcionesNombre = res ?? [];
+    });
+  }
+
+  private loadComboNombresClientes(): void {
+    this._clientesService.listarComboClientes().subscribe((res) => {
+      this.opcionesClientes = res ?? [];
     });
   }
 
@@ -123,8 +130,7 @@ export default class ListComponent {
     const filtro = this.formData.value as IFiltroCliente;
 
     this.appendParam(params, 'cedulaClie', filtro.cedulaClie);
-    this.appendParam(params, 'primerNombreClie', filtro.primerNombreClie);
-    this.appendParam(params, 'apellidoPaternoClie', filtro.apellidoPaternoClie);
+    this.appendParam(params, 'nombreCompletoClie', filtro.nombreCompletoClie);
     this.appendParam(params, 'esSocio', filtro.esSocio);
     this.appendParam(params, 'esTerceraEdad', filtro.esTerceraEdad);
 
