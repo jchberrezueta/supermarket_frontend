@@ -139,8 +139,7 @@ export interface IFiltroProveedor {
   ideEmpr: string;
   nombreEmp: string;
   cedulaProv: string;
-  primerNombreProv: string;
-  apellidoPaternoProv: string;
+  nombreCompletoProv: string;
   emailProv: string;
   estadoProv: string;
 }

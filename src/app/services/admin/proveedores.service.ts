@@ -73,6 +73,11 @@ export class ProveedoresService {
       `${this.apiUrl}/listar/proveedores/combo/cedula`,
     );
   }
+  public listarComboNombresProveedores(): Observable<IComboBoxOption[]> {
+    return this._restService.get<IComboBoxOption[]>(
+      `${this.apiUrl}/listar/proveedores/combo/nombres`,
+    );
+  }
   public listarComboPrimerNombre(): Observable<IComboBoxOption[]> {
     return this._restService.get<IComboBoxOption[]>(
       `${this.apiUrl}/listar/proveedores/combo/primer/nombre`,

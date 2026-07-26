@@ -40,8 +40,7 @@ export default class ListComponent {
   protected readonly config = ListProveedoresConfig;
 
   protected opcionesCedula: IComboBoxOption[] = [];
-  protected opcionesPrimerNombre: IComboBoxOption[] = [];
-  protected opcionesApellidoPaterno: IComboBoxOption[] = [];
+  protected opcionesProveedores: IComboBoxOption[] = [];
   protected opcionesEmail: IComboBoxOption[] = [];
 
   protected estadosProveedor: IComboBoxOption[] = [];
@@ -56,8 +55,7 @@ export default class ListComponent {
     this.configForm();
     this.loadComboEmpresa();
     this.loadComboCedulas();
-    this.loadComboPrimerNombre();
-    this.loadComboApellidoPaterno();
+    this.loadComboProveedores();
     this.loadComboEmail();
     this.loadComboEstadosProv();
   }
@@ -67,8 +65,7 @@ export default class ListComponent {
       ideEmpr: ['', [], []],
       nombreEmp: ['', [], []],
       cedulaProv: ['', [], []],
-      primerNombreProv: ['', [], []],
-      apellidoPaternoProv: ['', [], []],
+      nombreCompletoProv: ['', [], []],
       emailProv: ['', [], []],
       estadoProv: ['', []],
     }) as FilterProveedorFormGroup;
@@ -94,16 +91,12 @@ export default class ListComponent {
     });
   }
 
-  private loadComboPrimerNombre(): void {
-    this._proveedoresService.listarComboPrimerNombre().subscribe((res) => {
-      this.opcionesPrimerNombre = res ?? [];
-    });
-  }
-
-  private loadComboApellidoPaterno(): void {
-    this._proveedoresService.listarComboApellidoPaterno().subscribe((res) => {
-      this.opcionesApellidoPaterno = res ?? [];
-    });
+  private loadComboProveedores(): void {
+    this._proveedoresService
+      .listarComboNombresProveedores()
+      .subscribe((res) => {
+        this.opcionesProveedores = res ?? [];
+      });
   }
 
   private loadComboEmail(): void {
@@ -137,8 +130,7 @@ export default class ListComponent {
     this.appendParam(params, 'ideEmpr', filtro.ideEmpr);
     this.appendParam(params, 'nombreEmp', filtro.nombreEmp);
     this.appendParam(params, 'cedulaProv', filtro.cedulaProv);
-    this.appendParam(params, 'primerNombreProv', filtro.primerNombreProv);
-    this.appendParam(params, 'apellidoPaternoProv', filtro.apellidoPaternoProv);
+    this.appendParam(params, 'nombreCompletoProv', filtro.nombreCompletoProv);
     this.appendParam(params, 'emailProv', filtro.emailProv);
     this.appendParam(params, 'estadoProv', filtro.estadoProv);
 
