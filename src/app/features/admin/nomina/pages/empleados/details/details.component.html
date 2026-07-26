@@ -1,5 +1,5 @@
 <div class="div_container">
-  <div class="div_card">
+  <ui-card [showHeader]="false" class="div_card">
     <div class="panel_1">
       <div class="card_form">
         <!-- CABECERA -->
@@ -53,48 +53,48 @@
             <ui-text-field
               [label]="'ID'"
               [value]="empleado?.ideEmpl"
-              [disabled]="true"
+              [readonly]="true"
             />
             <ui-text-field
               [label]="'Cédula'"
               [value]="empleado?.cedulaEmpl"
-              [disabled]="true"
+              [readonly]="true"
             />
           </div>
           <div class="info_row">
             <ui-text-field
               [label]="'Primer Nombre'"
               [value]="empleado?.primerNombreEmpl"
-              [disabled]="true"
+              [readonly]="true"
             />
             <ui-text-field
               [label]="'Segundo Nombre'"
               [value]="empleado?.segundoNombreEmpl"
-              [disabled]="true"
+              [readonly]="true"
             />
           </div>
           <div class="info_row">
             <ui-text-field
               [label]="'Apellido Paterno'"
               [value]="empleado?.apellidoPaternoEmpl"
-              [disabled]="true"
+              [readonly]="true"
             />
             <ui-text-field
               [label]="'Apellido Materno'"
               [value]="empleado?.apellidoMaternoEmpl"
-              [disabled]="true"
+              [readonly]="true"
             />
           </div>
           <div class="info_row">
-            <ui-text-field
+            <ui-datetime-picker
               [label]="'Fecha Nacimiento'"
-              [value]="empleado?.fechaNacimientoEmpl"
-              [disabled]="true"
+              [value]="empleado ? empleado.fechaNacimientoEmpl : null"
+              [readonly]="true"
             />
             <ui-text-field
               [label]="'Edad'"
               [value]="empleado?.edadEmpl"
-              [disabled]="true"
+              [readonly]="true"
             />
           </div>
         </div>
@@ -106,35 +106,42 @@
             <ui-text-field
               [label]="'Título'"
               [value]="empleado?.tituloEmpl"
-              [disabled]="true"
+              [readonly]="true"
             />
             <ui-text-field
               [label]="'RMU (Salario)'"
               [value]="empleado?.rmuEmpl"
-              [disabled]="true"
+              [readonly]="true"
             />
           </div>
           <div class="info_row">
             <ui-text-field
               [label]="'Fecha de Inicio'"
               [value]="empleado?.fechaInicioEmpl"
-              [disabled]="true"
+              [readonly]="true"
             />
+
             <ui-text-field
               [label]="'Fecha de Término'"
               [value]="empleado?.fechaTerminoEmpl"
-              [disabled]="true"
+              [readonly]="true"
             />
           </div>
           <div class="info_row">
             <ui-text-field
               [label]="'Estado'"
               [value]="empleado?.estadoEmpl"
-              [disabled]="true"
+              [readonly]="true"
+            />
+
+            <ui-text-field
+              [label]="'Rol'"
+              [value]="empleado?.nombreRol"
+              [readonly]="true"
             />
           </div>
         </div>
       </div>
     </div>
-  </div>
+  </ui-card>
 </div>

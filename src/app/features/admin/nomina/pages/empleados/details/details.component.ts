@@ -6,6 +6,8 @@ import { Location, CommonModule } from '@angular/common';
 import { EmpleadosService } from '@services/empleados.service';
 import { IEmpleado } from '@models';
 import { LoadingService } from '@shared/services/loading.service';
+import { UiDatetimePickerComponent } from '@shared/components/datetime-picker/datetime-picker.component';
+import { UiCardComponent } from '@shared/components/card/card.component';
 
 @Component({
   selector: 'app-details',
@@ -13,13 +15,14 @@ import { LoadingService } from '@shared/services/loading.service';
   imports: [
     CommonModule,
     UiTextFieldComponent,
-    UiButtonComponent
+    UiButtonComponent,
+    UiDatetimePickerComponent,
+    UiCardComponent,
   ],
   templateUrl: './details.component.html',
-  styleUrl: './details.component.scss'
+  styleUrl: './details.component.scss',
 })
 export default class DetailsComponent {
-
   private readonly _route = inject(ActivatedRoute);
   private readonly _empleadosService = inject(EmpleadosService);
   private readonly _loadingService = inject(LoadingService);
@@ -44,6 +47,7 @@ export default class DetailsComponent {
         this.empleado = {
           ideEmpl: data.ide_empl,
           ideRol: data.ide_rol,
+          nombreRol: data.nombre_rol,
           cedulaEmpl: data.cedula_empl,
           fechaNacimientoEmpl: data.fecha_nacimiento_empl,
           edadEmpl: data.edad_empl,
@@ -55,11 +59,11 @@ export default class DetailsComponent {
           estadoEmpl: data.estado_empl,
           segundoNombreEmpl: data.segundo_nombre_empl,
           apellidoMaternoEmpl: data.apellido_materno_empl,
-          fechaTerminoEmpl: data.fecha_termino_empl
+          fechaTerminoEmpl: data.fecha_termino_empl,
         };
         this._loadingService.hide();
       },
-      error: () => this._loadingService.hide()
+      error: () => this._loadingService.hide(),
     });
   }
 

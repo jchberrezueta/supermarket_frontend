@@ -5,6 +5,7 @@ import { UiButtonComponent } from '@shared/components/button/button.component';
 import { Location, CommonModule } from '@angular/common';
 import { RolesService } from '@services/roles.service';
 import { LoadingService } from '@shared/services/loading.service';
+import { UiCardComponent } from '@shared/components/card/card.component';
 
 interface IRolView {
   ideRol: number;
@@ -18,13 +19,13 @@ interface IRolView {
   imports: [
     CommonModule,
     UiTextFieldComponent,
-    UiButtonComponent
+    UiButtonComponent,
+    UiCardComponent,
   ],
   templateUrl: './details.component.html',
-  styleUrl: './details.component.scss'
+  styleUrl: './details.component.scss',
 })
 export default class DetailsComponent {
-
   private readonly _route = inject(ActivatedRoute);
   private readonly _rolesService = inject(RolesService);
   private readonly _loadingService = inject(LoadingService);
@@ -49,11 +50,11 @@ export default class DetailsComponent {
         this.rol = {
           ideRol: data.ide_rol,
           nombreRol: data.nombre_rol,
-          descripcionRol: data.descripcion_rol
+          descripcionRol: data.descripcion_rol,
         };
         this._loadingService.hide();
       },
-      error: () => this._loadingService.hide()
+      error: () => this._loadingService.hide(),
     });
   }
 
