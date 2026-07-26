@@ -50,8 +50,8 @@
 
         <div
           class="estado_badge"
-          [class.activo]="empresa?.estadoEmp === 'activo'"
-          [class.inactivo]="empresa?.estadoEmp !== 'activo'"
+          [class.activo]="empresa.estadoEmp === 'activo'"
+          [class.inactivo]="empresa.estadoEmp !== 'activo'"
         >
           {{ empresa ? empresa.estadoEmp : "" }}
         </div>
