@@ -93,7 +93,7 @@ export default class FormComponent {
   }
 
   private loadEmpresas() {
-    this._empresasService.listarComboEmpresas().subscribe((res) => {
+    this._empresasService.listarComboEmpresasActivas().subscribe((res) => {
       this.empresas = res;
     });
   }

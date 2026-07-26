@@ -360,7 +360,7 @@ export class UiTableListComponent implements OnInit {
     const segments = this._router.url.split('/');
     const posFinal = segments.length - 1;
 
-    if (segments[posFinal] === 'list') {
+    if (segments[posFinal] === 'list' || !isNaN(Number(segments[posFinal]))) {
       segments.pop();
     }
 

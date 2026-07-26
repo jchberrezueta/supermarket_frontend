@@ -7,11 +7,18 @@ import { LoadingService } from '@shared/services/loading.service';
 
 import { UiTextFieldComponent } from '@shared/components/text-field/text-field.component';
 import { UiButtonComponent } from '@shared/components/button/button.component';
+import { UiCardComponent } from '@shared/components/card/card.component';
 
 @Component({
   selector: 'app-details',
   standalone: true,
-  imports: [CommonModule, UiTextFieldComponent, UiButtonComponent],
+  imports: [
+    CommonModule,
+    UiTextFieldComponent,
+    UiButtonComponent,
+    UiCardComponent,
+    UiCardComponent,
+  ],
   templateUrl: './details.component.html',
   styleUrl: './details.component.scss',
 })

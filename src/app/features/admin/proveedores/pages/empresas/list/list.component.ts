@@ -47,6 +47,7 @@ export default class ListComponent {
 
   private initialFormValue!: IFiltroEmpresa;
   private idEmpresa = -1;
+  private estadoEmpr = '';
 
   protected opcionesEmpresa: IComboBoxOption[] = [];
   protected opcionesResponsable: IComboBoxOption[] = [];
@@ -96,9 +97,19 @@ export default class ListComponent {
       return;
     }
     if (this.idEmpresa > -1) {
-      this._router.navigate(['../precios', this.idEmpresa], {
-        relativeTo: this._route,
-      });
+      if (this.estadoEmpr === 'activo') {
+        this._router.navigate(['../precios', this.idEmpresa], {
+          relativeTo: this._route,
+        });
+      } else {
+        Swal.fire({
+          title: 'Empresa no activa',
+          text: 'Seleccione una empresa actualmente activa.',
+          icon: 'info',
+          confirmButtonColor: 'var(--sm-color-primary)',
+          confirmButtonText: 'Aceptar',
+        });
+      }
     } else {
       Swal.fire({
         title: 'Empresa no seleccionada',
@@ -113,10 +124,11 @@ export default class ListComponent {
   protected setIdEmpresa(elem: any): void {
     if (elem?.row) {
       this.idEmpresa = elem.row.ide_empr ?? elem.row.ideEmpr ?? -1;
+      this.estadoEmpr = elem.row.estado_empr ?? elem.row.estadoEmp ?? '';
       return;
     }
-
     this.idEmpresa = -1;
+    this.estadoEmpr = '';
   }
 
   protected refreshData(actionClick: string): void {

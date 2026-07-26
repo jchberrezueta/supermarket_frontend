@@ -1,5 +1,5 @@
 <div class="div_container">
-  <div class="div_card">
+  <ui-card [showHeader]="false" class="div_card">
     <div class="panel_1">
       <div class="card_form">
         <!-- CABECERA -->
@@ -116,6 +116,23 @@
           </div>
         </div>
 
+        <!-- INFORMACIÓN DE CONTACTO -->
+        <div class="section_title">Información Laboral</div>
+        <div class="info_grid">
+          <div class="info_row">
+            <ui-text-field
+              [label]="'Cargo laboral'"
+              [value]="proveedor?.cargo_prov"
+              [readonly]="true"
+            />
+            <ui-text-field
+              [label]="'Estado'"
+              [value]="proveedor?.estado_prov"
+              [readonly]="true"
+            />
+          </div>
+        </div>
+
         <!-- EMPRESA -->
         <div class="section_title">Empresa Asociada</div>
         <div class="empresa_card">
@@ -131,5 +148,5 @@
         </div>
       </div>
     </div>
-  </div>
+  </ui-card>
 </div>

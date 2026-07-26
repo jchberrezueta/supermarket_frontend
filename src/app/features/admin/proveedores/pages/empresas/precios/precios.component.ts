@@ -14,8 +14,7 @@ import { UiInputBoxComponent } from '@shared/components/input-box/input-box.comp
 import { EmpresasService } from '@services/empresas.service';
 import { Location } from '@angular/common';
 
-import Swal from 'sweetalert2'
-
+import Swal from 'sweetalert2';
 
 type EmpresaPrecioFormGroup = FormGroupOf<IEmpresaPrecios>;
 
@@ -28,13 +27,14 @@ type EmpresaPrecioFormGroup = FormGroupOf<IEmpresaPrecios>;
     UiInputBoxComponent,
     UiTextFieldComponent,
     UiButtonComponent,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
   templateUrl: './precios.component.html',
-  styleUrl: './precios.component.scss'
+  styleUrl: './precios.component.scss',
 })
 export default class PreciosComponent {
-  private readonly _tableList = viewChild.required<UiTableListComponent>(UiTableListComponent);
+  private readonly _tableList =
+    viewChild.required<UiTableListComponent>(UiTableListComponent);
   private readonly _route = inject(ActivatedRoute);
   private readonly formBuilder = inject(FormBuilder);
   private readonly _empresasService = inject(EmpresasService);
@@ -52,19 +52,15 @@ export default class PreciosComponent {
   protected formData!: EmpresaPrecioFormGroup;
   private initialFormValue!: IEmpresaPrecios;
 
-
   constructor() {
-    
-
     const idParam = this._route.snapshot.params['id'];
-    if(idParam){
+    if (idParam) {
       this.idEmpresa = +idParam;
       this.initForm();
       this.loadEmpresa();
       this.loadProductos();
     }
   }
-
 
   private initForm() {
     this.formData = this.formBuilder.group({
@@ -74,10 +70,10 @@ export default class PreciosComponent {
       precioCompraProd: [0, [Validators.required], []],
       dctoCompraProd: [0, [Validators.required], []],
       dctoCaducidadProd: [0, [Validators.required], []],
-      ivaProd: [0, [Validators.required], []]
+      ivaProd: [0, [Validators.required], []],
     }) as EmpresaPrecioFormGroup;
 
-     // snapshot inicial
+    // snapshot inicial
     this.initialFormValue = this.formData.getRawValue();
   }
   private setData() {
@@ -88,38 +84,54 @@ export default class PreciosComponent {
       precioCompraProd: this.precioEmp?.precio_compra_prod,
       dctoCompraProd: this.precioEmp?.dcto_compra_prod,
       dctoCaducidadProd: this.precioEmp?.dcto_caducidad_prod,
-      ivaProd: this.precioEmp?.iva_prod
+      ivaProd: this.precioEmp?.iva_prod,
     });
   }
 
   private loadProductos() {
-    this._productosService.listarComboProductos().subscribe((res) => {
-      this.productos = res;
-    });
+    this._productosService
+      .listarComboProductosActivosSinPrecioPorEmpresa(this.idEmpresa)
+      .subscribe((res) => {
+        this.productos = res;
+      });
   }
   private loadEmpresa() {
-    this._empresasService.buscar(this.idEmpresa).subscribe((res) => {
+    this._empresasService.buscarActiva(this.idEmpresa).subscribe((res) => {
       const data = res.data[0];
-      this.empresa = {
-        ideEmp: data.ide_empr,
-        nombreEmp: data.nombre_empr,
-        responsableEmp: data.responsable_empr,
-        fechaContratoEmp: data.fecha_contrato_empr,
-        direccionEmp: data.direccion_empr,
-        telefonoEmp: data.telefono_empr,
-        emailEmp: data.email_empr,
-        estadoEmp: data.estado_empr,
-        descripcionEmp: data.descripcion_empr
-      };
-      this.nombreEmpresa = this.empresa.nombreEmp;
-    })
+      if (data != null) {
+        this.empresa = {
+          ideEmp: data.ide_empr,
+          nombreEmp: data.nombre_empr,
+          responsableEmp: data.responsable_empr,
+          fechaContratoEmp: data.fecha_contrato_empr,
+          direccionEmp: data.direccion_empr,
+          telefonoEmp: data.telefono_empr,
+          emailEmp: data.email_empr,
+          estadoEmp: data.estado_empr,
+          descripcionEmp: data.descripcion_empr,
+        };
+        this.nombreEmpresa = this.empresa.nombreEmp;
+      } else {
+        Swal.fire({
+          title: 'Empresa no Activa',
+          text: 'No puede gestionar los precios de los productos de una empresa actualmente inactiva.',
+          icon: 'info',
+          confirmButtonColor: 'var(--sm-color-primary)',
+          confirmButtonText: 'Aceptar',
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+        }).then(() => {
+          this.location.back();
+        });
+      }
+    });
   }
 
   protected setIdEmprProd(elem: any) {
-    if(elem && elem.row){
-      this.precioEmp= elem.row;
-    }else{
-      if(!this.isAdd){
+    if (elem && elem.row) {
+      this.precioEmp = elem.row;
+    } else {
+      if (!this.isAdd) {
         this.resetForm();
         this.isAdd = true;
       }
@@ -127,68 +139,80 @@ export default class PreciosComponent {
     }
   }
 
-  protected changeModeUpdate(){
-    if(this.precioEmp){
+  protected changeModeUpdate() {
+    if (this.precioEmp) {
+      this.productos.unshift({
+        label: this.precioEmp.nombre_prod,
+        value: this.precioEmp.ide_prod,
+      });
       this.isAdd = false;
       this.setData();
+    } else {
+      Swal.fire({
+        title: 'Producto no seleccionado',
+        text: 'Seleccione el precio de un producto de la lista para poder modificarlo.',
+        icon: 'info',
+        confirmButtonColor: 'var(--sm-color-primary)',
+        confirmButtonText: 'Aceptar',
+      });
     }
   }
 
-  protected changeModeInsert(){
+  protected changeModeInsert() {
+    if (!this.isAdd) {
+      this._tableList().refreshData();
+      this.loadProductos();
+    }
     this.isAdd = true;
     this.precioEmp = null;
     this.resetForm();
   }
 
   protected guardar() {
-    const data = this.formData.getRawValue() as IEmpresaPrecios;  
-    if(this.formData.valid){
+    const data = this.formData.getRawValue() as IEmpresaPrecios;
+    if (this.formData.valid) {
       if (this.isAdd) {
-        this._empresasService.insertarPrecio(data).subscribe(
-          (res) => {
-            Swal.fire({
-              title: "Precio registrado :)",
-              text: "El Precio fue guardado correctamente",
-              icon: "success"
-            });
-            this.refreshData();
-          }
-        );
-      } else {
-        if(this.precioEmp){
+        this._empresasService.insertarPrecio(data).subscribe((res) => {
           Swal.fire({
-            title: "Esta seguro de modificar esta empresa?",
-            text: "Los cambios realizados se registraran!",
-            icon: "warning",
+            title: 'Precio registrado :)',
+            text: 'El Precio fue guardado correctamente',
+            icon: 'success',
+          });
+          this.refreshData();
+        });
+      } else {
+        if (this.precioEmp) {
+          Swal.fire({
+            title: 'Esta seguro de modificar esta empresa?',
+            text: 'Los cambios realizados se registraran!',
+            icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Si, de acuerdo"
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, de acuerdo',
           }).then((result) => {
             if (result.isConfirmed) {
-              this._empresasService.actualizarPrecio(this.precioEmp.ide_empr_prod, data).subscribe(
-                (res) => {
+              this._empresasService
+                .actualizarPrecio(this.precioEmp.ide_empr_prod, data)
+                .subscribe((res) => {
                   Swal.fire({
-                    title: "Precio actualizado :)",
-                    text: "El Precio fue actualizado correctamente",
-                    icon: "success"
+                    title: 'Precio actualizado :)',
+                    text: 'El Precio fue actualizado correctamente',
+                    icon: 'success',
                   });
                   this.refreshData();
-                }
-              );
+                });
             }
           });
-          
         }
       }
-    }else{
+    } else {
       Swal.fire({
-        icon: "info",
-        title: "Oops... Faltan datos",
-        text: "Revise porfavor la información ingresada"
+        icon: 'info',
+        title: 'Oops... Faltan datos',
+        text: 'Revise porfavor la información ingresada',
       });
     }
-    
   }
 
   protected resetForm() {
@@ -196,14 +220,14 @@ export default class PreciosComponent {
   }
 
   protected volver() {
-     Swal.fire({
-      title: "Esta Seguro de Volver?",
-      text: "Los cambios realizados no se guardaran!",
-      icon: "warning",
+    Swal.fire({
+      title: 'Esta Seguro de Volver?',
+      text: 'Los cambios realizados no se guardaran!',
+      icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Si, Volver!"
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si, Volver!',
     }).then((result) => {
       if (result.isConfirmed) {
         this.resetForm();
@@ -212,11 +236,11 @@ export default class PreciosComponent {
         this.location.back();
       }
     });
-    
   }
 
   protected refreshData() {
     this._tableList().refreshData();
     this.changeModeInsert();
+    this.loadProductos();
   }
 }

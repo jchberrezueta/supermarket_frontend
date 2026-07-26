@@ -28,6 +28,12 @@ export class EmpresasService {
     );
   }
 
+  public buscarActiva(id: number): Observable<IResultDataEmpresa> {
+    return this._restService.get<IResultDataEmpresa>(
+      `${this.apiUrl}/buscar/activa/${id}`,
+    );
+  }
+
   public insertar(body: IEmpresa) {
     return this._restService.post<any>(`${this.apiUrl}/insertar`, body);
   }
@@ -53,6 +59,12 @@ export class EmpresasService {
   public listarComboEmpresas(): Observable<IComboBoxOption[]> {
     return this._restService.get<IComboBoxOption[]>(
       `${this.apiUrl}/listar/combo/empresas`,
+    );
+  }
+
+  public listarComboEmpresasActivas(): Observable<IComboBoxOption[]> {
+    return this._restService.get<IComboBoxOption[]>(
+      `${this.apiUrl}/listar/combo/empresas/activas`,
     );
   }
 

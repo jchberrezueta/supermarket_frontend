@@ -27,11 +27,6 @@
                   />
 
                   <ui-text-field
-                    [label]="'Cédula'"
-                    formControlName="cedulaProv"
-                  />
-
-                  <ui-text-field
                     [label]="'Primer Nombre'"
                     formControlName="primerNombreProv"
                   />
@@ -46,6 +41,11 @@
                     [isTime]="false"
                     formControlName="fechaNacimientoProv"
                   />
+
+                  <ui-text-field
+                    [label]="'Teléfono'"
+                    formControlName="telefonoProv"
+                  />
                   <ui-combo-box
                     [label]="'Estado'"
                     [options]="estadosProveedor"
@@ -54,6 +54,10 @@
                 </div>
 
                 <div class="form_div">
+                  <ui-text-field
+                    [label]="'Cédula'"
+                    formControlName="cedulaProv"
+                  />
                   <ui-text-field
                     [label]="'Apellido Paterno'"
                     formControlName="apellidoPaternoProv"
@@ -65,8 +69,9 @@
                   />
 
                   <ui-text-field
-                    [label]="'Teléfono'"
-                    formControlName="telefonoProv"
+                    [label]="'Edad'"
+                    [valueType]="'number'"
+                    formControlName="edadProv"
                   />
 
                   <ui-text-field
@@ -75,12 +80,7 @@
                   />
 
                   <ui-text-field
-                    [label]="'Edad'"
-                    [valueType]="'number'"
-                    formControlName="edadProv"
-                  />
-                  <ui-text-field
-                    [label]="'Cargo'"
+                    [label]="'Cargo laboral'"
                     formControlName="cargoProv"
                   />
                 </div>
