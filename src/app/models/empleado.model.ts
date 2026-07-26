@@ -176,9 +176,9 @@ export interface IResultDataEmpleado {
 
 export interface IFiltroEmpleado {
   ideRol: string;
+  nombreRol: string;
   cedulaEmpl: string;
-  primerNombreEmpl: string;
-  apellidoPaternoEmpl: string;
+  nombreCompletoEmpl: string;
   tituloEmpl: EnumEstadoEmpleado;
   estadoEmpl: EnumEstadoEmpleado;
 }

@@ -40,7 +40,7 @@ const PROVIDERS = [
 })
 export class UiDatetimePickerComponent implements ControlValueAccessor {
   public label = input.required<string>();
-  public value = input<string | null>('');
+  public value = input<string | null | undefined>('');
   public disabled = input<boolean>(false);
   public readonly = input<boolean>(false);
   public min = input<string | null>(null);

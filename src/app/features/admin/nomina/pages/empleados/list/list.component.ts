@@ -45,6 +45,7 @@ export default class ListComponent {
   protected opcionesEmplApellidoPaterno: IComboBoxOption[] = [];
   protected opcionesEmplTitulos: IComboBoxOption[] = [];
   protected opcionesEmplEstados: IComboBoxOption[] = [];
+  protected opcionesEmpleados: IComboBoxOption[] = [];
 
   protected formData!: FilterEmpleadoFormGroup;
 
@@ -54,8 +55,7 @@ export default class ListComponent {
     this.configForm();
     this.loadComboRoles();
     this.loadComboCedulas();
-    this.loadComboPrimerNombre();
-    this.loadComboApellidoPaterno();
+    this.loadComboEmpleados();
     this.loadComboTitulos();
     this.loadComboEstados();
   }
@@ -63,9 +63,9 @@ export default class ListComponent {
   protected configForm(): void {
     this.formData = this.formBuilder.group({
       ideRol: ['', [], []],
+      nombreRol: ['', [], []],
       cedulaEmpl: ['', [], []],
-      primerNombreEmpl: ['', [], []],
-      apellidoPaternoEmpl: ['', [], []],
+      nombreCompletoEmpl: ['', [], []],
       tituloEmpl: ['', [], []],
       estadoEmpl: ['', [], []],
     }) as FilterEmpleadoFormGroup;
@@ -79,21 +79,15 @@ export default class ListComponent {
     });
   }
 
+  private loadComboEmpleados(): void {
+    this._empleadosService.listarComboEmpleados().subscribe((res) => {
+      this.opcionesEmpleados = res ?? [];
+    });
+  }
+
   private loadComboCedulas(): void {
     this._empleadosService.listarComboCedulas().subscribe((res) => {
       this.opcionesEmplCedulas = res ?? [];
-    });
-  }
-
-  private loadComboPrimerNombre(): void {
-    this._empleadosService.listarComboPrimerNombre().subscribe((res) => {
-      this.opcionesEmplPrimerNombre = res ?? [];
-    });
-  }
-
-  private loadComboApellidoPaterno(): void {
-    this._empleadosService.listarComboApellidoPaterno().subscribe((res) => {
-      this.opcionesEmplApellidoPaterno = res ?? [];
     });
   }
 
@@ -131,11 +125,10 @@ export default class ListComponent {
   private getParams(): URLSearchParams {
     const params = new URLSearchParams();
     const filtro = this.formData.value as IFiltroEmpleado;
-    console.log(filtro);
     this.appendParam(params, 'ideRol', filtro.ideRol);
+    this.appendParam(params, 'nombreRol', filtro.nombreRol);
     this.appendParam(params, 'cedulaEmpl', filtro.cedulaEmpl);
-    this.appendParam(params, 'primerNombreEmpl', filtro.primerNombreEmpl);
-    this.appendParam(params, 'apellidoPaternoEmpl', filtro.apellidoPaternoEmpl);
+    this.appendParam(params, 'nombreCompletoEmpl', filtro.nombreCompletoEmpl);
     this.appendParam(params, 'tituloEmpl', filtro.tituloEmpl);
     this.appendParam(params, 'estadoEmpl', filtro.estadoEmpl);
 

@@ -47,6 +47,13 @@ export default class FormComponent {
 
   ngOnInit(): void {
     this.initForm();
+    this.formData
+      .get('fechaNacimientoEmpl')!
+      .valueChanges.subscribe((value) => {
+        const edad = this.calcularEdad(value);
+        this.formData.get('edadEmpl')?.setValue(edad, { emitEvent: false });
+      });
+
     this.loadRoles();
 
     const id = this._route.snapshot.params['id'];
@@ -88,15 +95,6 @@ export default class FormComponent {
     this._empleadosService.buscar(id).subscribe((res) => {
       const e = res.data[0] as IEmpleadoResult;
 
-      // Formatear fechas correctamente para datetime-picker
-      const formatDate = (dateStr: string | null | undefined): string => {
-        if (!dateStr) return '';
-        // Si la fecha ya viene en formato YYYY-MM-DD, devolverla tal cual
-        if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return dateStr;
-        // Si viene con timestamp, extraer solo la fecha
-        return dateStr.split('T')[0];
-      };
-
       this.formData.patchValue({
         ideEmpl: e.ide_empl,
         ideRol: e.ide_rol,
@@ -105,10 +103,10 @@ export default class FormComponent {
         segundoNombreEmpl: e.segundo_nombre_empl,
         apellidoPaternoEmpl: e.apellido_paterno_empl,
         apellidoMaternoEmpl: e.apellido_materno_empl,
-        fechaNacimientoEmpl: formatDate(e.fecha_nacimiento_empl),
+        fechaNacimientoEmpl: e.fecha_nacimiento_empl,
         edadEmpl: e.edad_empl,
-        fechaInicioEmpl: formatDate(e.fecha_inicio_empl),
-        fechaTerminoEmpl: formatDate(e.fecha_termino_empl),
+        fechaInicioEmpl: e.fecha_inicio_empl,
+        fechaTerminoEmpl: e.fecha_termino_empl,
         tituloEmpl: e.titulo_empl,
         rmuEmpl: Number(e.rmu_empl) || 1,
         estadoEmpl: e.estado_empl,
@@ -116,20 +114,20 @@ export default class FormComponent {
     });
   }
 
-  protected calcularEdad() {
-    const fecha = this.formData.controls.fechaNacimientoEmpl.value;
-    if (!fecha) return;
+  protected calcularEdad(fecha: string | Date): number {
+    if (!fecha) return 0;
 
-    const nacimiento = new Date(fecha);
+    const fechaNac = new Date(fecha);
     const hoy = new Date();
-    let edad = hoy.getFullYear() - nacimiento.getFullYear();
-    const m = hoy.getMonth() - nacimiento.getMonth();
 
-    if (m < 0 || (m === 0 && hoy.getDate() < nacimiento.getDate())) {
+    let edad = hoy.getFullYear() - fechaNac.getFullYear();
+    const mes = hoy.getMonth() - fechaNac.getMonth();
+
+    if (mes < 0 || (mes === 0 && hoy.getDate() < fechaNac.getDate())) {
       edad--;
     }
 
-    this.formData.controls.edadEmpl.setValue(edad);
+    return edad;
   }
 
   protected guardar(): void {

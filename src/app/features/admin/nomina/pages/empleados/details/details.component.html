@@ -109,21 +109,8 @@
               [readonly]="true"
             />
             <ui-text-field
-              [label]="'RMU (Salario)'"
-              [value]="empleado?.rmuEmpl"
-              [readonly]="true"
-            />
-          </div>
-          <div class="info_row">
-            <ui-text-field
-              [label]="'Fecha de Inicio'"
-              [value]="empleado?.fechaInicioEmpl"
-              [readonly]="true"
-            />
-
-            <ui-text-field
-              [label]="'Fecha de Término'"
-              [value]="empleado?.fechaTerminoEmpl"
+              [label]="'Rol'"
+              [value]="empleado?.nombreRol"
               [readonly]="true"
             />
           </div>
@@ -133,10 +120,21 @@
               [value]="empleado?.estadoEmpl"
               [readonly]="true"
             />
-
             <ui-text-field
-              [label]="'Rol'"
-              [value]="empleado?.nombreRol"
+              [label]="'RMU (Salario)'"
+              [value]="empleado?.rmuEmpl"
+              [readonly]="true"
+            />
+          </div>
+          <div class="info_row">
+            <ui-datetime-picker
+              [label]="'Fecha de Inicio'"
+              [value]="empleado ? empleado.fechaInicioEmpl : null"
+              [readonly]="true"
+            />
+            <ui-datetime-picker
+              [label]="'Fecha de Término'"
+              [value]="empleado ? empleado.fechaTerminoEmpl : null"
               [readonly]="true"
             />
           </div>

@@ -8,7 +8,8 @@
               class="sm-field-md"
               [label]="'Rol'"
               [options]="opcionesRoles"
-              formControlName="ideRol"
+              [returnValue]="'label'"
+              formControlName="nombreRol"
             />
 
             <ui-input-box
@@ -20,19 +21,11 @@
             />
 
             <ui-input-box
-              class="sm-field-md"
-              [label]="'Nombre'"
-              [options]="opcionesEmplPrimerNombre"
-              [returnValue]="'label'"
-              formControlName="primerNombreEmpl"
-            />
-
-            <ui-input-box
               class="sm-field-lg"
-              [label]="'Apellido'"
-              [options]="opcionesEmplApellidoPaterno"
+              [label]="'Empleado'"
+              [options]="opcionesEmpleados"
               [returnValue]="'label'"
-              formControlName="apellidoPaternoEmpl"
+              formControlName="nombreCompletoEmpl"
             />
 
             <ui-input-box
