@@ -5,4 +5,5 @@ export interface IOpcionSidebar {
   icono: string;
   activo: string;
   hijas: IOpcionSidebar[];
+  visible: boolean;
 }

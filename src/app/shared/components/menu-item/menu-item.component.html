@@ -30,15 +30,17 @@
     </div>
   </mat-expansion-panel>
 } @else {
-  <a
-    mat-list-item
-    class="menu_link"
-    [class.active]="isActiveUrl(elem.ruta)"
-    (click)="navigateToUrl(elem.ruta)"
-  >
-    <div class="div_item">
-      <mat-icon>{{ elem.icono }}</mat-icon>
-      <span>{{ elem.titulo }}</span>
-    </div>
-  </a>
+  @if (elem.visible) {
+    <a
+      mat-list-item
+      class="menu_link"
+      [class.active]="isActiveUrl(elem.ruta)"
+      (click)="navigateToUrl(elem.ruta)"
+    >
+      <div class="div_item">
+        <mat-icon>{{ elem.icono }}</mat-icon>
+        <span>{{ elem.titulo }}</span>
+      </div>
+    </a>
+  }
 }

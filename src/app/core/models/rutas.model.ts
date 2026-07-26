@@ -8,4 +8,5 @@ export interface IRuta {
   activo: boolean;
   nivel: number;
   padre: number;
+  visible: boolean;
 }

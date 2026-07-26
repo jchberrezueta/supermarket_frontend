@@ -58,6 +58,7 @@ export class UiSidebarComponent {
         icono: 'dashboard',
         activo: 'si',
         hijas: [],
+        visible: true,
       });
     }
 
