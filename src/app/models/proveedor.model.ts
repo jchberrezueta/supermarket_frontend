@@ -142,4 +142,5 @@ export interface IFiltroProveedor {
   primerNombreProv: string;
   apellidoPaternoProv: string;
   emailProv: string;
+  estadoProv: string;
 }
