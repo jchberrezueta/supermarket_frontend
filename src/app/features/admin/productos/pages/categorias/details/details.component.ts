@@ -5,6 +5,7 @@ import { UiButtonComponent } from '@shared/components/button/button.component';
 import { Location, CommonModule } from '@angular/common';
 import { CategoriasService } from '@services/index';
 import { LoadingService } from '@shared/services/loading.service';
+import { UiCardComponent } from '../../../../../../shared/components/card/card.component';
 
 interface ICategoriaView {
   ideCate: number;
@@ -18,13 +19,13 @@ interface ICategoriaView {
   imports: [
     CommonModule,
     UiTextFieldComponent,
-    UiButtonComponent
+    UiButtonComponent,
+    UiCardComponent,
   ],
   templateUrl: './details.component.html',
-  styleUrl: './details.component.scss'
+  styleUrl: './details.component.scss',
 })
 export default class DetailsComponent {
-
   private readonly _route = inject(ActivatedRoute);
   private readonly _categoriasService = inject(CategoriasService);
   private readonly _loadingService = inject(LoadingService);
@@ -49,11 +50,11 @@ export default class DetailsComponent {
         this.categoria = {
           ideCate: data.ide_cate,
           nombreCate: data.nombre_cate,
-          descripcionCate: data.descripcion_cate
+          descripcionCate: data.descripcion_cate,
         };
         this._loadingService.hide();
       },
-      error: () => this._loadingService.hide()
+      error: () => this._loadingService.hide(),
     });
   }
 

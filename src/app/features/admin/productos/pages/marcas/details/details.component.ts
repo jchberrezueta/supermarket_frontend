@@ -5,6 +5,7 @@ import { UiButtonComponent } from '@shared/components/button/button.component';
 import { Location, CommonModule } from '@angular/common';
 import { MarcasService } from '@services/index';
 import { LoadingService } from '@shared/services/loading.service';
+import { UiCardComponent } from '../../../../../../shared/components/card/card.component';
 
 interface IMarcaView {
   ideMarc: number;
@@ -20,13 +21,13 @@ interface IMarcaView {
   imports: [
     CommonModule,
     UiTextFieldComponent,
-    UiButtonComponent
+    UiButtonComponent,
+    UiCardComponent,
   ],
   templateUrl: './details.component.html',
-  styleUrl: './details.component.scss'
+  styleUrl: './details.component.scss',
 })
 export default class DetailsComponent {
-
   private readonly _route = inject(ActivatedRoute);
   private readonly _marcasService = inject(MarcasService);
   private readonly _loadingService = inject(LoadingService);
@@ -53,11 +54,11 @@ export default class DetailsComponent {
           nombreMarc: data.nombre_marc,
           paisOrigenMarc: data.pais_origen_marc,
           calidadMarc: data.calidad_marc,
-          descripcionMarc: data.descripcion_marc
+          descripcionMarc: data.descripcion_marc,
         };
         this._loadingService.hide();
       },
-      error: () => this._loadingService.hide()
+      error: () => this._loadingService.hide(),
     });
   }
 

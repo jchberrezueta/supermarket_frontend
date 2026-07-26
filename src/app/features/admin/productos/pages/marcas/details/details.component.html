@@ -1,16 +1,19 @@
 <div class="div_container">
-  <div class="div_card">
+  <ui-card [showHeader]="false" class="div_card">
     <div class="panel_1">
       <div class="card_form">
-        
         <!-- CABECERA -->
         <div class="header_actions">
           <div class="header_title">
             <h2>Detalle de la Marca #{{ idMarca }}</h2>
           </div>
           <div class="header_buttons">
-            <ui-button [icon]="'refresh'" (evntClick)="loadMarca()"/>
-            <ui-button [label]="'Volver'" [icon]="'arrow_back'" (evntClick)="volver()"/>
+            <ui-button [icon]="'refresh'" (evntClick)="loadMarca()" />
+            <ui-button
+              [label]="'Volver'"
+              [icon]="'arrow_back'"
+              (evntClick)="volver()"
+            />
           </div>
         </div>
 
@@ -21,8 +24,13 @@
           </div>
           <div class="marca_info_principal">
             <h3>{{ marca?.nombreMarc }}</h3>
-            <p class="id_marca"><span class="material-icons">tag</span> ID: {{ marca?.ideMarc }}</p>
-            <p class="pais_origen"><span class="material-icons">public</span> {{ marca?.paisOrigenMarc }}</p>
+            <p class="id_marca">
+              <span class="material-icons">tag</span> ID: {{ marca?.ideMarc }}
+            </p>
+            <p class="pais_origen">
+              <span class="material-icons">public</span>
+              {{ marca?.paisOrigenMarc }}
+            </p>
           </div>
           <div class="calidad_badge">
             <span class="material-icons">star</span>
@@ -34,22 +42,37 @@
         <div class="section_title">Información de la Marca</div>
         <div class="info_grid">
           <div class="info_row">
-            <ui-text-field [label]="'ID'" [value]="marca?.ideMarc" [disabled]="true"/>
-            <ui-text-field [label]="'Nombre de la Marca'" [value]="marca?.nombreMarc" [disabled]="true"/>
+            <ui-text-field
+              [label]="'ID'"
+              [value]="marca?.ideMarc"
+              [readonly]="true"
+            />
+            <ui-text-field
+              [label]="'Nombre de la Marca'"
+              [value]="marca?.nombreMarc"
+              [readonly]="true"
+            />
           </div>
           <div class="info_row">
-            <ui-text-field [label]="'País de Origen'" [value]="marca?.paisOrigenMarc" [disabled]="true"/>
-            <ui-text-field [label]="'Calidad'" [value]="marca?.calidadMarc" [disabled]="true"/>
+            <ui-text-field
+              [label]="'País de Origen'"
+              [value]="marca?.paisOrigenMarc"
+              [readonly]="true"
+            />
+            <ui-text-field
+              [label]="'Calidad'"
+              [value]="marca?.calidadMarc"
+              [readonly]="true"
+            />
           </div>
         </div>
 
         <!-- DESCRIPCIÓN -->
         <div class="section_title">Descripción</div>
         <div class="descripcion_card">
-          <p>{{ marca?.descripcionMarc || 'Sin descripción' }}</p>
+          <p>{{ marca?.descripcionMarc || "Sin descripción" }}</p>
         </div>
-
       </div>
     </div>
-  </div>
+  </ui-card>
 </div>
