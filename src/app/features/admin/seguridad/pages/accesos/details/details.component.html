@@ -1,5 +1,5 @@
 <div class="div_container">
-  <div class="div_card">
+  <ui-card [showHeader]="false" class="div_card">
     <div class="panel_1">
       <div class="card_form">
         <!-- CABECERA -->
@@ -17,6 +17,20 @@
           </div>
         </div>
 
+        <!-- PERFIL DEL ACCESO -->
+        <div class="acceso_perfil">
+          <div class="avatar">
+            <span class="material-icons">category</span>
+          </div>
+          <div class="acceso_info_principal">
+            <h3>{{ acceso?.ideCuen }}</h3>
+            <p class="id_acceso">
+              <span class="material-icons">tag</span> ID:
+              {{ acceso?.fechaAcce }}
+            </p>
+          </div>
+        </div>
+
         <!-- INFO ACCESO -->
         <div class="section_title">Información del Acceso</div>
         <div class="info_grid">
@@ -24,36 +38,36 @@
             <ui-text-field
               [label]="'ID Acceso'"
               [value]="acceso?.ideAcce"
-              [disabled]="true"
+              [readonly]="true"
             />
             <ui-text-field
               [label]="'ID Cuenta'"
               [value]="acceso?.ideCuen"
-              [disabled]="true"
+              [readonly]="true"
             />
           </div>
           <div class="info_row">
             <ui-text-field
               [label]="'Navegador'"
               [value]="acceso?.navegadorAcce"
-              [disabled]="true"
+              [readonly]="true"
             />
             <ui-text-field
               [label]="'Dirección IP'"
               [value]="acceso?.ipAcce"
-              [disabled]="true"
+              [readonly]="true"
             />
           </div>
           <div class="info_row">
             <ui-text-field
               [label]="'Fecha de Acceso'"
               [value]="formatDate(acceso?.fechaAcce || '')"
-              [disabled]="true"
+              [readonly]="true"
             />
             <ui-text-field
               [label]="'Intentos Fallidos'"
               [value]="acceso?.numIntFallAcce"
-              [disabled]="true"
+              [readonly]="true"
             />
           </div>
         </div>
@@ -65,12 +79,12 @@
             <ui-text-field
               [label]="'Latitud'"
               [value]="acceso?.latitudAcce ?? 'No disponible'"
-              [disabled]="true"
+              [readonly]="true"
             />
             <ui-text-field
               [label]="'Longitud'"
               [value]="acceso?.longitudAcce ?? 'No disponible'"
-              [disabled]="true"
+              [readonly]="true"
             />
           </div>
         </div>
@@ -96,5 +110,5 @@
         }
       </div>
     </div>
-  </div>
+  </ui-card>
 </div>

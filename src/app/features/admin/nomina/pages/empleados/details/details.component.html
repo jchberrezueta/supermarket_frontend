@@ -94,6 +94,23 @@
           </div>
         </div>
 
+        <!-- INFORMACIÓN DE CONTACTO -->
+        <div class="section_title">Información de Contacto</div>
+        <div class="info_grid">
+          <div class="info_row">
+            <ui-text-field
+              [label]="'Teléfono'"
+              [value]="empleado ? empleado.telefonoEmpl : null"
+              [readonly]="true"
+            />
+            <ui-text-field
+              [label]="'Email'"
+              [value]="empleado ? empleado.emailEmpl : null"
+              [readonly]="true"
+            />
+          </div>
+        </div>
+
         <!-- INFORMACIÓN LABORAL -->
         <div class="section_title">Información Laboral</div>
         <div class="info_grid">

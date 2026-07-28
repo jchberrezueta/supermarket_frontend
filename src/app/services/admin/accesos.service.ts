@@ -38,6 +38,12 @@ export class AccesosService {
     );
   }
 
+  public listarComboMotivos(): Observable<IComboBoxOption[]> {
+    return this.restService.get<IComboBoxOption[]>(
+      `${this.apiUrl}/listar/combo/motivo`,
+    );
+  }
+
   public listarComboCuentas(): Observable<IComboBoxOption[]> {
     return this.restService.get<IComboBoxOption[]>(
       `${this.apiUrl}/listar/combo/cuentas`,

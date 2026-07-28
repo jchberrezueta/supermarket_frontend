@@ -63,6 +63,8 @@ export default class ListComponent {
 
   protected opcionesNavegadores: IComboBoxOption[] = [];
 
+  protected opcionesMotivos: IComboBoxOption[] = [];
+
   protected formData!: FilterAccesoUsuarioFormGroup;
 
   private initialFormValue!: IFiltroAccesoUsuario;
@@ -72,6 +74,7 @@ export default class ListComponent {
     this.loadComboCuentas();
     this.loadComboIps();
     this.loadComboNavegador();
+    this.loadComboMotivos();
   }
 
   protected configForm(): void {
@@ -89,6 +92,8 @@ export default class ListComponent {
       fechaAcceDesde: [''],
 
       fechaAcceHasta: [''],
+
+      motivoAcce: [''],
     }) as FilterAccesoUsuarioFormGroup;
 
     this.initialFormValue = this.formData.getRawValue();
@@ -106,6 +111,14 @@ export default class ListComponent {
     this.accesosService.listarComboIps().subscribe({
       next: (response) => {
         this.opcionesIps = response ?? [];
+      },
+    });
+  }
+
+  private loadComboMotivos(): void {
+    this.accesosService.listarComboMotivos().subscribe({
+      next: (response) => {
+        this.opcionesMotivos = response ?? [];
       },
     });
   }
@@ -156,6 +169,8 @@ export default class ListComponent {
       : '';
 
     this.appendParam(params, 'fechaAcceHasta', fechaHasta);
+
+    this.appendParam(params, 'motivoAcce', filter.motivoAcce);
 
     return params;
   }

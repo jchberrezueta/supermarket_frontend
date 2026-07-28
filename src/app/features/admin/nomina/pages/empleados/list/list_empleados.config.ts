@@ -39,6 +39,13 @@ export const ListEmpleadosConfig: ITableListConfig = {
       type: 'text',
       sortable: true,
     },
+    {
+      label: 'Telefono',
+      property: 'telefono_empl',
+      type: 'text',
+      sortable: true,
+    },
+    { label: 'Email', property: 'email_empl', type: 'text', sortable: true },
     { label: 'Rol', property: 'nombre_rol', type: 'text', sortable: true },
     { label: 'Título', property: 'titulo_empl', type: 'text', sortable: true },
     { label: 'RMU', property: 'rmu_empl', type: 'text', sortable: true },

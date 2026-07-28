@@ -55,5 +55,33 @@ export const ListAccesosUsuarioConfig: ITableListConfig = {
       type: 'text',
       sortable: true,
     },
+
+    {
+      label: 'Latitud/Longitud',
+      property: 'lat_long_acce',
+      type: 'text',
+      sortable: true,
+    },
+
+    {
+      label: 'Usuario/Intentado',
+      property: 'usuario_intentado',
+      type: 'text',
+      sortable: true,
+    },
+
+    {
+      label: 'Resultado',
+      property: 'resultado_acce',
+      type: 'text',
+      sortable: true,
+    },
+
+    {
+      label: 'Motivo',
+      property: 'motivo_acce',
+      type: 'text',
+      sortable: true,
+    },
   ],
 };

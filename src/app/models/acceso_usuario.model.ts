@@ -52,4 +52,6 @@ export interface IFiltroAccesoUsuario {
 
   fechaAcceDesde: string;
   fechaAcceHasta: string;
+
+  motivoAcce: string;
 }

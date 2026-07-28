@@ -60,6 +60,8 @@ export default class DetailsComponent {
           segundoNombreEmpl: data.segundo_nombre_empl,
           apellidoMaternoEmpl: data.apellido_materno_empl,
           fechaTerminoEmpl: data.fecha_termino_empl,
+          telefonoEmpl: data.telefono_empl,
+          emailEmpl: data.email_empl,
         };
         this._loadingService.hide();
       },

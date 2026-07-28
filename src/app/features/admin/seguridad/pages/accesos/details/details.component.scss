@@ -41,6 +41,56 @@
   }
 }
 
+.acceso_perfil {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  border-radius: 16px;
+  padding: 30px;
+  margin-bottom: 30px;
+  color: white;
+
+  .avatar {
+    width: 90px;
+    height: 90px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .material-icons {
+      font-size: 50px;
+      color: white;
+    }
+  }
+
+  .acceso_info_principal {
+    flex: 1;
+
+    h3 {
+      margin: 0 0 8px 0;
+      font-size: 1.5rem;
+      font-weight: 600;
+      text-transform: capitalize;
+    }
+
+    .id_acceso {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0;
+      opacity: 0.9;
+      font-size: 1rem;
+
+      .material-icons {
+        font-size: 18px;
+      }
+    }
+  }
+}
+
 .section_title {
   font-size: 1.15rem;
   font-weight: 600;

@@ -30,6 +30,8 @@ export interface IEmpleado {
   segundoNombreEmpl?: string | null;
   apellidoMaternoEmpl?: string | null;
   fechaTerminoEmpl?: string | null;
+  emailEmpl?: string | null;
+  telefonoEmpl?: string | null;
 }
 
 export class CEmpleado implements IEmpleado {
@@ -167,6 +169,8 @@ export interface IEmpleadoResult {
   segundo_nombre_empl: string | null;
   apellido_materno_empl: string | null;
   fecha_termino_empl: string | null;
+  telefono_empl: string | null;
+  email_empl: string | null;
 }
 
 export interface IResultDataEmpleado {
