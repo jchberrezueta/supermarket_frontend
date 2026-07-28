@@ -62,6 +62,27 @@ export const ListCuentasConfig: ITableListConfig = {
     },
 
     {
+      label: 'Intentos/Fallidos',
+      property: 'intentos_fallidos',
+      type: 'text',
+      sortable: true,
+    },
+
+    {
+      label: 'Bloqueado/Hasta',
+      property: 'bloqueado_hasta',
+      type: 'text',
+      sortable: true,
+    },
+
+    {
+      label: 'Ultimo/Acceso',
+      property: 'ultimo_login',
+      type: 'date',
+      sortable: true,
+    },
+
+    {
       label: '',
       property: 'menu',
       type: 'ud',

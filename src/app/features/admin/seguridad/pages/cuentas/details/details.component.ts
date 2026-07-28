@@ -25,6 +25,7 @@ import { AuthService } from '@core/services/auth.service';
 import { forkJoin } from 'rxjs';
 
 import Swal from 'sweetalert2';
+import { UiCardComponent } from '@shared/components/card/card.component';
 
 interface ICuentaView {
   ideCuen: number;
@@ -40,7 +41,12 @@ interface ICuentaView {
 @Component({
   selector: 'app-details',
   standalone: true,
-  imports: [CommonModule, UiTextFieldComponent, UiButtonComponent],
+  imports: [
+    CommonModule,
+    UiTextFieldComponent,
+    UiButtonComponent,
+    UiCardComponent,
+  ],
   templateUrl: './details.component.html',
   styleUrl: './details.component.scss',
 })
