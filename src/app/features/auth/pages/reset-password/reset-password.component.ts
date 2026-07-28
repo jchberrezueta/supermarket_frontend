@@ -6,34 +6,37 @@ import { Component, inject } from '@angular/core';
 
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { MatIconModule } from '@angular/material/icon';
 
 import { AuthService } from '@core/services/auth.service';
 
 @Component({
-  selector: 'app-change-password',
+  selector: 'app-reset-password',
 
   standalone: true,
 
   imports: [CommonModule, ReactiveFormsModule, MatIconModule],
 
-  templateUrl: './change-password.component.html',
+  templateUrl: './reset-password.component.html',
 
-  styleUrl: './change-password.component.scss',
+  styleUrl: '../change-password/change-password.component.scss',
 })
-export default class ChangePasswordComponent {
+export default class ResetPasswordComponent {
   private readonly formBuilder = inject(FormBuilder);
 
   private readonly authService = inject(AuthService);
 
+  private readonly activatedRoute = inject(ActivatedRoute);
+
   private readonly router = inject(Router);
 
-  protected readonly usuario = this.authService.getPendingChangeUser();
+  private readonly token =
+    this.activatedRoute.snapshot.queryParamMap.get('token')?.trim() ?? '';
 
   protected readonly form = this.formBuilder.group({
-    claveNueva: [
+    nuevaClave: [
       '',
       [Validators.required, Validators.minLength(8), Validators.maxLength(100)],
     ],
@@ -52,16 +55,23 @@ export default class ChangePasswordComponent {
   protected successMessage = '';
 
   constructor() {
-    if (!this.authService.getPendingChangeToken()) {
-      void this.router.navigate(['/auth/login'], {
-        replaceUrl: true,
-      });
+    if (!this.token) {
+      this.errorMessage =
+        'El enlace de recuperación no contiene un token válido.';
+
+      this.form.disable();
     }
   }
 
   protected submit(): void {
     this.errorMessage = '';
     this.successMessage = '';
+
+    if (!this.token) {
+      this.errorMessage = 'El enlace de recuperación no es válido.';
+
+      return;
+    }
 
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -71,25 +81,17 @@ export default class ChangePasswordComponent {
       return;
     }
 
-    const { claveNueva, confirmarClave } = this.form.getRawValue();
+    const { nuevaClave, confirmarClave } = this.form.getRawValue();
 
-    if (claveNueva !== confirmarClave) {
+    if (nuevaClave !== confirmarClave) {
       this.errorMessage = 'Las contraseñas no coinciden.';
 
       return;
     }
 
-    if (!this.meetsPasswordPolicy(claveNueva ?? '')) {
+    if (!this.meetsPasswordPolicy(nuevaClave ?? '')) {
       this.errorMessage =
-        'La contraseña debe contener mayúscula, minúscula, número y carácter especial.';
-
-      return;
-    }
-
-    const changeToken = this.authService.getPendingChangeToken();
-
-    if (!changeToken) {
-      this.errorMessage = 'La autorización expiró. Inicia sesión nuevamente.';
+        'La contraseña debe incluir mayúscula, minúscula, número y carácter especial.';
 
       return;
     }
@@ -97,24 +99,20 @@ export default class ChangePasswordComponent {
     this.isSubmitting = true;
 
     this.authService
-      .cambiarClaveObligatoria({
-        changeToken,
-        claveNueva: claveNueva ?? '',
-      })
+      .restablecerPassword(this.token, nuevaClave ?? '')
       .subscribe({
         next: () => {
           this.isSubmitting = false;
 
-          this.authService.clearPendingPasswordChange();
+          this.successMessage = 'La contraseña fue restablecida correctamente.';
 
-          this.successMessage =
-            'Contraseña actualizada correctamente. Serás enviado al inicio de sesión.';
+          this.form.disable();
 
           window.setTimeout(() => {
             void this.router.navigate(['/auth/login'], {
               replaceUrl: true,
             });
-          }, 1200);
+          }, 1400);
         },
 
         error: (error: HttpErrorResponse) => {
@@ -125,12 +123,8 @@ export default class ChangePasswordComponent {
       });
   }
 
-  protected cancel(): void {
-    this.authService.clearPendingPasswordChange();
-
-    void this.router.navigate(['/auth/login'], {
-      replaceUrl: true,
-    });
+  protected volverLogin(): void {
+    void this.router.navigate(['/auth/login']);
   }
 
   private meetsPasswordPolicy(value: string): boolean {
@@ -154,6 +148,6 @@ export default class ChangePasswordComponent {
       return message;
     }
 
-    return 'No fue posible actualizar la contraseña.';
+    return 'El enlace es inválido, expiró o ya fue utilizado.';
   }
 }

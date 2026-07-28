@@ -2,14 +2,14 @@
   <div class="div_card">
     <div class="panel_1">
       <div class="card_form">
-        <form [formGroup]="formData" class="form">
+        <form [formGroup]="formData" class="form" (ngSubmit)="guardar()">
           <div class="div_form">
             <div class="form_info">
               @if (!isAdd) {
                 <div class="form_row">
                   <div class="form_div">
                     <ui-text-field
-                      [label]="'ID'"
+                      label="ID"
                       formControlName="ideCuen"
                       [readonly]="true"
                     />
@@ -18,39 +18,45 @@
                   <div class="form_div"></div>
                 </div>
               }
+
               <div class="form_row">
                 <div class="form_div form_div_1">
                   <ui-combo-box
-                    [label]="'Empleado'"
+                    label="Empleado"
                     [options]="empleados"
                     formControlName="ideEmpl"
                   />
+
                   <ui-text-field
-                    [label]="'Usuario'"
+                    label="Usuario"
                     formControlName="usuarioCuen"
                   />
                 </div>
 
                 <div class="form_div form_div_2">
                   <ui-combo-box
-                    [label]="'Perfil'"
+                    label="Perfil"
                     [options]="perfiles"
                     formControlName="idePerf"
                   />
-                  <ui-text-field
-                    [label]="
-                      isAdd
-                        ? 'Contraseña'
-                        : 'Nueva Contraseña (dejar vacío para mantener)'
-                    "
-                    [valueType]="'password'"
-                    formControlName="passwordCuen"
-                  />
+
+                  @if (isAdd) {
+                    <ui-text-field
+                      label="Contraseña temporal"
+                      valueType="password"
+                      formControlName="passwordCuen"
+                    />
+
+                    <small class="password-help">
+                      Debe contener mayúscula, minúscula, número y carácter
+                      especial. El usuario deberá cambiarla al iniciar sesión.
+                    </small>
+                  }
                 </div>
 
                 <div class="form_div form_div_3">
                   <ui-combo-box
-                    [label]="'Estado'"
+                    label="Estado"
                     [options]="estadosCuenta"
                     formControlName="estadoCuen"
                   />
@@ -64,11 +70,8 @@
               [label]="isAdd ? 'Guardar' : 'Actualizar'"
               (evntClick)="guardar()"
             />
-            <ui-button
-              [label]="'Cancelar'"
-              (evntClick)="cancelar()"
-              [color]="'red'"
-            />
+
+            <ui-button label="Cancelar" color="red" (evntClick)="cancelar()" />
           </div>
         </form>
       </div>

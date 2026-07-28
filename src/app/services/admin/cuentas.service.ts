@@ -1,54 +1,87 @@
 import { inject, Injectable } from '@angular/core';
-import { IResultData } from '@core/models';
+
+import { IResultData, IResultDataCreate } from '@core/models';
+
 import { RestService } from '@core/services/rest.service';
-import { ICuenta, IResultDataCuenta } from '@models';
+
+import { ICreateCuenta, IResultDataCuenta, IUpdateCuenta } from '@models';
+
 import { IComboBoxOption } from '@shared/models/combo_box_option';
+
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CuentasService {
-  private readonly _restService = inject(RestService);
+  private readonly restService = inject(RestService);
+
   private readonly apiUrl = 'cuentas';
 
   public listar(): Observable<IResultDataCuenta> {
-    return this._restService.get<IResultDataCuenta>(`${this.apiUrl}`);
+    return this.restService.get<IResultDataCuenta>(this.apiUrl);
   }
 
   public buscar(id: number): Observable<IResultDataCuenta> {
-    return this._restService.get<IResultDataCuenta>(`${this.apiUrl}/buscar/${id}`);
+    return this.restService.get<IResultDataCuenta>(
+      `${this.apiUrl}/buscar/${id}`,
+    );
   }
 
-  public insertar(body: ICuenta) {
-    return this._restService.post<any>(`${this.apiUrl}/insertar`, body);
+  public insertar(body: ICreateCuenta): Observable<IResultDataCreate> {
+    return this.restService.post<IResultDataCreate>(
+      `${this.apiUrl}/insertar`,
+      body,
+    );
   }
 
-  public actualizar(id: number, body: ICuenta) {
-    return this._restService.put<any>(`${this.apiUrl}/actualizar/${id}`, body);
+  public actualizar(
+    id: number,
+    body: IUpdateCuenta,
+  ): Observable<IResultDataCreate> {
+    return this.restService.put<IResultDataCreate>(
+      `${this.apiUrl}/actualizar/${id}`,
+      body,
+    );
   }
 
-  public eliminar(id: number) {
-    return this._restService.delete<any>(`${this.apiUrl}/eliminar/${id}`);
+  public restablecerClave(
+    id: number,
+    claveTemporal: string,
+  ): Observable<IResultDataCreate> {
+    return this.restService.post<IResultDataCreate>(
+      `${this.apiUrl}/${id}/restablecer-clave`,
+      {
+        claveTemporal,
+      },
+    );
   }
 
-  /**
-   * JOINS
-   */
+  public eliminar(id: number): Observable<IResultDataCreate> {
+    return this.restService.delete<IResultDataCreate>(
+      `${this.apiUrl}/eliminar/${id}`,
+    );
+  }
+
   public listarCuentas(): Observable<IResultData> {
-    return this._restService.get<IResultData>(`${this.apiUrl}/listar/cuentas`);
+    return this.restService.get<IResultData>(`${this.apiUrl}/listar/cuentas`);
   }
 
-  /**
-   * COMBOS
-   */
   public listarComboCuentas(): Observable<IComboBoxOption[]> {
-    return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/combo/cuentas`);
+    return this.restService.get<IComboBoxOption[]>(
+      `${this.apiUrl}/listar/combo/cuentas`,
+    );
   }
+
   public listarComboUsuarios(): Observable<IComboBoxOption[]> {
-    return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/combo/usuarios`);
+    return this.restService.get<IComboBoxOption[]>(
+      `${this.apiUrl}/listar/combo/usuarios`,
+    );
   }
+
   public listarComboEstados(): Observable<IComboBoxOption[]> {
-    return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/combo/estados`);
+    return this.restService.get<IComboBoxOption[]>(
+      `${this.apiUrl}/listar/combo/estados`,
+    );
   }
 }

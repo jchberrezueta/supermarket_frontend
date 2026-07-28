@@ -1,0 +1,171 @@
+<section class="account-security">
+  <header class="page-header">
+    <div>
+      <span class="eyebrow"> Mi cuenta </span>
+
+      <h1>Seguridad de la cuenta</h1>
+
+      <p>
+        Administra la verificación en dos pasos de tu cuenta administrativa.
+      </p>
+    </div>
+
+    <div class="status-badge" [class.enabled]="mfaEnabled">
+      <mat-icon> {{ mfaEnabled ? 'verified_user' : 'gpp_maybe' }} </mat-icon>
+
+      {{ mfaEnabled ? 'MFA activado' : 'MFA desactivado' }}
+    </div>
+  </header>
+
+  @if (isLoading) {
+  <div class="panel loading-panel">Consultando configuración...</div>
+  } @else { @if (errorMessage) {
+  <div class="message error-message">{{ errorMessage }}</div>
+  } @if (successMessage) {
+  <div class="message success-message">{{ successMessage }}</div>
+  } @if (!mfaEnabled && !setup) {
+  <article class="panel">
+    <div class="panel-title">
+      <mat-icon>add_moderator</mat-icon>
+
+      <div>
+        <h2>Activar verificación en dos pasos</h2>
+
+        <p>
+          Necesitarás una aplicación como Google Authenticator, Microsoft
+          Authenticator o Authy.
+        </p>
+      </div>
+    </div>
+
+    <form
+      [formGroup]="generateForm"
+      (ngSubmit)="
+            generateConfiguration()
+          "
+    >
+      <label for="generatePassword"> Confirma tu contraseña actual </label>
+
+      <input
+        id="generatePassword"
+        type="password"
+        formControlName="claveActual"
+        autocomplete="current-password"
+      />
+
+      <button type="submit" class="primary-button" [disabled]="isSubmitting">
+        @if (isSubmitting) { Generando... } @else { Configurar MFA }
+      </button>
+    </form>
+  </article>
+  } @if (!mfaEnabled && setup) {
+  <article class="panel setup-panel">
+    <div class="panel-title">
+      <mat-icon>qr_code_2</mat-icon>
+
+      <div>
+        <h2>Escanea el código QR</h2>
+
+        <p>Después ingresa el código generado por la aplicación.</p>
+      </div>
+    </div>
+
+    <div class="qr-container">
+      <img [src]="setup.qr" alt="Código QR para configurar MFA" />
+
+      <div class="manual-secret">
+        <span> Clave de configuración manual </span>
+
+        <code> {{ setup.secreto }} </code>
+
+        <small>
+          No compartas ni guardes esta clave en capturas públicas.
+        </small>
+      </div>
+    </div>
+
+    <form [formGroup]="activationForm" (ngSubmit)="activateMfa()">
+      <label for="activationCode"> Código de seis dígitos </label>
+
+      <input
+        id="activationCode"
+        class="code-input"
+        type="text"
+        inputmode="numeric"
+        maxlength="6"
+        autocomplete="one-time-code"
+        formControlName="codigo"
+        (input)="
+              normalizeCode(
+                $event,
+                'activation'
+              )
+            "
+      />
+
+      <div class="button-row">
+        <button
+          type="button"
+          class="secondary-button"
+          (click)="cancelSetup()"
+          [disabled]="isSubmitting"
+        >
+          Cancelar
+        </button>
+
+        <button type="submit" class="primary-button" [disabled]="isSubmitting">
+          @if (isSubmitting) { Activando... } @else { Confirmar activación }
+        </button>
+      </div>
+    </form>
+  </article>
+  } @if (mfaEnabled) {
+  <article class="panel danger-panel">
+    <div class="panel-title">
+      <mat-icon>remove_moderator</mat-icon>
+
+      <div>
+        <h2>Desactivar MFA</h2>
+
+        <p>
+          Para confirmar, ingresa tu contraseña actual y un código válido de la
+          aplicación.
+        </p>
+      </div>
+    </div>
+
+    <form [formGroup]="disableForm" (ngSubmit)="disableMfa()">
+      <label for="disablePassword"> Contraseña actual </label>
+
+      <input
+        id="disablePassword"
+        type="password"
+        formControlName="claveActual"
+        autocomplete="current-password"
+      />
+
+      <label for="disableCode"> Código MFA </label>
+
+      <input
+        id="disableCode"
+        class="code-input"
+        type="text"
+        inputmode="numeric"
+        maxlength="6"
+        autocomplete="one-time-code"
+        formControlName="codigo"
+        (input)="
+              normalizeCode(
+                $event,
+                'disable'
+              )
+            "
+      />
+
+      <button type="submit" class="danger-button" [disabled]="isSubmitting">
+        @if (isSubmitting) { Desactivando... } @else { Desactivar MFA }
+      </button>
+    </form>
+  </article>
+  } }
+</section>

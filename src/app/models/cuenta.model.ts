@@ -7,19 +7,35 @@ export enum EnumEstadosCuenta {
 export const ListEstadosCuenta = [
   {
     value: EnumEstadosCuenta.ACTIVO,
-    label: 'activo',
+    label: 'Activo',
   },
   {
     value: EnumEstadosCuenta.INACTIVO,
-    label: 'inactivo',
+    label: 'Inactivo',
   },
   {
     value: EnumEstadosCuenta.BLOQUEADO,
-    label: 'bloqueado',
+    label: 'Bloqueado',
   },
 ];
 
-export interface ICuenta {
+export interface ICreateCuenta {
+  ideEmpl: number;
+  idePerf: number;
+  usuarioCuen: string;
+  passwordCuen: string;
+  estadoCuen: EnumEstadosCuenta;
+}
+
+export interface IUpdateCuenta {
+  ideCuen: number;
+  ideEmpl: number;
+  idePerf: number;
+  usuarioCuen: string;
+  estadoCuen: EnumEstadosCuenta;
+}
+
+export interface ICuentaForm {
   ideCuen: number;
   ideEmpl: number;
   idePerf: number;
@@ -28,68 +44,20 @@ export interface ICuenta {
   estadoCuen: EnumEstadosCuenta;
 }
 
-export class CCuenta implements ICuenta {
-  constructor(
-    private _ideCuen: number,
-    private _ideEmpl: number,
-    private _idePerf: number,
-    private _usuarioCuen: string,
-    private _passwordCuen: string,
-    private _estadoCuen: EnumEstadosCuenta,
-  ) {}
-
-  // --- Getters / Setters ---
-
-  get ideCuen() {
-    return this._ideCuen;
-  }
-  set ideCuen(value: number) {
-    this._ideCuen = value;
-  }
-
-  get ideEmpl() {
-    return this._ideEmpl;
-  }
-  set ideEmpl(value: number) {
-    this._ideEmpl = value;
-  }
-
-  get idePerf() {
-    return this._idePerf;
-  }
-  set idePerf(value: number) {
-    this._idePerf = value;
-  }
-
-  get usuarioCuen() {
-    return this._usuarioCuen;
-  }
-  set usuarioCuen(value: string) {
-    this._usuarioCuen = value;
-  }
-
-  get passwordCuen() {
-    return this._passwordCuen;
-  }
-  set passwordCuen(value: string) {
-    this._passwordCuen = value;
-  }
-
-  get estadoCuen() {
-    return this._estadoCuen;
-  }
-  set estadoCuen(value: EnumEstadosCuenta) {
-    this._estadoCuen = value;
-  }
-}
-
 export interface ICuentaResult {
   ide_cuen: number;
   ide_empl: number;
+  nombre_empleado?: string | null;
   ide_perf: number;
+  nombre_perf?: string | null;
   usuario_cuen: string;
   password_cuen: string;
   estado_cuen: EnumEstadosCuenta;
+  debe_cambiar_clave: boolean;
+  usua_ingre?: string | null;
+  fecha_ingre?: string | Date | null;
+  usua_actua?: string | null;
+  fecha_actua?: string | Date | null;
 }
 
 export interface IResultDataCuenta {
@@ -103,5 +71,6 @@ export interface IFiltroCuenta {
   nombrePerf: string;
   nombreCompletoEmpl: string;
   usuarioCuen: string;
-  estadoCuen: EnumEstadosCuenta;
+  estadoCuen: EnumEstadosCuenta | '';
+  debeCambiarClave?: boolean | '';
 }

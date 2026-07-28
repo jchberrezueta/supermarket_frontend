@@ -4,7 +4,7 @@ export interface IResultData {
 }
 
 export interface IResultDataCreate {
-  p_result: string;
-  p_id: number;
+  p_result: number;
+  p_id?: number;
   p_response: string;
 }

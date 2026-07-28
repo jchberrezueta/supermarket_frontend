@@ -23,7 +23,8 @@ export class UiUserComponent {
 
   protected miProfile(): void {
     this.open = false;
-    this._router.navigate(['/admin']);
+
+    void this._router.navigate(['/admin/mi-cuenta/seguridad']);
   }
 
   protected logout(): void {

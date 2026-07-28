@@ -1,0 +1,55 @@
+<div class="mfa-page">
+  <section class="mfa-card">
+    <div class="mfa-icon">
+      <mat-icon> verified_user </mat-icon>
+    </div>
+
+    <h1>Verificación en dos pasos</h1>
+
+    <p>
+      Abre tu aplicación de autenticación e ingresa el código temporal de seis
+      dígitos.
+    </p>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <label for="codigo"> Código de seguridad </label>
+
+      <input
+        id="codigo"
+        class="code-input"
+        type="text"
+        inputmode="numeric"
+        autocomplete="one-time-code"
+        maxlength="6"
+        formControlName="codigo"
+        (input)="onlyNumbers($event)"
+        autofocus
+      />
+
+      @if (errorMessage) {
+        <div class="error-message">
+          {{ errorMessage }}
+        </div>
+      }
+
+      <div class="actions">
+        <button
+          type="button"
+          class="secondary-button"
+          (click)="cancel()"
+          [disabled]="isSubmitting"
+        >
+          Cancelar
+        </button>
+
+        <button type="submit" class="primary-button" [disabled]="isSubmitting">
+          @if (isSubmitting) {
+            Verificando...
+          } @else {
+            Verificar
+          }
+        </button>
+      </div>
+    </form>
+  </section>
+</div>

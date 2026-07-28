@@ -1,0 +1,114 @@
+.mfa-page {
+  min-height: 100%;
+  display: grid;
+  place-items: center;
+  padding: 2rem 1rem;
+}
+
+.mfa-card {
+  width: min(100%, 430px);
+  padding: 2rem;
+
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  border-radius: 20px;
+
+  background: #fff;
+
+  box-shadow: 0 18px 50px rgba(15, 23, 42, 0.12);
+
+  text-align: center;
+
+  h1 {
+    margin: 0;
+  }
+
+  p {
+    color: #64748b;
+    line-height: 1.5;
+  }
+}
+
+.mfa-icon {
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  margin: 0 auto 1rem;
+
+  border-radius: 50%;
+  background: #e8f7ef;
+  color: #16834b;
+}
+
+form {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+label {
+  font-weight: 600;
+  color: #334155;
+}
+
+.code-input {
+  width: 100%;
+  min-height: 58px;
+  box-sizing: border-box;
+
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 0.7rem;
+  text-align: center;
+
+  &:focus {
+    outline: 3px solid rgba(22, 131, 75, 0.2);
+    border-color: #16834b;
+  }
+}
+
+.error-message {
+  padding: 0.75rem;
+  border-radius: 10px;
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.primary-button,
+.secondary-button {
+  min-height: 42px;
+  padding: 0 1.1rem;
+
+  border-radius: 9px;
+
+  font: inherit;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: wait;
+  }
+}
+
+.primary-button {
+  border: 1px solid #16834b;
+  background: #16834b;
+  color: #fff;
+}
+
+.secondary-button {
+  border: 1px solid #cbd5e1;
+  background: #fff;
+  color: #334155;
+}

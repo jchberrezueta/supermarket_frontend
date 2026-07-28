@@ -7,6 +7,6 @@ export interface IRuta {
   eliminar: boolean;
   activo: boolean;
   nivel: number;
-  padre: number;
-  visible: boolean;
+  padre: number | null;
+  visible?: boolean;
 }

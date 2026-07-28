@@ -108,3 +108,13 @@
   background-image: url("/imgs/img_roles.jpg");
   background-size: cover;
 }
+
+.password-help {
+  display: block;
+  margin-top: -0.5rem;
+
+  color: var(--sm-color-text-muted, #64748b);
+
+  font-size: 0.82rem;
+  line-height: 1.45;
+}

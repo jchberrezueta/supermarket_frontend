@@ -4,3 +4,5 @@ export * from './result_data.model';
 export * from './result_login.model';
 export * from './rutas.model';
 export * from './usuarios.model';
+export * from './result_data.model';
+export * from './auth-security.model';

@@ -73,6 +73,7 @@ export const ListCuentasConfig: ITableListConfig = {
           router: true,
           key: 'ide_cuen',
           color: 'primary',
+          disable: (row) => Number(row['ide_cuen']) === 0,
         },
         {
           action: 'delete',
@@ -80,6 +81,7 @@ export const ListCuentasConfig: ITableListConfig = {
           icon: 'delete',
           key: 'ide_cuen',
           color: 'red',
+          disable: (row) => Number(row['ide_cuen']) === 0,
         },
       ],
     },
