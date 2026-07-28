@@ -1,3 +1,5 @@
+export type ValorPermiso = 'si' | 'no';
+
 export interface IPerfil {
   idePerf: number;
   ideRol: number;
@@ -5,50 +7,25 @@ export interface IPerfil {
   descripcionPerf: string;
 }
 
-export class CPerfil implements IPerfil {
-  constructor(
-    private _idePerf: number,
-    private _ideRol: number,
-    private _nombrePerf: string,
-    private _descripcionPerf: string,
-  ) {}
+export interface ICreatePerfil {
+  ideRol: number;
+  nombrePerf: string;
+  descripcionPerf: string;
+}
 
-  // --- Getters / Setters ---
-
-  get idePerf() {
-    return this._idePerf;
-  }
-  set idePerf(value: number) {
-    this._idePerf = value;
-  }
-
-  get ideRol() {
-    return this._ideRol;
-  }
-  set ideRol(value: number) {
-    this._ideRol = value;
-  }
-
-  get nombrePerf() {
-    return this._nombrePerf;
-  }
-  set nombrePerf(value: string) {
-    this._nombrePerf = value;
-  }
-
-  get descripcionPerf() {
-    return this._descripcionPerf;
-  }
-  set descripcionPerf(value: string) {
-    this._descripcionPerf = value;
-  }
+export interface IUpdatePerfil {
+  idePerf: number;
+  ideRol: number;
+  nombrePerf: string;
+  descripcionPerf: string;
 }
 
 export interface IPerfilResult {
   ide_perf: number;
   ide_rol: number;
+  nombre_rol?: string | null;
   nombre_perf: string;
-  descripcion_perf: string;
+  descripcion_perf: string | null;
 }
 
 export interface IResultDataPerfil {
@@ -61,4 +38,60 @@ export interface IFiltroPerfil {
   nombreRol: string;
   nombrePerf: string;
   descripcionPerf: string;
+}
+
+export interface IPerfilPermisosInfo {
+  ide_perf: number;
+  nombre_perf: string;
+  descripcion_perf: string | null;
+}
+
+export interface IPermisoPerfilOpcion {
+  ide_perf_opci: number | null;
+
+  ide_opci: number;
+  nombre_opci: string;
+  ruta_opci: string;
+
+  descripcion_opci: string | null;
+
+  activo_opci: 'si' | 'no';
+
+  visible_opci: boolean;
+  nivel_opci: number;
+
+  padre_opci: number | null;
+
+  icono_opci: string | null;
+
+  asignado: boolean;
+
+  listar: ValorPermiso;
+  insertar: ValorPermiso;
+  modificar: ValorPermiso;
+  eliminar: ValorPermiso;
+}
+
+export interface IPerfilPermisosResponse {
+  success: boolean;
+
+  data: {
+    perfil: IPerfilPermisosInfo;
+
+    permisos: IPermisoPerfilOpcion[];
+  };
+
+  response: string;
+}
+
+export interface IGuardarPermisoPerfil {
+  ideOpci: number;
+  listar: ValorPermiso;
+  insertar: ValorPermiso;
+  modificar: ValorPermiso;
+  eliminar: ValorPermiso;
+}
+
+export interface IGuardarPermisosPerfilRequest {
+  permisos: IGuardarPermisoPerfil[];
 }

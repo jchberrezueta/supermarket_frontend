@@ -2,45 +2,52 @@
   <div class="div_card">
     <div class="panel_1">
       <div class="card_form">
-        <form [formGroup]="formData" class="form">
+        <form [formGroup]="formData" class="form" (ngSubmit)="guardar()">
           @if (!isAdd) {
             <div class="div_id">
               <ui-text-field
-                [label]="'ID'"
+                label="ID"
                 formControlName="ideOpci"
                 [readonly]="true"
               />
+
               <div class="input_falso"></div>
             </div>
           }
 
           <div class="form_info">
-            <ui-text-field [label]="'Nombre'" formControlName="nombreOpci" />
+            <ui-text-field label="Nombre" formControlName="nombreOpci" />
 
-            <ui-text-field [label]="'Ruta'" formControlName="rutaOpci" />
+            <ui-text-field label="Ruta Angular" formControlName="rutaOpci" />
 
             <ui-text-field
-              [label]="'Nivel'"
-              [valueType]="'number'"
+              label="Nivel"
+              valueType="number"
               formControlName="nivelOpci"
             />
 
-            <ui-text-field
-              [label]="'Padre (ID)'"
-              [valueType]="'number'"
+            <ui-combo-box
+              label="Opción padre"
+              [options]="opcionesPadre"
               formControlName="padreOpci"
             />
 
-            <ui-text-field [label]="'Icono'" formControlName="iconoOpci" />
+            <ui-text-field label="Icono Material" formControlName="iconoOpci" />
 
             <ui-combo-box
-              [label]="'Estado'"
+              label="Estado"
               [options]="estadosOptions"
               formControlName="activoOpci"
             />
 
+            <ui-combo-box
+              label="Visibilidad"
+              [options]="visibilidadOptions"
+              formControlName="visibleOpci"
+            />
+
             <ui-text-area
-              [label]="'Descripción'"
+              label="Descripción"
               formControlName="descripcionOpci"
             />
           </div>
@@ -50,11 +57,8 @@
               [label]="isAdd ? 'Guardar' : 'Actualizar'"
               (evntClick)="guardar()"
             />
-            <ui-button
-              [label]="'Cancelar'"
-              [color]="'red'"
-              (evntClick)="cancelar()"
-            />
+
+            <ui-button label="Cancelar" color="red" (evntClick)="cancelar()" />
           </div>
         </form>
       </div>

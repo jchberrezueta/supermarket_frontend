@@ -35,6 +35,9 @@ export const canMatchPermisoGuard: CanMatchFn = (route, segments) => {
   if (route.path === 'insert') return authService.canInsert(rutaActual);
   if (route.path === 'details/:id') return authService.canList(rutaActual);
   if (route.path === 'update/:id') return authService.canUpdate(rutaActual);
+  if (route.path === 'permissions/:id') {
+    return authService.canUpdate(rutaActual);
+  }
   // debes poder todo para hacer algo extra sobre un item :)
   if (route.path?.includes('/:id')) return authService.canAll(rutaActual);
 

@@ -1,0 +1,195 @@
+<div class="permissions-page">
+  <header class="permissions-header">
+    <div>
+      <span class="eyebrow"> Seguridad </span>
+
+      <h2>Permisos del perfil</h2>
+
+      <p>
+        @if (perfil) {
+          <strong>
+            {{ perfil.nombre_perf }}
+          </strong>
+
+          @if (perfil.descripcion_perf) {
+            —
+            {{ perfil.descripcion_perf }}
+          }
+        }
+      </p>
+    </div>
+
+    <div class="header-actions">
+      <ui-button label="Volver" icon="arrow_back" (evntClick)="back()" />
+
+      @if (!isAdministrator) {
+        <ui-button
+          label="Guardar permisos"
+          icon="save"
+          color="success"
+          (evntClick)="save()"
+        />
+      }
+    </div>
+  </header>
+
+  @if (isAdministrator) {
+    <div class="administrator-notice">
+      <mat-icon> verified_user </mat-icon>
+
+      <div>
+        <strong> Perfil administrador principal </strong>
+
+        <span>
+          Este perfil conserva acceso completo a todas las opciones. Los
+          permisos se muestran en modo de consulta.
+        </span>
+      </div>
+    </div>
+  }
+
+  <section class="permissions-toolbar">
+    <div class="search-field">
+      <mat-icon>search</mat-icon>
+
+      <input
+        type="search"
+        placeholder="Buscar opción, descripción o ruta"
+        [value]="search"
+        (input)="updateSearch($event)"
+      />
+    </div>
+
+    @if (!isAdministrator) {
+      <div class="bulk-actions">
+        <button
+          type="button"
+          class="secondary-action"
+          (click)="selectAllRead()"
+        >
+          <mat-icon> done_all </mat-icon>
+
+          Marcar lectura
+        </button>
+
+        <button type="button" class="clear-action" (click)="clearAll()">
+          <mat-icon> remove_done </mat-icon>
+
+          Limpiar
+        </button>
+      </div>
+    }
+  </section>
+
+  <section class="permissions-card">
+    <div class="permissions-table">
+      <div class="permission-row table-header">
+        <div class="option-column">Opción</div>
+
+        <div class="permission-column">Asignado</div>
+
+        <div class="permission-column">Listar</div>
+
+        <div class="permission-column">Insertar</div>
+
+        <div class="permission-column">Modificar</div>
+
+        <div class="permission-column">Eliminar</div>
+      </div>
+
+      @for (permission of filteredPermissions; track permission.ide_opci) {
+        <div
+          class="permission-row"
+          [class.inactive-option]="permission.activo_opci === 'no'"
+        >
+          <div
+            class="option-column"
+            [style.padding-left]="optionIndent(permission)"
+          >
+            <div class="option-icon">
+              <mat-icon>
+                {{ permission.icono_opci || "radio_button_checked" }}
+              </mat-icon>
+            </div>
+
+            <div class="option-information">
+              <div class="option-name">
+                {{ permission.nombre_opci }}
+
+                @if (permission.activo_opci === "no") {
+                  <span class="inactive-badge"> Inactiva </span>
+                }
+              </div>
+
+              <div class="option-route">
+                {{ permission.ruta_opci }}
+              </div>
+
+              @if (permission.descripcion_opci) {
+                <div class="option-description">
+                  {{ permission.descripcion_opci }}
+                </div>
+              }
+            </div>
+          </div>
+
+          <div class="permission-column">
+            <input
+              type="checkbox"
+              [checked]="hasAnyPermission(permission)"
+              [disabled]="isAdministrator || permission.activo_opci === 'no'"
+              (change)="toggleAssigned(permission)"
+              aria-label="Asignar opción"
+            />
+          </div>
+
+          <div class="permission-column">
+            <input
+              type="checkbox"
+              [checked]="permission.listarActivo"
+              [disabled]="isAdministrator || permission.activo_opci === 'no'"
+              (change)="toggleAction(permission, 'listar', $event)"
+              aria-label="Permiso listar"
+            />
+          </div>
+
+          <div class="permission-column">
+            <input
+              type="checkbox"
+              [checked]="permission.insertarActivo"
+              [disabled]="isAdministrator || permission.activo_opci === 'no'"
+              (change)="toggleAction(permission, 'insertar', $event)"
+              aria-label="Permiso insertar"
+            />
+          </div>
+
+          <div class="permission-column">
+            <input
+              type="checkbox"
+              [checked]="permission.modificarActivo"
+              [disabled]="isAdministrator || permission.activo_opci === 'no'"
+              (change)="toggleAction(permission, 'modificar', $event)"
+              aria-label="Permiso modificar"
+            />
+          </div>
+
+          <div class="permission-column">
+            <input
+              type="checkbox"
+              [checked]="permission.eliminarActivo"
+              [disabled]="isAdministrator || permission.activo_opci === 'no'"
+              (change)="toggleAction(permission, 'eliminar', $event)"
+              aria-label="Permiso eliminar"
+            />
+          </div>
+        </div>
+      } @empty {
+        <div class="empty-state">
+          <mat-icon> search_off </mat-icon>
+
+          <span> No se encontraron opciones. </span>
+        </div>
+      }
+    </div>
+  </section>
+</div>

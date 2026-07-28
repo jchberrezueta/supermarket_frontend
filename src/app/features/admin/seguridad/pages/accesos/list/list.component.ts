@@ -1,14 +1,27 @@
 import { Component, inject, viewChild } from '@angular/core';
+
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+
 import { FormGroupOf } from '@core/utils/utilities';
-import { AccesosService, CuentasService } from '@services/index';
+
+import { IFiltroAccesoUsuario, ListResultadosAcceso } from '@models';
+
+import { AccesosService } from '@services/index';
+
 import { UiButtonComponent } from '@shared/components/button/button.component';
+
 import { UiCardComponent } from '@shared/components/card/card.component';
+
+import { UiComboBoxComponent } from '@shared/components/combo-box/combo-box.component';
+
 import { UiDatetimePickerComponent } from '@shared/components/datetime-picker/datetime-picker.component';
+
 import { UiInputBoxComponent } from '@shared/components/input-box/input-box.component';
+
 import { UiTableListComponent } from '@shared/components/index';
+
 import { IComboBoxOption } from '@shared/models/combo_box_option';
-import { IFiltroAccesoUsuario } from 'app/models';
+
 import { ListAccesosUsuarioConfig } from './list_accesos.config';
 
 const IMPORTS = [
@@ -17,6 +30,7 @@ const IMPORTS = [
   UiCardComponent,
   ReactiveFormsModule,
   UiInputBoxComponent,
+  UiComboBoxComponent,
   UiDatetimePickerComponent,
 ];
 
@@ -26,21 +40,27 @@ type FilterAccesoUsuarioFormGroup = FormGroupOf<IFiltroAccesoUsuario>;
   selector: 'app-list',
   standalone: true,
   imports: IMPORTS,
+
   templateUrl: './list.component.html',
+
   styleUrl: './list.component.scss',
 })
 export default class ListComponent {
-  private readonly _tableList =
+  private readonly tableList =
     viewChild.required<UiTableListComponent>(UiTableListComponent);
 
-  private readonly _accesosService = inject(AccesosService);
-  private readonly _cuentasService = inject(CuentasService);
+  private readonly accesosService = inject(AccesosService);
+
   private readonly formBuilder = inject(FormBuilder);
 
   protected readonly config = ListAccesosUsuarioConfig;
 
+  protected readonly resultados = ListResultadosAcceso;
+
   protected opcionesCuentas: IComboBoxOption[] = [];
+
   protected opcionesIps: IComboBoxOption[] = [];
+
   protected opcionesNavegadores: IComboBoxOption[] = [];
 
   protected formData!: FilterAccesoUsuarioFormGroup;
@@ -56,38 +76,50 @@ export default class ListComponent {
 
   protected configForm(): void {
     this.formData = this.formBuilder.group({
-      ideCuen: ['', [], []],
-      usuarioCuen: ['', [], []],
-      ipAcce: ['', [], []],
-      navegadorAcce: ['', [], []],
-      fechaAcceDesde: ['', [], []],
-      fechaAcceHasta: ['', [], []],
+      ideCuen: [''],
+
+      usuarioCuen: [''],
+
+      ipAcce: [''],
+
+      navegadorAcce: [''],
+
+      resultadoAcce: [''],
+
+      fechaAcceDesde: [''],
+
+      fechaAcceHasta: [''],
     }) as FilterAccesoUsuarioFormGroup;
 
     this.initialFormValue = this.formData.getRawValue();
   }
 
   private loadComboCuentas(): void {
-    this._cuentasService.listarComboCuentas().subscribe((res) => {
-      this.opcionesCuentas = res ?? [];
+    this.accesosService.listarComboCuentas().subscribe({
+      next: (response) => {
+        this.opcionesCuentas = response ?? [];
+      },
     });
   }
 
   private loadComboIps(): void {
-    this._accesosService.listarComboIps().subscribe((res) => {
-      this.opcionesIps = res ?? [];
+    this.accesosService.listarComboIps().subscribe({
+      next: (response) => {
+        this.opcionesIps = response ?? [];
+      },
     });
   }
 
   private loadComboNavegador(): void {
-    this._accesosService.listarComboNavegador().subscribe((res) => {
-      this.opcionesNavegadores = res ?? [];
+    this.accesosService.listarComboNavegador().subscribe({
+      next: (response) => {
+        this.opcionesNavegadores = response ?? [];
+      },
     });
   }
 
   protected filtrar(): void {
-    const tableListInstance = this._tableList();
-    tableListInstance.filterData(this.getParams());
+    this.tableList().filterData(this.getParams());
   }
 
   protected refreshData(actionClick: string): void {
@@ -95,8 +127,8 @@ export default class ListComponent {
       return;
     }
 
-    const tableListInstance = this._tableList();
-    tableListInstance.refreshData();
+    this.tableList().refreshData();
+
     this.resetForm();
   }
 
@@ -106,17 +138,22 @@ export default class ListComponent {
 
   private getParams(): URLSearchParams {
     const params = new URLSearchParams();
-    const filtro = this.formData.value as IFiltroAccesoUsuario;
 
-    this.appendParam(params, 'ideCuen', filtro.ideCuen);
-    this.appendParam(params, 'usuarioCuen', filtro.usuarioCuen);
-    this.appendParam(params, 'ipAcce', filtro.ipAcce);
-    this.appendParam(params, 'navegadorAcce', filtro.navegadorAcce);
-    this.appendParam(params, 'fechaAcceDesde', filtro.fechaAcceDesde);
+    const filter = this.formData.getRawValue();
 
-    const fechaHasta = filtro.fechaAcceHasta
-      ? filtro.fechaAcceHasta.replace(/T\d{2}:\d{2}(:\d{2})?/, 'T23:59:59')
-      : filtro.fechaAcceHasta;
+    this.appendParam(params, 'usuarioCuen', filter.usuarioCuen);
+
+    this.appendParam(params, 'ipAcce', filter.ipAcce);
+
+    this.appendParam(params, 'navegadorAcce', filter.navegadorAcce);
+
+    this.appendParam(params, 'resultadoAcce', filter.resultadoAcce);
+
+    this.appendParam(params, 'fechaAcceDesde', filter.fechaAcceDesde);
+
+    const fechaHasta = filter.fechaAcceHasta
+      ? filter.fechaAcceHasta.replace(/T\d{2}:\d{2}(:\d{2})?/, 'T23:59:59')
+      : '';
 
     this.appendParam(params, 'fechaAcceHasta', fechaHasta);
 
@@ -125,6 +162,7 @@ export default class ListComponent {
 
   private appendParam(
     params: URLSearchParams,
+
     key: string,
     value: unknown,
   ): void {
@@ -134,7 +172,7 @@ export default class ListComponent {
 
     const stringValue = String(value).trim();
 
-    if (stringValue === '') {
+    if (!stringValue) {
       return;
     }
 

@@ -9,6 +9,12 @@ import { UiTableListComponent } from '@shared/components/index';
 import { IComboBoxOption } from '@shared/models/combo_box_option';
 import { IFiltroPerfil } from 'app/models';
 import { ListPerfilesConfig } from './list_perfiles.config';
+import { Router } from '@angular/router';
+
+import { AuthService } from '@core/services/auth.service';
+
+import { TableRow } from '@shared/models/button_item.model';
+import Swal from 'sweetalert2';
 
 const IMPORTS = [
   UiTableListComponent,
@@ -44,6 +50,10 @@ export default class ListComponent {
   protected formData!: FilterPerfilFormGroup;
 
   private initialFormValue!: IFiltroPerfil;
+
+  private readonly router = inject(Router);
+
+  private readonly authService = inject(AuthService);
 
   constructor() {
     this.configForm();
@@ -109,6 +119,31 @@ export default class ListComponent {
     this.appendParam(params, 'descripcionPerf', filtro.descripcionPerf);
 
     return params;
+  }
+
+  protected handleTableAction(event: { action: string; row: TableRow }): void {
+    if (event.action !== 'permissions') {
+      return;
+    }
+
+    if (!this.authService.canUpdate('/admin/seguridad/perfiles')) {
+      void Swal.fire({
+        icon: 'warning',
+        title: 'Acceso restringido',
+
+        text: 'No tienes permiso para modificar los permisos del perfil.',
+      });
+
+      return;
+    }
+
+    const id = Number(event.row['ide_perf']);
+
+    if (!Number.isInteger(id) || id < 0) {
+      return;
+    }
+
+    void this.router.navigate(['/admin/seguridad/perfiles/permissions', id]);
   }
 
   private appendParam(

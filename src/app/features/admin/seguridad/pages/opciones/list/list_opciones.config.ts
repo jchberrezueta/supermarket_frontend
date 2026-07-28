@@ -1,80 +1,101 @@
-import { ITableListConfig } from "@shared/models/table-list.model";
+import { ITableListConfig } from '@shared/models/table-list.model';
 
 export const ListOpcionesConfig: ITableListConfig = {
   dataKey: 'ide_opci',
+
   columns: [
     {
       label: 'Detalles',
       property: 'view_details',
       type: 'details',
+
       buttonItems: [
         {
           action: 'details',
-          label: 'Ver Detalles',
+          label: 'Ver detalles',
+          tooltip: 'Consultar la opción',
           icon: 'visibility',
           router: true,
           key: 'ide_opci',
-          color: 'purple'
-        }
-      ]
+          color: 'purple',
+        },
+      ],
     },
 
-    { 
-      label: 'Nombre', 
-      property: 'nombre_opci', 
-      type: 'text', 
-      sortable: true 
+    {
+      label: 'ID',
+      property: 'ide_opci',
+      type: 'text',
+      sortable: true,
     },
 
-    { 
-      label: 'Ruta', 
-      property: 'ruta_opci', 
-      type: 'text', 
-      sortable: true 
+    {
+      label: 'Nombre',
+      property: 'nombre_opci',
+      type: 'text',
+      sortable: true,
     },
 
-    { 
-      label: 'Nivel', 
-      property: 'nivel_opci', 
-      type: 'text', 
-      sortable: true 
+    {
+      label: 'Ruta',
+      property: 'ruta_opci',
+      type: 'textTruncate',
+      sortable: true,
     },
 
-    { 
-      label: 'Estado', 
-      property: 'activo_opci', 
-      type: 'badge',
-      sortable: true 
+    {
+      label: 'Nivel',
+      property: 'nivel_opci',
+      type: 'text',
+      sortable: true,
     },
 
-    { 
-      label: 'Descripción', 
-      property: 'descripcion_opci', 
-      type: 'text', 
-      sortable: true 
+    {
+      label: 'Estado',
+      property: 'activo_opci',
+      type: 'boolean',
+      sortable: true,
+    },
+
+    {
+      label: 'Visible',
+      property: 'visible_opci',
+      type: 'boolean',
+      sortable: true,
+    },
+
+    {
+      label: 'Descripción',
+      property: 'descripcion_opci',
+      type: 'textTruncate',
+      sortable: true,
     },
 
     {
       label: '',
       property: 'menu',
       type: 'ud',
+
       buttonItems: [
         {
           action: 'update',
           label: 'Editar',
+          tooltip: 'Editar opción',
           icon: 'edit',
           router: true,
           key: 'ide_opci',
-          color: 'primary'
+          color: 'primary',
         },
+
         {
           action: 'delete',
           label: 'Eliminar',
+          tooltip: 'Eliminar opción',
           icon: 'delete',
           key: 'ide_opci',
-          color: 'red'
-        }
-      ]
-    }
-  ]
+          color: 'red',
+        },
+      ],
+    },
+  ],
 };

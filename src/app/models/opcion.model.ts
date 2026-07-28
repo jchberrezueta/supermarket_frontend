@@ -1,118 +1,92 @@
 export enum EnumEstadosOpcion {
-    SI = 'si',
-    no = 'no'
+  SI = 'si',
+  NO = 'no',
 }
 
 export const ListEstadosOpcion = [
-    { value: 'si', label: 'Activo' },
-    { value: 'no', label: 'Inactivo' }
+  {
+    value: EnumEstadosOpcion.SI,
+    label: 'Activo',
+  },
+  {
+    value: EnumEstadosOpcion.NO,
+    label: 'Inactivo',
+  },
 ];
 
-export interface IOpciones {
-    ideOpci: number;
-    nombreOpci: string;
-    rutaOpci: string;
-    nivelOpci: number;
-    padreOpci?: number | null;
-    iconoOpci?: string | null;
-    activoOpci: EnumEstadosOpcion;
-    descripcionOpci: string;
+export const ListVisibilidadOpcion = [
+  {
+    value: true,
+    label: 'Visible en el menú',
+  },
+  {
+    value: false,
+    label: 'Oculta en el menú',
+  },
+];
+
+export interface IOpcionForm {
+  ideOpci: number;
+  nombreOpci: string;
+  rutaOpci: string;
+  activoOpci: EnumEstadosOpcion;
+  descripcionOpci: string;
+  nivelOpci: number;
+  padreOpci: number | null;
+  iconoOpci: string;
+  visibleOpci: boolean;
 }
 
-export class COpciones implements IOpciones {
-
-    constructor(
-        private _ideOpci: number,
-        private _nombreOpci: string,
-        private _rutaOpci: string,
-        private _activoOpci: EnumEstadosOpcion,
-        private _descripcionOpci: string,
-        private _nivelOpci: number,
-        private _padreOpci?: number | null,
-        private _iconoOpci?: string | null
-    ) {}
-
-    // --- Getters / Setters ---
-
-    get ideOpci() {
-        return this._ideOpci;
-    }
-    set ideOpci(value: number) {
-        this._ideOpci = value;
-    }
-
-    get nombreOpci() {
-        return this._nombreOpci;
-    }
-    set nombreOpci(value: string) {
-        this._nombreOpci = value;
-    }
-
-    get rutaOpci() {
-        return this._rutaOpci;
-    }
-    set rutaOpci(value: string) {
-        this._rutaOpci = value;
-    }
-
-    get activoOpci() {
-        return this._activoOpci;
-    }
-    set activoOpci(value: EnumEstadosOpcion) {
-        this._activoOpci = value;
-    }
-
-    get descripcionOpci() {
-        return this._descripcionOpci;
-    }
-    set descripcionOpci(value: string) {
-        this._descripcionOpci = value;
-    }
-
-    get nivelOpci() {
-        return this._nivelOpci;
-    }
-    set nivelOpci(value: number) {
-        this._nivelOpci = value;
-    }
-
-    get padreOpci() {
-        return this._padreOpci;
-    }
-    set padreOpci(value: number | null | undefined) {
-        this._padreOpci = value;
-    }
-
-    get iconoOpci() {
-        return this._iconoOpci;
-    }
-    set iconoOpci(value: string | null | undefined) {
-        this._iconoOpci = value;
-    }
+export interface ICreateOpcion {
+  nombreOpci: string;
+  rutaOpci: string;
+  activoOpci: EnumEstadosOpcion;
+  descripcionOpci: string | null;
+  nivelOpci: number;
+  padreOpci: number | null;
+  iconoOpci: string | null;
+  visibleOpci: boolean;
 }
 
-export interface IOpcionesResult {
-    ide_opci: number;
-    nombre_opci: string;
-    ruta_opci: string;
-    activo_opci: EnumEstadosOpcion;
-    descripcion_opci: string;
-    nivel_opci: number;
-    padre_opci: number | null;
-    icono_opci: string | null;
+export interface IUpdateOpcion extends ICreateOpcion {
+  ideOpci: number;
+}
+
+export interface IOpcionResult {
+  ide_opci: number;
+  nombre_opci: string;
+  ruta_opci: string;
+  activo_opci: EnumEstadosOpcion;
+
+  descripcion_opci: string | null;
+
+  nivel_opci: number;
+
+  padre_opci: number | null;
+
+  icono_opci: string | null;
+
+  visible_opci: boolean;
+
+  usua_ingre?: string | null;
+  fecha_ingre?: string | Date | null;
+  usua_actua?: string | null;
+  fecha_actua?: string | Date | null;
 }
 
 export interface IResultDataOpciones {
-  data: IOpcionesResult[];
+  data: IOpcionResult[];
   response: string;
 }
 
 export interface IFiltroOpciones {
-    ideOpci: number;
-    nombreOpci: string;
-    rutaOpci: string;
-    activoOpci: EnumEstadosOpcion;
-    nivelOpci: number;
-    padreOpci: number;
-    iconoOpci: string;
+  ideOpci: number;
+  nombreOpci: string;
+  rutaOpci: string;
+
+  activoOpci: EnumEstadosOpcion | '';
+
+  nivelOpci: number;
+  padreOpci: number;
+  iconoOpci: string;
 }

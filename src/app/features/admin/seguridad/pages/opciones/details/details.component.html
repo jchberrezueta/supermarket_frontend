@@ -1,10 +1,7 @@
 <div class="details-container">
   <div class="details-header">
     <h2>Detalles de la Opción</h2>
-    <ui-button
-      label="Volver"
-      icon="arrow_back"
-      (evntClick)="goBack()">
+    <ui-button label="Volver" icon="arrow_back" (evntClick)="goBack()">
     </ui-button>
   </div>
 
@@ -13,58 +10,80 @@
       <div class="form-row">
         <ui-text-field
           label="ID"
-          [value]="opcion.ideOpci.toString()"
-          [disabled]="true">
+          [value]="opcion.ide_opci.toString()"
+          [disabled]="true"
+        >
         </ui-text-field>
 
         <ui-text-field
           label="Nombre"
-          [value]="opcion.nombreOpci"
-          [disabled]="true">
+          [value]="opcion.nombre_opci"
+          [disabled]="true"
+        >
         </ui-text-field>
       </div>
 
       <div class="form-row">
         <ui-text-field
           label="Ruta"
-          [value]="opcion.rutaOpci"
-          [disabled]="true">
+          [value]="opcion.ruta_opci"
+          [disabled]="true"
+        >
         </ui-text-field>
 
         <ui-text-field
           label="Nivel"
-          [value]="opcion.nivelOpci.toString()"
-          [disabled]="true">
+          [value]="opcion.nivel_opci.toString()"
+          [disabled]="true"
+        >
         </ui-text-field>
       </div>
 
       <div class="form-row">
         <ui-text-field
           label="Padre (ID)"
-          [value]="opcion.padreOpci?.toString() ?? 'Ninguno'"
-          [disabled]="true">
+          [value]="opcion.padre_opci?.toString() ?? 'Ninguno'"
+          [disabled]="true"
+        >
         </ui-text-field>
 
         <ui-text-field
           label="Icono"
-          [value]="opcion.iconoOpci ?? 'Ninguno'"
-          [disabled]="true">
+          [value]="opcion.icono_opci ?? 'Ninguno'"
+          [disabled]="true"
+        >
         </ui-text-field>
       </div>
 
       <div class="form-row">
         <ui-text-field
           label="Estado"
-          [value]="opcion.activoOpci === 'si' ? 'Activo' : 'Inactivo'"
-          [disabled]="true">
+          [value]="opcion.activo_opci === 'si' ? 'Activo' : 'Inactivo'"
+          [disabled]="true"
+        >
         </ui-text-field>
+      </div>
+
+      <div class="form-row">
+        <ui-text-field
+          label="Estado"
+          [value]="opcion.activo_opci === 'si' ? 'Activo' : 'Inactivo'"
+          [disabled]="true"
+        />
+
+        <ui-text-field
+          label="Visible en menú"
+          [value]="opcion.visible_opci ? 'Sí' : 'No'"
+          [disabled]="true"
+        />
       </div>
 
       <div class="form-row full-width">
         <ui-text-area
           label="Descripción"
-          [value]="opcion.descripcionOpci"
-          [disabled]="true">
+          [value]="opcion.descripcion_opci"
+          [disabled]="true"
+        >
         </ui-text-area>
       </div>
     </div>

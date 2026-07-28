@@ -56,6 +56,7 @@
         [serviceApiFilter]="'perfiles/filtrar'"
         [serviceApiReal]="'perfiles'"
         [columns]="config.columns"
+        (actionClick)="handleTableAction($event)"
       />
     </div>
   </ui-card>
