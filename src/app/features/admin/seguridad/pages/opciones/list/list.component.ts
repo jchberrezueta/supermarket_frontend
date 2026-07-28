@@ -42,6 +42,9 @@ export default class ListComponent {
   protected opcionesRutas: IComboBoxOption[] = [];
   protected opcionesActividad: IComboBoxOption[] = [];
 
+  protected opcionesNiveles: IComboBoxOption[] = [];
+  protected opcionesPadres: IComboBoxOption[] = [];
+
   protected formData!: FilterOpcionFormGroup;
 
   private initialFormValue!: IFiltroOpciones;
@@ -51,6 +54,8 @@ export default class ListComponent {
     this.loadComboEstados();
     this.loadComboNombres();
     this.loadComboRutas();
+    this.loadComboNiveles();
+    this.loadComboPadres();
   }
 
   protected configForm(): void {
@@ -76,6 +81,17 @@ export default class ListComponent {
   private loadComboRutas(): void {
     this._opcionesService.listarComboRutas().subscribe((res) => {
       this.opcionesRutas = res ?? [];
+    });
+  }
+  private loadComboNiveles(): void {
+    this._opcionesService.listarComboNiveles().subscribe((res) => {
+      this.opcionesNiveles = res ?? [];
+    });
+  }
+
+  private loadComboPadres(): void {
+    this._opcionesService.listarComboPadres().subscribe((res) => {
+      this.opcionesPadres = res ?? [];
     });
   }
 

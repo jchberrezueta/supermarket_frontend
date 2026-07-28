@@ -51,6 +51,13 @@ export const ListOpcionesConfig: ITableListConfig = {
     },
 
     {
+      label: 'Padre',
+      property: 'padre_opci',
+      type: 'text',
+      sortable: true,
+    },
+
+    {
       label: 'Estado',
       property: 'activo_opci',
       type: 'boolean',
@@ -68,6 +75,13 @@ export const ListOpcionesConfig: ITableListConfig = {
       label: 'Descripción',
       property: 'descripcion_opci',
       type: 'textTruncate',
+      sortable: true,
+    },
+
+    {
+      label: 'Icono',
+      property: 'icono_opci',
+      type: 'icon',
       sortable: true,
     },
 

@@ -63,6 +63,18 @@ export class OpcionesService {
     );
   }
 
+  public listarComboNiveles(): Observable<IComboBoxOption[]> {
+    return this.restService.get<IComboBoxOption[]>(
+      `${this.apiUrl}/listar/combo/niveles`,
+    );
+  }
+
+  public listarComboPadres(): Observable<IComboBoxOption[]> {
+    return this.restService.get<IComboBoxOption[]>(
+      `${this.apiUrl}/listar/combo/padres`,
+    );
+  }
+
   public listarComboEstados(): Observable<IComboBoxOption[]> {
     return this.restService.get<IComboBoxOption[]>(
       `${this.apiUrl}/listar/combo/estados`,

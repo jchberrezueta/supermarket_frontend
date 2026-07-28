@@ -11,14 +11,14 @@
         <ui-text-field
           label="ID"
           [value]="opcion.ide_opci.toString()"
-          [disabled]="true"
+          [readonly]="true"
         >
         </ui-text-field>
 
         <ui-text-field
           label="Nombre"
           [value]="opcion.nombre_opci"
-          [disabled]="true"
+          [readonly]="true"
         >
         </ui-text-field>
       </div>
@@ -27,14 +27,14 @@
         <ui-text-field
           label="Ruta"
           [value]="opcion.ruta_opci"
-          [disabled]="true"
+          [readonly]="true"
         >
         </ui-text-field>
 
         <ui-text-field
           label="Nivel"
           [value]="opcion.nivel_opci.toString()"
-          [disabled]="true"
+          [readonly]="true"
         >
         </ui-text-field>
       </div>
@@ -43,14 +43,14 @@
         <ui-text-field
           label="Padre (ID)"
           [value]="opcion.padre_opci?.toString() ?? 'Ninguno'"
-          [disabled]="true"
+          [readonly]="true"
         >
         </ui-text-field>
 
         <ui-text-field
           label="Icono"
           [value]="opcion.icono_opci ?? 'Ninguno'"
-          [disabled]="true"
+          [readonly]="true"
         >
         </ui-text-field>
       </div>
@@ -59,7 +59,7 @@
         <ui-text-field
           label="Estado"
           [value]="opcion.activo_opci === 'si' ? 'Activo' : 'Inactivo'"
-          [disabled]="true"
+          [readonly]="true"
         >
         </ui-text-field>
       </div>
@@ -68,13 +68,13 @@
         <ui-text-field
           label="Estado"
           [value]="opcion.activo_opci === 'si' ? 'Activo' : 'Inactivo'"
-          [disabled]="true"
+          [readonly]="true"
         />
 
         <ui-text-field
           label="Visible en menú"
           [value]="opcion.visible_opci ? 'Sí' : 'No'"
-          [disabled]="true"
+          [readonly]="true"
         />
       </div>
 
@@ -82,7 +82,7 @@
         <ui-text-area
           label="Descripción"
           [value]="opcion.descripcion_opci"
-          [disabled]="true"
+          [readonly]="true"
         >
         </ui-text-area>
       </div>

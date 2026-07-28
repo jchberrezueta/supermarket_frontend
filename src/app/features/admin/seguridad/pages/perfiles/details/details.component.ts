@@ -9,6 +9,7 @@ import { PerfilesService } from '@services/perfiles.service';
 import { RolesService } from '@services/roles.service';
 import { LoadingService } from '@shared/services/loading.service';
 import { IComboBoxOption } from '@shared/models/combo_box_option';
+import { UiCardComponent } from '@shared/components/card/card.component';
 
 interface IPerfilView {
   idePerf: number;
@@ -24,13 +25,13 @@ interface IPerfilView {
   imports: [
     CommonModule,
     UiTextFieldComponent,
-    UiButtonComponent
+    UiButtonComponent,
+    UiCardComponent,
   ],
   templateUrl: './details.component.html',
-  styleUrl: './details.component.scss'
+  styleUrl: './details.component.scss',
 })
 export default class DetailsComponent {
-
   private readonly _route = inject(ActivatedRoute);
   private readonly _perfilesService = inject(PerfilesService);
   private readonly _rolesService = inject(RolesService);
@@ -51,26 +52,28 @@ export default class DetailsComponent {
 
   protected loadData(): void {
     this._loadingService.show();
-    
+
     forkJoin({
       perfil: this._perfilesService.buscar(this.idPerfil),
-      roles: this._rolesService.listarComboRoles()
+      roles: this._rolesService.listarComboRoles(),
     }).subscribe({
       next: (res) => {
         this.roles = res.roles;
         const data = res.perfil.data[0] as any;
-        const nombreRol = this.roles.find(r => +r.value === data.ide_rol)?.label || `ID: ${data.ide_rol}`;
-        
+        const nombreRol =
+          this.roles.find((r) => +r.value === data.ide_rol)?.label ||
+          `ID: ${data.ide_rol}`;
+
         this.perfil = {
           idePerf: data.ide_perf,
           ideRol: data.ide_rol,
           nombreRol: nombreRol,
           nombrePerf: data.nombre_perf,
-          descripcionPerf: data.descripcion_perf
+          descripcionPerf: data.descripcion_perf,
         };
         this._loadingService.hide();
       },
-      error: () => this._loadingService.hide()
+      error: () => this._loadingService.hide(),
     });
   }
 

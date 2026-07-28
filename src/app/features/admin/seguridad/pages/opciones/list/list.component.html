@@ -22,6 +22,22 @@
 
             <ui-combo-box
               class="sm-field-sm"
+              [label]="'Nivel'"
+              [options]="opcionesNiveles"
+              [returnValue]="'label'"
+              formControlName="nivelOpci"
+            />
+
+            <ui-combo-box
+              class="sm-field-sm"
+              [label]="'Padre'"
+              [options]="opcionesPadres"
+              [returnValue]="'label'"
+              formControlName="padreOpci"
+            />
+
+            <ui-combo-box
+              class="sm-field-sm"
               [label]="'Estado'"
               [options]="opcionesActividad"
               [returnValue]="'label'"
