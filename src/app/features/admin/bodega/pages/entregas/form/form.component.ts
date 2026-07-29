@@ -59,6 +59,7 @@ export default class FormComponent implements OnInit {
   protected cantidadLote = 1;
   protected indiceLoteEdicion: number | null = null;
   private entregaCargada: IEntregaResult | null = null;
+  protected readonly fechaMinimaReemplazo = this.calcularFechaMinimaReemplazo();
 
   protected readonly formData = this.fb.group({
     idePedi: [-1, [Validators.required, Validators.min(1)]],
@@ -104,6 +105,13 @@ export default class FormComponent implements OnInit {
     const cantidad = Number(this.cantidadLote);
     if (!/^\d{4}-\d{2}-\d{2}$/.test(fecha) || !Number.isInteger(cantidad) || cantidad <= 0) {
       this.alerta('Distribución inválida', 'Ingrese una fecha y una cantidad entera mayor que cero.');
+      return;
+    }
+    if (this.esCanje && fecha < this.fechaMinimaReemplazo) {
+      this.alerta(
+        'Caducidad inválida',
+        `El lote de reemplazo debe caducar desde ${this.fechaMinimaReemplazo} en adelante.`,
+      );
       return;
     }
     if (this.lotesEdicion.some((lote, i) => lote.fechaCaducidadLote === fecha && i !== this.indiceLoteEdicion)) {
@@ -198,6 +206,8 @@ export default class FormComponent implements OnInit {
   protected get lineaEditada(): ILineaEntregaLocal | null { return this.detalles.find((linea) => linea.claveLocal === this.claveEdicion) ?? null; }
   protected get totalLotesEdicion(): number { return this.lotesEdicion.reduce((suma, lote) => suma + Number(lote.cantidadLote), 0); }
   protected get cantidadTotal(): number { return this.detalles.reduce((suma, linea) => suma + linea.cantidadProd, 0); }
+  protected get esCanje(): boolean { return this.pedidoInfo?.motivoPedi === 'devolucion'; }
+  protected get nombreProceso(): string { return this.esCanje ? 'Canje por caducidad' : 'Petición normal'; }
   protected get totalEconomico(): number { return this.redondear(this.detalles.reduce((suma, linea) => suma + this.importeLinea(linea), 0)); }
   protected get puntualidad(): 'anticipada' | 'tiempo' | 'atrasada' | null {
     const real = this.formData.controls.fechaEntr.value;
@@ -272,8 +282,21 @@ export default class FormComponent implements OnInit {
     if (linea.cantidadProd === 0) return linea.lotesRecibidos.length === 0;
     const fechas = new Set(linea.lotesRecibidos.map((lote) => lote.fechaCaducidadLote));
     return linea.lotesRecibidos.length > 0 && fechas.size === linea.lotesRecibidos.length
-      && linea.lotesRecibidos.every((lote) => /^\d{4}-\d{2}-\d{2}$/.test(lote.fechaCaducidadLote) && Number.isInteger(lote.cantidadLote) && lote.cantidadLote > 0)
+      && linea.lotesRecibidos.every((lote) =>
+        /^\d{4}-\d{2}-\d{2}$/.test(lote.fechaCaducidadLote)
+        && Number.isInteger(lote.cantidadLote)
+        && lote.cantidadLote > 0
+        && (!this.esCanje || lote.fechaCaducidadLote >= this.fechaMinimaReemplazo))
       && linea.lotesRecibidos.reduce((suma, lote) => suma + lote.cantidadLote, 0) === linea.cantidadProd;
+  }
+
+  private calcularFechaMinimaReemplazo(): string {
+    const fecha = new Date();
+    fecha.setDate(fecha.getDate() + 1);
+    const year = fecha.getFullYear();
+    const month = String(fecha.getMonth() + 1).padStart(2, '0');
+    const day = String(fecha.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 
   private limpiarCapturaLote(): void { this.fechaLote = ''; this.cantidadLote = 1; this.indiceLoteEdicion = null; }

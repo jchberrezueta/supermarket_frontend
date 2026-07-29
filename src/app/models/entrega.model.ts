@@ -47,6 +47,7 @@ export interface IPedidoEntregaDisponible {
   fecha_pedi: string;
   fecha_entr_pedi: string | null;
   estado_pedi: string;
+  motivo_pedi: string;
 }
 
 export interface IPedidoEntregaPendiente {

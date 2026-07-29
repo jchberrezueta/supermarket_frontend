@@ -1,76 +1,341 @@
 <div class="entrega-page">
   <section class="entrega-card">
     <header class="card-heading">
-      <div><span class="eyebrow">{{ isAdd ? 'Nueva entrega' : 'Editar entrega #' + idEntrega }}</span><h2>{{ isAdd ? 'Registrar borrador' : 'Actualizar borrador' }}</h2></div>
+      <div>
+        <span class="eyebrow">
+          {{ isAdd ? "Nueva entrega" : "Editar entrega #" + idEntrega }}
+        </span>
+        <h2>{{ isAdd ? "Registrar borrador" : "Actualizar borrador" }}</h2>
+      </div>
       <span class="status-badge">Borrador</span>
     </header>
 
     <form [formGroup]="formData" class="header-grid">
-      <ui-combo-box label="Pedido" [options]="pedidos" formControlName="idePedi" [disabled]="!isAdd"
-        (evntSelectOption)="seleccionarPedido($event)" />
-      <ui-text-field label="Empresa responsable" [value]="pedidoInfo?.nombreEmpr || ''" [readonly]="true" />
-      <ui-combo-box label="Proveedor" [options]="proveedores" formControlName="ideProv" [disabled]="!pedidoInfo" />
-      <ui-text-field label="Fecha esperada" [value]="pedidoInfo?.fechaEntrPedi || ''" [readonly]="true" />
-      <ui-datetime-picker label="Fecha real de entrega" formControlName="fechaEntr" [min]="pedidoInfo?.fechaPedi || null" />
+      <ui-combo-box
+        label="Pedido"
+        [options]="pedidos"
+        formControlName="idePedi"
+        [disabled]="!isAdd"
+        (evntSelectOption)="seleccionarPedido($event)"
+      />
+      <ui-text-field
+        label="Tipo de proceso"
+        [value]="pedidoInfo ? nombreProceso : ''"
+        [readonly]="true"
+      />
+      <ui-text-field
+        label="Empresa responsable"
+        [value]="pedidoInfo?.nombreEmpr || ''"
+        [readonly]="true"
+      />
+      <ui-combo-box
+        label="Proveedor"
+        [options]="proveedores"
+        formControlName="ideProv"
+        [disabled]="!pedidoInfo"
+      />
+      <ui-text-field
+        label="Fecha esperada"
+        [value]="pedidoInfo?.fechaEntrPedi || ''"
+        [readonly]="true"
+      />
+      <ui-datetime-picker
+        label="Fecha real de entrega"
+        formControlName="fechaEntr"
+        [min]="pedidoInfo?.fechaPedi || null"
+      />
       <div class="punctuality-field">
         <span class="field-label">Puntualidad</span>
-        @if (puntualidad === 'anticipada') { <span class="punctuality early">Entrega anticipada</span> }
-        @else if (puntualidad === 'tiempo') { <span class="punctuality on-time">Entrega a tiempo</span> }
-        @else if (puntualidad === 'atrasada') { <span class="punctuality late">Entrega atrasada</span> }
-        @else { <span class="readonly-empty">Seleccione la fecha real</span> }
+        @if (puntualidad === "anticipada") {
+          <span class="punctuality early">Entrega anticipada</span>
+        } @else if (puntualidad === "tiempo") {
+          <span class="punctuality on-time">Entrega a tiempo</span>
+        } @else if (puntualidad === "atrasada") {
+          <span class="punctuality late">Entrega atrasada</span>
+        } @else {
+          <span class="readonly-empty">Seleccione la fecha real</span>
+        }
       </div>
-      <ui-text-area class="observation" label="Observación (opcional)" formControlName="observacionEntr" />
-      <ui-text-field label="Cantidad total recibida" [value]="cantidadTotal" [readonly]="true" />
-      <ui-text-field label="Total económico recibido" [value]="totalEconomico | number:'1.2-2'" [readonly]="true" />
+      <ui-text-area
+        class="observation"
+        label="Observación (opcional)"
+        formControlName="observacionEntr"
+      />
+      <ui-text-field
+        [label]="esCanje ? 'Cantidad total canjeada' : 'Cantidad total recibida'"
+        [value]="cantidadTotal"
+        [readonly]="true"
+      />
+      <ui-text-field
+        label="Total económico recibido"
+        [value]="totalEconomico | number: '1.2-2'"
+        [readonly]="true"
+      />
     </form>
   </section>
 
   <section class="entrega-card">
-    <div class="section-heading"><div><span class="eyebrow">Detalle</span><h3>Líneas pendientes del pedido</h3></div><span class="helper">Los borradores de otras entregas no reducen el pendiente.</span></div>
+    <div class="section-heading">
+      <div>
+        <span class="eyebrow">Detalle</span>
+        <h3>
+          {{ esCanje ? "Canje de productos caducados" : "Líneas pendientes del pedido" }}
+        </h3>
+      </div>
+      <span class="helper">
+        @if (esCanje) {
+          Cada unidad caducada procesada debe registrar una unidad nueva de reemplazo.
+        } @else {
+          Los borradores de otras entregas no reducen el pendiente.
+        }
+      </span>
+    </div>
 
     @if (lineaEditada; as linea) {
       <div class="edit-panel">
-        <div class="section-heading"><div><span class="eyebrow">Captura local</span><h3>{{ linea.nombreProd }}</h3></div><span class="state-chip" [class.complete]="cantidadEdicion === linea.cantidadPendiente">{{ estadoCalculado(cantidadEdicion, linea.cantidadPendiente) }}</span></div>
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">Captura local</span>
+            <h3>{{ linea.nombreProd }}</h3>
+          </div>
+          <span
+            class="state-chip"
+            [class.complete]="cantidadEdicion === linea.cantidadPendiente"
+          >
+            {{ estadoCalculado(cantidadEdicion, linea.cantidadPendiente) }}
+          </span>
+        </div>
+
+        @if (esCanje) {
+          <div class="lot-list">
+            <strong>Lotes caducados asignados al pedido</strong>
+            @for (lote of linea.lotesDevolucion ?? []; track lote.ideLote) {
+              <div class="lot-item">
+                <span>
+                  Lote #{{ lote.ideLote }} ·
+                  {{ lote.fechaCaducidadLote || "Sin fecha" }}
+                </span>
+                <strong>
+                  pendiente {{ lote.cantidadPendiente }} /
+                  asignado {{ lote.cantidadDevolucion }}
+                </strong>
+              </div>
+            } @empty {
+              <span class="helper warning">
+                La línea no tiene lotes caducados asignados.
+              </span>
+            }
+          </div>
+        }
+
         <div class="edit-grid">
-          <ui-text-field label="Producto" [value]="linea.nombreProd" [readonly]="true" />
-          <ui-text-field label="Cantidad pendiente" [value]="linea.cantidadPendiente" [readonly]="true" />
-          <ui-text-field label="Recibido ahora" valueType="number" [(ngModel)]="cantidadEdicion" [ngModelOptions]="{standalone: true}" (evntChange)="cambiarCantidadEdicion($event)" />
+          <ui-text-field
+            label="Producto"
+            [value]="linea.nombreProd"
+            [readonly]="true"
+          />
+          <ui-text-field
+            [label]="esCanje ? 'Cantidad pendiente de canje' : 'Cantidad pendiente'"
+            [value]="linea.cantidadPendiente"
+            [readonly]="true"
+          />
+          <ui-text-field
+            [label]="esCanje ? 'Reemplazos recibidos ahora' : 'Recibido ahora'"
+            valueType="number"
+            [(ngModel)]="cantidadEdicion"
+            [ngModelOptions]="{ standalone: true }"
+            (evntChange)="cambiarCantidadEdicion($event)"
+          />
         </div>
 
         @if (cantidadEdicion > 0) {
           <div class="lot-editor">
-            <label>Fecha de caducidad<input type="date" [(ngModel)]="fechaLote" [ngModelOptions]="{standalone: true}" /></label>
-            <label>Cantidad del lote<input type="number" min="1" step="1" [(ngModel)]="cantidadLote" [ngModelOptions]="{standalone: true}" /></label>
-            <ui-button [label]="indiceLoteEdicion === null ? 'Agregar distribución' : 'Guardar distribución'" icon="add" color="green" (evntClick)="agregarLote()" />
+            <label>
+              {{ esCanje ? "Caducidad del lote de reemplazo" : "Fecha de caducidad" }}
+              <input
+                type="date"
+                [min]="esCanje ? fechaMinimaReemplazo : null"
+                [(ngModel)]="fechaLote"
+                [ngModelOptions]="{ standalone: true }"
+              />
+            </label>
+            <label>
+              Cantidad del lote
+              <input
+                type="number"
+                min="1"
+                step="1"
+                [(ngModel)]="cantidadLote"
+                [ngModelOptions]="{ standalone: true }"
+              />
+            </label>
+            <ui-button
+              [label]="
+                indiceLoteEdicion === null
+                  ? esCanje
+                    ? 'Agregar lote de reemplazo'
+                    : 'Agregar distribución'
+                  : 'Guardar distribución'
+              "
+              icon="add"
+              color="green"
+              (evntClick)="agregarLote()"
+            />
           </div>
+
           <div class="lot-list">
-            @for (lote of lotesEdicion; track lote.fechaCaducidadLote; let i = $index) {
-              <div class="lot-item"><span>{{ lote.fechaCaducidadLote }}</span><strong>{{ lote.cantidadLote }}</strong><button type="button" class="link-blue" (click)="editarLote(i)">Editar</button><button type="button" class="link-red" (click)="quitarLote(i)">Quitar</button></div>
-            } @empty { <span class="helper warning">Agregue al menos una distribución.</span> }
+            @for (
+              lote of lotesEdicion;
+              track lote.fechaCaducidadLote;
+              let i = $index
+            ) {
+              <div class="lot-item">
+                <span>{{ lote.fechaCaducidadLote }}</span>
+                <strong>{{ lote.cantidadLote }}</strong>
+                <button type="button" class="link-blue" (click)="editarLote(i)">
+                  Editar
+                </button>
+                <button type="button" class="link-red" (click)="quitarLote(i)">
+                  Quitar
+                </button>
+              </div>
+            } @empty {
+              <span class="helper warning">
+                {{ esCanje ? "Agregue al menos un lote de reemplazo." : "Agregue al menos una distribución." }}
+              </span>
+            }
           </div>
-          <span class="lot-sum" [class.invalid]="totalLotesEdicion !== cantidadEdicion">Distribuido: {{ totalLotesEdicion }} / {{ cantidadEdicion }}</span>
+
+          <span
+            class="lot-sum"
+            [class.invalid]="totalLotesEdicion !== cantidadEdicion"
+          >
+            Distribuido: {{ totalLotesEdicion }} / {{ cantidadEdicion }}
+          </span>
         }
-        <div class="edit-actions"><ui-button label="Guardar cambios" icon="save" color="green" (evntClick)="guardarCambiosLinea()" /><ui-button label="Cancelar edición" icon="close" color="neutral" (evntClick)="cancelarEdicionLinea()" /></div>
+
+        <div class="edit-actions">
+          <ui-button
+            label="Guardar cambios"
+            icon="save"
+            color="green"
+            (evntClick)="guardarCambiosLinea()"
+          />
+          <ui-button
+            label="Cancelar edición"
+            icon="close"
+            color="neutral"
+            (evntClick)="cancelarEdicionLinea()"
+          />
+        </div>
       </div>
     }
 
     <div class="table-wrap">
       <table>
-        <thead><tr><th>Producto</th><th>Solicitado</th><th>Recibido anteriormente</th><th>Pendiente</th><th>Recibido ahora</th><th>Estado de recepción</th><th>Fechas de caducidad/lotes</th><th>Acción</th></tr></thead>
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Solicitado</th>
+            <th>Procesado anteriormente</th>
+            <th>Pendiente</th>
+            @if (esCanje) {
+              <th>Lotes caducados de origen</th>
+            }
+            <th>{{ esCanje ? "Reemplazos ahora" : "Recibido ahora" }}</th>
+            <th>Estado</th>
+            <th>{{ esCanje ? "Lotes nuevos de reemplazo" : "Fechas de caducidad/lotes" }}</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
         <tbody>
           @for (linea of detalles; track linea.claveLocal) {
             <tr [class.editing-row]="linea.claveLocal === claveEdicion">
-              <td>{{ linea.nombreProd }}</td><td>{{ linea.cantidadSolicitada }}</td><td>{{ linea.cantidadRecibidaConfirmada }}</td><td>{{ linea.cantidadPendiente }}</td><td>{{ linea.cantidadProd }}</td>
-              <td><span class="state-chip" [class.complete]="linea.estadoDetaEntr === 'completo'">{{ linea.estadoDetaEntr }}</span></td>
-              <td>@for (lote of linea.lotesRecibidos; track lote.fechaCaducidadLote) { <span class="lot-chip">{{ lote.fechaCaducidadLote }} · {{ lote.cantidadLote }}</span> } @empty { <span class="helper">Sin distribución</span> }</td>
-              <td><ui-button label="Editar" icon="edit" color="blue" (evntClick)="editarLinea(linea)" /></td>
+              <td>{{ linea.nombreProd }}</td>
+              <td>{{ linea.cantidadSolicitada }}</td>
+              <td>{{ linea.cantidadRecibidaConfirmada }}</td>
+              <td>{{ linea.cantidadPendiente }}</td>
+              @if (esCanje) {
+                <td>
+                  @for (lote of linea.lotesDevolucion ?? []; track lote.ideLote) {
+                    <span class="lot-chip">
+                      #{{ lote.ideLote }} ·
+                      {{ lote.fechaCaducidadLote || "Sin fecha" }} ·
+                      pendiente {{ lote.cantidadPendiente }}
+                    </span>
+                  } @empty {
+                    <span class="helper warning">Sin asignación</span>
+                  }
+                </td>
+              }
+              <td>{{ linea.cantidadProd }}</td>
+              <td>
+                <span
+                  class="state-chip"
+                  [class.complete]="linea.estadoDetaEntr === 'completo'"
+                >
+                  {{ linea.estadoDetaEntr }}
+                </span>
+              </td>
+              <td>
+                @for (lote of linea.lotesRecibidos; track lote.fechaCaducidadLote) {
+                  <span class="lot-chip">
+                    {{ lote.fechaCaducidadLote }} · {{ lote.cantidadLote }}
+                  </span>
+                } @empty {
+                  <span class="helper">Sin distribución</span>
+                }
+              </td>
+              <td>
+                <ui-button
+                  label="Editar"
+                  icon="edit"
+                  color="blue"
+                  (evntClick)="editarLinea(linea)"
+                />
+              </td>
             </tr>
-          } @empty { <tr><td colspan="8" class="empty-row">Seleccione un pedido disponible.</td></tr> }
+          } @empty {
+            <tr>
+              <td [attr.colspan]="esCanje ? 9 : 8" class="empty-row">
+                Seleccione un pedido disponible.
+              </td>
+            </tr>
+          }
         </tbody>
-        <tfoot><tr><td>Totales</td><td></td><td></td><td></td><td>{{ cantidadTotal }}</td><td></td><td>{{ totalEconomico | currency:'USD':'symbol':'1.2-2' }}</td><td></td></tr></tfoot>
+        <tfoot>
+          <tr>
+            <td>Totales</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            @if (esCanje) {
+              <td></td>
+            }
+            <td>{{ cantidadTotal }}</td>
+            <td></td>
+            <td>{{ totalEconomico | currency: "USD" : "symbol" : "1.2-2" }}</td>
+            <td></td>
+          </tr>
+        </tfoot>
       </table>
     </div>
   </section>
 
-  <div class="final-actions"><ui-button [label]="isAdd ? 'Guardar borrador' : 'Actualizar borrador'" icon="save" color="green" [disabled]="guardando" (evntClick)="guardar()" /><ui-button label="Cancelar" icon="close" color="red" [disabled]="guardando" (evntClick)="cancelar()" /></div>
+  <div class="final-actions">
+    <ui-button
+      [label]="isAdd ? 'Guardar borrador' : 'Actualizar borrador'"
+      icon="save"
+      color="green"
+      [disabled]="guardando"
+      (evntClick)="guardar()"
+    />
+    <ui-button
+      label="Cancelar"
+      icon="close"
+      color="red"
+      [disabled]="guardando"
+      (evntClick)="cancelar()"
+    />
+  </div>
 </div>

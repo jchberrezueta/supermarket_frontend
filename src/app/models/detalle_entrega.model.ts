@@ -15,6 +15,14 @@ export interface IDetalleEntrega {
   lotesRecibidos: ILoteEntregaBorrador[];
 }
 
+export interface ILoteDevolucionPendiente {
+  ideLote: number;
+  fechaCaducidadLote: string | null;
+  cantidadDevolucion: number;
+  cantidadProcesada: number;
+  cantidadPendiente: number;
+}
+
 export interface ILineaPedidoPendiente {
   ideDetaPedi: number;
   ideProd: number;
@@ -29,6 +37,7 @@ export interface ILineaPedidoPendiente {
   totalProd: number;
   dctoCaducProd: number;
   estadoDetaPedi: string;
+  lotesDevolucion?: ILoteDevolucionPendiente[];
 }
 
 export interface IDetalleEntregaResult {
