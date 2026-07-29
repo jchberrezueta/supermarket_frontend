@@ -113,42 +113,258 @@ export default class ListComponent {
 
   protected manejarAccion(event: { action: string; row: TableRow }): void {
     const id = Number(event.row['ide_pedi']);
-    if (!Number.isInteger(id) || id <= 0) return;
+
+    if (!Number.isInteger(id) || id <= 0) {
+      return;
+    }
+
+    const estado = String(event.row['estado_pedi']);
+
     if (event.action === 'view') {
       void this.router.navigate(['/admin/bodega/pedidos/details', id]);
-    } else if (event.action === 'edit' && event.row['estado_pedi'] === 'borrador') {
+
+      return;
+    }
+
+    if (event.action === 'edit' && estado === 'borrador') {
       void this.router.navigate(['/admin/bodega/pedidos/update', id]);
-    } else if (event.action === 'delete' && event.row['estado_pedi'] === 'borrador') {
-      this.confirmarAccion(id, 'Eliminar borrador', 'El borrador se eliminará de forma permanente.', 'delete');
-    } else if (event.action === 'emit' && event.row['estado_pedi'] === 'borrador') {
-      this.confirmarAccion(id, 'Emitir pedido', 'Después de emitirlo ya no podrá editarse como borrador.', 'emit');
+
+      return;
+    }
+
+    if (event.action === 'delete' && estado === 'borrador') {
+      this.confirmarAccion(
+        id,
+        'Eliminar borrador',
+        'El borrador se eliminará de forma permanente.',
+        'delete',
+      );
+
+      return;
+    }
+
+    if (event.action === 'emit' && estado === 'borrador') {
+      this.confirmarAccion(
+        id,
+        'Emitir pedido',
+        'Después de emitirlo ya no podrá editarse como borrador.',
+        'emit',
+      );
+
+      return;
+    }
+
+    if (
+      event.action === 'cancel' &&
+      (estado === 'borrador' || estado === 'emitido')
+    ) {
+      this.solicitarMotivo(id, 'cancel');
+
+      return;
+    }
+
+    if (event.action === 'close-incomplete' && estado === 'parcial') {
+      this.solicitarMotivo(id, 'close-incomplete');
     }
   }
 
-  private confirmarAccion(id: number, title: string, text: string, action: 'delete' | 'emit'): void {
+  private confirmarAccion(
+    id: number,
+    title: string,
+    text: string,
+    action: 'delete' | 'emit',
+  ): void {
     if (this.ejecutandoAccion) return;
-    void Swal.fire({ title, text, icon: 'warning', showCancelButton: true, confirmButtonText: action === 'emit' ? 'Sí, emitir' : 'Sí, eliminar', cancelButtonText: 'Cancelar' })
-      .then((result) => { if (result.isConfirmed) this.ejecutarAccion(id, action); });
+    void Swal.fire({
+      title,
+      text,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: action === 'emit' ? 'Sí, emitir' : 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+    }).then((result) => {
+      if (result.isConfirmed) this.ejecutarAccion(id, action);
+    });
   }
 
   private ejecutarAccion(id: number, action: 'delete' | 'emit'): void {
     if (this.ejecutandoAccion) return;
     this.ejecutandoAccion = true;
-    const request = action === 'emit' ? this._pedidosService.emitir(id) : this._pedidosService.eliminar(id);
-    request.pipe(finalize(() => this.ejecutandoAccion = false)).subscribe({
+    const request =
+      action === 'emit'
+        ? this._pedidosService.emitir(id)
+        : this._pedidosService.eliminar(id);
+    request.pipe(finalize(() => (this.ejecutandoAccion = false))).subscribe({
       next: (res) => {
         const success = Number(res?.p_result) === 1;
-        const message = this.mensajeRespuesta(res?.p_response, success ? 'Operación completada.' : 'No se pudo completar la operación.');
-        void Swal.fire({ icon: success ? 'success' : 'error', title: success ? (action === 'emit' ? 'Pedido emitido' : 'Borrador eliminado') : 'Operación rechazada', text: message });
+        const message = this.mensajeRespuesta(
+          res?.p_response,
+          success
+            ? 'Operación completada.'
+            : 'No se pudo completar la operación.',
+        );
+        void Swal.fire({
+          icon: success ? 'success' : 'error',
+          title: success
+            ? action === 'emit'
+              ? 'Pedido emitido'
+              : 'Borrador eliminado'
+            : 'Operación rechazada',
+          text: message,
+        });
         if (success) this._tableList().refreshData();
       },
-      error: (error) => void Swal.fire({ icon: 'error', title: 'No se pudo completar la operación', text: error?.error?.message ?? 'Revise el estado del pedido e intente nuevamente.' }),
+      error: (error) =>
+        void Swal.fire({
+          icon: 'error',
+          title: 'No se pudo completar la operación',
+          text:
+            error?.error?.message ??
+            'Revise el estado del pedido e intente nuevamente.',
+        }),
     });
   }
 
-  private mensajeRespuesta(response: string | undefined, fallback: string): string {
+  private solicitarMotivo(
+    id: number,
+    action: 'cancel' | 'close-incomplete',
+  ): void {
+    if (this.ejecutandoAccion) {
+      return;
+    }
+
+    const esCancelacion = action === 'cancel';
+
+    void Swal.fire({
+      title: esCancelacion ? 'Cancelar pedido' : 'Cerrar pedido incompleto',
+
+      text: esCancelacion
+        ? 'El pedido conservará su historial, pero ya no podrá procesarse.'
+        : 'Las cantidades pendientes se marcarán como no entregadas.',
+
+      input: 'textarea',
+
+      inputLabel: esCancelacion
+        ? 'Motivo de cancelación'
+        : 'Motivo del cierre incompleto',
+
+      inputPlaceholder: 'Escriba un motivo de 5 a 250 caracteres.',
+
+      inputAttributes: {
+        maxlength: '250',
+        'aria-label': 'Motivo de la operación',
+      },
+
+      icon: 'warning',
+
+      showCancelButton: true,
+
+      confirmButtonText: esCancelacion
+        ? 'Sí, cancelar pedido'
+        : 'Sí, cerrar incompleto',
+
+      cancelButtonText: 'Volver',
+
+      inputValidator: (value) => {
+        const motivo = String(value ?? '').trim();
+
+        if (motivo.length < 5) {
+          return 'El motivo debe tener al menos ' + '5 caracteres.';
+        }
+
+        if (motivo.length > 250) {
+          return 'El motivo no puede superar ' + '250 caracteres.';
+        }
+
+        return undefined;
+      },
+    }).then((result) => {
+      if (!result.isConfirmed) {
+        return;
+      }
+
+      const motivo = String(result.value ?? '').trim();
+
+      this.ejecutarAccionConMotivo(id, action, motivo);
+    });
+  }
+
+  private ejecutarAccionConMotivo(
+    id: number,
+    action: 'cancel' | 'close-incomplete',
+    motivo: string,
+  ): void {
+    if (this.ejecutandoAccion) {
+      return;
+    }
+
+    this.ejecutandoAccion = true;
+
+    const request =
+      action === 'cancel'
+        ? this._pedidosService.cancelar(id, motivo)
+        : this._pedidosService.cerrarIncompleto(id, motivo);
+
+    request
+      .pipe(
+        finalize(() => {
+          this.ejecutandoAccion = false;
+        }),
+      )
+      .subscribe({
+        next: (response) => {
+          const success = Number(response.p_result) === 1;
+
+          const message = this.mensajeRespuesta(
+            response.p_response,
+
+            success
+              ? 'Operación completada correctamente.'
+              : 'No se pudo completar la operación.',
+          );
+
+          void Swal.fire({
+            icon: success ? 'success' : 'error',
+
+            title: success
+              ? action === 'cancel'
+                ? 'Pedido cancelado'
+                : 'Pedido cerrado'
+              : 'Operación rechazada',
+
+            text: message,
+          });
+
+          if (success) {
+            this._tableList().refreshData();
+          }
+        },
+
+        error: (error) => {
+          const message = error?.error?.message;
+
+          void Swal.fire({
+            icon: 'error',
+            title: 'No se pudo completar la operación',
+
+            text: Array.isArray(message)
+              ? message.join(' ')
+              : (message ?? 'Revise el estado del pedido.'),
+          });
+        },
+      });
+  }
+
+  private mensajeRespuesta(
+    response: string | undefined,
+    fallback: string,
+  ): string {
     if (!response) return fallback;
-    try { return JSON.parse(response).message ?? fallback; } catch { return response; }
+    try {
+      return JSON.parse(response).message ?? fallback;
+    } catch {
+      return response;
+    }
   }
 
   private getParams(): URLSearchParams {

@@ -26,16 +26,62 @@ export const ListEntregasConfig: ITableListConfig = {
     { label: 'Empresa', property: 'nombre_empr', type: 'text', sortable: true },
 
     // del JOIN proveedor (nombre completo)
-    { label: 'Proveedor', property: 'nombre_proveedor', type: 'text', sortable: true },
+    {
+      label: 'Proveedor',
+      property: 'nombre_proveedor',
+      type: 'text',
+      sortable: true,
+    },
 
     // formateada con TO_CHAR en el SQL
-    { label: 'Fecha Entrega', property: 'fecha_entr', type: 'text', sortable: true },
+    {
+      label: 'Fecha Entrega',
+      property: 'fecha_entr',
+      type: 'text',
+      sortable: true,
+    },
 
-    { label: 'Cantidad', property: 'cantidad_total_entr', type: 'text', sortable: true },
+    {
+      label: 'Cantidad',
+      property: 'cantidad_total_entr',
+      type: 'text',
+      sortable: true,
+    },
     { label: 'Total', property: 'total_entr', type: 'text', sortable: true },
     { label: 'Estado', property: 'estado_entr', type: 'text', sortable: true },
-    { label: 'Observación', property: 'observacion_entr', type: 'text', sortable: true },
-
+    {
+      label: 'Observación',
+      property: 'observacion_entr',
+      type: 'text',
+      sortable: true,
+    },
+    {
+      label: 'Proceso',
+      property: 'process_actions',
+      type: 'actions',
+      buttonItems: [
+        {
+          action: 'confirm',
+          label: 'Confirmar',
+          tooltip: 'Confirmar la recepción y actualizar el inventario',
+          icon: 'check_circle',
+          color: 'green',
+          key: 'ide_entr',
+          visible: (row) => row['estado_entr'] === 'borrador',
+        },
+        {
+          action: 'annul',
+          label: 'Anular',
+          tooltip: 'Anular la entrega y revertir sus movimientos de inventario',
+          icon: 'undo',
+          color: 'red',
+          key: 'ide_entr',
+          visible: (row) =>
+            row['estado_entr'] === 'parcial' ||
+            row['estado_entr'] === 'completa',
+        },
+      ],
+    },
     {
       label: '',
       property: 'menu',

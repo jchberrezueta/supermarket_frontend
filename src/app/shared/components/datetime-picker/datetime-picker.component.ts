@@ -151,7 +151,7 @@ export class UiDatetimePickerComponent implements ControlValueAccessor {
     this._isDisabled.set(isDisabled);
   }
 
-  public updateValue(event: Event): void {
+  /*public updateValue(event: Event): void {
     const value = (event.target as HTMLInputElement).value;
 
     this.innerValue.set(value);
@@ -161,6 +161,22 @@ export class UiDatetimePickerComponent implements ControlValueAccessor {
     } else {
       this.onChange(this.normalizeDate(value));
     }
+    this.onTouched();
+  }*/
+
+  public updateValue(event: Event): void {
+    const value = (event.target as HTMLInputElement).value;
+
+    this.innerValue.set(value);
+
+    /*
+     * Cuando es fecha:
+     * YYYY-MM-DD
+     *
+     * Cuando incluye hora:
+     * YYYY-MM-DDTHH:mm
+     */
+    this.onChange(value);
     this.onTouched();
   }
 

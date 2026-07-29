@@ -79,7 +79,11 @@ export default class FormComponent implements OnInit {
 
   protected readonly motivos: IComboBoxOption[] = [
     { value: EnumMotivosPedido.PETICION, label: 'Petición' },
-    { value: EnumMotivosPedido.DEVOLUCION, label: 'Devolución' },
+    {
+      value: EnumMotivosPedido.DEVOLUCION,
+
+      label: 'Devolución / canje por caducidad',
+    },
   ];
   protected empresas: IComboBoxOption[] = [];
   protected productos: IComboBoxOption[] = [];
@@ -454,9 +458,11 @@ export default class FormComponent implements OnInit {
               precio.ide_prod > 0 &&
               precio.nombre_prod &&
               precio.estado_prod === 'activo' &&
+              precio.estado_empr_prod === 'activo' &&
               !unicos.has(precio.ide_prod)
-            )
+            ) {
               unicos.set(precio.ide_prod, precio);
+            }
           }
           this.preciosEmpresa = [...unicos.values()];
           this.productos = this.preciosEmpresa.map((precio) => ({
@@ -510,32 +516,80 @@ export default class FormComponent implements OnInit {
     );
   }
 
+  private normalizarTasaIva(value: unknown): number {
+    const iva = Number(value ?? 0);
+
+    if (!Number.isFinite(iva) || iva < 0) {
+      return 0;
+    }
+
+    /*
+     * Admite temporalmente ambos formatos:
+     *
+     * 0.15 = 15 %
+     * 15   = 15 %
+     */
+    return iva > 1 ? iva / 100 : iva;
+  }
+
   private actualizarPreview(): void {
     const precio = this.precioSeleccionado;
+
     const cantidad = Number(this.cantidadProducto);
-    if (!precio || !Number.isFinite(cantidad) || cantidad <= 0) {
-      this.preview = { ...VACIO };
+
+    if (
+      !precio ||
+      !Number.isFinite(cantidad) ||
+      !Number.isInteger(cantidad) ||
+      cantidad <= 0
+    ) {
+      this.preview = {
+        ...VACIO,
+      };
+
       return;
     }
-    const subtotal = this.redondear(
-      Number(precio.precio_compra_prod) * cantidad,
-    );
-    const dctoCompra = this.redondear(
-      Number(precio.dcto_compra_prod) * cantidad,
-    );
-    const dctoCaduc =
-      this.formData.controls.motivoPedi.value === EnumMotivosPedido.DEVOLUCION
-        ? this.redondear(Number(precio.dcto_caducidad_prod) * cantidad)
-        : 0;
-    const neto = this.redondear(subtotal - dctoCompra - dctoCaduc);
-    const iva = this.redondear(neto * Number(precio.iva_prod));
+
+    const precioUnitario = Number(precio.precio_compra_prod);
+
+    const descuentoCompraUnitario = Number(precio.dcto_compra_prod);
+
+    const descuentoCaducidadUnitario = Number(precio.dcto_caducidad_prod);
+
+    const subtotal = this.redondear(precioUnitario * cantidad);
+
+    const dctoCompra = this.redondear(descuentoCompraUnitario * cantidad);
+
+    const dctoCaduc = this.esDevolucion
+      ? this.redondear(descuentoCaducidadUnitario * cantidad)
+      : 0;
+
+    const baseImponible = this.redondear(subtotal - dctoCompra - dctoCaduc);
+
+    if (baseImponible < 0) {
+      this.preview = {
+        ...VACIO,
+      };
+
+      return;
+    }
+
+    const tasaIva = this.normalizarTasaIva(precio.iva_prod);
+
+    const iva = this.redondear(baseImponible * tasaIva);
+
     this.preview = {
-      precioUnitarioProd: this.redondear(Number(precio.precio_compra_prod)),
+      precioUnitarioProd: this.redondear(precioUnitario),
+
       subtotalProd: subtotal,
+
       dctoCompraProd: dctoCompra,
+
       dctoCaducProd: dctoCaduc,
+
       ivaProd: iva,
-      totalProd: this.redondear(neto + iva),
+
+      totalProd: this.redondear(baseImponible + iva),
     };
   }
 
@@ -546,7 +600,9 @@ export default class FormComponent implements OnInit {
         ideEmpr: Number(this.formData.controls.ideEmpr.value),
         motivoPedi: this.formData.controls.motivoPedi
           .value as EnumMotivosPedido,
-        fechaEntrPedi: this.formData.controls.fechaEntrPedi.value!,
+        fechaEntrPedi: this.extraerFechaCalendario(
+          this.formData.controls.fechaEntrPedi.value!,
+        ),
         observacionPedi:
           this.formData.controls.observacionPedi.value?.trim() || null,
       },
