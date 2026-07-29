@@ -2,57 +2,108 @@
   <div class="div_card">
     <div class="panel_1">
       <div class="card_form">
-        
-        <!-- CABECERA -->
         <div class="header_actions">
           <div class="header_title">
-            <h2>Detalle del Lote #{{ idLote }}</h2>
+            <h2>Detalle del lote #{{ idLote }}</h2>
           </div>
+
           <div class="header_buttons">
-            <ui-button [icon]="'refresh'" (evntClick)="loadLote()"/>
-            <ui-button [label]="'Volver'" [icon]="'arrow_back'" (evntClick)="volver()"/>
+            <ui-button icon="refresh" (evntClick)="loadLote()" />
+
+            <ui-button
+              label="Volver"
+              icon="arrow_back"
+              (evntClick)="volver()"
+            />
           </div>
         </div>
 
-        <!-- PERFIL DEL LOTE -->
-        <div class="lote_perfil">
-          <div class="avatar">
-            <span class="material-icons">inventory_2</span>
-          </div>
-          <div class="lote_info_principal">
-            <h3>{{ lote?.nombreProd }}</h3>
-            <p class="id_lote"><span class="material-icons">tag</span> Lote ID: {{ lote?.ideLote }}</p>
-          </div>
-          <div class="estado_badge" [class.activo]="lote?.estadoLote === 'Activo'" [class.inactivo]="lote?.estadoLote !== 'Activo'">
-            {{ lote?.estadoLote }}
-          </div>
-        </div>
+        @if (lote) {
+          <div class="lote_perfil" [ngClass]="estadoClass(lote.estado_lote)">
+            <div class="avatar">
+              <span class="material-icons"> inventory_2 </span>
+            </div>
 
-        <!-- INFORMACIÓN DEL LOTE -->
-        <div class="section_title">Información del Lote</div>
-        <div class="info_grid">
-          <div class="info_row">
-            <ui-text-field [label]="'ID Lote'" [value]="lote?.ideLote" [disabled]="true"/>
-            <ui-text-field [label]="'Producto'" [value]="lote?.nombreProd" [disabled]="true"/>
-          </div>
-          <div class="info_row">
-            <ui-text-field [label]="'Stock Disponible'" [value]="lote?.stockLote" [disabled]="true"/>
-            <ui-text-field [label]="'Estado'" [value]="lote?.estadoLote" [disabled]="true"/>
-          </div>
-        </div>
+            <div class="lote_info_principal">
+              <h3>
+                {{ lote.nombre_prod ?? "Producto no disponible" }}
+              </h3>
 
-        <!-- FECHA DE CADUCIDAD -->
-        <div class="section_title">Fecha de Caducidad</div>
-        <div class="fecha_card">
-          <div class="fecha_icon">
-            <span class="material-icons">event</span>
-          </div>
-          <div class="fecha_info">
-            <span class="fecha_label">Fecha de Vencimiento</span>
-            <span class="fecha_value">{{ formatDate(lote?.fechaCaducidadLote || '') }}</span>
-          </div>
-        </div>
+              <p class="id_lote">
+                <span class="material-icons"> tag </span>
 
+                Lote ID:
+                {{ lote.ide_lote }}
+              </p>
+            </div>
+
+            <div class="estado_badge">
+              {{ estadoLabel(lote.estado_lote) }}
+            </div>
+          </div>
+
+          <div class="section_title">Información del lote</div>
+
+          <div class="info_grid">
+            <div class="info_row">
+              <ui-text-field
+                label="ID del lote"
+                [value]="lote.ide_lote"
+                [readonly]="true"
+              />
+
+              <ui-text-field
+                label="ID del producto"
+                [value]="lote.ide_prod"
+                [readonly]="true"
+              />
+            </div>
+
+            <div class="info_row">
+              <ui-text-field
+                label="Producto"
+                [value]="lote.nombre_prod ?? 'No disponible'"
+                [readonly]="true"
+              />
+
+              <ui-text-field
+                label="Stock disponible"
+                [value]="lote.stock_lote"
+                [readonly]="true"
+              />
+            </div>
+
+            <div class="info_row">
+              <ui-text-field
+                label="Estado"
+                [value]="estadoLabel(lote.estado_lote)"
+                [readonly]="true"
+              />
+
+              <ui-text-field
+                label="Fecha de caducidad"
+                [value]="formatDate(lote.fecha_caducidad_lote)"
+                [readonly]="true"
+              />
+            </div>
+          </div>
+
+          <div class="section_title">Fecha de caducidad</div>
+
+          <div class="fecha_card">
+            <div class="fecha_icon">
+              <span class="material-icons"> event </span>
+            </div>
+
+            <div class="fecha_info">
+              <span class="fecha_label"> Fecha de vencimiento </span>
+
+              <span class="fecha_value">
+                {{ formatDate(lote.fecha_caducidad_lote) }}
+              </span>
+            </div>
+          </div>
+        }
       </div>
     </div>
   </div>

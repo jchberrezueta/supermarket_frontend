@@ -1,65 +1,112 @@
+import { CommonModule, DatePipe, Location } from '@angular/common';
+
+import { HttpErrorResponse } from '@angular/common/http';
+
 import { Component, inject } from '@angular/core';
+
 import { ActivatedRoute } from '@angular/router';
-import { UiTextFieldComponent } from '@shared/components/text-field/text-field.component';
-import { UiButtonComponent } from '@shared/components/button/button.component';
-import { Location, CommonModule, DatePipe } from '@angular/common';
+
+import { EstadoLote, ILoteResult } from '@models';
+
 import { LotesService } from '@services/lotes.service';
+
+import { UiButtonComponent } from '@shared/components/button/button.component';
+
+import { UiTextFieldComponent } from '@shared/components/text-field/text-field.component';
+
 import { LoadingService } from '@shared/services/loading.service';
 
-interface ILoteView {
-  ideLote: number;
-  nombreProd: string;
-  fechaCaducidadLote: string;
-  stockLote: number;
-  estadoLote: string;
-}
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-details',
+
   standalone: true,
-  imports: [
-    CommonModule,
-    UiTextFieldComponent,
-    UiButtonComponent
-  ],
+
+  imports: [CommonModule, UiTextFieldComponent, UiButtonComponent],
+
   providers: [DatePipe],
+
   templateUrl: './details.component.html',
-  styleUrl: './details.component.scss'
+
+  styleUrl: './details.component.scss',
 })
 export default class DetailsComponent {
+  private readonly route = inject(ActivatedRoute);
 
-  private readonly _route = inject(ActivatedRoute);
-  private readonly _lotesService = inject(LotesService);
-  private readonly _loadingService = inject(LoadingService);
-  private readonly _datePipe = inject(DatePipe);
-  public location = inject(Location);
+  private readonly lotesService = inject(LotesService);
 
-  protected lote: ILoteView | null = null;
-  protected idLote!: number;
+  private readonly loadingService = inject(LoadingService);
+
+  private readonly datePipe = inject(DatePipe);
+
+  protected readonly location = inject(Location);
+
+  protected lote: ILoteResult | null = null;
+
+  protected idLote = -1;
 
   constructor() {
-    const idParam = this._route.snapshot.params['id'];
-    if (idParam) {
-      this.idLote = +idParam;
-      this.loadLote();
+    const id = Number(this.route.snapshot.paramMap.get('id'));
+
+    if (!Number.isInteger(id) || id <= 0) {
+      void Swal.fire({
+        icon: 'warning',
+        title: 'Identificador inválido',
+
+        text: 'El identificador del lote no es válido.',
+      }).then(() => {
+        this.location.back();
+      });
+
+      return;
     }
+
+    this.idLote = id;
+    this.loadLote();
   }
 
   protected loadLote(): void {
-    this._loadingService.show();
-    this._lotesService.buscar(this.idLote).subscribe({
-      next: (res) => {
-        const data = res.data[0] as any;
-        this.lote = {
-          ideLote: data.ide_lote,
-          nombreProd: data.nombre_prod,
-          fechaCaducidadLote: data.fecha_caducidad_lote,
-          stockLote: data.stock_lote,
-          estadoLote: data.estado_lote
-        };
-        this._loadingService.hide();
+    if (this.idLote <= 0) {
+      return;
+    }
+
+    this.loadingService.show();
+
+    this.lotesService.buscar(this.idLote).subscribe({
+      next: (response) => {
+        this.loadingService.hide();
+
+        const lote = response.data[0];
+
+        if (!lote) {
+          this.lote = null;
+
+          void Swal.fire({
+            icon: 'error',
+            title: 'Lote no encontrado',
+
+            text: 'No se encontró el lote indicado.',
+          }).then(() => {
+            this.location.back();
+          });
+
+          return;
+        }
+
+        this.lote = lote;
       },
-      error: () => this._loadingService.hide()
+
+      error: (error: HttpErrorResponse) => {
+        this.loadingService.hide();
+
+        void Swal.fire({
+          icon: 'error',
+          title: 'No se pudo cargar',
+
+          text: this.extractError(error),
+        });
+      },
     });
   }
 
@@ -67,7 +114,63 @@ export default class DetailsComponent {
     this.location.back();
   }
 
-  protected formatDate(date: string): string {
-    return this._datePipe.transform(date, 'dd/MM/yyyy') || date;
+  protected formatDate(date: string | null | undefined): string {
+    if (!date) {
+      return 'No disponible';
+    }
+
+    return this.datePipe.transform(date, 'dd/MM/yyyy') ?? date;
+  }
+
+  protected estadoLabel(estado: EstadoLote | undefined): string {
+    switch (estado) {
+      case 'correcto':
+        return 'Correcto';
+
+      case 'proximo':
+        return 'Próximo a caducar';
+
+      case 'caducado':
+        return 'Caducado';
+
+      case 'devuelto':
+        return 'Devuelto';
+
+      default:
+        return 'No disponible';
+    }
+  }
+
+  protected estadoClass(estado: EstadoLote | undefined): string {
+    switch (estado) {
+      case 'correcto':
+        return 'estado-correcto';
+
+      case 'proximo':
+        return 'estado-proximo';
+
+      case 'caducado':
+        return 'estado-caducado';
+
+      case 'devuelto':
+        return 'estado-devuelto';
+
+      default:
+        return '';
+    }
+  }
+
+  private extractError(error: HttpErrorResponse): string {
+    const message = error.error?.message;
+
+    if (Array.isArray(message)) {
+      return message.join('. ');
+    }
+
+    if (typeof message === 'string') {
+      return message;
+    }
+
+    return 'No fue posible consultar la información del lote.';
   }
 }

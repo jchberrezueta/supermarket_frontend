@@ -50,7 +50,6 @@
   display: flex;
   align-items: center;
   gap: 25px;
-  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
   border-radius: 16px;
   padding: 30px;
   margin-bottom: 30px;
@@ -100,21 +99,34 @@
     position: absolute;
     top: 20px;
     right: 20px;
+
     padding: 8px 16px;
+
     border-radius: 20px;
+
+    background: rgba(255, 255, 255, 0.22);
+
+    color: white;
+
     font-weight: 600;
     font-size: 0.85rem;
-
-    &.activo {
-      background: rgba(255, 255, 255, 0.25);
-      color: white;
-    }
-
-    &.inactivo {
-      background: rgba(0, 0, 0, 0.2);
-      color: white;
-    }
   }
+}
+
+.estado-correcto {
+  background: linear-gradient(135deg, #16834b 0%, #116737 100%);
+}
+
+.estado-proximo {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+
+.estado-caducado {
+  background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+}
+
+.estado-devuelto {
+  background: linear-gradient(135deg, #64748b 0%, #334155 100%);
 }
 
 .section_title {
@@ -123,7 +135,7 @@
   color: #555;
   margin: 25px 0 15px 0;
   padding-bottom: 8px;
-  border-bottom: 2px solid #f59e0b;
+  border-bottom: 2px solid #16834b;
   display: inline-block;
 }
 
