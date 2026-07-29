@@ -22,7 +22,7 @@ export class EmpleadosService {
     );
   }
 
-  public insertar(body: IEmpleado) {
+  public insertar(body: Omit<IEmpleado, 'ideEmpl'>) {
     return this._restService.post<any>(`${this.apiUrl}/insertar`, body);
   }
 

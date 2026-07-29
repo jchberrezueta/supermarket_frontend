@@ -74,26 +74,51 @@ export default class FormComponent implements OnInit {
     this.initForm();
     this.loadCombos();
 
-    const id = Number(this.route.snapshot.paramMap.get('id'));
+    const idParam = this.route.snapshot.paramMap.get('id');
 
-    if (Number.isInteger(id) && id >= 0) {
-      if (id === 0) {
-        void Swal.fire({
-          icon: 'warning',
-          title: 'Perfil protegido',
-
-          text: 'El perfil administrador principal no puede modificarse.',
-        }).then(() => this.location.back());
-
-        return;
-      }
-
-      this.isAdd = false;
-      this.idParam = id;
-      this.setData(id);
+    /*
+     * La ruta de creación no contiene ID.
+     */
+    if (idParam === null) {
+      this.isAdd = true;
+      return;
     }
-  }
 
+    const id = Number(idParam);
+
+    if (!Number.isInteger(id) || id < 0) {
+      void Swal.fire({
+        icon: 'warning',
+        title: 'Identificador inválido',
+        text: 'El identificador del perfil no es válido.',
+      }).then(() => {
+        this.location.back();
+      });
+
+      return;
+    }
+
+    /*
+     * El perfil 0 corresponde al
+     * administrador principal.
+     */
+    if (id === 0) {
+      void Swal.fire({
+        icon: 'warning',
+        title: 'Perfil protegido',
+        text: 'El perfil administrador principal no puede modificarse.',
+      }).then(() => {
+        this.location.back();
+      });
+
+      return;
+    }
+
+    this.isAdd = false;
+    this.idParam = id;
+
+    this.setData(id);
+  }
   private initForm(): void {
     this.formData = this.formBuilder.group({
       idePerf: [

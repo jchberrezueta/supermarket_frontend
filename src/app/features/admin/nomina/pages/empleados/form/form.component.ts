@@ -133,47 +133,66 @@ export default class FormComponent {
   protected guardar(): void {
     if (!this.formData.invalid) {
       const data = this.formData.getRawValue() as IEmpleado;
+
       if (this.isAdd) {
-        data.ideEmpl = -1;
-        this._empleadosService.insertar(data).subscribe((res) => {
+        const { ideEmpl: _ideEmpl, ...createData } = data;
+
+        this._empleadosService.insertar(createData).subscribe(() => {
           Swal.fire({
             title: 'Empleado registrado :)',
+
             text: 'El empleado fue guardado correctamente',
+
             icon: 'success',
           });
+
           this.location.back();
           this.resetForm();
         });
-      } else {
-        Swal.fire({
-          title: '¿Está seguro de modificar este empleado?',
-          text: 'Los cambios realizados se registrarán!',
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          confirmButtonText: 'Sí, de acuerdo',
-        }).then((result) => {
-          if (result.isConfirmed) {
-            data.ideEmpl = this.idParam;
-            this._empleadosService
-              .actualizar(this.idParam, data)
-              .subscribe((res) => {
-                Swal.fire({
-                  title: 'Empleado actualizado :)',
-                  text: 'El empleado fue actualizado correctamente',
-                  icon: 'success',
-                });
-                this.location.back();
-                this.resetForm();
-              });
-          }
-        });
+
+        return;
       }
+
+      Swal.fire({
+        title: '¿Está seguro de modificar este empleado?',
+
+        text: 'Los cambios realizados se registrarán!',
+
+        icon: 'warning',
+
+        showCancelButton: true,
+
+        confirmButtonColor: '#3085d6',
+
+        cancelButtonColor: '#d33',
+
+        confirmButtonText: 'Sí, de acuerdo',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          data.ideEmpl = this.idParam;
+
+          this._empleadosService
+            .actualizar(this.idParam, data)
+            .subscribe(() => {
+              Swal.fire({
+                title: 'Empleado actualizado :)',
+
+                text: 'El empleado fue actualizado correctamente',
+
+                icon: 'success',
+              });
+
+              this.location.back();
+              this.resetForm();
+            });
+        }
+      });
     } else {
       Swal.fire({
         icon: 'info',
+
         title: 'Oops... Faltan datos',
+
         text: 'Revise por favor la información ingresada',
       });
     }

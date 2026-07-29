@@ -85,15 +85,52 @@ export default class FormComponent implements OnInit {
     this.initForm();
     this.loadCombos();
 
-    const id = Number(this.route.snapshot.paramMap.get('id'));
+    const idParam = this.route.snapshot.paramMap.get('id');
 
-    if (Number.isInteger(id) && id >= 0) {
-      this.isAdd = false;
-      this.idParam = id;
-
-      this.configureUpdateForm();
-      this.setData(id);
+    /*
+     * Si la ruta no contiene ID,
+     * estamos creando una cuenta.
+     */
+    if (idParam === null) {
+      this.isAdd = true;
+      return;
     }
+
+    const id = Number(idParam);
+
+    if (!Number.isInteger(id) || id < 0) {
+      void Swal.fire({
+        icon: 'warning',
+        title: 'Identificador inválido',
+        text: 'El identificador de la cuenta no es válido.',
+      }).then(() => {
+        this.location.back();
+      });
+
+      return;
+    }
+
+    /*
+     * La cuenta 0 es la cuenta
+     * administrativa principal.
+     */
+    if (id === 0) {
+      void Swal.fire({
+        icon: 'warning',
+        title: 'Cuenta protegida',
+        text: 'La cuenta administrativa principal no puede modificarse.',
+      }).then(() => {
+        this.location.back();
+      });
+
+      return;
+    }
+
+    this.isAdd = false;
+    this.idParam = id;
+
+    this.configureUpdateForm();
+    this.setData(id);
   }
 
   private initForm(): void {
