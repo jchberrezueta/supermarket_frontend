@@ -6,50 +6,47 @@
           <div class="sm-crud-filters">
             <ui-input-box
               class="sm-field-lg"
-              [label]="'Nombre'"
+              label="Nombre"
               [options]="opcionesNombres"
-              [returnValue]="'label'"
+              returnValue="label"
               formControlName="nombreOpci"
             />
 
             <ui-input-box
               class="sm-field-xl"
-              [label]="'Ruta'"
+              label="Ruta"
               [options]="opcionesRutas"
-              [returnValue]="'label'"
+              returnValue="label"
               formControlName="rutaOpci"
             />
 
             <ui-combo-box
               class="sm-field-sm"
-              [label]="'Nivel'"
+              label="Nivel"
               [options]="opcionesNiveles"
-              [returnValue]="'label'"
               formControlName="nivelOpci"
             />
 
             <ui-combo-box
-              class="sm-field-sm"
-              [label]="'Padre'"
+              class="sm-field-lg"
+              label="Padre"
               [options]="opcionesPadres"
-              [returnValue]="'label'"
               formControlName="padreOpci"
             />
 
             <ui-combo-box
               class="sm-field-sm"
-              [label]="'Estado'"
+              label="Estado"
               [options]="opcionesActividad"
-              [returnValue]="'label'"
               formControlName="activoOpci"
             />
           </div>
 
           <div class="sm-crud-filter-button">
             <ui-button
-              [label]="'Filtrar'"
-              [icon]="'filter_alt'"
-              [action]="'filter'"
+              label="Filtrar"
+              icon="filter_alt"
+              action="filter"
               (evntClick)="filtrar()"
             />
           </div>
@@ -58,8 +55,8 @@
 
       <div class="sm-crud-actions">
         <ui-button
-          [icon]="'refresh'"
-          [action]="'refresh'"
+          icon="refresh"
+          action="refresh"
           (evntClick)="refreshData($event)"
         />
       </div>

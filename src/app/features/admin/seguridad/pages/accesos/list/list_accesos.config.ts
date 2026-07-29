@@ -2,15 +2,20 @@ import { ITableListConfig } from '@shared/models/table-list.model';
 
 export const ListAccesosUsuarioConfig: ITableListConfig = {
   dataKey: 'ide_acce',
+
   columns: [
     {
       label: 'Detalles',
       property: 'view_details',
       type: 'details',
+
       buttonItems: [
         {
           action: 'details',
-          label: 'Ver Detalles',
+          label: 'Ver detalles',
+
+          tooltip: 'Consultar evento de autenticación',
+
           icon: 'visibility',
           router: true,
           key: 'ide_acce',
@@ -19,7 +24,12 @@ export const ListAccesosUsuarioConfig: ITableListConfig = {
       ],
     },
 
-    { label: 'ID', property: 'ide_acce', type: 'text', sortable: true },
+    {
+      label: 'ID',
+      property: 'ide_acce',
+      type: 'text',
+      sortable: true,
+    },
 
     {
       label: 'Usuario',
@@ -29,42 +39,7 @@ export const ListAccesosUsuarioConfig: ITableListConfig = {
     },
 
     {
-      label: 'Navegador',
-      property: 'navegador_acce',
-      type: 'text',
-      sortable: true,
-    },
-
-    {
-      label: 'Fecha Acceso',
-      property: 'fecha_acce',
-      type: 'date',
-      sortable: true,
-    },
-
-    {
-      label: 'IP',
-      property: 'ip_acce',
-      type: 'text',
-      sortable: false,
-    },
-
-    {
-      label: 'Intentos Fallidos',
-      property: 'num_int_fall_acce',
-      type: 'text',
-      sortable: true,
-    },
-
-    {
-      label: 'Latitud/Longitud',
-      property: 'lat_long_acce',
-      type: 'text',
-      sortable: true,
-    },
-
-    {
-      label: 'Usuario/Intentado',
+      label: 'Usuario intentado',
       property: 'usuario_intentado',
       type: 'text',
       sortable: true,
@@ -80,7 +55,42 @@ export const ListAccesosUsuarioConfig: ITableListConfig = {
     {
       label: 'Motivo',
       property: 'motivo_acce',
+      type: 'textTruncate',
+      sortable: true,
+    },
+
+    {
+      label: 'Estado cuenta',
+      property: 'estado_cuen',
       type: 'text',
+      sortable: true,
+    },
+
+    {
+      label: 'Fecha',
+      property: 'fecha_acce',
+      type: 'date',
+      sortable: true,
+    },
+
+    {
+      label: 'IP',
+      property: 'ip_acce',
+      type: 'text',
+      sortable: false,
+    },
+
+    {
+      label: 'Intentos fallidos',
+      property: 'num_int_fall_acce',
+      type: 'text',
+      sortable: true,
+    },
+
+    {
+      label: 'Navegador',
+      property: 'navegador_acce',
+      type: 'textTruncate',
       sortable: true,
     },
   ],

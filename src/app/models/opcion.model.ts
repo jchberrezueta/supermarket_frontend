@@ -80,13 +80,12 @@ export interface IResultDataOpciones {
 }
 
 export interface IFiltroOpciones {
-  ideOpci: number;
   nombreOpci: string;
   rutaOpci: string;
 
   activoOpci: EnumEstadosOpcion | '';
 
-  nivelOpci: number;
-  padreOpci: number;
-  iconoOpci: string;
+  nivelOpci: number | '';
+
+  padreOpci: number | '';
 }

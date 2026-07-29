@@ -2,111 +2,178 @@
   <ui-card [showHeader]="false" class="div_card">
     <div class="panel_1">
       <div class="card_form">
-        <!-- CABECERA -->
         <div class="header_actions">
           <div class="header_title">
-            <h2>Detalle del Acceso #{{ idAcceso }}</h2>
+            <h2>Detalle del acceso #{{ idAcceso }}</h2>
           </div>
+
           <div class="header_buttons">
-            <ui-button [icon]="'refresh'" (evntClick)="loadData()" />
+            <ui-button icon="refresh" (evntClick)="loadData()" />
+
             <ui-button
-              [label]="'Volver'"
-              [icon]="'arrow_back'"
+              label="Volver"
+              icon="arrow_back"
               (evntClick)="volver()"
             />
           </div>
         </div>
 
-        <!-- PERFIL DEL ACCESO -->
-        <div class="acceso_perfil">
-          <div class="avatar">
-            <span class="material-icons">category</span>
-          </div>
-          <div class="acceso_info_principal">
-            <h3>{{ acceso?.ideCuen }}</h3>
-            <p class="id_acceso">
-              <span class="material-icons">tag</span> ID:
-              {{ acceso?.fechaAcce }}
-            </p>
-          </div>
-        </div>
+        @if (acceso) {
+          <div
+            class="acceso_perfil"
+            [class.acceso_exitoso]="acceso.resultado_acce === 'exitoso'"
+            [class.acceso_fallido]="acceso.resultado_acce === 'fallido'"
+          >
+            <div class="avatar">
+              <span class="material-icons">
+                {{
+                  acceso.resultado_acce === "exitoso"
+                    ? "verified_user"
+                    : "gpp_bad"
+                }}
+              </span>
+            </div>
 
-        <!-- INFO ACCESO -->
-        <div class="section_title">Información del Acceso</div>
-        <div class="info_grid">
-          <div class="info_row">
-            <ui-text-field
-              [label]="'ID Acceso'"
-              [value]="acceso?.ideAcce"
-              [readonly]="true"
-            />
-            <ui-text-field
-              [label]="'ID Cuenta'"
-              [value]="acceso?.ideCuen"
-              [readonly]="true"
-            />
-          </div>
-          <div class="info_row">
-            <ui-text-field
-              [label]="'Navegador'"
-              [value]="acceso?.navegadorAcce"
-              [readonly]="true"
-            />
-            <ui-text-field
-              [label]="'Dirección IP'"
-              [value]="acceso?.ipAcce"
-              [readonly]="true"
-            />
-          </div>
-          <div class="info_row">
-            <ui-text-field
-              [label]="'Fecha de Acceso'"
-              [value]="formatDate(acceso?.fechaAcce || '')"
-              [readonly]="true"
-            />
-            <ui-text-field
-              [label]="'Intentos Fallidos'"
-              [value]="acceso?.numIntFallAcce"
-              [readonly]="true"
-            />
-          </div>
-        </div>
+            <div class="acceso_info_principal">
+              <h3>
+                {{ usuarioMostrado() }}
+              </h3>
 
-        <!-- UBICACIÓN -->
-        <div class="section_title">Ubicación Geográfica</div>
-        <div class="info_grid">
-          <div class="info_row">
-            <ui-text-field
-              [label]="'Latitud'"
-              [value]="acceso?.latitudAcce ?? 'No disponible'"
-              [readonly]="true"
-            />
-            <ui-text-field
-              [label]="'Longitud'"
-              [value]="acceso?.longitudAcce ?? 'No disponible'"
-              [readonly]="true"
-            />
-          </div>
-        </div>
+              <p class="id_acceso">
+                <span class="material-icons">
+                  {{
+                    acceso.resultado_acce === "exitoso"
+                      ? "check_circle"
+                      : "error"
+                  }}
+                </span>
 
-        <!-- MAPA (si hay coordenadas) -->
-        @if (acceso?.latitudAcce && acceso?.longitudAcce) {
-          <div class="section_title">Mapa</div>
-          <div class="mapa_card">
-            <a
-              [href]="
-                'https://www.google.com/maps?q=' +
-                acceso!.latitudAcce +
-                ',' +
-                acceso!.longitudAcce
-              "
-              target="_blank"
-              class="mapa_link"
-            >
-              <span class="material-icons">location_on</span>
-              Ver ubicación en Google Maps
-            </a>
+                {{ formatResultado() }}
+                —
+
+                {{ formatDate(acceso.fecha_acce) }}
+              </p>
+            </div>
           </div>
+
+          <div class="section_title">Resultado de autenticación</div>
+
+          <div class="info_grid">
+            <div class="info_row">
+              <ui-text-field
+                label="Resultado"
+                [value]="formatResultado()"
+                [readonly]="true"
+              />
+
+              <ui-text-field
+                label="Motivo"
+                [value]="formatMotivo()"
+                [readonly]="true"
+              />
+            </div>
+
+            <div class="info_row">
+              <ui-text-field
+                label="Usuario intentado"
+                [value]="acceso.usuario_intentado ?? 'No disponible'"
+                [readonly]="true"
+              />
+
+              <ui-text-field
+                label="Usuario asociado"
+                [value]="acceso.usuario_cuen ?? 'No disponible'"
+                [readonly]="true"
+              />
+            </div>
+
+            <div class="info_row">
+              <ui-text-field
+                label="Estado de la cuenta"
+                [value]="estadoCuenta()"
+                [readonly]="true"
+              />
+
+              <ui-text-field
+                label="Intentos fallidos"
+                [value]="acceso.num_int_fall_acce"
+                [readonly]="true"
+              />
+            </div>
+          </div>
+
+          <div class="section_title">Información técnica</div>
+
+          <div class="info_grid">
+            <div class="info_row">
+              <ui-text-field
+                label="ID del acceso"
+                [value]="acceso.ide_acce"
+                [readonly]="true"
+              />
+
+              <ui-text-field
+                label="ID de la cuenta"
+                [value]="acceso.ide_cuen ?? 'No asociada'"
+                [readonly]="true"
+              />
+            </div>
+
+            <div class="info_row">
+              <ui-text-field
+                label="Fecha del acceso"
+                [value]="formatDate(acceso.fecha_acce)"
+                [readonly]="true"
+              />
+
+              <ui-text-field
+                label="Dirección IP"
+                [value]="acceso.ip_acce ?? 'No disponible'"
+                [readonly]="true"
+              />
+            </div>
+
+            <div class="info_row full_row">
+              <ui-text-field
+                label="Navegador o dispositivo"
+                [value]="acceso.navegador_acce || 'No disponible'"
+                [readonly]="true"
+              />
+            </div>
+          </div>
+
+          <div class="section_title">Ubicación geográfica</div>
+
+          <div class="info_grid">
+            <div class="info_row">
+              <ui-text-field
+                label="Latitud"
+                [value]="acceso.latitud_acce ?? 'No disponible'"
+                [readonly]="true"
+              />
+
+              <ui-text-field
+                label="Longitud"
+                [value]="acceso.longitud_acce ?? 'No disponible'"
+                [readonly]="true"
+              />
+            </div>
+          </div>
+
+          @if (hasLocation()) {
+            <div class="mapa_card">
+              <a
+                [href]="mapUrl()"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="mapa_link"
+              >
+                <span class="material-icons"> location_on </span>
+
+                Ver ubicación en Google Maps
+              </a>
+            </div>
+          }
         }
       </div>
     </div>

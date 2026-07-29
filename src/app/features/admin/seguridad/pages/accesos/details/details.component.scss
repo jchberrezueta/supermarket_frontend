@@ -45,7 +45,6 @@
   display: flex;
   align-items: center;
   gap: 25px;
-  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
   border-radius: 16px;
   padding: 30px;
   margin-bottom: 30px;
@@ -91,14 +90,26 @@
   }
 }
 
+.acceso_exitoso {
+  background: linear-gradient(135deg, #16834b 0%, #116737 100%);
+}
+
+.acceso_fallido {
+  background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+}
+
+.full_row {
+  grid-template-columns: 1fr !important;
+}
+
 .section_title {
   font-size: 1.15rem;
   font-weight: 600;
   color: #555;
   margin: 25px 0 15px 0;
   padding-bottom: 8px;
-  border-bottom: 2px solid #3b82f6;
   display: inline-block;
+  border-bottom: 2px solid #16834b;
 }
 
 .info_grid {
@@ -129,21 +140,21 @@
   border-radius: 10px;
   padding: 25px;
   margin-top: 10px;
-  border-left: 4px solid #3b82f6;
+  border-left: 4px solid #16834b;
 
   .mapa_link {
     display: flex;
     align-items: center;
     gap: 12px;
-    color: #3b82f6;
     text-decoration: none;
     font-weight: 500;
     font-size: 1rem;
     transition: color 0.2s;
 
+    color: #16834b;
+
     &:hover {
-      color: #1d4ed8;
-      text-decoration: underline;
+      color: #116737;
     }
 
     .material-icons {

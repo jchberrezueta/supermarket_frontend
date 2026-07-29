@@ -1,14 +1,25 @@
 import { Component, inject, viewChild } from '@angular/core';
+
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+
 import { FormGroupOf } from '@core/utils/utilities';
+
+import { IFiltroOpciones } from '@models';
+
 import { OpcionesService } from '@services/index';
+
 import { UiButtonComponent } from '@shared/components/button/button.component';
+
 import { UiCardComponent } from '@shared/components/card/card.component';
+
 import { UiComboBoxComponent } from '@shared/components/combo-box/combo-box.component';
+
 import { UiInputBoxComponent } from '@shared/components/input-box/input-box.component';
+
 import { UiTableListComponent } from '@shared/components/index';
+
 import { IComboBoxOption } from '@shared/models/combo_box_option';
-import { IFiltroOpciones } from 'app/models';
+
 import { ListOpcionesConfig } from './list_opciones.config';
 
 const IMPORTS = [
@@ -30,19 +41,23 @@ type FilterOpcionFormGroup = FormGroupOf<IFiltroOpciones>;
   styleUrl: './list.component.scss',
 })
 export default class ListComponent {
-  private readonly _tableList =
+  private readonly tableList =
     viewChild.required<UiTableListComponent>(UiTableListComponent);
 
-  private readonly _opcionesService = inject(OpcionesService);
+  private readonly opcionesService = inject(OpcionesService);
+
   private readonly formBuilder = inject(FormBuilder);
 
   protected readonly config = ListOpcionesConfig;
 
   protected opcionesNombres: IComboBoxOption[] = [];
+
   protected opcionesRutas: IComboBoxOption[] = [];
+
   protected opcionesActividad: IComboBoxOption[] = [];
 
   protected opcionesNiveles: IComboBoxOption[] = [];
+
   protected opcionesPadres: IComboBoxOption[] = [];
 
   protected formData!: FilterOpcionFormGroup;
@@ -60,50 +75,58 @@ export default class ListComponent {
 
   protected configForm(): void {
     this.formData = this.formBuilder.group({
-      ideOpci: [0, [], []],
-      nombreOpci: ['', [], []],
-      rutaOpci: ['', [], []],
-      activoOpci: ['', [], []],
-      nivelOpci: [0, [], []],
-      padreOpci: [0, [], []],
-      iconoOpci: ['', [], []],
+      nombreOpci: [''],
+      rutaOpci: [''],
+      activoOpci: [''],
+      nivelOpci: [''],
+      padreOpci: [''],
     }) as FilterOpcionFormGroup;
 
     this.initialFormValue = this.formData.getRawValue();
   }
 
   private loadComboNombres(): void {
-    this._opcionesService.listarComboNombres().subscribe((res) => {
-      this.opcionesNombres = res ?? [];
+    this.opcionesService.listarComboNombres().subscribe({
+      next: (response) => {
+        this.opcionesNombres = response ?? [];
+      },
     });
   }
 
   private loadComboRutas(): void {
-    this._opcionesService.listarComboRutas().subscribe((res) => {
-      this.opcionesRutas = res ?? [];
+    this.opcionesService.listarComboRutas().subscribe({
+      next: (response) => {
+        this.opcionesRutas = response ?? [];
+      },
     });
   }
+
   private loadComboNiveles(): void {
-    this._opcionesService.listarComboNiveles().subscribe((res) => {
-      this.opcionesNiveles = res ?? [];
+    this.opcionesService.listarComboNiveles().subscribe({
+      next: (response) => {
+        this.opcionesNiveles = response ?? [];
+      },
     });
   }
 
   private loadComboPadres(): void {
-    this._opcionesService.listarComboPadres().subscribe((res) => {
-      this.opcionesPadres = res ?? [];
+    this.opcionesService.listarComboPadres().subscribe({
+      next: (response) => {
+        this.opcionesPadres = response ?? [];
+      },
     });
   }
 
   private loadComboEstados(): void {
-    this._opcionesService.listarComboEstados().subscribe((res) => {
-      this.opcionesActividad = res ?? [];
+    this.opcionesService.listarComboEstados().subscribe({
+      next: (response) => {
+        this.opcionesActividad = response ?? [];
+      },
     });
   }
 
   protected filtrar(): void {
-    const tableListInstance = this._tableList();
-    tableListInstance.filterData(this.getParams());
+    this.tableList().filterData(this.getParams());
   }
 
   protected refreshData(actionClick: string): void {
@@ -111,8 +134,8 @@ export default class ListComponent {
       return;
     }
 
-    const tableListInstance = this._tableList();
-    tableListInstance.refreshData();
+    this.tableList().refreshData();
+
     this.resetForm();
   }
 
@@ -122,11 +145,18 @@ export default class ListComponent {
 
   private getParams(): URLSearchParams {
     const params = new URLSearchParams();
-    const filtro = this.formData.value as IFiltroOpciones;
+
+    const filtro = this.formData.getRawValue();
 
     this.appendParam(params, 'nombreOpci', filtro.nombreOpci);
+
     this.appendParam(params, 'rutaOpci', filtro.rutaOpci);
+
     this.appendParam(params, 'activoOpci', filtro.activoOpci);
+
+    this.appendParam(params, 'nivelOpci', filtro.nivelOpci);
+
+    this.appendParam(params, 'padreOpci', filtro.padreOpci);
 
     return params;
   }
@@ -142,7 +172,7 @@ export default class ListComponent {
 
     const stringValue = String(value).trim();
 
-    if (stringValue === '') {
+    if (!stringValue) {
       return;
     }
 
