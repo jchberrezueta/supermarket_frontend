@@ -3,12 +3,13 @@ import { RestService } from '@core/services/rest.service';
 import { ICliente, IResultDataCliente } from '@models';
 import { IComboBoxOption } from '@shared/models/combo_box_option';
 import { Observable } from 'rxjs';
+import { IResultDataCreate } from '@core/models';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ClientesService {
-private readonly _restService = inject(RestService);
+  private readonly _restService = inject(RestService);
   private readonly apiUrl = 'clientes';
 
   public listar(): Observable<IResultDataCliente> {
@@ -16,41 +17,64 @@ private readonly _restService = inject(RestService);
   }
 
   public buscar(id: number): Observable<IResultDataCliente> {
-    return this._restService.get<IResultDataCliente>(`${this.apiUrl}/buscar/${id}`);
+    return this._restService.get<IResultDataCliente>(
+      `${this.apiUrl}/buscar/${id}`,
+    );
   }
 
-  public insertar(body: ICliente) {
-    return this._restService.post<any>(`${this.apiUrl}/insertar`, body);
+  public insertar(
+    body: Omit<ICliente, 'ideClie'>,
+  ): Observable<IResultDataCreate> {
+    return this._restService.post<IResultDataCreate>(
+      `${this.apiUrl}/insertar`,
+      body,
+    );
   }
 
-  public actualizar(id: number, body: ICliente) {
-    return this._restService.put<any>(`${this.apiUrl}/actualizar/${id}`, body);
+  public actualizar(id: number, body: ICliente): Observable<IResultDataCreate> {
+    return this._restService.put<IResultDataCreate>(
+      `${this.apiUrl}/actualizar/${id}`,
+      body,
+    );
   }
 
-  public eliminar(id: number) {
-    return this._restService.delete<any>(`${this.apiUrl}/eliminar/${id}`);
+  public eliminar(id: number): Observable<IResultDataCreate> {
+    return this._restService.delete<IResultDataCreate>(
+      `${this.apiUrl}/eliminar/${id}`,
+    );
   }
 
   /**
    * COMBOS
    */
   public listarComboClientes(): Observable<IComboBoxOption[]> {
-    return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/combo/clientes`);
+    return this._restService.get<IComboBoxOption[]>(
+      `${this.apiUrl}/listar/combo/clientes`,
+    );
   }
   public listarComboCedulas(): Observable<IComboBoxOption[]> {
-    return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/combo/cedulas`);
+    return this._restService.get<IComboBoxOption[]>(
+      `${this.apiUrl}/listar/combo/cedulas`,
+    );
   }
   public listarComboNombres(): Observable<IComboBoxOption[]> {
-    return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/combo/nombres`);
+    return this._restService.get<IComboBoxOption[]>(
+      `${this.apiUrl}/listar/combo/nombres`,
+    );
   }
   public listarComboApellidos(): Observable<IComboBoxOption[]> {
-    return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/combo/apellidos`);
+    return this._restService.get<IComboBoxOption[]>(
+      `${this.apiUrl}/listar/combo/apellidos`,
+    );
   }
   public listarComboSocio(): Observable<IComboBoxOption[]> {
-    return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/combo/socios`);
+    return this._restService.get<IComboBoxOption[]>(
+      `${this.apiUrl}/listar/combo/socios`,
+    );
   }
   public listarComboTerceraEdad(): Observable<IComboBoxOption[]> {
-    return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/combo/tercera/edad`);
+    return this._restService.get<IComboBoxOption[]>(
+      `${this.apiUrl}/listar/combo/tercera/edad`,
+    );
   }
-
 }

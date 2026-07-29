@@ -15,6 +15,7 @@ import { UiDatetimePickerComponent } from '@shared/components/datetime-picker/da
 import { LoadingService } from '@shared/services/loading.service';
 
 import Swal from 'sweetalert2';
+import { IResultDataCreate } from '@core/models';
 
 type ClienteFormGroup = FormGroupOf<ICliente>;
 
@@ -111,52 +112,91 @@ export default class FormComponent {
     });
   }
 
-  protected guardar() {
-    if (!this.formData.valid) {
-      Swal.fire('Oops', 'Faltan datos obligatorios', 'info');
+  protected guardar(): void {
+    this.formData.markAllAsTouched();
+
+    if (this.formData.invalid) {
+      void Swal.fire(
+        'Formulario incompleto',
+        'Revise los datos obligatorios.',
+        'info',
+      );
+
       return;
     }
 
-    const data = this.formData.getRawValue() as ICliente;
+    const raw = this.formData.getRawValue();
+
+    const data: ICliente = {
+      ...raw,
+      cedulaClie: raw.cedulaClie.trim(),
+      telefonoClie: raw.telefonoClie.trim(),
+      primerNombreClie: raw.primerNombreClie.trim(),
+      apellidoPaternoClie: raw.apellidoPaternoClie.trim(),
+      emailClie: raw.emailClie.trim().toLowerCase(),
+      segundoNombreClie: raw.segundoNombreClie?.trim() || null,
+      apellidoMaternoClie: raw.apellidoMaternoClie?.trim() || null,
+    };
 
     if (this.isAdd) {
-      data.ideClie = -1;
+      const { ideClie: _ideClie, ...createData } = data;
+
       this._loadingService.show();
-      this._clientesService.insertar(data).subscribe({
-        next: () => {
+
+      this._clientesService.insertar(createData).subscribe({
+        next: (response) => {
           this._loadingService.hide();
-          Swal.fire(
-            'Cliente registrado',
-            'El cliente fue guardado correctamente',
-            'success',
-          );
-          this.location.back();
-          this.resetForm();
+
+          this.procesarRespuesta(response, 'Cliente registrado');
         },
-        error: () => this._loadingService.hide(),
+
+        error: (error) => {
+          this._loadingService.hide();
+
+          void Swal.fire(
+            'No se pudo registrar',
+            this.obtenerErrorHttp(error),
+            'error',
+          );
+        },
       });
-    } else {
-      Swal.fire({
-        title: '¿Actualizar cliente?',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Sí, actualizar',
-      }).then((r) => {
-        if (r.isConfirmed) {
-          data.ideClie = this.idParam;
-          this._loadingService.show();
-          this._clientesService.actualizar(this.idParam, data).subscribe({
-            next: () => {
-              this._loadingService.hide();
-              Swal.fire('Cliente actualizado', 'Cambios guardados', 'success');
-              this.location.back();
-              this.resetForm();
-            },
-            error: () => this._loadingService.hide(),
-          });
-        }
-      });
+
+      return;
     }
+
+    void Swal.fire({
+      title: '¿Actualizar cliente?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, actualizar',
+      cancelButtonText: 'Cancelar',
+    }).then((result) => {
+      if (!result.isConfirmed) {
+        return;
+      }
+
+      data.ideClie = this.idParam;
+
+      this._loadingService.show();
+
+      this._clientesService.actualizar(this.idParam, data).subscribe({
+        next: (response) => {
+          this._loadingService.hide();
+
+          this.procesarRespuesta(response, 'Cliente actualizado');
+        },
+
+        error: (error) => {
+          this._loadingService.hide();
+
+          void Swal.fire(
+            'No se pudo actualizar',
+            this.obtenerErrorHttp(error),
+            'error',
+          );
+        },
+      });
+    });
   }
 
   protected calcularEdad(fecha: string | Date): number {
@@ -191,5 +231,38 @@ export default class FormComponent {
 
   protected resetForm() {
     this.formData.reset(this.initialFormValue);
+  }
+
+  private procesarRespuesta(response: IResultDataCreate, titulo: string): void {
+    const success = Number(response.p_result) === 1;
+
+    void Swal.fire({
+      icon: success ? 'success' : 'error',
+      title: success ? titulo : 'Operación rechazada',
+      text:
+        response.p_response ||
+        (success
+          ? 'Operación completada.'
+          : 'No se pudo completar la operación.'),
+    }).then(() => {
+      if (success) {
+        this.location.back();
+      }
+    });
+  }
+
+  private obtenerErrorHttp(error: unknown): string {
+    const httpError = error as {
+      error?: {
+        message?: string | string[];
+      };
+      message?: string;
+    };
+
+    const message = httpError.error?.message;
+
+    return Array.isArray(message)
+      ? message.join(' ')
+      : (message ?? httpError.message ?? 'Ocurrió un error inesperado.');
   }
 }
