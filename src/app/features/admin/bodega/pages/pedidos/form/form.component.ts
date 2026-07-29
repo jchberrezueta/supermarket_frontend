@@ -16,6 +16,8 @@ import {
   IEmpresaPreciosResult,
   IPedidoCompleto,
   IPedidoResult,
+  ILoteCaducadoDisponible,
+  ILoteDevolucionPedidoResult,
 } from '@models';
 import { EmpresasService, PedidosService } from '@services/index';
 import { UiButtonComponent } from '@shared/components/button/button.component';
@@ -25,6 +27,20 @@ import { UiTextFieldComponent } from '@shared/components/text-field/text-field.c
 import { UiDatetimePickerComponent } from '@shared/components/datetime-picker/datetime-picker.component';
 import { IComboBoxOption } from '@shared/models/combo_box_option';
 import { LoadingService } from '@shared/services/loading.service';
+
+interface ILoteCanjeFormulario {
+  ideLote: number;
+  fechaCaducidadLote: string;
+  stockLote: number;
+  cantidadSeleccionada: number;
+}
+
+interface ILoteCanjeDetalle {
+  ideLote: number;
+  fechaCaducidadLote: string;
+  stockLote: number;
+  cantidadDevolucion: number;
+}
 
 interface IDetalleTabla {
   claveLocal: string;
@@ -37,11 +53,12 @@ interface IDetalleTabla {
   dctoCompraProd: number;
   dctoCaducProd: number;
   totalProd: number;
+  lotesDevolucion: ILoteCanjeDetalle[];
 }
 
 interface IPrevisualizacion extends Omit<
   IDetalleTabla,
-  'claveLocal' | 'ideProd' | 'nombreProd' | 'cantidadProd'
+  'claveLocal' | 'ideProd' | 'nombreProd' | 'cantidadProd' | 'lotesDevolucion'
 > {}
 
 const VACIO: IPrevisualizacion = {
@@ -87,6 +104,8 @@ export default class FormComponent implements OnInit {
   ];
   protected empresas: IComboBoxOption[] = [];
   protected productos: IComboBoxOption[] = [];
+  protected lotesCaducados: ILoteCanjeFormulario[] = [];
+  protected cargandoLotes = false;
   protected preciosEmpresa: IEmpresaPreciosResult[] = [];
   protected detalles: IDetalleTabla[] = [];
   protected productoSeleccionado = -1;
@@ -128,9 +147,13 @@ export default class FormComponent implements OnInit {
   }
 
   protected seleccionarMotivo(value: string): void {
-    if (this.cabeceraConfirmada || this.detalles.length > 0) return;
+    if (this.cabeceraConfirmada || this.detalles.length > 0) {
+      return;
+    }
+
     this.formData.controls.motivoPedi.setValue(value);
-    this.actualizarPreview();
+
+    this.limpiarSeleccionProducto();
   }
 
   protected confirmarCabecera(): void {
@@ -163,14 +186,38 @@ export default class FormComponent implements OnInit {
 
   protected seleccionarProducto(value: string | number): void {
     this.productoSeleccionado = Number(value);
+
+    this.lotesCaducados = [];
+
+    if (
+      this.esDevolucion &&
+      Number.isInteger(this.productoSeleccionado) &&
+      this.productoSeleccionado > 0
+    ) {
+      this.cantidadProducto = 0;
+
+      this.cargarLotesCaducados(this.productoSeleccionado);
+
+      return;
+    }
+
+    this.cantidadProducto = 1;
     this.actualizarPreview();
   }
 
   protected cambiarCantidad(value: number): void {
+    /*
+     * En un canje, la cantidad se obtiene
+     * de la suma de lotes seleccionados.
+     */
+    if (this.esDevolucion) {
+      return;
+    }
+
     this.cantidadProducto = Number(value);
+
     this.actualizarPreview();
   }
-
   protected agregarProducto(): void {
     if (this.claveEdicion) {
       this.guardarCambiosProducto();
@@ -199,6 +246,13 @@ export default class FormComponent implements OnInit {
       );
       return;
     }
+
+    const lotesDevolucion = this.obtenerLotesCanje();
+
+    if (lotesDevolucion === null) {
+      return;
+    }
+
     if (this.detalles.some((detalle) => detalle.ideProd === precio.ide_prod)) {
       this.alerta(
         'Producto duplicado',
@@ -223,6 +277,7 @@ export default class FormComponent implements OnInit {
         ideProd: precio.ide_prod,
         nombreProd: precio.nombre_prod ?? `Producto #${precio.ide_prod}`,
         cantidadProd: this.cantidadProducto,
+        lotesDevolucion,
         ...this.preview,
       },
     ];
@@ -232,9 +287,18 @@ export default class FormComponent implements OnInit {
 
   protected editarProducto(detalle: IDetalleTabla): void {
     this.claveEdicion = detalle.claveLocal;
+
     this.productoSeleccionado = detalle.ideProd;
+
     this.cantidadProducto = detalle.cantidadProd;
+
     this.actualizarPreview();
+
+    if (this.esDevolucion) {
+      this.cargarLotesCaducados(detalle.ideProd, detalle.lotesDevolucion);
+    } else {
+      this.lotesCaducados = [];
+    }
   }
 
   protected guardarCambiosProducto(): void {
@@ -268,6 +332,11 @@ export default class FormComponent implements OnInit {
       );
       return;
     }
+    const lotesDevolucion = this.obtenerLotesCanje();
+
+    if (lotesDevolucion === null) {
+      return;
+    }
     if (
       this.detalles.some(
         (detalle) =>
@@ -295,6 +364,7 @@ export default class FormComponent implements OnInit {
       ideProd: precio.ide_prod,
       nombreProd: precio.nombre_prod ?? `Producto #${precio.ide_prod}`,
       cantidadProd: this.cantidadProducto,
+      lotesDevolucion,
       ...this.preview,
     };
     this.detalles = this.detalles.map((detalle, itemIndex) =>
@@ -479,6 +549,86 @@ export default class FormComponent implements OnInit {
       });
   }
 
+  private cargarLotesCaducados(
+    ideProd: number,
+
+    seleccionados: ILoteCanjeDetalle[] = [],
+  ): void {
+    this.cargandoLotes = true;
+    this.lotesCaducados = [];
+
+    const seleccionadosPorId = new Map(
+      seleccionados.map((lote) => [lote.ideLote, lote.cantidadDevolucion]),
+    );
+
+    this.pedidosService
+      .listarLotesCaducados(ideProd)
+      .pipe(
+        finalize(() => {
+          this.cargandoLotes = false;
+        }),
+      )
+      .subscribe({
+        next: (response) => {
+          this.lotesCaducados = (response.data ?? []).map(
+            (lote: ILoteCaducadoDisponible) => ({
+              ideLote: lote.ide_lote,
+
+              fechaCaducidadLote: lote.fecha_caducidad_lote,
+
+              stockLote: Number(lote.stock_lote),
+
+              cantidadSeleccionada: seleccionadosPorId.get(lote.ide_lote) ?? 0,
+            }),
+          );
+
+          this.recalcularCantidadCanje();
+        },
+
+        error: (error) => {
+          this.lotesCaducados = [];
+          this.cantidadProducto = 0;
+          this.actualizarPreview();
+
+          this.alerta(
+            'No se pudieron cargar los lotes',
+            error?.error?.message ??
+              'No fue posible consultar los lotes caducados del producto.',
+            'error',
+          );
+        },
+      });
+  }
+
+  protected cambiarCantidadLote(
+    lote: ILoteCanjeFormulario,
+    event: Event,
+  ): void {
+    const input = event.target as HTMLInputElement;
+
+    const value = Math.trunc(Number(input.value ?? 0));
+
+    const cantidad = Number.isFinite(value)
+      ? Math.max(0, Math.min(value, lote.stockLote))
+      : 0;
+
+    lote.cantidadSeleccionada = cantidad;
+
+    input.value = String(cantidad);
+
+    this.recalcularCantidadCanje();
+  }
+
+  private recalcularCantidadCanje(): void {
+    this.cantidadProducto = this.lotesCaducados.reduce(
+      (total, lote) => total + lote.cantidadSeleccionada,
+
+      0,
+    );
+
+    this.actualizarPreview();
+  }
+
   private cargarDetalles(id: number): void {
     this.pedidosService
       .listarDetallesPedido(id)
@@ -504,6 +654,17 @@ export default class FormComponent implements OnInit {
             dctoCompraProd: detalle.dcto_compra_prod,
             dctoCaducProd: detalle.dcto_caduc_prod,
             totalProd: detalle.total_prod,
+            lotesDevolucion: (detalle.lotes_devolucion ?? []).map(
+              (lote: ILoteDevolucionPedidoResult) => ({
+                ideLote: lote.ide_lote,
+
+                fechaCaducidadLote: lote.fecha_caducidad_lote ?? '',
+
+                stockLote: Number(lote.stock_lote ?? 0),
+
+                cantidadDevolucion: Number(lote.cantidad_devolucion),
+              }),
+            ),
           }));
           this.cabeceraConfirmada = this.detalles.length > 0;
         },
@@ -606,17 +767,31 @@ export default class FormComponent implements OnInit {
         observacionPedi:
           this.formData.controls.observacionPedi.value?.trim() || null,
       },
-      detallePedido: this.detalles.map(({ ideProd, cantidadProd }) => ({
-        ideProd,
-        cantidadProd,
+      detallePedido: this.detalles.map((detalle) => ({
+        ideProd: detalle.ideProd,
+
+        cantidadProd: detalle.cantidadProd,
+
+        lotesDevolucion: this.esDevolucion
+          ? detalle.lotesDevolucion.map((lote) => ({
+              ideLote: lote.ideLote,
+
+              cantidadDevolucion: lote.cantidadDevolucion,
+            }))
+          : [],
       })),
     };
   }
-
   private limpiarSeleccionProducto(): void {
     this.productoSeleccionado = -1;
-    this.cantidadProducto = 1;
-    this.preview = { ...VACIO };
+
+    this.cantidadProducto = this.esDevolucion ? 0 : 1;
+
+    this.lotesCaducados = [];
+
+    this.preview = {
+      ...VACIO,
+    };
   }
 
   private crearClaveLocal(): string {
@@ -664,5 +839,49 @@ export default class FormComponent implements OnInit {
     } catch {
       return response;
     }
+  }
+
+  private obtenerLotesCanje(): ILoteCanjeDetalle[] | null {
+    if (!this.esDevolucion) {
+      return [];
+    }
+
+    const lotes = this.lotesCaducados
+      .filter((lote) => lote.cantidadSeleccionada > 0)
+      .map((lote) => ({
+        ideLote: lote.ideLote,
+
+        fechaCaducidadLote: lote.fechaCaducidadLote,
+
+        stockLote: lote.stockLote,
+
+        cantidadDevolucion: lote.cantidadSeleccionada,
+      }));
+
+    if (!lotes.length) {
+      this.alerta(
+        'Sin lotes seleccionados',
+        'Seleccione al menos una unidad de un lote caducado.',
+      );
+
+      return null;
+    }
+
+    const total = lotes.reduce(
+      (sum, lote) => sum + lote.cantidadDevolucion,
+
+      0,
+    );
+
+    if (total !== this.cantidadProducto) {
+      this.alerta(
+        'Cantidad inconsistente',
+        'La cantidad del producto debe coincidir con la suma de los lotes seleccionados.',
+      );
+
+      return null;
+    }
+
+    return lotes;
   }
 }

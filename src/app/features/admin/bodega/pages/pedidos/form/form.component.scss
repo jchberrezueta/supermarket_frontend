@@ -64,10 +64,9 @@ h3 {
 }
 .product-entry {
   display: grid;
-  grid-template-columns: minmax(220px, 2.2fr) 0.7fr repeat(
-      5,
-      minmax(92px, 0.8fr)
-    ) auto;
+  grid-template-columns:
+    minmax(220px, 2.2fr) 0.7fr repeat(5, minmax(92px, 0.8fr))
+    auto;
   gap: 10px;
   margin-top: 10px;
   align-items: end;
@@ -202,4 +201,73 @@ tfoot {
   .card-heading {
     flex-wrap: wrap;
   }
+}
+
+.exchange-lots {
+  margin-top: 18px;
+  padding: 16px;
+  border: 1px solid #d7e8dc;
+  border-radius: 12px;
+  background: #f7fbf8;
+}
+
+.exchange-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.exchange-heading div {
+  display: grid;
+  gap: 4px;
+}
+
+.exchange-heading span {
+  color: #64748b;
+  font-size: 0.85rem;
+}
+
+.exchange-total {
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: #e1f5e7;
+  color: #176b34 !important;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.exchange-message {
+  padding: 18px;
+  text-align: center;
+  color: #64748b;
+}
+
+.exchange-message.warning {
+  color: #a16207;
+}
+
+.exchange-table {
+  min-width: 620px;
+  margin: 0;
+}
+
+.lot-quantity {
+  width: 120px;
+  padding: 8px 10px;
+  border: 1px solid #cbd9cf;
+  border-radius: 7px;
+  background: #fff;
+}
+
+.selected-lots {
+  display: grid;
+  gap: 3px;
+  min-width: 210px;
+}
+
+.selected-lots span {
+  color: #475569;
+  font-size: 0.82rem;
 }

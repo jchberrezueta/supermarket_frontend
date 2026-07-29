@@ -102,9 +102,9 @@
       />
       <ui-text-field
         class="quantity-field"
-        label="Cantidad"
         valueType="number"
-        [disabled]="!cabeceraConfirmada"
+        [label]="esDevolucion ? 'Cantidad a canjear' : 'Cantidad'"
+        [disabled]="!cabeceraConfirmada || esDevolucion"
         [(ngModel)]="cantidadProducto"
         [ngModelOptions]="{ standalone: true }"
         (evntChange)="cambiarCantidad($event)"
@@ -156,38 +156,153 @@
       </div>
     </div>
 
+    @if (esDevolucion && cabeceraConfirmada && productoSeleccionado > 0) {
+      <div class="exchange-lots">
+        <div class="exchange-heading">
+          <div>
+            <strong> Lotes caducados disponibles </strong>
+
+            <span>
+              La cantidad del producto se calcula automáticamente con los lotes
+              seleccionados.
+            </span>
+          </div>
+
+          <span class="exchange-total">
+            Total a canjear:
+            {{ cantidadProducto }}
+          </span>
+        </div>
+
+        @if (cargandoLotes) {
+          <div class="exchange-message">Cargando lotes caducados…</div>
+        } @else if (!lotesCaducados.length) {
+          <div class="exchange-message warning">
+            Este producto no tiene lotes caducados con stock disponible.
+          </div>
+        } @else {
+          <table class="exchange-table">
+            <thead>
+              <tr>
+                <th>Lote</th>
+                <th>Caducidad</th>
+                <th>Stock disponible</th>
+                <th>Cantidad a devolver</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              @for (lote of lotesCaducados; track lote.ideLote) {
+                <tr>
+                  <td>#{{ lote.ideLote }}</td>
+
+                  <td>
+                    {{ lote.fechaCaducidadLote }}
+                  </td>
+
+                  <td>
+                    {{ lote.stockLote }}
+                  </td>
+
+                  <td>
+                    <input
+                      class="lot-quantity"
+                      type="number"
+                      min="0"
+                      [max]="lote.stockLote"
+                      [value]="lote.cantidadSeleccionada"
+                      (input)="cambiarCantidadLote(lote, $event)"
+                    />
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        }
+      </div>
+    }
+
     <div class="table-wrap">
       <table>
         <thead>
           <tr>
             <th>Producto</th>
             <th>Cant.</th>
+
+            @if (esDevolucion) {
+              <th>Lotes de canje</th>
+            }
+
             <th>Precio unit.</th>
             <th>Subtotal bruto</th>
             <th>Dcto. compra</th>
+
             @if (esDevolucion) {
               <th>Dcto. canje</th>
             }
+
             <th>IVA</th>
             <th>Total</th>
             <th></th>
           </tr>
         </thead>
+
         <tbody>
           @for (detalle of detalles; track detalle.claveLocal) {
             <tr [class.editing-row]="detalle.claveLocal === claveEdicion">
-              <td>{{ detalle.nombreProd }}</td>
-              <td>{{ detalle.cantidadProd }}</td>
-              <td>{{ detalle.precioUnitarioProd | number: "1.2-2" }}</td>
-              <td>{{ detalle.subtotalProd | number: "1.2-2" }}</td>
-              <td>{{ detalle.dctoCompraProd | number: "1.2-2" }}</td>
+              <td>
+                {{ detalle.nombreProd }}
+              </td>
+
+              <td>
+                {{ detalle.cantidadProd }}
+              </td>
+
               @if (esDevolucion) {
-                <td>{{ detalle.dctoCaducProd | number: "1.2-2" }}</td>
+                <td>
+                  <div class="selected-lots">
+                    @for (lote of detalle.lotesDevolucion; track lote.ideLote) {
+                      <span>
+                        #{{ lote.ideLote }}
+                        ·
+                        {{ lote.fechaCaducidadLote }}
+                        ·
+                        {{ lote.cantidadDevolucion }}
+                        u.
+                      </span>
+                    } @empty {
+                      <span> Sin lotes asignados </span>
+                    }
+                  </div>
+                </td>
               }
-              <td>{{ detalle.ivaProd | number: "1.2-2" }}</td>
+
+              <td>
+                {{ detalle.precioUnitarioProd | number: "1.2-2" }}
+              </td>
+
+              <td>
+                {{ detalle.subtotalProd | number: "1.2-2" }}
+              </td>
+
+              <td>
+                {{ detalle.dctoCompraProd | number: "1.2-2" }}
+              </td>
+
+              @if (esDevolucion) {
+                <td>
+                  {{ detalle.dctoCaducProd | number: "1.2-2" }}
+                </td>
+              }
+
+              <td>
+                {{ detalle.ivaProd | number: "1.2-2" }}
+              </td>
+
               <td class="money-strong">
                 {{ detalle.totalProd | number: "1.2-2" }}
               </td>
+
               <td>
                 <div class="row-actions">
                   <ui-button
@@ -198,6 +313,7 @@
                     ariaLabel="Editar producto"
                     (evntClick)="editarProducto(detalle)"
                   />
+
                   <ui-button
                     label="Eliminar"
                     icon="delete"
@@ -211,23 +327,44 @@
             </tr>
           } @empty {
             <tr>
-              <td [attr.colspan]="esDevolucion ? 9 : 8" class="empty-row">
-                Aún no hay productos agregados.
+              <td [attr.colspan]="esDevolucion ? 10 : 8" class="empty-row">
+                No existen productos agregados.
               </td>
             </tr>
           }
         </tbody>
+
         <tfoot>
           <tr>
             <td>Totales</td>
-            <td>{{ cantidadTotal }}</td>
-            <td></td>
-            <td>{{ subtotalTotal | number: "1.2-2" }}</td>
-            <td [attr.colspan]="esDevolucion ? 2 : 1">
-              - {{ descuentosTotal | number: "1.2-2" }}
+
+            <td>
+              {{ cantidadTotal }}
             </td>
-            <td>{{ ivaTotal | number: "1.2-2" }}</td>
-            <td>{{ totalGeneral | number: "1.2-2" }}</td>
+
+            @if (esDevolucion) {
+              <td></td>
+            }
+
+            <td></td>
+
+            <td>
+              {{ subtotalTotal | number: "1.2-2" }}
+            </td>
+
+            <td [attr.colspan]="esDevolucion ? 2 : 1">
+              -
+              {{ descuentosTotal | number: "1.2-2" }}
+            </td>
+
+            <td>
+              {{ ivaTotal | number: "1.2-2" }}
+            </td>
+
+            <td>
+              {{ totalGeneral | number: "1.2-2" }}
+            </td>
+
             <td></td>
           </tr>
         </tfoot>

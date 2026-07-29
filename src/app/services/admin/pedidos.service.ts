@@ -1,7 +1,11 @@
 import { inject, Injectable } from '@angular/core';
 import { IResultData, IResultDataCreate } from '@core/models';
 import { RestService } from '@core/services/rest.service';
-import { IPedidoCompleto, IResultDataPedido } from '@models';
+import {
+  IPedidoCompleto,
+  IResultDataLotesCaducados,
+  IResultDataPedido,
+} from '@models';
 import { IComboBoxOption } from '@shared/models/combo_box_option';
 import { Observable } from 'rxjs';
 
@@ -79,6 +83,14 @@ export class PedidosService {
   public listarDetallesPedido(idPedido: number): Observable<IResultData> {
     return this._restService.get<IResultData>(
       `${this.apiUrl}/listar/detalles/${idPedido}`,
+    );
+  }
+
+  public listarLotesCaducados(
+    ideProd: number,
+  ): Observable<IResultDataLotesCaducados> {
+    return this._restService.get<IResultDataLotesCaducados>(
+      `${this.apiUrl}/listar/lotes-caducados/${ideProd}`,
     );
   }
 
