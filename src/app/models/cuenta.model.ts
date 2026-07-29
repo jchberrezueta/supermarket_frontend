@@ -47,16 +47,31 @@ export interface ICuentaForm {
 export interface ICuentaResult {
   ide_cuen: number;
   ide_empl: number;
+
   nombre_empleado?: string | null;
+
   ide_perf: number;
+
   nombre_perf?: string | null;
+
   usuario_cuen: string;
-  password_cuen: string;
+
   estado_cuen: EnumEstadosCuenta;
+
   debe_cambiar_clave: boolean;
+
+  intentos_fallidos?: number;
+
+  bloqueado_hasta?: string | Date | null;
+
+  ultimo_login?: string | Date | null;
+
   usua_ingre?: string | null;
+
   fecha_ingre?: string | Date | null;
+
   usua_actua?: string | null;
+
   fecha_actua?: string | Date | null;
 }
 
