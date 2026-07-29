@@ -1,188 +1,403 @@
-import { Component, inject } from '@angular/core';
-import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
 import { CommonModule, Location } from '@angular/common';
-import Swal from 'sweetalert2';
+
+import { Component, inject } from '@angular/core';
+
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+
+import { ActivatedRoute } from '@angular/router';
+
+import { IResultDataCreate } from '@core/models';
 
 import { FormGroupOf } from '@core/utils/utilities';
-import { IProducto, IProductoResult } from '@models';
-import { IComboBoxOption } from '@shared/models/combo_box_option';
 
-import { ProductosService, CategoriasService, MarcasService } from '@services/index';
+import {
+  EnumEstadosProducto,
+  ICreateProducto,
+  IProducto,
+  IProductoResult,
+  IUpdateProducto,
+} from '@models';
+
+import {
+  CategoriasService,
+  MarcasService,
+  ProductosService,
+} from '@services/index';
+
+import { UiButtonComponent } from '@shared/components/button/button.component';
+
+import { UiComboBoxComponent } from '@shared/components/combo-box/combo-box.component';
+
+import { UiInputBoxComponent } from '@shared/components/input-box/input-box.component';
+
+import { UiTextAreaComponent } from '@shared/components/text-area/text-area.component';
 
 import { UiTextFieldComponent } from '@shared/components/text-field/text-field.component';
-import { UiComboBoxComponent } from '@shared/components/combo-box/combo-box.component';
-import { UiButtonComponent } from '@shared/components/button/button.component';
-import { UiTextAreaComponent } from '@shared/components/text-area/text-area.component';
-import { UiInputBoxComponent } from '@shared/components/input-box/input-box.component';
+
+import { IComboBoxOption } from '@shared/models/combo_box_option';
+
+import Swal from 'sweetalert2';
 
 type ProductoFormGroup = FormGroupOf<IProducto>;
 
 @Component({
   selector: 'app-form',
+
   standalone: true,
+
   imports: [
+    CommonModule,
+    ReactiveFormsModule,
     UiTextFieldComponent,
     UiComboBoxComponent,
     UiTextAreaComponent,
     UiButtonComponent,
-    ReactiveFormsModule,
     UiInputBoxComponent,
-    CommonModule
   ],
+
   templateUrl: './form.component.html',
-  styleUrl: './form.component.scss'
+
+  styleUrl: './form.component.scss',
 })
 export default class FormComponent {
+  private readonly route = inject(ActivatedRoute);
 
-  private readonly _route = inject(ActivatedRoute);
-  private readonly _fb = inject(FormBuilder);
-  private readonly _productosService = inject(ProductosService);
-  private readonly _categoriasService = inject(CategoriasService);
-  private readonly _marcasService = inject(MarcasService);
-  public location = inject(Location);
+  private readonly formBuilder = inject(FormBuilder);
+
+  private readonly productosService = inject(ProductosService);
+
+  private readonly categoriasService = inject(CategoriasService);
+
+  private readonly marcasService = inject(MarcasService);
+
+  public readonly location = inject(Location);
 
   protected formData!: ProductoFormGroup;
+
   private initialFormValue!: IProducto;
 
-  protected categorias!: IComboBoxOption[];
-  protected marcas!: IComboBoxOption[];
-  protected opcionesProdEstados!: IComboBoxOption[];
-  protected opcionesProdDisponibilidad!: IComboBoxOption[];
+  protected categorias: IComboBoxOption[] = [];
 
+  protected marcas: IComboBoxOption[] = [];
+
+  protected opcionesProdEstados: IComboBoxOption[] = [];
 
   protected isAdd = true;
-  private idParam = -1;
 
-  constructor() {
-    this.loadCategorias();
-    this.loadMarcas();
-    this.loadProductosDisponiblidad()
-    this.loadProductosEstados();
-  }
+  private idParam = -1;
 
   ngOnInit(): void {
     this.initForm();
+    this.loadCombos();
 
-    const id = this._route.snapshot.params['id'];
-    if (id) {
-      this.isAdd = false;
-      this.idParam = +id;
-      this.setData(this.idParam);
+    const idParam = this.route.snapshot.paramMap.get('id');
+
+    if (idParam === null) {
+      this.isAdd = true;
+      return;
     }
+
+    const id = Number(idParam);
+
+    if (!Number.isInteger(id) || id <= 0) {
+      void Swal.fire({
+        icon: 'error',
+        title: 'Identificador inválido',
+        text: 'El identificador del producto no es válido.',
+      }).then(() => {
+        this.location.back();
+      });
+
+      return;
+    }
+
+    this.isAdd = false;
+    this.idParam = id;
+
+    this.setData(id);
   }
 
-  private initForm() {
-    this.formData = this._fb.group({
-      ideProd: [{ value: -1, disabled: true }, Validators.required],
-      ideCate: [-1, Validators.required],
-      ideMarc: [-1, Validators.required],
-      codigoBarraProd: ['', Validators.required],
-      nombreProd: ['', Validators.required],
-      precioVentaProd: [0, Validators.required],
-      ivaProd: [0, Validators.required],
-      dctoPromoProd: [0, Validators.required],
-      stockProd: [0, [Validators.required], []],
-      disponibleProd: ['no', Validators.required],
-      estadoProd: ['activo', Validators.required],
-      descripcionProd: [''],
-      urlImgProd: ['', Validators.required],
+  private initForm(): void {
+    this.formData = this.formBuilder.group({
+      ideProd: [
+        {
+          value: -1,
+          disabled: true,
+        },
+        Validators.required,
+      ],
+
+      ideCate: [-1, [Validators.required, Validators.min(1)]],
+
+      ideMarc: [-1, [Validators.required, Validators.min(1)]],
+
+      codigoBarraProd: ['', [Validators.required, Validators.maxLength(30)]],
+
+      nombreProd: ['', [Validators.required, Validators.maxLength(100)]],
+
+      precioVentaProd: [0, [Validators.required, Validators.min(0)]],
+
+      ivaProd: [
+        0,
+        [Validators.required, Validators.min(0), Validators.max(100)],
+      ],
+
+      dctoPromoProd: [0, [Validators.required, Validators.min(0)]],
+
+      stockProd: [
+        {
+          value: 0,
+          disabled: true,
+        },
+        [Validators.required, Validators.min(0)],
+      ],
+
+      stockMinimoProd: [0, [Validators.required, Validators.min(0)]],
+
+      disponibleProd: [
+        {
+          value: 'no',
+          disabled: true,
+        },
+        Validators.required,
+      ],
+
+      estadoProd: [EnumEstadosProducto.ACTIVO, Validators.required],
+
+      descripcionProd: [null, Validators.maxLength(250)],
+
+      urlImgProd: [null, Validators.maxLength(500)],
     }) as ProductoFormGroup;
 
     this.initialFormValue = this.formData.getRawValue();
   }
 
-  private loadCategorias() {
-    this._categoriasService.listarComboCategorias().subscribe(res => {
-      this.categorias = res;
+  private loadCombos(): void {
+    this.categoriasService.listarComboCategorias().subscribe({
+      next: (response) => {
+        this.categorias = response ?? [];
+      },
+
+      error: () => {
+        this.categorias = [];
+      },
+    });
+
+    this.marcasService.listarComboMarcas().subscribe({
+      next: (response) => {
+        this.marcas = response ?? [];
+      },
+
+      error: () => {
+        this.marcas = [];
+      },
+    });
+
+    this.productosService.listarComboEstados().subscribe({
+      next: (response) => {
+        this.opcionesProdEstados = response ?? [];
+      },
+
+      error: () => {
+        this.opcionesProdEstados = [];
+      },
     });
   }
 
-  private loadMarcas() {
-    this._marcasService.listarComboMarcas().subscribe(res => {
-      this.marcas = res;
+  private setData(id: number): void {
+    this.productosService.buscar(id).subscribe({
+      next: (response) => {
+        const producto = response.data[0] as IProductoResult | undefined;
+
+        if (!producto) {
+          void Swal.fire({
+            icon: 'error',
+            title: 'Producto no encontrado',
+            text: 'No se encontró el producto solicitado.',
+          }).then(() => {
+            this.location.back();
+          });
+
+          return;
+        }
+
+        this.formData.patchValue({
+          ideProd: producto.ide_prod,
+
+          ideCate: producto.ide_cate,
+
+          ideMarc: producto.ide_marc,
+
+          codigoBarraProd: producto.codigo_barra_prod,
+
+          nombreProd: producto.nombre_prod,
+
+          precioVentaProd: Number(producto.precio_venta_prod),
+
+          /*
+           * La base antigua puede contener:
+           * 0.15 o 15 para representar 15 %.
+           *
+           * En el formulario siempre mostraremos 15.
+           */
+          ivaProd: this.normalizarIvaFormulario(producto.iva_prod),
+
+          dctoPromoProd: Number(producto.dcto_promo_prod),
+
+          stockProd: Number(producto.stock_prod),
+
+          stockMinimoProd: Number(producto.stock_minimo_prod ?? 0),
+
+          disponibleProd: producto.disponible_prod,
+
+          estadoProd: producto.estado_prod,
+
+          descripcionProd: producto.descripcion_prod ?? null,
+
+          urlImgProd: producto.url_img_prod ?? null,
+        });
+      },
+
+      error: (error) => {
+        void Swal.fire({
+          icon: 'error',
+          title: 'No se pudo cargar el producto',
+          text: this.obtenerErrorHttp(error),
+        }).then(() => {
+          this.location.back();
+        });
+      },
     });
   }
 
-  private loadProductosEstados() {
-    this._productosService.listarComboEstados().subscribe(
-      (res) => {
-        this.opcionesProdEstados = res;
-      }
-    );
-  }
-  private loadProductosDisponiblidad() {
-    this._productosService.listarComboDisponibilidad().subscribe(
-      (res) => {
-        this.opcionesProdDisponibilidad = res;
-      }
-    );
-  }
+  protected guardar(): void {
+    this.formData.markAllAsTouched();
 
-  private setData(id: number) {
-    this._productosService.buscar(id).subscribe(res => {
-      const p = res.data[0] as IProductoResult;
-
-      this.formData.patchValue({
-        ideProd: p.ide_prod,
-        ideCate: p.ide_cate,
-        ideMarc: p.ide_marc,
-        codigoBarraProd: p.codigo_barra_prod,
-        nombreProd: p.nombre_prod,
-        precioVentaProd: p.precio_venta_prod,
-        ivaProd: p.iva_prod,
-        dctoPromoProd: p.dcto_promo_prod,
-        stockProd: p.stock_prod,
-        disponibleProd: p.disponible_prod,
-        estadoProd: p.estado_prod,
-        descripcionProd: p.descripcion_prod,
-        urlImgProd: p.url_img_prod
+    if (this.formData.invalid) {
+      void Swal.fire({
+        icon: 'warning',
+        title: 'Formulario incompleto',
+        text: 'Revise los campos obligatorios y los valores numéricos.',
       });
-    });
-  }
 
-  protected guardar() {
-    if (!this.formData.valid) {
-      Swal.fire('Oops...', 'Faltan datos por completar', 'info');
       return;
     }
 
-    const data = this.formData.getRawValue() as IProducto;
+    const raw = this.formData.getRawValue();
+
+    const precioVenta = Number(raw.precioVentaProd);
+
+    const descuentoUnitario = Number(raw.dctoPromoProd);
+
+    if (descuentoUnitario > precioVenta) {
+      void Swal.fire({
+        icon: 'warning',
+        title: 'Descuento inválido',
+        text: 'El descuento promocional por unidad no puede superar el precio de venta.',
+      });
+
+      return;
+    }
+
+    const commonData = {
+      ideCate: Number(raw.ideCate),
+
+      ideMarc: Number(raw.ideMarc),
+
+      codigoBarraProd: raw.codigoBarraProd.trim().toLowerCase(),
+
+      nombreProd: raw.nombreProd.trim().toLowerCase(),
+
+      precioVentaProd: precioVenta,
+
+      ivaProd: Number(raw.ivaProd),
+
+      dctoPromoProd: descuentoUnitario,
+
+      stockMinimoProd: Number(raw.stockMinimoProd),
+
+      estadoProd: raw.estadoProd,
+
+      descripcionProd: raw.descripcionProd?.trim().toLowerCase() || null,
+
+      urlImgProd: raw.urlImgProd?.trim() || null,
+    };
 
     if (this.isAdd) {
-      data.ideProd = -1;
-      this._productosService.insertar(data).subscribe(() => {
-        Swal.fire('Producto registrado', 'Registro exitoso', 'success');
-        this.location.back();
-        this.resetForm();
-      });
-    } else {
-      Swal.fire({
-        title: '¿Actualizar producto?',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Sí, actualizar'
-      }).then(result => {
-        if (result.isConfirmed) {
-          data.ideProd = this.idParam;
-          this._productosService.actualizar(this.idParam, data).subscribe(() => {
-            Swal.fire('Producto actualizado', 'Cambios guardados', 'success');
-            this.location.back();
-            this.resetForm();
+      const body: ICreateProducto = {
+        ...commonData,
+      };
+
+      this.productosService.insertar(body).subscribe({
+        next: (response) => {
+          this.procesarRespuesta(response, 'Producto registrado');
+        },
+
+        error: (error) => {
+          void Swal.fire({
+            icon: 'error',
+            title: 'No se pudo registrar',
+            text: this.obtenerErrorHttp(error),
           });
-        }
+        },
       });
+
+      return;
     }
+
+    void Swal.fire({
+      title: '¿Actualizar producto?',
+
+      text: 'El stock y la disponibilidad no serán modificados desde este formulario.',
+
+      icon: 'warning',
+
+      showCancelButton: true,
+
+      confirmButtonText: 'Sí, actualizar',
+
+      cancelButtonText: 'Cancelar',
+    }).then((result) => {
+      if (!result.isConfirmed) {
+        return;
+      }
+
+      const body: IUpdateProducto = {
+        ideProd: this.idParam,
+
+        ...commonData,
+      };
+
+      this.productosService.actualizar(this.idParam, body).subscribe({
+        next: (response) => {
+          this.procesarRespuesta(response, 'Producto actualizado');
+        },
+
+        error: (error) => {
+          void Swal.fire({
+            icon: 'error',
+            title: 'No se pudo actualizar',
+            text: this.obtenerErrorHttp(error),
+          });
+        },
+      });
+    });
   }
 
-  protected cancelar() {
-    Swal.fire({
-      title: '¿Cancelar?',
-      text: 'Los cambios no se guardarán',
+  protected cancelar(): void {
+    void Swal.fire({
+      title: '¿Cancelar cambios?',
+
+      text: 'La información no guardada se perderá.',
+
       icon: 'warning',
+
       showCancelButton: true,
-      confirmButtonText: 'Sí, cancelar'
-    }).then(result => {
+
+      confirmButtonText: 'Sí, cancelar',
+
+      cancelButtonText: 'Continuar editando',
+    }).then((result) => {
       if (result.isConfirmed) {
         this.resetForm();
         this.location.back();
@@ -190,7 +405,54 @@ export default class FormComponent {
     });
   }
 
-  protected resetForm() {
+  protected resetForm(): void {
     this.formData.reset(this.initialFormValue);
+  }
+
+  private procesarRespuesta(
+    response: IResultDataCreate,
+    successTitle: string,
+  ): void {
+    const success = Number(response.p_result) === 1;
+
+    void Swal.fire({
+      icon: success ? 'success' : 'error',
+
+      title: success ? successTitle : 'Operación rechazada',
+
+      text:
+        response.p_response ||
+        (success
+          ? 'Operación completada correctamente.'
+          : 'No se pudo completar la operación.'),
+    }).then(() => {
+      if (success) {
+        this.location.back();
+      }
+    });
+  }
+
+  private normalizarIvaFormulario(value: number): number {
+    const iva = Number(value ?? 0);
+
+    return iva > 0 && iva <= 1 ? iva * 100 : iva;
+  }
+
+  private obtenerErrorHttp(error: unknown): string {
+    const httpError = error as {
+      error?: {
+        message?: string | string[];
+      };
+
+      message?: string;
+    };
+
+    const message = httpError.error?.message;
+
+    if (Array.isArray(message)) {
+      return message.join(' ');
+    }
+
+    return message ?? httpError.message ?? 'Ocurrió un error inesperado.';
   }
 }

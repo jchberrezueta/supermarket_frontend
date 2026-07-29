@@ -1,56 +1,119 @@
 <div class="div_container">
   <div class="div_card">
-
     <div class="panel_1">
       <div class="card_form">
         <form [formGroup]="formData" class="form">
-
           <div class="div_form">
-
             @if (!isAdd) {
               <div class="div_id">
                 <ui-text-field label="ID" formControlName="ideProd" />
+
                 <div class="input_falso"></div>
               </div>
             }
 
             <div class="form_info">
-
               <div class="form_div">
-                <ui-input-box label="Categoría" [options]="categorias" formControlName="ideCate"/>
-                <ui-input-box label="Marca" [options]="marcas" formControlName="ideMarc" />
-                <ui-text-field label="Código Barra" formControlName="codigoBarraProd" />
+                <ui-input-box
+                  label="Categoría"
+                  [options]="categorias"
+                  formControlName="ideCate"
+                />
+
+                <ui-input-box
+                  label="Marca"
+                  [options]="marcas"
+                  formControlName="ideMarc"
+                />
+
+                <ui-text-field
+                  label="Código de barras"
+                  formControlName="codigoBarraProd"
+                />
+
                 <ui-text-field label="Nombre" formControlName="nombreProd" />
-                <ui-text-field label="Precio Venta" [valueType]="'number'" formControlName="precioVentaProd" />
+
+                <ui-text-field
+                  label="Precio de venta"
+                  valueType="number"
+                  formControlName="precioVentaProd"
+                />
               </div>
 
               <div class="form_div">
-                <ui-text-field label="IVA" [valueType]="'number'" formControlName="ivaProd" />
-                <ui-text-field label="Descuento Promo" [valueType]="'number'" formControlName="dctoPromoProd" />
-                <ui-text-field label="Stock" [valueType]="'number'" [disabled]="isAdd"  formControlName="stockProd" />
-                <ui-combo-box label="Disponible" [options]="opcionesProdDisponibilidad" [disabled]="isAdd" formControlName="disponibleProd" />
-                <ui-combo-box label="Estado" [options]="opcionesProdEstados" formControlName="estadoProd" />
+                <ui-text-field
+                  label="IVA (%)"
+                  valueType="number"
+                  formControlName="ivaProd"
+                />
+
+                <ui-text-field
+                  label="Descuento promocional unitario"
+                  valueType="number"
+                  formControlName="dctoPromoProd"
+                />
+
+                <ui-text-field
+                  label="Stock mínimo"
+                  valueType="number"
+                  formControlName="stockMinimoProd"
+                />
+
+                <ui-combo-box
+                  label="Estado"
+                  [options]="opcionesProdEstados"
+                  formControlName="estadoProd"
+                />
               </div>
 
+              <div class="form_div">
+                <ui-text-field
+                  label="Stock actual"
+                  valueType="number"
+                  formControlName="stockProd"
+                />
+
+                <ui-text-field
+                  label="Disponibilidad automática"
+                  formControlName="disponibleProd"
+                />
+              </div>
             </div>
 
-            <ui-text-area label="Descripción" formControlName="descripcionProd" />
-            <ui-text-field label="URL Imagen" formControlName="urlImgProd" />
+            <ui-text-area
+              label="Descripción"
+              formControlName="descripcionProd"
+            />
 
+            <ui-text-field
+              label="URL de imagen (opcional)"
+              formControlName="urlImgProd"
+            />
           </div>
 
           <div class="form_buttons">
-            <ui-button [label]="isAdd ? 'Guardar' : 'Actualizar'" (evntClick)="guardar()" />
+            <ui-button
+              [label]="isAdd ? 'Guardar' : 'Actualizar'"
+              (evntClick)="guardar()"
+            />
+
             <ui-button label="Cancelar" color="red" (evntClick)="cancelar()" />
           </div>
-
         </form>
       </div>
     </div>
 
     <div class="panel_2">
-      <div class="panel_2_img" [ngStyle]="{'background': 'url('+formData.value.urlImgProd+') center / cover no-repeat'}"></div>
+      <div
+        class="panel_2_img"
+        [ngStyle]="{
+          background: formData.get('urlImgProd')?.value
+            ? 'url(' +
+              formData.get('urlImgProd')?.value +
+              ') center / cover no-repeat'
+            : '#f1f5f9',
+        }"
+      ></div>
     </div>
-
   </div>
 </div>

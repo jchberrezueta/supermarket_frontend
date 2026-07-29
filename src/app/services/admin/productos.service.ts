@@ -1,8 +1,13 @@
 import { inject, Injectable } from '@angular/core';
-import { IResultData } from '@core/models';
+
+import { IResultDataCreate } from '@core/models';
+
 import { RestService } from '@core/services/rest.service';
-import { IProducto, IResultDataProducto } from '@models';
+
+import { ICreateProducto, IResultDataProducto, IUpdateProducto } from '@models';
+
 import { IComboBoxOption } from '@shared/models/combo_box_option';
+
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -22,18 +27,28 @@ export class ProductosService {
     );
   }
 
-  public insertar(body: IProducto) {
-    return this._restService.post<any>(`${this.apiUrl}/insertar`, body);
+  public insertar(body: ICreateProducto): Observable<IResultDataCreate> {
+    return this._restService.post<IResultDataCreate>(
+      `${this.apiUrl}/insertar`,
+      body,
+    );
   }
 
-  public actualizar(id: number, body: IProducto) {
-    return this._restService.put<any>(`${this.apiUrl}/actualizar/${id}`, body);
+  public actualizar(
+    id: number,
+    body: IUpdateProducto,
+  ): Observable<IResultDataCreate> {
+    return this._restService.put<IResultDataCreate>(
+      `${this.apiUrl}/actualizar/${id}`,
+      body,
+    );
   }
 
-  public eliminar(id: number) {
-    return this._restService.delete<any>(`${this.apiUrl}/eliminar/${id}`);
+  public eliminar(id: number): Observable<IResultDataCreate> {
+    return this._restService.delete<IResultDataCreate>(
+      `${this.apiUrl}/eliminar/${id}`,
+    );
   }
-
   /**
    * COMBOS
    */

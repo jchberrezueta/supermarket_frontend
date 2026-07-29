@@ -1,175 +1,69 @@
 export enum EnumEstadosProducto {
-    ACTIVO = 'activo',
-    INACTIVO = 'inactivo'
+  ACTIVO = 'activo',
+  INACTIVO = 'inactivo',
 }
-
 
 export interface IProducto {
-    ideProd: number;
-    ideCate: number;
-    ideMarc: number;
-    codigoBarraProd: string;
-    nombreProd: string;
-    precioVentaProd: number;
-    ivaProd: number;
-    dctoPromoProd: number;
-    stockProd: number;
-    disponibleProd: 'si' | 'no';
-    estadoProd: EnumEstadosProducto;
-    descripcionProd: string;
-    urlImgProd: string;
+  ideProd: number;
+  ideCate: number;
+  ideMarc: number;
+  codigoBarraProd: string;
+  nombreProd: string;
+  precioVentaProd: number;
+
+  /**
+   * Porcentaje.
+   *
+   * Ejemplo:
+   * 15 = 15 %
+   */
+  ivaProd: number;
+
+  /**
+   * Descuento monetario por unidad.
+   *
+   * Ejemplo:
+   * 0.50 = cincuenta centavos
+   * de descuento por unidad.
+   */
+  dctoPromoProd: number;
+
+  /**
+   * Datos controlados por inventario.
+   */
+  stockProd: number;
+  stockMinimoProd: number;
+  disponibleProd: 'si' | 'no';
+
+  estadoProd: EnumEstadosProducto;
+  descripcionProd: string | null;
+  urlImgProd: string | null;
 }
 
-export class CProducto implements IProducto {
+export type ICreateProducto = Omit<
+  IProducto,
+  'ideProd' | 'stockProd' | 'disponibleProd'
+>;
 
-    constructor(
-        private _ideProd: number,
-        private _ideCate: number,
-        private _ideMarc: number,
-        private _codigoBarraProd: string,
-        private _nombreProd: string,
-        private _precioCompraProd: number,
-        private _precioVentaProd: number,
-        private _ivaProd: number,
-        private _dctoPromoProd: number,
-        private _dctoCaducProd: number,
-        private _precioFinalProd: number,
-        private _stockProd: number,
-        private _disponibleProd: 'si' | 'no',
-        private _estadoProd: EnumEstadosProducto,
-        private _descripcionProd: string,
-        private _urlImgProd: string
-    ) {}
-
-    // --- Getters / Setters ---
-
-    get ideProd() {
-        return this._ideProd;
-    }
-    set ideProd(value: number) {
-        this._ideProd = value;
-    }
-
-    get ideCate() {
-        return this._ideCate;
-    }
-    set ideCate(value: number) {
-        this._ideCate = value;
-    }
-
-    get ideMarc() {
-        return this._ideMarc;
-    }
-    set ideMarc(value: number) {
-        this._ideMarc = value;
-    }
-
-    get codigoBarraProd() {
-        return this._codigoBarraProd;
-    }
-    set codigoBarraProd(value: string) {
-        this._codigoBarraProd = value;
-    }
-
-    get nombreProd() {
-        return this._nombreProd;
-    }
-    set nombreProd(value: string) {
-        this._nombreProd = value;
-    }
-
-    get precioCompraProd() {
-        return this._precioCompraProd;
-    }
-    set precioCompraProd(value: number) {
-        this._precioCompraProd = value;
-    }
-
-    get precioVentaProd() {
-        return this._precioVentaProd;
-    }
-    set precioVentaProd(value: number) {
-        this._precioVentaProd = value;
-    }
-
-    get ivaProd() {
-        return this._ivaProd;
-    }
-    set ivaProd(value: number) {
-        this._ivaProd = value;
-    }
-
-    get dctoPromoProd() {
-        return this._dctoPromoProd;
-    }
-    set dctoPromoProd(value: number) {
-        this._dctoPromoProd = value;
-    }
-
-    get dctoCaducProd() {
-        return this._dctoCaducProd;
-    }
-    set dctoCaducProd(value: number) {
-        this._dctoCaducProd = value;
-    }
-
-    get precioFinalProd() {
-        return this._precioFinalProd;
-    }
-    set precioFinalProd(value: number) {
-        this._precioFinalProd = value;
-    }
-
-    get stockProd() {
-        return this._stockProd;
-    }
-    set stockProd(value: number) {
-        this._stockProd = value;
-    }
-
-    get disponibleProd() {
-        return this._disponibleProd;
-    }
-    set disponibleProd(value: 'si' | 'no') {
-        this._disponibleProd = value;
-    }
-
-    get estadoProd() {
-        return this._estadoProd;
-    }
-    set estadoProd(value: EnumEstadosProducto) {
-        this._estadoProd = value;
-    }
-
-    get descripcionProd() {
-        return this._descripcionProd;
-    }
-    set descripcionProd(value: string) {
-        this._descripcionProd = value;
-    }
-
-    get urlImgProd() {
-        return this._urlImgProd;
-    }
-    set urlImgProd(value: string) {
-        this._urlImgProd = value;
-    }
-}
+export type IUpdateProducto = Omit<IProducto, 'stockProd' | 'disponibleProd'>;
 
 export interface IProductoResult {
-    ide_prod: number;
-    ide_cate: number;
-    ide_marc: number;
-    codigo_barra_prod: string;
-    nombre_prod: string;
-    precio_venta_prod: number;
-    iva_prod: number;
-    dcto_promo_prod: number;
-    stock_prod: number;
-    disponible_prod: 'si' | 'no';
-    estado_prod: EnumEstadosProducto;
-    descripcion_prod: string;
-    url_img_prod: string;
+  ide_prod: number;
+  ide_cate: number;
+  nombre_cate?: string;
+  ide_marc: number;
+  nombre_marc?: string;
+  codigo_barra_prod: string;
+  nombre_prod: string;
+  precio_venta_prod: number;
+  iva_prod: number;
+  dcto_promo_prod: number;
+  stock_prod: number;
+  stock_minimo_prod: number;
+  disponible_prod: 'si' | 'no';
+  estado_prod: EnumEstadosProducto;
+  descripcion_prod: string | null;
+  url_img_prod: string | null;
 }
 
 export interface IResultDataProducto {
@@ -178,10 +72,10 @@ export interface IResultDataProducto {
 }
 
 export interface IFiltroProducto {
-    ideCate: string;
-    ideMarc: string;
-    codigoBarraProd: string;
-    nombreProd: string;
-    disponibleProd: string;
-    estadoProd: EnumEstadosProducto;
+  ideCate: string;
+  ideMarc: string;
+  codigoBarraProd: string;
+  nombreProd: string;
+  disponibleProd: string;
+  estadoProd: EnumEstadosProducto | '';
 }

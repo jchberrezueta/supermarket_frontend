@@ -6,70 +6,7 @@ export interface IEmpresaPrecios {
   dctoCompraProd: number;
   dctoCaducidadProd: number;
   ivaProd: number;
-  estadoEmprProd?: string;
-}
-
-export class CEmpresaPrecios implements IEmpresaPrecios {
-  constructor(
-    private _ideEmprProd: number,
-    private _ideEmpr: number,
-    private _ideProd: number,
-    private _precioCompraProd: number,
-    private _dctoCompraProd: number,
-    private _dctoCaducidadProd: number,
-    private _ivaProd: number,
-  ) {}
-
-  // --- Getters / Setters ---
-
-  get ideEmprProd() {
-    return this._ideEmprProd;
-  }
-  set ideEmprProd(value: number) {
-    this._ideEmprProd = value;
-  }
-
-  get ideEmpr() {
-    return this._ideEmpr;
-  }
-  set ideEmpr(value: number) {
-    this._ideEmpr = value;
-  }
-
-  get ideProd() {
-    return this._ideProd;
-  }
-  set ideProd(value: number) {
-    this._ideProd = value;
-  }
-
-  get precioCompraProd() {
-    return this._precioCompraProd;
-  }
-  set precioCompraProd(value: number) {
-    this._precioCompraProd = value;
-  }
-
-  get dctoCompraProd() {
-    return this._dctoCompraProd;
-  }
-  set dctoCompraProd(value: number) {
-    this._dctoCompraProd = value;
-  }
-
-  get dctoCaducidadProd() {
-    return this._dctoCaducidadProd;
-  }
-  set dctoCaducidadProd(value: number) {
-    this._dctoCaducidadProd = value;
-  }
-
-  get ivaProd() {
-    return this._ivaProd;
-  }
-  set ivaProd(value: number) {
-    this._ivaProd = value;
-  }
+  estadoEmprProd: 'activo' | 'inactivo';
 }
 
 export interface IEmpresaPreciosResult {

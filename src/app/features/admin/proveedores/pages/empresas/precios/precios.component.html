@@ -45,26 +45,26 @@
       <form [formGroup]="formData" class="form">
         <div class="form_fields">
           <ui-text-field
-            [label]="'Precio Compra'"
-            [valueType]="'number'"
+            label="Precio de compra unitario"
+            valueType="number"
             formControlName="precioCompraProd"
           />
 
           <ui-text-field
-            [label]="'Dcto Compra'"
-            [valueType]="'number'"
+            label="Descuento de compra unitario"
+            valueType="number"
             formControlName="dctoCompraProd"
           />
 
           <ui-text-field
-            [label]="'Dcto Caducidad'"
-            [valueType]="'number'"
+            label="Descuento por caducidad unitario"
+            valueType="number"
             formControlName="dctoCaducidadProd"
           />
 
           <ui-text-field
-            [label]="'IVA'"
-            [valueType]="'number'"
+            label="IVA (%)"
+            valueType="number"
             formControlName="ivaProd"
           />
         </div>

@@ -23,6 +23,7 @@ interface IProductoView {
   estadoProd: string;
   descripcionProd: string;
   urlImgProd: string;
+  stockMinimoProd: number;
 }
 
 @Component({
@@ -76,6 +77,7 @@ export default class DetailsComponent {
           estadoProd: data.estado_prod,
           descripcionProd: data.descripcion_prod,
           urlImgProd: data.url_img_prod,
+          stockMinimoProd: Number(data.stock_minimo_prod ?? 0),
         };
         this.generarQrProducto();
         this._loadingService.hide();
@@ -99,8 +101,7 @@ export default class DetailsComponent {
         margin: 2,
         errorCorrectionLevel: 'M',
       });
-    } catch (error) {
-    }
+    } catch (error) {}
   }
 
   protected imprimirEtiqueta(): void {

@@ -77,17 +77,20 @@ export default class PreciosComponent {
         Validators.required,
       ],
 
-      ideEmpr: [this.idEmpresa, [Validators.required, Validators.min(0)]],
+      ideEmpr: [this.idEmpresa, [Validators.required, Validators.min(1)]],
 
-      ideProd: [-1, [Validators.required, Validators.min(0)]],
+      ideProd: [-1, [Validators.required, Validators.min(1)]],
 
-      precioCompraProd: [0, [Validators.required, Validators.min(0)]],
+      precioCompraProd: [0, [Validators.required, Validators.min(0.01)]],
 
       dctoCompraProd: [0, [Validators.required, Validators.min(0)]],
 
       dctoCaducidadProd: [0, [Validators.required, Validators.min(0)]],
 
-      ivaProd: [0, [Validators.required, Validators.min(0)]],
+      ivaProd: [
+        0,
+        [Validators.required, Validators.min(0), Validators.max(100)],
+      ],
 
       estadoEmprProd: ['activo', Validators.required],
     }) as EmpresaPrecioFormGroup;
@@ -103,9 +106,15 @@ export default class PreciosComponent {
       precioCompraProd: this.precioEmp?.precio_compra_prod,
       dctoCompraProd: this.precioEmp?.dcto_compra_prod,
       dctoCaducidadProd: this.precioEmp?.dcto_caducidad_prod,
-      ivaProd: this.precioEmp?.iva_prod,
+      ivaProd: this.normalizarIvaFormulario(this.precioEmp?.iva_prod),
       estadoEmprProd: this.precioEmp?.estado_empr_prod,
     });
+  }
+
+  private normalizarIvaFormulario(value: unknown): number {
+    const iva = Number(value ?? 0);
+
+    return iva > 0 && iva <= 1 ? iva * 100 : iva;
   }
 
   private loadProductos() {
@@ -197,19 +206,21 @@ export default class PreciosComponent {
       ];
     }
 
+    this.formData.get('ideProd')?.disable();
+
     this.isAdd = false;
 
     this.setData();
   }
 
-  protected changeModeInsert() {
-    if (!this.isAdd) {
-      this._tableList().refreshData();
-      this.loadProductos();
-    }
+  protected changeModeInsert(): void {
     this.isAdd = true;
     this.precioEmp = null;
+
+    this.formData.get('ideProd')?.enable();
+
     this.resetForm();
+    this.loadProductos();
   }
 
   protected guardar(): void {
@@ -227,8 +238,60 @@ export default class PreciosComponent {
 
     const raw = this.formData.getRawValue();
 
+    const precioCompra = Number(raw.precioCompraProd);
+
+    const descuentoCompra = Number(raw.dctoCompraProd);
+
+    const descuentoCaducidad = Number(raw.dctoCaducidadProd);
+
+    if (descuentoCompra > precioCompra) {
+      void Swal.fire({
+        icon: 'warning',
+        title: 'Descuento inválido',
+        text: 'El descuento de compra unitario no puede superar el precio de compra.',
+      });
+
+      return;
+    }
+
+    if (descuentoCaducidad > precioCompra) {
+      void Swal.fire({
+        icon: 'warning',
+        title: 'Descuento inválido',
+        text: 'El descuento por caducidad unitario no puede superar el precio de compra.',
+      });
+
+      return;
+    }
+
+    if (descuentoCompra + descuentoCaducidad > precioCompra) {
+      void Swal.fire({
+        icon: 'warning',
+        title: 'Descuentos inválidos',
+        text: 'La suma de los descuentos unitarios no puede superar el precio de compra.',
+      });
+
+      return;
+    }
+
+    const data: IEmpresaPrecios = {
+      ...raw,
+
+      ideEmpr: Number(raw.ideEmpr),
+
+      ideProd: Number(raw.ideProd),
+
+      precioCompraProd: precioCompra,
+
+      dctoCompraProd: descuentoCompra,
+
+      dctoCaducidadProd: descuentoCaducidad,
+
+      ivaProd: Number(raw.ivaProd),
+    };
+
     if (this.isAdd) {
-      const { ideEmprProd: _ideEmprProd, ...createData } = raw;
+      const { ideEmprProd: _ideEmprProd, ...createData } = data;
 
       this._empresasService.insertarPrecio(createData).subscribe({
         next: (response) => {
@@ -275,7 +338,7 @@ export default class PreciosComponent {
       }
 
       const body: IEmpresaPrecios = {
-        ...raw,
+        ...data,
 
         ideEmprProd: this.precioEmp.ide_empr_prod,
       };

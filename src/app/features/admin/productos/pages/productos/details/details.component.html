@@ -48,13 +48,21 @@
           />
           <ui-text-field
             [label]="'IVA'"
-            [value]="producto?.ivaProd | currency: '$'"
+            [value]="
+              ((producto?.ivaProd || 0) <= 1 && (producto?.ivaProd || 0) > 0
+                ? (producto?.ivaProd || 0) * 100
+                : producto?.ivaProd || 0) + ' %'
+            "
           />
           <ui-text-field
             [label]="'Dcto. Promo'"
             [value]="producto?.dctoPromoProd | currency: '$'"
           />
           <ui-text-field [label]="'Stock'" [value]="producto?.stockProd" />
+          <ui-text-field
+            [label]="'Stock mínimo'"
+            [value]="producto?.stockMinimoProd"
+          />
         </div>
 
         <div class="info_row">
