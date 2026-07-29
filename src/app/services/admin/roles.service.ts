@@ -1,12 +1,12 @@
 import { inject, Injectable } from '@angular/core';
-import { IResultData } from '@core/models';
+import { IResultDataCreate } from '@core/models';
 import { RestService } from '@core/services/rest.service';
 import { IResultDataRol, IRol } from '@models';
 import { IComboBoxOption } from '@shared/models/combo_box_option';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class RolesService {
   private readonly _restService = inject(RestService);
@@ -20,28 +20,41 @@ export class RolesService {
     return this._restService.get<IResultDataRol>(`${this.apiUrl}/buscar/${id}`);
   }
 
-  public insertar(body: IRol) {
-    return this._restService.post<any>(`${this.apiUrl}/insertar`, body);
+  public insertar(body: Omit<IRol, 'ideRol'>): Observable<IResultDataCreate> {
+    return this._restService.post<IResultDataCreate>(
+      `${this.apiUrl}/insertar`,
+      body,
+    );
   }
 
-  public actualizar(id: number, body: IRol) {
-    return this._restService.put<any>(`${this.apiUrl}/actualizar/${id}`, body);
+  public actualizar(id: number, body: IRol): Observable<IResultDataCreate> {
+    return this._restService.put<IResultDataCreate>(
+      `${this.apiUrl}/actualizar/${id}`,
+      body,
+    );
   }
 
-  public eliminar(id: number) {
-    return this._restService.delete<any>(`${this.apiUrl}/eliminar/${id}`);
+  public eliminar(id: number): Observable<IResultDataCreate> {
+    return this._restService.delete<IResultDataCreate>(
+      `${this.apiUrl}/eliminar/${id}`,
+    );
   }
-
   /**
    * COMBOS
    */
   public listarComboRoles(): Observable<IComboBoxOption[]> {
-    return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/combo/roles`);
+    return this._restService.get<IComboBoxOption[]>(
+      `${this.apiUrl}/listar/combo/roles`,
+    );
   }
   public listarComboNombres(): Observable<IComboBoxOption[]> {
-    return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/combo/nombres`);
+    return this._restService.get<IComboBoxOption[]>(
+      `${this.apiUrl}/listar/combo/nombres`,
+    );
   }
   public listarComboDescripcion(): Observable<IComboBoxOption[]> {
-    return this._restService.get<IComboBoxOption[]>(`${this.apiUrl}/listar/combo/descripcion`);
+    return this._restService.get<IComboBoxOption[]>(
+      `${this.apiUrl}/listar/combo/descripcion`,
+    );
   }
 }

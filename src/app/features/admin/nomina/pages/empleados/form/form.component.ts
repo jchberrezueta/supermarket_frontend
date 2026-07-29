@@ -80,6 +80,8 @@ export default class FormComponent {
       tituloEmpl: ['', Validators.required],
       rmuEmpl: [1, [Validators.required, Validators.min(1)]],
       estadoEmpl: ['activo', Validators.required],
+      telefonoEmpl: ['', [Validators.minLength(7), Validators.maxLength(20)]],
+      emailEmpl: ['', [Validators.email, Validators.maxLength(150)]],
     }) as EmpleadoFormGroup;
 
     this.initialFormValue = this.formData.getRawValue();
@@ -110,6 +112,8 @@ export default class FormComponent {
         tituloEmpl: e.titulo_empl,
         rmuEmpl: Number(e.rmu_empl) || 1,
         estadoEmpl: e.estado_empl,
+        telefonoEmpl: e.telefono_empl ?? '',
+        emailEmpl: e.email_empl ?? '',
       });
     });
   }

@@ -3,7 +3,7 @@ import { RestService } from '@core/services/rest.service';
 import { Observable } from 'rxjs';
 
 import { IComboBoxOption } from '@shared/models/combo_box_option';
-import { IResultData } from '@core/models';
+import { IResultData, IResultDataCreate } from '@core/models';
 import {
   IEmpresa,
   IEmpresaPrecios,
@@ -34,16 +34,26 @@ export class EmpresasService {
     );
   }
 
-  public insertar(body: IEmpresa) {
-    return this._restService.post<any>(`${this.apiUrl}/insertar`, body);
+  public insertar(
+    body: Omit<IEmpresa, 'ideEmp'>,
+  ): Observable<IResultDataCreate> {
+    return this._restService.post<IResultDataCreate>(
+      `${this.apiUrl}/insertar`,
+      body,
+    );
   }
 
-  public actualizar(id: number, body: IEmpresa) {
-    return this._restService.put<any>(`${this.apiUrl}/actualizar/${id}`, body);
+  public actualizar(id: number, body: IEmpresa): Observable<IResultDataCreate> {
+    return this._restService.put<IResultDataCreate>(
+      `${this.apiUrl}/actualizar/${id}`,
+      body,
+    );
   }
 
-  public eliminar(id: number) {
-    return this._restService.delete<any>(`${this.apiUrl}/eliminar/${id}`);
+  public eliminar(id: number): Observable<IResultDataCreate> {
+    return this._restService.delete<IResultDataCreate>(
+      `${this.apiUrl}/eliminar/${id}`,
+    );
   }
 
   /**
@@ -97,12 +107,20 @@ export class EmpresasService {
     );
   }
 
-  public insertarPrecio(body: IEmpresaPrecios) {
-    return this._restService.post<any>(`${this.apiUrl}/insertar/precio`, body);
+  public insertarPrecio(
+    body: Omit<IEmpresaPrecios, 'ideEmprProd'>,
+  ): Observable<IResultDataCreate> {
+    return this._restService.post<IResultDataCreate>(
+      `${this.apiUrl}/insertar/precio`,
+      body,
+    );
   }
 
-  public actualizarPrecio(id: number, body: IEmpresaPrecios) {
-    return this._restService.put<any>(
+  public actualizarPrecio(
+    id: number,
+    body: IEmpresaPrecios,
+  ): Observable<IResultDataCreate> {
+    return this._restService.put<IResultDataCreate>(
       `${this.apiUrl}/actualizar/precio/${id}`,
       body,
     );

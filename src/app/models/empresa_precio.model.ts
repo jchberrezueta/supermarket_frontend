@@ -82,6 +82,8 @@ export interface IEmpresaPreciosResult {
   iva_prod: number;
   nombre_prod?: string | null;
   estado_prod?: string | null;
+
+  estado_empr_prod: 'activo' | 'inactivo';
 }
 
 export interface IResultDataEmpresaPrecios {

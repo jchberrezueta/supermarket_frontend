@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { IResultData } from '@core/models';
+import { IResultData, IResultDataCreate } from '@core/models';
 import { RestService } from '@core/services/rest.service';
 import { IProveedor, IResultDataProveedor } from '@models';
 import { IComboBoxOption } from '@shared/models/combo_box_option';
@@ -22,16 +22,29 @@ export class ProveedoresService {
     );
   }
 
-  public insertar(body: IProveedor) {
-    return this._restService.post<any>(`${this.apiUrl}/insertar`, body);
+  public insertar(
+    body: Omit<IProveedor, 'ideProv'>,
+  ): Observable<IResultDataCreate> {
+    return this._restService.post<IResultDataCreate>(
+      `${this.apiUrl}/insertar`,
+      body,
+    );
   }
 
-  public actualizar(id: number, body: IProveedor) {
-    return this._restService.put<any>(`${this.apiUrl}/actualizar/${id}`, body);
+  public actualizar(
+    id: number,
+    body: IProveedor,
+  ): Observable<IResultDataCreate> {
+    return this._restService.put<IResultDataCreate>(
+      `${this.apiUrl}/actualizar/${id}`,
+      body,
+    );
   }
 
-  public eliminar(id: number) {
-    return this._restService.delete<any>(`${this.apiUrl}/eliminar/${id}`);
+  public eliminar(id: number): Observable<IResultDataCreate> {
+    return this._restService.delete<IResultDataCreate>(
+      `${this.apiUrl}/eliminar/${id}`,
+    );
   }
 
   /**
