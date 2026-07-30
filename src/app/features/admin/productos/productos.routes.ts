@@ -10,6 +10,10 @@ export const productosRoutes: Routes = [
     loadChildren: () => import('./pages/lotes/lotes.routes'),
   },
   {
+    path: 'movimientos',
+    loadChildren: () => import('./pages/movimientos/movimientos.routes'),
+  },
+  {
     path: 'marcas',
     loadChildren: () => import('./pages/marcas/marcas.routes'),
   },

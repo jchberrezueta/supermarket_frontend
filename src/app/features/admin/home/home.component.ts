@@ -139,10 +139,11 @@ export default class HomeComponent implements OnInit, OnDestroy {
       case 'completo':
       case 'pagado':
         return 'estado-success';
-      case 'progreso':
+      case 'emitido':
+      case 'parcial':
       case 'pendiente':
         return 'estado-warning';
-      case 'incompleto':
+      case 'cerrado_incompleto':
       case 'cancelado':
         return 'estado-danger';
       default:

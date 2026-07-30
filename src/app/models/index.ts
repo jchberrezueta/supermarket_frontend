@@ -19,3 +19,5 @@ export * from './perfil_opcion.model';
 export * from './producto.model';
 export * from './rol.model';
 export * from './venta.model';
+
+export * from './movimiento_inventario.model';

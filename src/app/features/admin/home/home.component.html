@@ -57,12 +57,10 @@
           <div class="stat_content">
             <span class="stat_label">Productos Activos</span>
             <span class="stat_value">{{ stats?.totalProductos }}</span>
-            <span
-              class="stat_detail stat_warning"
-              *ngIf="stats?.productosStockBajo"
-            >
+            <span class="stat_detail stat_warning">
               <span class="material-symbols-rounded">warning</span>
-              {{ stats?.productosStockBajo }} con stock bajo
+              {{ stats?.productosStockBajo ?? 0 }} con stock bajo ·
+              {{ stats?.productosSinStock ?? 0 }} agotados
             </span>
           </div>
         </div>
@@ -97,6 +95,29 @@
             <span class="stat_label">Entregas Pendientes</span>
             <span class="stat_value">{{ stats?.entregasPendientes }}</span>
             <span class="stat_detail">Por completar</span>
+          </div>
+        </div>
+
+
+        <div class="stat_card stat_lotes_proximos">
+          <div class="stat_icon">
+            <span class="material-symbols-rounded">event_upcoming</span>
+          </div>
+          <div class="stat_content">
+            <span class="stat_label">Lotes próximos</span>
+            <span class="stat_value">{{ stats?.lotesProximosCaducar ?? 0 }}</span>
+            <span class="stat_detail">Caducan en 30 días</span>
+          </div>
+        </div>
+
+        <div class="stat_card stat_lotes_caducados">
+          <div class="stat_icon">
+            <span class="material-symbols-rounded">event_busy</span>
+          </div>
+          <div class="stat_content">
+            <span class="stat_label">Lotes caducados</span>
+            <span class="stat_value">{{ stats?.lotesCaducadosConStock ?? 0 }}</span>
+            <span class="stat_detail stat_warning">Con stock pendiente de canje</span>
           </div>
         </div>
       </div>

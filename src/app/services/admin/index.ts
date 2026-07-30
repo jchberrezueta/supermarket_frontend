@@ -18,3 +18,5 @@ export * from './ventas.service';
 export * from './pos.service';
 export * from './pos-scan.service';
 export * from './iot.service';
+
+export * from './movimientos-inventario.service';

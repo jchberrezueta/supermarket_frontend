@@ -13,6 +13,9 @@ export interface IDashboardStats {
   entregasPendientes: number;
   ventasMes: number;
   productosStockBajo: number;
+  productosSinStock: number;
+  lotesProximosCaducar: number;
+  lotesCaducadosConStock: number;
 }
 
 export interface IVentaMensual {
