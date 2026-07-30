@@ -57,7 +57,10 @@
         [serviceApiFilter]="'ventas/filtrar'"
         [serviceApiReal]="'ventas'"
         [columns]="config.columns"
-        [isSelection]="true"
+        [isSelection]="false"
+        [rowClickEnabled]="false"
+        [rowDoubleClickEnabled]="false"
+        (actionClick)="manejarAccion($event)"
       />
     </div>
   </ui-card>

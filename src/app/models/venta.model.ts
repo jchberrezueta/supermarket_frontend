@@ -116,7 +116,7 @@ export class CVenta implements IVenta {
 
 export interface IVentaResult {
     ide_vent: number;
-    ide_empl: number;
+    ide_empl: number | null;
     ide_clie: number;
     num_factura_vent: string;
     fecha_vent: string;
@@ -126,10 +126,35 @@ export interface IVentaResult {
     dcto_socio_vent: number;
     estado_vent: EnumEstadoVenta;
     dcto_edad_vent: number;
+    tipo_pago_vent?: string | null;
+    ide_meto_pago?: number | null;
+    canal_vent?: string;
+}
+
+export interface IMovimientoVentaResult {
+  ide_movi: number;
+  ide_deta_vent: number | null;
+  ide_prod: number;
+  ide_lote: number | null;
+  fecha_caducidad_lote: string | null;
+  tipo_movi: string;
+  cantidad_movi: number;
+  stock_prod_anterior: number | null;
+  stock_prod_posterior: number | null;
+  stock_lote_anterior: number | null;
+  stock_lote_posterior: number | null;
+  observacion_movi: string | null;
+  usua_ingre: string;
+  fecha_ingre: string;
 }
 
 export interface IResultDataVenta {
   data: IVentaResult[];
+  response: string;
+}
+
+export interface IResultDataMovimientoVenta {
+  data: IMovimientoVentaResult[];
   response: string;
 }
 

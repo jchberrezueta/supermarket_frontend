@@ -1,20 +1,33 @@
 import { ITableListConfig } from '@shared/models/table-list.model';
+import { TableRow } from '@shared/models/button_item.model';
+
+const esCompletada = (row: TableRow): boolean =>
+  row['estado_vent'] === 'completado';
 
 export const ListVentasConfig: ITableListConfig = {
   dataKey: 'ide_vent',
   columns: [
     {
-      label: 'Detalles',
-      property: 'view_details',
-      type: 'details',
+      label: 'Acciones',
+      property: 'acciones',
+      type: 'actions',
       buttonItems: [
         {
           action: 'details',
-          label: 'Ver detalles',
+          label: 'Ver',
+          tooltip: 'Ver venta y trazabilidad',
           icon: 'visibility',
-          router: true,
           key: 'ide_vent',
           color: 'purple',
+        },
+        {
+          action: 'cancel',
+          label: 'Anular',
+          tooltip: 'Anular venta y restaurar los lotes consumidos',
+          icon: 'undo',
+          key: 'ide_vent',
+          color: 'red',
+          visible: esCompletada,
         },
       ],
     },

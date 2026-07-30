@@ -202,3 +202,20 @@
     }
   }
 }
+
+
+.tabla_movimientos {
+  table {
+    min-width: 1050px;
+  }
+
+  .cantidad-salida {
+    color: #b91c1c;
+    font-weight: 700;
+  }
+
+  .cantidad-entrada {
+    color: #166534;
+    font-weight: 700;
+  }
+}
