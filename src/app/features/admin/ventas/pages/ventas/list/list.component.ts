@@ -95,8 +95,8 @@ export default class ListComponent {
 
     this.appendParam(params, 'numFacturaVent', filtro.numFacturaVent);
     this.appendParam(params, 'estadoVent', filtro.estadoVent);
-    this.appendParam(params, 'fechaVentDesde', filtro.fechaVentDesde);
-    this.appendParam(params, 'fechaVentHasta', filtro.fechaVentHasta);
+    this.appendParam(params, 'fechaDesde', filtro.fechaVentDesde);
+    this.appendParam(params, 'fechaHasta', filtro.fechaVentHasta);
 
     return params;
   }

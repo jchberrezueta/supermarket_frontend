@@ -23,6 +23,8 @@ interface IVentaView {
   dctoSocioVent: number;
   dctoEdadVent: number;
   estadoVent: string;
+  canalVent: string;
+  tipoPagoVent: string;
 }
 
 interface IDetalleView {
@@ -103,7 +105,9 @@ export default class DetailsComponent {
           totalVent: data.total_vent,
           dctoSocioVent: data.dcto_socio_vent,
           dctoEdadVent: data.dcto_edad_vent,
-          estadoVent: data.estado_vent
+          estadoVent: data.estado_vent,
+          canalVent: data.canal_vent ?? 'No identificado',
+          tipoPagoVent: this.formatearTipoPago(data.tipo_pago_vent)
         };
 
         this.detalles = res.detalles.data.map((d: any) => {
@@ -146,6 +150,21 @@ export default class DetailsComponent {
       numValue = value || 0;
     }
     return this._currencyPipe.transform(numValue, '$') || numValue.toString();
+  }
+
+  private formatearTipoPago(value: string | null | undefined): string {
+    switch (value) {
+      case 'efectivo':
+        return 'Efectivo';
+      case 'tarjeta_credito':
+        return 'Tarjeta de crédito';
+      case 'tarjeta_debito':
+        return 'Tarjeta de débito';
+      case 'paypal':
+        return 'PayPal';
+      default:
+        return value || 'No registrado';
+    }
   }
 
   protected getEstadoClass(estado: string): string {

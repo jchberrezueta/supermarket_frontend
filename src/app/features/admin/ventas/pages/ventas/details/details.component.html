@@ -29,6 +29,10 @@
             <ui-text-field [label]="'ID Empleado'" [value]="venta?.ideEmpl" [disabled]="true"/>
           </div>
           <div class="info_row">
+            <ui-text-field [label]="'Canal'" [value]="venta?.canalVent" [disabled]="true"/>
+            <ui-text-field [label]="'Forma de pago'" [value]="venta?.tipoPagoVent" [disabled]="true"/>
+          </div>
+          <div class="info_row">
             <ui-text-field [label]="'Dcto. Socio'" [value]="formatCurrency(venta?.dctoSocioVent || 0)" [disabled]="true"/>
             <ui-text-field [label]="'Dcto. Edad'" [value]="formatCurrency(venta?.dctoEdadVent || 0)" [disabled]="true"/>
           </div>

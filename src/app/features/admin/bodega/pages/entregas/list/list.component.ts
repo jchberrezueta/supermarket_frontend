@@ -100,9 +100,9 @@ export default class ListComponent {
     if (isValidStringValue(filtro.estadoEntr))
       params.append('estadoEntr', filtro.estadoEntr);
     if (isValidStringValue(filtro.fechaEntrDesde))
-      params.append('fechaEntrDesde', filtro.fechaEntrDesde);
+      params.append('fechaDesde', filtro.fechaEntrDesde);
     if (isValidStringValue(filtro.fechaEntrHasta))
-      params.append('fechaEntrHasta', filtro.fechaEntrHasta);
+      params.append('fechaHasta', filtro.fechaEntrHasta);
     return params;
   }
 
