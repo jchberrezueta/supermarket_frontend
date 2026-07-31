@@ -1,0 +1,762 @@
+<section class="cold_page">
+  <header class="cold_header">
+    <div>
+      <span class="header_eyebrow"> Sistema de Información Gerencial </span>
+
+      <h1>Cadena de frío</h1>
+
+      <p>
+        Supervisión térmica, alertas, incidentes, acciones correctivas y
+        trazabilidad BPM.
+      </p>
+    </div>
+
+    <div class="header_actions">
+      @if (ultimaConsulta) {
+        <div class="header_time">
+          <span>Última consulta</span>
+
+          <strong>
+            {{ ultimaConsulta | date: "dd/MM/yyyy HH:mm:ss" }}
+          </strong>
+        </div>
+      }
+
+      <button
+        type="button"
+        class="header_button"
+        [disabled]="cargando"
+        (click)="cargarPanel()"
+      >
+        <span class="material-symbols-rounded" [class.rotating]="cargando">
+          refresh
+        </span>
+
+        Actualizar
+      </button>
+    </div>
+  </header>
+
+  <section class="device_bar">
+    <div>
+      <span class="material-symbols-rounded"> sensors </span>
+
+      <div>
+        <small>Dispositivo supervisado</small>
+
+        <strong>{{ codigoDispositivo }}</strong>
+      </div>
+    </div>
+
+    <label>
+      <span>Registros visibles</span>
+
+      <select name="limite" [(ngModel)]="limite" (change)="cargarPanel()">
+        <option [ngValue]="10">10</option>
+        <option [ngValue]="20">20</option>
+        <option [ngValue]="50">50</option>
+      </select>
+    </label>
+  </section>
+
+  @if (cargando) {
+    <div class="state_panel">
+      <div class="loading_spinner"></div>
+
+      <h2>Consultando cadena de frío</h2>
+
+      <p>Recuperando lecturas, alertas e incidentes almacenados en Oracle.</p>
+    </div>
+  } @else if (mensajeError) {
+    <div class="state_panel error_panel">
+      <span class="material-symbols-rounded"> device_thermostat </span>
+
+      <h2>No fue posible cargar la información</h2>
+
+      <p>{{ mensajeError }}</p>
+
+      <button type="button" class="primary_button" (click)="cargarPanel()">
+        Reintentar
+      </button>
+    </div>
+  } @else {
+    @if (resumen; as data) {
+      <section class="kpi_grid">
+        <article
+          class="kpi_card"
+          [class.danger_card]="data.ultimaLectura?.estado === 'fuera_rango'"
+        >
+          <div class="kpi_icon temperature_icon">
+            <span class="material-symbols-rounded"> device_thermostat </span>
+          </div>
+
+          <div>
+            <span class="kpi_label"> Temperatura actual </span>
+
+            @if (data.ultimaLectura; as ultima) {
+              <strong class="kpi_value">
+                {{ ultima.temperatura | number: "1.1-2" }}
+                °C
+              </strong>
+
+              <small>
+                {{ formatearEstado(ultima.estado) }}
+              </small>
+            } @else {
+              <strong class="kpi_value">—</strong>
+              <small>Sin lecturas</small>
+            }
+          </div>
+        </article>
+
+        <article class="kpi_card">
+          <div class="kpi_icon humidity_icon">
+            <span class="material-symbols-rounded"> humidity_percentage </span>
+          </div>
+
+          <div>
+            <span class="kpi_label"> Humedad actual </span>
+
+            @if (data.ultimaLectura; as ultima) {
+              <strong class="kpi_value">
+                {{ ultima.humedad ?? 0 | number: "1.0-2" }}%
+              </strong>
+
+              <small>Medición ambiental</small>
+            } @else {
+              <strong class="kpi_value">—</strong>
+              <small>Sin lecturas</small>
+            }
+          </div>
+        </article>
+
+        <article class="kpi_card">
+          <div class="kpi_icon compliance_icon">
+            <span class="material-symbols-rounded"> verified </span>
+          </div>
+
+          <div>
+            <span class="kpi_label"> Cumplimiento térmico </span>
+
+            <strong class="kpi_value">
+              {{ data.porcentajeNormal | number: "1.0-2" }}%
+            </strong>
+
+            <small>
+              {{ data.lecturasNormales }} de {{ data.totalLecturas }} lecturas
+            </small>
+          </div>
+        </article>
+
+        <article class="kpi_card warning_card">
+          <div class="kpi_icon alert_icon">
+            <span class="material-symbols-rounded">
+              notification_important
+            </span>
+          </div>
+
+          <div>
+            <span class="kpi_label"> Alertas activas </span>
+
+            <strong class="kpi_value">
+              {{ alertasActivas() }}
+            </strong>
+
+            <small> {{ data.alertas.cerradas }} cerradas </small>
+          </div>
+        </article>
+
+        <article class="kpi_card danger_card">
+          <div class="kpi_icon incident_icon">
+            <span class="material-symbols-rounded"> emergency_home </span>
+          </div>
+
+          <div>
+            <span class="kpi_label"> Incidentes activos </span>
+
+            <strong class="kpi_value">
+              {{ incidentesActivos() }}
+            </strong>
+
+            <small> {{ data.incidentes.cerrados }} cerrados </small>
+          </div>
+        </article>
+
+        <article class="kpi_card">
+          <div class="kpi_icon reading_icon">
+            <span class="material-symbols-rounded"> query_stats </span>
+          </div>
+
+          <div>
+            <span class="kpi_label"> Lecturas registradas </span>
+
+            <strong class="kpi_value">
+              {{ data.totalLecturas }}
+            </strong>
+
+            <small>
+              {{ data.lecturasFueraRango }}
+              fuera de rango
+            </small>
+          </div>
+        </article>
+      </section>
+
+      @if (data.recomendaciones.length > 0) {
+        <section class="recommendations_panel">
+          <header class="section_header">
+            <div>
+              <span class="material-symbols-rounded"> tips_and_updates </span>
+
+              <div>
+                <h2>Recomendaciones gerenciales</h2>
+
+                <p>
+                  Acciones sugeridas según el estado térmico y el proceso BPM.
+                </p>
+              </div>
+            </div>
+          </header>
+
+          <div class="recommendations_grid">
+            @for (
+              recomendacion of data.recomendaciones;
+              track recomendacion.codigo
+            ) {
+              <article
+                class="recommendation_card"
+                [ngClass]="clasePrioridad(recomendacion.prioridad)"
+              >
+                <span class="priority_label">
+                  {{ recomendacion.prioridad }}
+                </span>
+
+                <h3>{{ recomendacion.titulo }}</h3>
+
+                <p>{{ recomendacion.mensaje }}</p>
+              </article>
+            }
+          </div>
+        </section>
+      }
+    }
+
+    <section class="content_grid">
+      <article class="panel readings_panel">
+        <header class="section_header">
+          <div>
+            <span class="material-symbols-rounded"> monitoring </span>
+
+            <div>
+              <h2>Historial de lecturas</h2>
+
+              <p>Temperatura y humedad recibidas desde el dispositivo IoT.</p>
+            </div>
+          </div>
+        </header>
+
+        <div class="table_container">
+          <table>
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Temperatura</th>
+                <th>Humedad</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              @for (lectura of lecturas; track lectura.id) {
+                <tr>
+                  <td>
+                    {{ lectura.fechaLectura | date: "dd/MM/yyyy HH:mm:ss" }}
+                  </td>
+
+                  <td>
+                    <strong>
+                      {{ lectura.temperatura | number: "1.1-2" }}
+                      °C
+                    </strong>
+                  </td>
+
+                  <td>{{ lectura.humedad ?? 0 | number: "1.0-2" }}%</td>
+
+                  <td>
+                    <span
+                      class="status_badge"
+                      [ngClass]="claseEstado(lectura.estado)"
+                    >
+                      {{ formatearEstado(lectura.estado) }}
+                    </span>
+                  </td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="4" class="empty_cell">
+                    No existen lecturas registradas.
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </article>
+
+      <article class="panel alerts_panel">
+        <header class="section_header">
+          <div>
+            <span class="material-symbols-rounded"> notifications_active </span>
+
+            <div>
+              <h2>Alertas</h2>
+
+              <p>Eventos automáticos generados por desviaciones térmicas.</p>
+            </div>
+          </div>
+        </header>
+
+        <div class="card_list">
+          @for (alerta of alertas; track alerta.id) {
+            <article class="list_card">
+              <div class="list_card_header">
+                <strong>Alerta #{{ alerta.id }}</strong>
+
+                <span
+                  class="status_badge"
+                  [ngClass]="claseEstado(alerta.estado)"
+                >
+                  {{ formatearEstado(alerta.estado) }}
+                </span>
+              </div>
+
+              <p>{{ alerta.mensaje }}</p>
+
+              <div class="list_meta">
+                <span>
+                  Severidad:
+                  <strong>
+                    {{ alerta.severidad }}
+                  </strong>
+                </span>
+
+                <span>
+                  {{ alerta.fechaApertura | date: "dd/MM/yyyy HH:mm" }}
+                </span>
+              </div>
+            </article>
+          } @empty {
+            <div class="empty_state">No existen alertas registradas.</div>
+          }
+        </div>
+      </article>
+    </section>
+
+    <section class="workflow_grid">
+      <article class="panel incidents_panel">
+        <header class="section_header">
+          <div>
+            <span class="material-symbols-rounded"> account_tree </span>
+
+            <div>
+              <h2>Incidentes BPM</h2>
+
+              <p>Selecciona un incidente para operar su flujo de calidad.</p>
+            </div>
+          </div>
+        </header>
+
+        <div class="incident_list">
+          @for (incidente of incidentes; track incidente.id) {
+            <button
+              type="button"
+              class="incident_button"
+              [class.selected]="
+                detalleSeleccionado?.incidente?.id === incidente.id
+              "
+              (click)="cargarDetalle(incidente.id)"
+            >
+              <div class="incident_button_header">
+                <strong>{{ incidente.codigo }}</strong>
+
+                <span
+                  class="status_badge"
+                  [ngClass]="claseEstado(incidente.estado)"
+                >
+                  {{ formatearEstado(incidente.estado) }}
+                </span>
+              </div>
+
+              <span>{{ incidente.titulo }}</span>
+
+              <small>
+                {{ incidente.fechaApertura | date: "dd/MM/yyyy HH:mm" }}
+              </small>
+            </button>
+          } @empty {
+            <div class="empty_state">No existen incidentes registrados.</div>
+          }
+        </div>
+      </article>
+
+      <article class="panel detail_panel">
+        @if (cargandoDetalle) {
+          <div class="detail_loading">
+            <div class="loading_spinner small"></div>
+
+            <span>Cargando incidente...</span>
+          </div>
+        } @else {
+          @if (detalleSeleccionado; as detalle) {
+            <header class="detail_header">
+              <div>
+                <span class="section_eyebrow">
+                  {{ detalle.incidente.codigo }}
+                </span>
+
+                <h2>{{ detalle.incidente.titulo }}</h2>
+
+                <p>
+                  {{ detalle.incidente.descripcion }}
+                </p>
+              </div>
+
+              <button
+                type="button"
+                class="icon_button"
+                title="Cerrar detalle"
+                (click)="limpiarSeleccion()"
+              >
+                <span class="material-symbols-rounded"> close </span>
+              </button>
+            </header>
+
+            <div class="incident_summary">
+              <div>
+                <span>Estado</span>
+
+                <strong
+                  class="status_badge"
+                  [ngClass]="claseEstado(detalle.incidente.estado)"
+                >
+                  {{ formatearEstado(detalle.incidente.estado) }}
+                </strong>
+              </div>
+
+              <div>
+                <span>Severidad</span>
+
+                <strong>
+                  {{ detalle.incidente.severidad }}
+                </strong>
+              </div>
+
+              <div>
+                <span>Responsable</span>
+
+                <strong>
+                  {{ detalle.incidente.responsable || "Sin asignar" }}
+                </strong>
+              </div>
+            </div>
+
+            <section class="timeline">
+              <article class="timeline_step completed">
+                <span>1</span>
+                <div>
+                  <strong>Detectado</strong>
+                  <small>
+                    {{
+                      detalle.incidente.fechaApertura | date: "dd/MM/yyyy HH:mm"
+                    }}
+                  </small>
+                </div>
+              </article>
+
+              <article
+                class="timeline_step"
+                [class.completed]="pasoReconocido()"
+              >
+                <span>2</span>
+                <div>
+                  <strong>Reconocido</strong>
+                  <small>
+                    {{
+                      detalle.incidente.fechaReconocimiento
+                        ? (detalle.incidente.fechaReconocimiento
+                          | date: "dd/MM/yyyy HH:mm")
+                        : "Pendiente"
+                    }}
+                  </small>
+                </div>
+              </article>
+
+              <article
+                class="timeline_step"
+                [class.completed]="pasoEnTratamiento()"
+              >
+                <span>3</span>
+                <div>
+                  <strong>En tratamiento</strong>
+                  <small>
+                    {{
+                      detalle.acciones.length > 0
+                        ? detalle.acciones.length + " acción(es)"
+                        : "Pendiente"
+                    }}
+                  </small>
+                </div>
+              </article>
+
+              <article class="timeline_step" [class.completed]="pasoResuelto()">
+                <span>4</span>
+                <div>
+                  <strong>Resuelto</strong>
+                  <small>
+                    {{
+                      detalle.incidente.fechaResolucion
+                        ? (detalle.incidente.fechaResolucion
+                          | date: "dd/MM/yyyy HH:mm")
+                        : "Pendiente"
+                    }}
+                  </small>
+                </div>
+              </article>
+
+              <article class="timeline_step" [class.completed]="pasoCerrado()">
+                <span>5</span>
+                <div>
+                  <strong>Cerrado</strong>
+                  <small>
+                    {{
+                      detalle.incidente.fechaCierre
+                        ? (detalle.incidente.fechaCierre
+                          | date: "dd/MM/yyyy HH:mm")
+                        : "Pendiente"
+                    }}
+                  </small>
+                </div>
+              </article>
+            </section>
+
+            @if (puedeReconocer()) {
+              <section class="operation_box">
+                <h3>Reconocer incidente</h3>
+
+                <label>
+                  Responsable
+
+                  <input
+                    type="text"
+                    name="responsableReconocimiento"
+                    [(ngModel)]="responsableReconocimiento"
+                  />
+                </label>
+
+                <button
+                  type="button"
+                  class="primary_button"
+                  [disabled]="procesando"
+                  (click)="reconocerIncidente()"
+                >
+                  Reconocer incidente
+                </button>
+              </section>
+            }
+
+            @if (puedeRegistrarAccion()) {
+              <section class="operation_box">
+                <h3>Registrar acción correctiva</h3>
+
+                <label>
+                  Descripción
+
+                  <textarea
+                    name="accionDescripcion"
+                    rows="3"
+                    [(ngModel)]="accionDescripcion"
+                    placeholder="Describe la intervención realizada"
+                  ></textarea>
+                </label>
+
+                <div class="form_grid">
+                  <label>
+                    Responsable
+
+                    <input
+                      type="text"
+                      name="accionResponsable"
+                      [(ngModel)]="accionResponsable"
+                    />
+                  </label>
+
+                  <label>
+                    Resultado
+
+                    <input
+                      type="text"
+                      name="accionResultado"
+                      [(ngModel)]="accionResultado"
+                      placeholder="Resultado obtenido"
+                    />
+                  </label>
+                </div>
+
+                <button
+                  type="button"
+                  class="primary_button"
+                  [disabled]="procesando"
+                  (click)="registrarAccionCorrectiva()"
+                >
+                  Registrar acción
+                </button>
+              </section>
+            }
+
+            @if (puedeResolver()) {
+              <section class="operation_box compact">
+                <div>
+                  <h3>Finalizar tratamiento</h3>
+
+                  <p>Existe al menos una acción correctiva registrada.</p>
+                </div>
+
+                <button
+                  type="button"
+                  class="success_button"
+                  [disabled]="procesando"
+                  (click)="resolverIncidente()"
+                >
+                  Marcar como resuelto
+                </button>
+              </section>
+            }
+
+            @if (puedeCerrar()) {
+              <section class="operation_box compact">
+                <div>
+                  <h3>Cerrar proceso BPM</h3>
+
+                  <p>El cierre también cerrará la alerta relacionada.</p>
+                </div>
+
+                <button
+                  type="button"
+                  class="success_button"
+                  [disabled]="procesando"
+                  (click)="cerrarIncidente()"
+                >
+                  Cerrar incidente
+                </button>
+              </section>
+            }
+
+            @if (mensajeOperacion) {
+              <div class="operation_message">
+                {{ mensajeOperacion }}
+              </div>
+            }
+
+            <section class="actions_history">
+              <h3>Acciones correctivas</h3>
+
+              @for (accion of detalle.acciones; track accion.id) {
+                <article class="action_item">
+                  <div>
+                    <strong>{{ accion.descripcion }}</strong>
+
+                    <span>
+                      Responsable:
+                      {{ accion.responsable }}
+                    </span>
+                  </div>
+
+                  <small>
+                    {{ accion.fechaAccion | date: "dd/MM/yyyy HH:mm" }}
+                  </small>
+
+                  @if (accion.resultado) {
+                    <p>Resultado: {{ accion.resultado }}</p>
+                  }
+                </article>
+              } @empty {
+                <div class="empty_state">
+                  Aún no se registran acciones correctivas.
+                </div>
+              }
+            </section>
+          } @else {
+            <div class="detail_placeholder">
+              <span class="material-symbols-rounded"> account_tree </span>
+
+              <h2>Detalle del proceso BPM</h2>
+
+              <p>
+                Selecciona un incidente para revisar su trazabilidad y ejecutar
+                acciones.
+              </p>
+            </div>
+          }
+        }
+      </article>
+    </section>
+
+    <section class="panel audit_panel">
+      <header class="section_header">
+        <div>
+          <span class="material-symbols-rounded"> history </span>
+
+          <div>
+            <h2>Auditoría de cadena de frío</h2>
+
+            <p>Evidencia cronológica de lecturas y transiciones del proceso.</p>
+          </div>
+        </div>
+      </header>
+
+      <div class="table_container">
+        <table>
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Actor</th>
+              <th>Acción</th>
+              <th>Entidad</th>
+              <th>Detalle</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            @for (evento of auditoria; track evento.id) {
+              <tr>
+                <td>
+                  {{ evento.fechaEvento | date: "dd/MM/yyyy HH:mm:ss" }}
+                </td>
+
+                <td>{{ evento.actor }}</td>
+
+                <td>
+                  <strong>
+                    {{ formatearEstado(evento.accion) }}
+                  </strong>
+                </td>
+
+                <td>{{ evento.entidad }}</td>
+
+                <td>
+                  {{ evento.detalle || "—" }}
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="5" class="empty_cell">
+                  No existen eventos de auditoría.
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+  }
+</section>

@@ -25,3 +25,4 @@ export * from './sig-resumen-ejecutivo.model';
 export * from './sig-ventas.model';
 export * from './sig-inventario.model';
 export * from './sig-abastecimiento.model';
+export * from './sig-cadena-frio.model';

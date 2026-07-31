@@ -21,3 +21,4 @@ export * from './iot.service';
 
 export * from './movimientos-inventario.service';
 export * from './sig.service';
+export * from './sig-cadena-frio.service';

@@ -28,6 +28,11 @@ export const sigRoutes: Routes = [
     loadComponent: () =>
       import('./pages/abastecimiento/abastecimiento.component'),
   },
+  {
+    path: 'cadena-frio',
+    title: 'Cadena de frío SIG',
+    loadComponent: () => import('./pages/cadena-frio/cadena-frio.component'),
+  },
 ];
 
 export default sigRoutes;

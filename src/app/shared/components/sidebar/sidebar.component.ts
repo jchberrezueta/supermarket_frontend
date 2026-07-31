@@ -108,6 +108,15 @@ export class UiSidebarComponent {
             hijas: [],
             visible: true,
           },
+          {
+            id: -15,
+            titulo: 'Cadena de frío',
+            ruta: 'admin/sig/cadena-frio',
+            icono: 'device_thermostat',
+            activo: 'si',
+            hijas: [],
+            visible: true,
+          },
         ],
       };
 
