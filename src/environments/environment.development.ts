@@ -1,6 +1,7 @@
 export const environment = {
   production: false,
   api_url: 'http://localhost:3001/api',
+  sig_api_url: 'http://localhost:8080/api/sig',
   posScanSocketUrl: 'http://localhost:3001/pos-scan',
   appBaseUrl: 'http://localhost:4200',
 };

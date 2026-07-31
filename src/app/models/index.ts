@@ -21,3 +21,4 @@ export * from './rol.model';
 export * from './venta.model';
 
 export * from './movimiento_inventario.model';
+export * from './sig-resumen-ejecutivo.model';

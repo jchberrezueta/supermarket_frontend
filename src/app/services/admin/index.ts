@@ -20,3 +20,4 @@ export * from './pos-scan.service';
 export * from './iot.service';
 
 export * from './movimientos-inventario.service';
+export * from './sig.service';

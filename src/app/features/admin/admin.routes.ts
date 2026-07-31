@@ -38,6 +38,10 @@ export const adminRoutes: Routes = [
     loadChildren: () => import('./proveedores/proveedores.routes'),
   },
   {
+    path: 'sig',
+    loadChildren: () => import('./sig/sig.routes'),
+  },
+  {
     path: 'seguridad',
     canMatch: [canMatchModuleGuard],
     loadChildren: () => import('./seguridad/seguridad.routes'),

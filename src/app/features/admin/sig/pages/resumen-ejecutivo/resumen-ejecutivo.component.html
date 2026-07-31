@@ -1,0 +1,466 @@
+<section class="sig_page">
+  <header class="sig_header">
+    <div>
+      <span class="header_eyebrow">Sistema de Información Gerencial</span>
+
+      <h1>Resumen ejecutivo</h1>
+
+      <p>
+        Indicadores consolidados de ventas, inventario, calidad y cadena de
+        frío.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="refresh_button"
+      [disabled]="cargando"
+      (click)="cargarResumen()"
+    >
+      <span
+        class="material-symbols-rounded"
+        [class.rotating]="cargando"
+      >
+        refresh
+      </span>
+
+      Actualizar
+    </button>
+  </header>
+
+  @if (cargando) {
+    <div class="state_container">
+      <div class="loading_spinner"></div>
+      <h2>Cargando información gerencial</h2>
+      <p>Consultando los indicadores almacenados en Oracle...</p>
+    </div>
+  } @else if (mensajeError) {
+    <div class="state_container error_state">
+      <span class="material-symbols-rounded state_icon">
+        cloud_off
+      </span>
+
+      <h2>No fue posible cargar el SIG</h2>
+      <p>{{ mensajeError }}</p>
+
+      <button
+        type="button"
+        class="retry_button"
+        (click)="cargarResumen()"
+      >
+        Reintentar
+      </button>
+    </div>
+  } @else {
+    @if (resumen; as data) {
+      <div
+        class="data_status"
+        [class.status_ok]="data.tieneDatosERP"
+        [class.status_warning]="!data.tieneDatosERP"
+      >
+        <div class="status_identity">
+          <span class="material-symbols-rounded">
+            {{ data.tieneDatosERP ? "database" : "database_off" }}
+          </span>
+
+          <div>
+            <strong>
+              {{
+                data.tieneDatosERP
+                  ? "Información ERP disponible"
+                  : "Sin información ERP"
+              }}
+            </strong>
+
+            <span>
+              {{
+                data.tieneDatosERP
+                  ? "Los indicadores fueron reconstruidos desde Oracle."
+                  : "Todavía no existe una sincronización válida."
+              }}
+            </span>
+          </div>
+        </div>
+
+        <div class="status_time">
+          <span>Consulta de pantalla</span>
+          <strong>
+            {{
+              ultimaConsulta
+                | date: "dd/MM/yyyy HH:mm:ss"
+            }}
+          </strong>
+        </div>
+      </div>
+
+      <section class="kpi_grid">
+        <article class="kpi_card kpi_sales">
+          <div class="kpi_icon">
+            <span class="material-symbols-rounded">payments</span>
+          </div>
+
+          <div class="kpi_content">
+            <span class="kpi_label">Ventas completadas</span>
+
+            <strong class="kpi_value">
+              {{
+                data.ventas.totalVentas
+                  | currency: "USD" : "symbol" : "1.2-2"
+              }}
+            </strong>
+
+            <span class="kpi_detail">
+              {{ data.ventas.ventasCompletadas }}
+              transacciones completadas
+            </span>
+          </div>
+        </article>
+
+        <article class="kpi_card kpi_ticket">
+          <div class="kpi_icon">
+            <span class="material-symbols-rounded">
+              receipt_long
+            </span>
+          </div>
+
+          <div class="kpi_content">
+            <span class="kpi_label">Ticket promedio</span>
+
+            <strong class="kpi_value">
+              {{
+                data.ventas.ticketPromedio
+                  | currency: "USD" : "symbol" : "1.2-2"
+              }}
+            </strong>
+
+            <span class="kpi_detail">
+              Promedio por venta completada
+            </span>
+          </div>
+        </article>
+
+        <article class="kpi_card kpi_products">
+          <div class="kpi_icon">
+            <span class="material-symbols-rounded">
+              inventory_2
+            </span>
+          </div>
+
+          <div class="kpi_content">
+            <span class="kpi_label">Productos</span>
+
+            <strong class="kpi_value">
+              {{ data.inventario.productos }}
+            </strong>
+
+            <span class="kpi_detail warning_text">
+              {{ data.inventario.productosAgotados }}
+              agotados
+            </span>
+          </div>
+        </article>
+
+        <article class="kpi_card kpi_units">
+          <div class="kpi_icon">
+            <span class="material-symbols-rounded">
+              warehouse
+            </span>
+          </div>
+
+          <div class="kpi_content">
+            <span class="kpi_label">Unidades disponibles</span>
+
+            <strong class="kpi_value">
+              {{
+                data.inventario.unidadesDisponibles
+                  | number: "1.0-2"
+              }}
+            </strong>
+
+            <span class="kpi_detail">
+              Existencias consolidadas
+            </span>
+          </div>
+        </article>
+      </section>
+
+      <section class="detail_grid">
+        <article class="detail_card">
+          <header class="detail_header">
+            <div class="detail_title">
+              <span class="material-symbols-rounded">monitoring</span>
+
+              <div>
+                <h2>Comportamiento de ventas</h2>
+                <p>Transacciones y canales registrados</p>
+              </div>
+            </div>
+          </header>
+
+          <div class="metric_list">
+            <div class="metric_row">
+              <span>Ventas completadas</span>
+              <strong>{{ data.ventas.ventasCompletadas }}</strong>
+            </div>
+
+            <div class="metric_row">
+              <span>Ventas canceladas</span>
+              <strong>{{ data.ventas.ventasCanceladas }}</strong>
+            </div>
+
+            <div class="metric_row">
+              <span>Unidades vendidas</span>
+              <strong>
+                {{ data.ventas.unidadesVendidas | number: "1.0-2" }}
+              </strong>
+            </div>
+
+            <div class="metric_row">
+              <span>Transacciones POS</span>
+              <strong>{{ data.ventas.pos.transacciones }}</strong>
+            </div>
+
+            <div class="metric_row">
+              <span>Transacciones móviles</span>
+              <strong>{{ data.ventas.movil.transacciones }}</strong>
+            </div>
+          </div>
+        </article>
+
+        <article class="detail_card">
+          <header class="detail_header">
+            <div class="detail_title">
+              <span class="material-symbols-rounded">
+                inventory
+              </span>
+
+              <div>
+                <h2>Situación del inventario</h2>
+                <p>Riesgos que requieren atención</p>
+              </div>
+            </div>
+          </header>
+
+          <div class="metric_list">
+            <div class="metric_row danger_metric">
+              <span>Productos agotados</span>
+              <strong>
+                {{ data.inventario.productosAgotados }}
+              </strong>
+            </div>
+
+            <div class="metric_row warning_metric">
+              <span>Productos con stock bajo</span>
+              <strong>
+                {{ data.inventario.productosStockBajo }}
+              </strong>
+            </div>
+
+            <div class="metric_row">
+              <span>Lotes próximos a caducar</span>
+              <strong>
+                {{ data.inventario.lotesProximosCaducar }}
+              </strong>
+            </div>
+
+            <div class="metric_row danger_metric">
+              <span>Lotes caducados con stock</span>
+              <strong>
+                {{ data.inventario.lotesCaducadosConStock }}
+              </strong>
+            </div>
+          </div>
+        </article>
+
+        <article class="detail_card">
+          <header class="detail_header">
+            <div class="detail_title">
+              <span class="material-symbols-rounded">
+                device_thermostat
+              </span>
+
+              <div>
+                <h2>Calidad y cadena de frío</h2>
+                <p>Alertas e incidentes del proceso BPM</p>
+              </div>
+            </div>
+          </header>
+
+          <div class="metric_list">
+            <div class="metric_row">
+              <span>Alertas abiertas</span>
+              <strong>{{ data.calidad.alertasAbiertas }}</strong>
+            </div>
+
+            <div class="metric_row">
+              <span>Alertas reconocidas</span>
+              <strong>
+                {{ data.calidad.alertasReconocidas }}
+              </strong>
+            </div>
+
+            <div class="metric_row">
+              <span>Incidentes activos</span>
+              <strong>{{ data.calidad.incidentesActivos }}</strong>
+            </div>
+
+            <div class="metric_row">
+              <span>Incidentes cerrados</span>
+              <strong>{{ data.calidad.incidentesCerrados }}</strong>
+            </div>
+
+            @if (data.calidad.ultimaTemperatura !== undefined) {
+              <div class="metric_row">
+                <span>Última temperatura</span>
+                <strong>
+                  {{
+                    data.calidad.ultimaTemperatura
+                      | number: "1.1-1"
+                  }}
+                  °C
+                </strong>
+              </div>
+            }
+          </div>
+        </article>
+
+        <article class="detail_card">
+          <header class="detail_header">
+            <div class="detail_title">
+              <span class="material-symbols-rounded">sync</span>
+
+              <div>
+                <h2>Sincronización ERP</h2>
+                <p>Último snapshot importado en Oracle</p>
+              </div>
+            </div>
+          </header>
+
+          @if (data.ultimaSincronizacion; as sync) {
+            <div class="metric_list">
+              <div class="metric_row">
+                <span>Contrato</span>
+                <strong>v{{ sync.versionContrato }}</strong>
+              </div>
+
+              <div class="metric_row">
+                <span>Modo</span>
+                <strong>{{ sync.modo }}</strong>
+              </div>
+
+              <div class="metric_row">
+                <span>Fecha de importación</span>
+                <strong>
+                  {{
+                    sync.fechaImportacion
+                      | date: "dd/MM/yyyy HH:mm:ss"
+                  }}
+                </strong>
+              </div>
+
+              <div class="metric_row">
+                <span>Productos importados</span>
+                <strong>{{ sync.registros.productos }}</strong>
+              </div>
+
+              <div class="metric_row">
+                <span>Ventas importadas</span>
+                <strong>{{ sync.registros.ventas }}</strong>
+              </div>
+
+              <div class="metric_row">
+                <span>Movimientos importados</span>
+                <strong>{{ sync.registros.movimientos }}</strong>
+              </div>
+            </div>
+          } @else {
+            <div class="empty_panel">
+              No existe una sincronización registrada.
+            </div>
+          }
+        </article>
+      </section>
+
+      <section class="recommendations_section">
+        <header class="section_header">
+          <div>
+            <span class="section_eyebrow">
+              Apoyo a la toma de decisiones
+            </span>
+
+            <h2>Recomendaciones gerenciales</h2>
+
+            <p>
+              Acciones sugeridas a partir de los indicadores actuales.
+            </p>
+          </div>
+
+          <span class="recommendation_count">
+            {{ data.recomendaciones.length }}
+            {{
+              data.recomendaciones.length === 1
+                ? "recomendación"
+                : "recomendaciones"
+            }}
+          </span>
+        </header>
+
+        @if (data.recomendaciones.length > 0) {
+          <div class="recommendations_grid">
+            @for (
+              recomendacion of data.recomendaciones;
+              track recomendacion.codigo
+            ) {
+              <article
+                class="recommendation_card"
+                [ngClass]="
+                  'priority_' + recomendacion.prioridad
+                "
+              >
+                <div class="recommendation_top">
+                  <span class="recommendation_module">
+                    {{ recomendacion.modulo }}
+                  </span>
+
+                  <span class="priority_badge">
+                    {{
+                      etiquetaPrioridad(
+                        recomendacion.prioridad
+                      )
+                    }}
+                  </span>
+                </div>
+
+                <h3>{{ recomendacion.titulo }}</h3>
+                <p>{{ recomendacion.mensaje }}</p>
+
+                <span class="recommendation_code">
+                  {{ recomendacion.codigo }}
+                </span>
+              </article>
+            }
+          </div>
+        } @else {
+          <div class="empty_recommendations">
+            <span class="material-symbols-rounded">
+              task_alt
+            </span>
+
+            <h3>Sin recomendaciones pendientes</h3>
+            <p>
+              Los indicadores actuales no requieren acciones adicionales.
+            </p>
+          </div>
+        }
+      </section>
+
+      <footer class="sig_footer">
+        Datos actualizados por la API SIG:
+        {{
+          data.fechaActualizacion
+            | date: "dd/MM/yyyy HH:mm:ss"
+        }}
+      </footer>
+    }
+  }
+</section>

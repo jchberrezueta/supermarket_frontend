@@ -46,11 +46,9 @@ export class UiSidebarComponent {
       ...(this._authService.getSidebarOptions() ?? []),
     ];
 
-    if (
-      rutas &&
-      this._authService.getUserPerfil() === 'padmin' &&
-      !rutas.some((ruta) => ruta.ruta === 'admin/home')
-    ) {
+    const esAdministrador = this._authService.getUserPerfil() === 'padmin';
+
+    if (esAdministrador && !this.contieneRuta(rutas, 'admin/home')) {
       rutas.unshift({
         id: 0,
         titulo: 'Dashboard',
@@ -62,6 +60,42 @@ export class UiSidebarComponent {
       });
     }
 
+    if (
+      esAdministrador &&
+      !this.contieneRuta(rutas, 'admin/sig/resumen-ejecutivo')
+    ) {
+      const opcionSig: IOpcionSidebar = {
+        id: -1,
+        titulo: 'SIG Gerencial',
+        ruta: 'admin/sig/resumen-ejecutivo',
+        icono: 'analytics',
+        activo: 'si',
+        hijas: [],
+        visible: true,
+      };
+
+      const posicionDashboard = rutas.findIndex(
+        (ruta) => ruta.ruta === 'admin/home',
+      );
+
+      if (posicionDashboard >= 0) {
+        rutas.splice(posicionDashboard + 1, 0, opcionSig);
+      } else {
+        rutas.unshift(opcionSig);
+      }
+    }
+
     this.opciones = rutas;
+  }
+
+  private contieneRuta(
+    opciones: IOpcionSidebar[],
+    rutaBuscada: string,
+  ): boolean {
+    return opciones.some(
+      (opcion) =>
+        opcion.ruta === rutaBuscada ||
+        this.contieneRuta(opcion.hijas ?? [], rutaBuscada),
+    );
   }
 }
