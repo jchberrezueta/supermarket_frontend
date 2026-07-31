@@ -90,6 +90,15 @@ export class UiSidebarComponent {
             hijas: [],
             visible: true,
           },
+          {
+            id: -13,
+            titulo: 'Analítica de inventario',
+            ruta: 'admin/sig/inventario',
+            icono: 'inventory_2',
+            activo: 'si',
+            hijas: [],
+            visible: true,
+          },
         ],
       };
 

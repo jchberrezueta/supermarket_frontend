@@ -1,0 +1,475 @@
+<section class="inventory_page">
+  <header class="inventory_header">
+    <div>
+      <span class="header_eyebrow"> Sistema de Información Gerencial </span>
+
+      <h1>Analítica de inventario</h1>
+
+      <p>
+        Disponibilidad, stock crítico, caducidad y trazabilidad de movimientos.
+      </p>
+    </div>
+
+    @if (ultimaConsulta) {
+      <div class="header_time">
+        <span>Última consulta</span>
+
+        <strong>
+          {{ ultimaConsulta | date: "dd/MM/yyyy HH:mm:ss" }}
+        </strong>
+      </div>
+    }
+  </header>
+
+  <form class="filters_panel" (ngSubmit)="cargarInventario()">
+    <div class="filter_field">
+      <label for="diasCaducidad"> Período de caducidad </label>
+
+      <select
+        id="diasCaducidad"
+        name="diasCaducidad"
+        [(ngModel)]="diasCaducidad"
+      >
+        <option [ngValue]="7">Próximos 7 días</option>
+        <option [ngValue]="15">Próximos 15 días</option>
+        <option [ngValue]="30">Próximos 30 días</option>
+        <option [ngValue]="60">Próximos 60 días</option>
+        <option [ngValue]="90">Próximos 90 días</option>
+      </select>
+    </div>
+
+    <div class="filter_field">
+      <label for="desde">Movimientos desde</label>
+
+      <input id="desde" name="desde" type="date" [(ngModel)]="desde" />
+    </div>
+
+    <div class="filter_field">
+      <label for="hasta">Movimientos hasta</label>
+
+      <input id="hasta" name="hasta" type="date" [(ngModel)]="hasta" />
+    </div>
+
+    <div class="filter_field">
+      <label for="tipoMovimiento">Tipo</label>
+
+      <select
+        id="tipoMovimiento"
+        name="tipoMovimiento"
+        [(ngModel)]="tipoMovimiento"
+      >
+        <option value="">Todos los movimientos</option>
+        <option value="entrada_compra">Entrada por compra</option>
+        <option value="salida_venta">Salida por venta</option>
+      </select>
+    </div>
+
+    <div class="filter_field">
+      <label for="limite">Límite</label>
+
+      <select id="limite" name="limite" [(ngModel)]="limite">
+        <option [ngValue]="10">10 registros</option>
+        <option [ngValue]="20">20 registros</option>
+        <option [ngValue]="50">50 registros</option>
+      </select>
+    </div>
+
+    <div class="filter_actions">
+      <button
+        type="button"
+        class="secondary_button"
+        [disabled]="cargando"
+        (click)="limpiarFiltros()"
+      >
+        Limpiar
+      </button>
+
+      <button type="submit" class="primary_button" [disabled]="cargando">
+        <span class="material-symbols-rounded" [class.rotating]="cargando">
+          refresh
+        </span>
+
+        Consultar
+      </button>
+    </div>
+  </form>
+
+  @if (cargando) {
+    <div class="state_panel">
+      <div class="loading_spinner"></div>
+
+      <h2>Analizando inventario</h2>
+
+      <p>Consultando existencias y movimientos almacenados en Oracle...</p>
+    </div>
+  } @else if (mensajeError) {
+    <div class="state_panel error_panel">
+      <span class="material-symbols-rounded"> inventory_2 </span>
+
+      <h2>No fue posible cargar el inventario</h2>
+
+      <p>{{ mensajeError }}</p>
+
+      <button type="button" class="primary_button" (click)="cargarInventario()">
+        Reintentar
+      </button>
+    </div>
+  } @else {
+    @if (resumen; as data) {
+      <section class="kpi_grid">
+        <article class="kpi_card">
+          <div class="kpi_icon products_icon">
+            <span class="material-symbols-rounded"> inventory_2 </span>
+          </div>
+
+          <div>
+            <span class="kpi_label">Productos</span>
+            <strong>{{ data.productos }}</strong>
+            <small>Catálogo sincronizado</small>
+          </div>
+        </article>
+
+        <article class="kpi_card">
+          <div class="kpi_icon units_icon">
+            <span class="material-symbols-rounded"> warehouse </span>
+          </div>
+
+          <div>
+            <span class="kpi_label"> Unidades disponibles </span>
+
+            <strong>
+              {{ data.unidadesDisponibles | number: "1.0-2" }}
+            </strong>
+
+            <small>Existencias consolidadas</small>
+          </div>
+        </article>
+
+        <article class="kpi_card danger_card">
+          <div class="kpi_icon empty_icon">
+            <span class="material-symbols-rounded">
+              production_quantity_limits
+            </span>
+          </div>
+
+          <div>
+            <span class="kpi_label">Agotados</span>
+            <strong>{{ data.productosAgotados }}</strong>
+            <small>Requieren reposición inmediata</small>
+          </div>
+        </article>
+
+        <article class="kpi_card warning_card">
+          <div class="kpi_icon low_icon">
+            <span class="material-symbols-rounded"> warning </span>
+          </div>
+
+          <div>
+            <span class="kpi_label">Stock bajo</span>
+            <strong>{{ data.productosStockBajo }}</strong>
+            <small>En el mínimo permitido</small>
+          </div>
+        </article>
+
+        <article class="kpi_card">
+          <div class="kpi_icon lots_icon">
+            <span class="material-symbols-rounded"> package_2 </span>
+          </div>
+
+          <div>
+            <span class="kpi_label">Lotes con stock</span>
+            <strong>{{ data.lotesConStock }}</strong>
+            <small>Lotes actualmente disponibles</small>
+          </div>
+        </article>
+
+        <article class="kpi_card warning_card">
+          <div class="kpi_icon expiring_icon">
+            <span class="material-symbols-rounded"> event_upcoming </span>
+          </div>
+
+          <div>
+            <span class="kpi_label"> Próximos a caducar </span>
+
+            <strong>
+              {{ data.lotesProximosCaducar }}
+            </strong>
+
+            <small> Evaluados a {{ data.diasEvaluadosCaducidad }} días </small>
+          </div>
+        </article>
+
+        <article class="kpi_card danger_card">
+          <div class="kpi_icon expired_icon">
+            <span class="material-symbols-rounded"> event_busy </span>
+          </div>
+
+          <div>
+            <span class="kpi_label">Lotes caducados</span>
+            <strong>{{ data.lotesCaducados }}</strong>
+            <small>Con existencias pendientes</small>
+          </div>
+        </article>
+      </section>
+
+      <section class="analysis_grid">
+        <article class="panel">
+          <header class="panel_header">
+            <div>
+              <h2>Stock crítico</h2>
+
+              <p>Productos agotados o en el nivel mínimo</p>
+            </div>
+
+            <span class="panel_badge danger_badge">
+              {{ productosCriticos.length }}
+            </span>
+          </header>
+
+          @if (productosCriticos.length > 0) {
+            <div class="table_wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Producto</th>
+                    <th>Categoría</th>
+                    <th>Stock</th>
+                    <th>Mínimo</th>
+                    <th>Estado</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  @for (
+                    producto of productosCriticos;
+                    track producto.idProductoOrigen
+                  ) {
+                    <tr>
+                      <td>
+                        <strong>{{ producto.nombre }}</strong>
+                      </td>
+
+                      <td>{{ producto.categoria }}</td>
+
+                      <td>{{ producto.stockActual }}</td>
+
+                      <td>{{ producto.stockMinimo }}</td>
+
+                      <td>
+                        <span
+                          class="status_badge"
+                          [class.status_danger]="producto.estado === 'agotado'"
+                          [class.status_warning]="
+                            producto.estado === 'stock_bajo'
+                          "
+                        >
+                          {{ etiquetaStock(producto.estado) }}
+                        </span>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          } @else {
+            <div class="empty_state">
+              No existen productos con stock crítico.
+            </div>
+          }
+        </article>
+
+        <article class="panel">
+          <header class="panel_header">
+            <div>
+              <h2>Control de caducidad</h2>
+
+              <p>Lotes vencidos o próximos a vencer</p>
+            </div>
+
+            <span class="panel_badge warning_badge">
+              {{ lotesCaducidad.length }}
+            </span>
+          </header>
+
+          @if (lotesCaducidad.length > 0) {
+            <div class="table_wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Producto</th>
+                    <th>Caducidad</th>
+                    <th>Días</th>
+                    <th>Stock</th>
+                    <th>Estado</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  @for (lote of lotesCaducidad; track lote.idLoteOrigen) {
+                    <tr>
+                      <td>
+                        <strong>{{ lote.producto }}</strong>
+                      </td>
+
+                      <td>
+                        {{ lote.fechaCaducidad | date: "dd/MM/yyyy" }}
+                      </td>
+
+                      <td>
+                        {{ lote.diasRestantes }}
+                      </td>
+
+                      <td>{{ lote.stock }}</td>
+
+                      <td>
+                        <span
+                          class="status_badge"
+                          [class.status_danger]="lote.estado === 'caducado'"
+                          [class.status_warning]="
+                            lote.estado === 'proximo_caducar'
+                          "
+                        >
+                          {{ etiquetaCaducidad(lote.estado) }}
+                        </span>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          } @else {
+            <div class="empty_state">
+              No existen lotes en riesgo de caducidad.
+            </div>
+          }
+        </article>
+      </section>
+
+      @if (reporteMovimientos; as reporte) {
+        <section class="movements_section">
+          <header class="section_header">
+            <div>
+              <span class="section_eyebrow"> Trazabilidad </span>
+
+              <h2>Movimientos de inventario</h2>
+
+              <p>Entradas, salidas y variaciones registradas en el ERP.</p>
+            </div>
+
+            <span class="movement_count">
+              {{ reporte.total }}
+              movimientos
+            </span>
+          </header>
+
+          <div class="movement_summary">
+            <article>
+              <span>Movimientos</span>
+              <strong>{{ reporte.resumen.movimientos }}</strong>
+            </article>
+
+            <article class="entry_summary">
+              <span>Entradas</span>
+              <strong>{{ reporte.resumen.entradas }}</strong>
+              <small> +{{ reporte.resumen.unidadesEntrada }} unidades </small>
+            </article>
+
+            <article class="output_summary">
+              <span>Salidas</span>
+              <strong>{{ reporte.resumen.salidas }}</strong>
+              <small> -{{ reporte.resumen.unidadesSalida }} unidades </small>
+            </article>
+
+            <article>
+              <span>Variación neta</span>
+
+              <strong
+                [class.positive_value]="reporte.resumen.unidadesNetas > 0"
+                [class.negative_value]="reporte.resumen.unidadesNetas < 0"
+              >
+                {{ reporte.resumen.unidadesNetas }}
+              </strong>
+
+              <small>Unidades netas</small>
+            </article>
+          </div>
+
+          @if (movimientos.length > 0) {
+            <div class="table_wrapper movements_table">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Fecha</th>
+                    <th>Producto</th>
+                    <th>Tipo</th>
+                    <th>Cantidad</th>
+                    <th>Stock anterior</th>
+                    <th>Stock posterior</th>
+                    <th>Documento</th>
+                    <th>Usuario</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  @for (
+                    movimiento of movimientos;
+                    track movimiento.idMovimientoOrigen
+                  ) {
+                    <tr>
+                      <td>
+                        {{
+                          movimiento.fechaMovimiento | date: "dd/MM/yyyy HH:mm"
+                        }}
+                      </td>
+
+                      <td>
+                        <strong>
+                          {{ movimiento.producto }}
+                        </strong>
+                      </td>
+
+                      <td>
+                        {{ etiquetaMovimiento(movimiento.tipo) }}
+                      </td>
+
+                      <td>
+                        <span
+                          class="quantity_badge"
+                          [class.entry_quantity]="esEntrada(movimiento)"
+                          [class.output_quantity]="!esEntrada(movimiento)"
+                        >
+                          {{ esEntrada(movimiento) ? "+" : "-"
+                          }}{{ valorAbsoluto(movimiento.cantidad) }}
+                        </span>
+                      </td>
+
+                      <td>
+                        {{ movimiento.stockProductoAnterior ?? "—" }}
+                      </td>
+
+                      <td>
+                        {{ movimiento.stockProductoPosterior ?? "—" }}
+                      </td>
+
+                      <td>
+                        {{ movimiento.documentoOrigen || "—" }}
+                      </td>
+
+                      <td>
+                        {{ movimiento.usuarioOrigen || "—" }}
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          } @else {
+            <div class="empty_state">
+              No existen movimientos para los filtros seleccionados.
+            </div>
+          }
+        </section>
+      }
+    }
+  }
+</section>
