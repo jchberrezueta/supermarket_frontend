@@ -99,6 +99,15 @@ export class UiSidebarComponent {
             hijas: [],
             visible: true,
           },
+          {
+            id: -14,
+            titulo: 'Abastecimiento',
+            ruta: 'admin/sig/abastecimiento',
+            icono: 'local_shipping',
+            activo: 'si',
+            hijas: [],
+            visible: true,
+          },
         ],
       };
 

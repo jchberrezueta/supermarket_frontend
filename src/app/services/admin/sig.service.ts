@@ -6,6 +6,7 @@ import { RestService } from '@core/services/rest.service';
 import { environment } from '@envs/environment';
 import {
   ISigApiResponse,
+  ISigFiltrosAbastecimiento,
   ISigFiltrosInventario,
   ISigFiltrosVentas,
   ISigInventarioResumen,
@@ -13,7 +14,10 @@ import {
   ISigRankingProductos,
   ISigReporteCaducidad,
   ISigReporteMovimientosInventario,
+  ISigReportePedidosAbastecimiento,
+  ISigReporteProveedores,
   ISigReporteStockCritico,
+  ISigResumenAbastecimiento,
   ISigResumenEjecutivo,
   ISigResumenVentasPeriodo,
   ISigTendenciaVentas,
@@ -126,6 +130,35 @@ export class SigService {
     });
   }
 
+  public obtenerResumenAbastecimiento(): Observable<
+    ISigApiResponse<ISigResumenAbastecimiento>
+  > {
+    return this.restService.get<ISigApiResponse<ISigResumenAbastecimiento>>(
+      `${this.apiUrl}/abastecimiento/resumen`,
+    );
+  }
+
+  public obtenerDesempenoProveedores(
+    limite = 20,
+  ): Observable<ISigApiResponse<ISigReporteProveedores>> {
+    return this.restService.get<ISigApiResponse<ISigReporteProveedores>>(
+      `${this.apiUrl}/abastecimiento/proveedores`,
+      {
+        params: new HttpParams().set('limite', limite.toString()),
+      },
+    );
+  }
+
+  public obtenerPedidosAbastecimiento(
+    filtros: ISigFiltrosAbastecimiento = {},
+  ): Observable<ISigApiResponse<ISigReportePedidosAbastecimiento>> {
+    return this.restService.get<
+      ISigApiResponse<ISigReportePedidosAbastecimiento>
+    >(`${this.apiUrl}/abastecimiento/pedidos`, {
+      params: this.crearParametrosAbastecimiento(filtros),
+    });
+  }
+
   private crearParametrosVentas(
     filtros: ISigFiltrosVentas,
     incluirLimite = false,
@@ -162,6 +195,22 @@ export class SigService {
 
     if (filtros.tipo) {
       params = params.set('tipo', filtros.tipo);
+    }
+
+    if (filtros.limite !== undefined) {
+      params = params.set('limite', filtros.limite.toString());
+    }
+
+    return params;
+  }
+
+  private crearParametrosAbastecimiento(
+    filtros: ISigFiltrosAbastecimiento,
+  ): HttpParams {
+    let params = new HttpParams();
+
+    if (filtros.estado) {
+      params = params.set('estado', filtros.estado);
     }
 
     if (filtros.limite !== undefined) {

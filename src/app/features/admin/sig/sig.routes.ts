@@ -22,6 +22,12 @@ export const sigRoutes: Routes = [
     title: 'Analítica de inventario SIG',
     loadComponent: () => import('./pages/inventario/inventario.component'),
   },
+  {
+    path: 'abastecimiento',
+    title: 'Analítica de abastecimiento SIG',
+    loadComponent: () =>
+      import('./pages/abastecimiento/abastecimiento.component'),
+  },
 ];
 
 export default sigRoutes;

@@ -1,0 +1,608 @@
+<section class="supply_page">
+  <header class="supply_header">
+    <div>
+      <span class="header_eyebrow"> Sistema de Información Gerencial </span>
+
+      <h1>Analítica de abastecimiento</h1>
+
+      <p>
+        Cumplimiento de pedidos, recepción de productos y desempeño de
+        proveedores.
+      </p>
+    </div>
+
+    @if (ultimaConsulta) {
+      <div class="header_time">
+        <span>Última consulta</span>
+
+        <strong>
+          {{ ultimaConsulta | date: "dd/MM/yyyy HH:mm:ss" }}
+        </strong>
+      </div>
+    }
+  </header>
+
+  <form class="filters_panel" (ngSubmit)="cargarAbastecimiento()">
+    <div class="filter_field">
+      <label for="estadoPedido"> Estado del pedido </label>
+
+      <select id="estadoPedido" name="estadoPedido" [(ngModel)]="estadoPedido">
+        <option value="">Todos los estados</option>
+
+        <option value="pendiente">Pendientes</option>
+
+        <option value="completado">Completados</option>
+
+        <option value="cancelado">Cancelados</option>
+      </select>
+    </div>
+
+    <div class="filter_field">
+      <label for="limite"> Límite de resultados </label>
+
+      <select id="limite" name="limite" [(ngModel)]="limite">
+        <option [ngValue]="10">10 registros</option>
+
+        <option [ngValue]="20">20 registros</option>
+
+        <option [ngValue]="50">50 registros</option>
+      </select>
+    </div>
+
+    <div class="filter_actions">
+      <button
+        type="button"
+        class="secondary_button"
+        [disabled]="cargando"
+        (click)="limpiarFiltros()"
+      >
+        Limpiar
+      </button>
+
+      <button type="submit" class="primary_button" [disabled]="cargando">
+        <span class="material-symbols-rounded" [class.rotating]="cargando">
+          refresh
+        </span>
+
+        Consultar
+      </button>
+    </div>
+  </form>
+
+  @if (cargando) {
+    <div class="state_panel">
+      <div class="loading_spinner"></div>
+
+      <h2>Analizando abastecimiento</h2>
+
+      <p>
+        Consultando pedidos, entregas y proveedores almacenados en Oracle...
+      </p>
+    </div>
+  } @else if (mensajeError) {
+    <div class="state_panel error_panel">
+      <span class="material-symbols-rounded"> local_shipping </span>
+
+      <h2>No fue posible cargar el abastecimiento</h2>
+
+      <p>{{ mensajeError }}</p>
+
+      <button
+        type="button"
+        class="primary_button"
+        (click)="cargarAbastecimiento()"
+      >
+        Reintentar
+      </button>
+    </div>
+  } @else {
+    @if (resumen; as data) {
+      <section class="kpi_grid">
+        <article class="kpi_card">
+          <div class="kpi_icon orders_icon">
+            <span class="material-symbols-rounded"> shopping_bag </span>
+          </div>
+
+          <div class="kpi_content">
+            <span class="kpi_label"> Pedidos </span>
+
+            <strong class="kpi_value">
+              {{ data.pedidos }}
+            </strong>
+
+            <small> Pedidos sincronizados desde el ERP </small>
+          </div>
+        </article>
+
+        <article class="kpi_card success_card">
+          <div class="kpi_icon completed_icon">
+            <span class="material-symbols-rounded"> task_alt </span>
+          </div>
+
+          <div class="kpi_content">
+            <span class="kpi_label"> Completados </span>
+
+            <strong class="kpi_value">
+              {{ data.pedidosCompletados }}
+            </strong>
+
+            <small> Pedidos recibidos satisfactoriamente </small>
+          </div>
+        </article>
+
+        <article class="kpi_card warning_card">
+          <div class="kpi_icon pending_icon">
+            <span class="material-symbols-rounded"> pending_actions </span>
+          </div>
+
+          <div class="kpi_content">
+            <span class="kpi_label"> Pendientes </span>
+
+            <strong class="kpi_value">
+              {{ data.pedidosPendientes }}
+            </strong>
+
+            <small> Pedidos todavía en seguimiento </small>
+          </div>
+        </article>
+
+        <article class="kpi_card danger_card">
+          <div class="kpi_icon cancelled_icon">
+            <span class="material-symbols-rounded"> cancel </span>
+          </div>
+
+          <div class="kpi_content">
+            <span class="kpi_label"> Cancelados </span>
+
+            <strong class="kpi_value">
+              {{ data.pedidosCancelados }}
+            </strong>
+
+            <small> Pedidos que no continuaron su proceso </small>
+          </div>
+        </article>
+
+        <article class="kpi_card">
+          <div class="kpi_icon purchase_icon">
+            <span class="material-symbols-rounded"> payments </span>
+          </div>
+
+          <div class="kpi_content">
+            <span class="kpi_label"> Total solicitado </span>
+
+            <strong class="kpi_value">
+              {{ data.totalPedidos | currency: "USD" : "symbol" : "1.2-2" }}
+            </strong>
+
+            <small> Valor acumulado de los pedidos </small>
+          </div>
+        </article>
+
+        <article class="kpi_card">
+          <div class="kpi_icon fulfillment_icon">
+            <span class="material-symbols-rounded"> fact_check </span>
+          </div>
+
+          <div class="kpi_content">
+            <span class="kpi_label"> Cumplimiento </span>
+
+            <strong class="kpi_value">
+              {{ data.porcentajeCumplimiento | number: "1.0-2" }}%
+            </strong>
+
+            <small> Cantidad recibida frente a la solicitada </small>
+          </div>
+        </article>
+
+        <article class="kpi_card">
+          <div class="kpi_icon punctuality_icon">
+            <span class="material-symbols-rounded"> schedule </span>
+          </div>
+
+          <div class="kpi_content">
+            <span class="kpi_label"> Puntualidad </span>
+
+            <strong class="kpi_value">
+              {{ data.porcentajePuntualidad | number: "1.0-2" }}%
+            </strong>
+
+            <small> Entregas evaluadas dentro del plazo </small>
+          </div>
+        </article>
+      </section>
+
+      <section class="overview_grid">
+        <article class="panel fulfillment_panel">
+          <header class="panel_header">
+            <div class="panel_title">
+              <span class="material-symbols-rounded"> inventory </span>
+
+              <div>
+                <h2>Cumplimiento de recepción</h2>
+
+                <p>Comparación de unidades solicitadas y recibidas</p>
+              </div>
+            </div>
+          </header>
+
+          <div class="quantity_comparison">
+            <article class="quantity_item">
+              <span>Cantidad solicitada</span>
+
+              <strong>
+                {{ data.cantidadSolicitada | number: "1.0-0" }}
+              </strong>
+
+              <small> Unidades pedidas a proveedores </small>
+            </article>
+
+            <div class="comparison_arrow">
+              <span class="material-symbols-rounded"> arrow_forward </span>
+            </div>
+
+            <article class="quantity_item received_quantity">
+              <span>Cantidad recibida</span>
+
+              <strong>
+                {{ data.cantidadRecibida | number: "1.0-0" }}
+              </strong>
+
+              <small> Unidades efectivamente entregadas </small>
+            </article>
+          </div>
+
+          <div class="main_progress">
+            <div class="progress_information">
+              <span>Avance de recepción</span>
+
+              <strong>
+                {{ data.porcentajeCumplimiento | number: "1.0-2" }}%
+              </strong>
+            </div>
+
+            <div class="progress_track">
+              <div
+                class="progress_fill fulfillment_fill"
+                [style.width.%]="porcentajeSeguro(data.porcentajeCumplimiento)"
+              ></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="panel deliveries_panel">
+          <header class="panel_header">
+            <div class="panel_title">
+              <span class="material-symbols-rounded"> local_shipping </span>
+
+              <div>
+                <h2>Situación de las entregas</h2>
+
+                <p>Estado y puntualidad del proceso logístico</p>
+              </div>
+            </div>
+          </header>
+
+          <div class="delivery_metrics">
+            <article>
+              <span>Entregas registradas</span>
+              <strong>{{ data.entregas }}</strong>
+            </article>
+
+            <article class="success_metric">
+              <span>Completas</span>
+              <strong>{{ data.entregasCompletas }}</strong>
+            </article>
+
+            <article class="warning_metric">
+              <span>Pendientes</span>
+              <strong>{{ data.entregasPendientes }}</strong>
+            </article>
+
+            <article class="success_metric">
+              <span>Puntuales</span>
+              <strong>{{ data.entregasPuntuales }}</strong>
+            </article>
+
+            <article class="danger_metric">
+              <span>Tardías</span>
+              <strong>{{ data.entregasTardias }}</strong>
+            </article>
+          </div>
+
+          <div class="main_progress">
+            <div class="progress_information">
+              <span>Índice de puntualidad</span>
+
+              <strong>
+                {{ data.porcentajePuntualidad | number: "1.0-2" }}%
+              </strong>
+            </div>
+
+            <div class="progress_track">
+              <div
+                class="progress_fill punctuality_fill"
+                [style.width.%]="porcentajeSeguro(data.porcentajePuntualidad)"
+              ></div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="panel suppliers_section">
+        <header class="section_header">
+          <div>
+            <span class="section_eyebrow"> Evaluación de proveedores </span>
+
+            <h2>Desempeño por empresa proveedora</h2>
+
+            <p>Cumplimiento, puntualidad y volumen de compra por empresa.</p>
+          </div>
+
+          <span class="section_count">
+            {{ proveedores.length }}
+            {{ proveedores.length === 1 ? "empresa" : "empresas" }}
+          </span>
+        </header>
+
+        @if (proveedores.length > 0) {
+          <div class="suppliers_grid">
+            @for (
+              proveedor of proveedores;
+              track proveedor.idEmpresaOrigen;
+              let posicion = $index
+            ) {
+              <article class="supplier_card">
+                <div class="supplier_header">
+                  <span class="supplier_position">
+                    {{ posicion + 1 }}
+                  </span>
+
+                  <div class="supplier_identity">
+                    <strong>
+                      {{ proveedor.empresa }}
+                    </strong>
+
+                    <span>
+                      {{ proveedor.proveedores }}
+                      {{
+                        proveedor.proveedores === 1
+                          ? "contacto proveedor"
+                          : "contactos proveedores"
+                      }}
+                    </span>
+                  </div>
+
+                  <span class="supplier_amount">
+                    {{
+                      proveedor.totalPedidos
+                        | currency: "USD" : "symbol" : "1.2-2"
+                    }}
+                  </span>
+                </div>
+
+                <div class="supplier_metrics">
+                  <div>
+                    <span>Pedidos</span>
+                    <strong>{{ proveedor.pedidos }}</strong>
+                  </div>
+
+                  <div>
+                    <span>Completados</span>
+                    <strong>
+                      {{ proveedor.pedidosCompletados }}
+                    </strong>
+                  </div>
+
+                  <div>
+                    <span>Pendientes</span>
+                    <strong>
+                      {{ proveedor.pedidosPendientes }}
+                    </strong>
+                  </div>
+
+                  <div>
+                    <span>Entregas</span>
+                    <strong>{{ proveedor.entregas }}</strong>
+                  </div>
+                </div>
+
+                <div class="supplier_indicator">
+                  <div class="indicator_header">
+                    <span>Cumplimiento</span>
+
+                    <strong>
+                      {{ proveedor.porcentajeCumplimiento | number: "1.0-2" }}%
+                    </strong>
+                  </div>
+
+                  <div class="progress_track">
+                    <div
+                      class="progress_fill fulfillment_fill"
+                      [style.width.%]="
+                        porcentajeSeguro(proveedor.porcentajeCumplimiento)
+                      "
+                    ></div>
+                  </div>
+
+                  <small>
+                    {{ proveedor.cantidadRecibida }}
+                    de
+                    {{ proveedor.cantidadSolicitada }}
+                    unidades recibidas
+                  </small>
+                </div>
+
+                <div class="supplier_indicator">
+                  <div class="indicator_header">
+                    <span>Puntualidad</span>
+
+                    @if (tieneEntregaEvaluada(proveedor)) {
+                      <strong>
+                        {{ proveedor.porcentajePuntualidad | number: "1.0-2" }}%
+                      </strong>
+                    } @else {
+                      <strong>Sin evaluación</strong>
+                    }
+                  </div>
+
+                  <div class="progress_track">
+                    <div
+                      class="progress_fill punctuality_fill"
+                      [style.width.%]="
+                        porcentajeSeguro(proveedor.porcentajePuntualidad)
+                      "
+                    ></div>
+                  </div>
+
+                  <small>
+                    {{ proveedor.entregasPuntuales }}
+                    puntuales ·
+                    {{ proveedor.entregasTardias }}
+                    tardías
+                  </small>
+                </div>
+              </article>
+            }
+          </div>
+        } @else {
+          <div class="empty_state">
+            <span class="material-symbols-rounded"> domain_disabled </span>
+
+            <h3>Sin desempeño disponible</h3>
+
+            <p>No existen empresas con pedidos para analizar.</p>
+          </div>
+        }
+      </section>
+
+      <section class="panel orders_section">
+        <header class="section_header">
+          <div>
+            <span class="section_eyebrow"> Seguimiento operativo </span>
+
+            <h2>Pedidos de abastecimiento</h2>
+
+            <p>Estado, recepción y valores de los pedidos sincronizados.</p>
+          </div>
+
+          <span class="section_count">
+            {{ reportePedidos?.total ?? 0 }}
+            {{ (reportePedidos?.total ?? 0) === 1 ? "pedido" : "pedidos" }}
+          </span>
+        </header>
+
+        @if (pedidos.length > 0) {
+          <div class="table_wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Pedido</th>
+                  <th>Empresa</th>
+                  <th>Motivo</th>
+                  <th>Fecha</th>
+                  <th>Fecha esperada</th>
+                  <th>Solicitado</th>
+                  <th>Recibido</th>
+                  <th>Cumplimiento</th>
+                  <th>Total</th>
+                  <th>Estado</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                @for (pedido of pedidos; track pedido.idPedidoOrigen) {
+                  <tr>
+                    <td>
+                      <strong> #{{ pedido.idPedidoOrigen }} </strong>
+                    </td>
+
+                    <td>
+                      {{ pedido.empresa }}
+                    </td>
+
+                    <td>
+                      <span class="reason_text" [title]="pedido.motivo">
+                        {{ pedido.motivo }}
+                      </span>
+                    </td>
+
+                    <td>
+                      {{ pedido.fechaPedido | date: "dd/MM/yyyy" }}
+                    </td>
+
+                    <td>
+                      @if (pedido.fechaEsperada) {
+                        {{ pedido.fechaEsperada | date: "dd/MM/yyyy" }}
+                      } @else {
+                        —
+                      }
+                    </td>
+
+                    <td>
+                      {{ pedido.cantidadSolicitada | number: "1.0-0" }}
+                    </td>
+
+                    <td>
+                      {{ pedido.cantidadRecibida | number: "1.0-0" }}
+                    </td>
+
+                    <td>
+                      <div class="table_progress">
+                        <div class="progress_information">
+                          <span>
+                            {{
+                              pedido.porcentajeCumplimiento | number: "1.0-2"
+                            }}%
+                          </span>
+                        </div>
+
+                        <div class="progress_track compact_track">
+                          <div
+                            class="progress_fill fulfillment_fill"
+                            [style.width.%]="porcentajeRecepcion(pedido)"
+                          ></div>
+                        </div>
+                      </div>
+                    </td>
+
+                    <td>
+                      <strong>
+                        {{
+                          pedido.total | currency: "USD" : "symbol" : "1.2-2"
+                        }}
+                      </strong>
+                    </td>
+
+                    <td>
+                      <span
+                        class="status_badge"
+                        [class.status_success]="
+                          esEstadoCompletado(pedido.estado)
+                        "
+                        [class.status_danger]="esEstadoCancelado(pedido.estado)"
+                        [class.status_warning]="
+                          !esEstadoCompletado(pedido.estado) &&
+                          !esEstadoCancelado(pedido.estado)
+                        "
+                      >
+                        {{ etiquetaEstado(pedido.estado) }}
+                      </span>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        } @else {
+          <div class="empty_state">
+            <span class="material-symbols-rounded"> search_off </span>
+
+            <h3>Sin pedidos encontrados</h3>
+
+            <p>No existen pedidos que coincidan con el filtro seleccionado.</p>
+          </div>
+        }
+      </section>
+    }
+  }
+</section>
