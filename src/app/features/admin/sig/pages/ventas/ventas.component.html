@@ -1,0 +1,400 @@
+<section class="sales_page">
+  <header class="sales_header">
+    <div>
+      <span class="header_eyebrow"> Sistema de Información Gerencial </span>
+
+      <h1>Analítica de ventas</h1>
+
+      <p>Comportamiento comercial, canales, productos y categorías.</p>
+    </div>
+
+    @if (ultimaConsulta) {
+      <div class="header_time">
+        <span>Última consulta</span>
+
+        <strong>
+          {{ ultimaConsulta | date: "dd/MM/yyyy HH:mm:ss" }}
+        </strong>
+      </div>
+    }
+  </header>
+
+  <form class="filters_panel" (ngSubmit)="cargarAnalitica()">
+    <div class="filter_field">
+      <label for="desde">Desde</label>
+
+      <input id="desde" name="desde" type="date" [(ngModel)]="desde" />
+    </div>
+
+    <div class="filter_field">
+      <label for="hasta">Hasta</label>
+
+      <input id="hasta" name="hasta" type="date" [(ngModel)]="hasta" />
+    </div>
+
+    <div class="filter_field">
+      <label for="limite">Ranking</label>
+
+      <select id="limite" name="limite" [(ngModel)]="limite">
+        <option [ngValue]="5">5 elementos</option>
+
+        <option [ngValue]="10">10 elementos</option>
+
+        <option [ngValue]="20">20 elementos</option>
+      </select>
+    </div>
+
+    <div class="filter_actions">
+      <button
+        type="button"
+        class="secondary_button"
+        [disabled]="cargando"
+        (click)="limpiarFiltros()"
+      >
+        Limpiar
+      </button>
+
+      <button type="submit" class="primary_button" [disabled]="cargando">
+        <span class="material-symbols-rounded" [class.rotating]="cargando">
+          refresh
+        </span>
+
+        Consultar
+      </button>
+    </div>
+  </form>
+
+  @if (cargando) {
+    <div class="state_panel">
+      <div class="loading_spinner"></div>
+
+      <h2>Analizando información comercial</h2>
+
+      <p>Consultando ventas almacenadas en Oracle...</p>
+    </div>
+  } @else if (mensajeError) {
+    <div class="state_panel error_panel">
+      <span class="material-symbols-rounded"> error </span>
+
+      <h2>No fue posible cargar las ventas</h2>
+      <p>{{ mensajeError }}</p>
+
+      <button type="button" class="primary_button" (click)="cargarAnalitica()">
+        Reintentar
+      </button>
+    </div>
+  } @else {
+    @if (resumen; as data) {
+      <section class="kpi_grid">
+        <article class="kpi_card">
+          <div class="kpi_icon sales_icon">
+            <span class="material-symbols-rounded"> payments </span>
+          </div>
+
+          <div>
+            <span class="kpi_label"> Ingresos </span>
+
+            <strong>
+              {{
+                data.indicadores.totalVentas
+                  | currency: "USD" : "symbol" : "1.2-2"
+              }}
+            </strong>
+
+            <small>
+              {{ data.indicadores.ventasCompletadas }}
+              ventas completadas
+            </small>
+          </div>
+        </article>
+
+        <article class="kpi_card">
+          <div class="kpi_icon ticket_icon">
+            <span class="material-symbols-rounded"> receipt_long </span>
+          </div>
+
+          <div>
+            <span class="kpi_label"> Ticket promedio </span>
+
+            <strong>
+              {{
+                data.indicadores.ticketPromedio
+                  | currency: "USD" : "symbol" : "1.2-2"
+              }}
+            </strong>
+
+            <small> Promedio por transacción </small>
+          </div>
+        </article>
+
+        <article class="kpi_card">
+          <div class="kpi_icon units_icon">
+            <span class="material-symbols-rounded"> shopping_cart </span>
+          </div>
+
+          <div>
+            <span class="kpi_label"> Unidades vendidas </span>
+
+            <strong>
+              {{ data.indicadores.unidadesVendidas | number: "1.0-2" }}
+            </strong>
+
+            <small> Productos facturados </small>
+          </div>
+        </article>
+
+        <article class="kpi_card">
+          <div class="kpi_icon cancel_icon">
+            <span class="material-symbols-rounded"> cancel </span>
+          </div>
+
+          <div>
+            <span class="kpi_label"> Ventas canceladas </span>
+
+            <strong>
+              {{ data.indicadores.ventasCanceladas }}
+            </strong>
+
+            <small> Transacciones no completadas </small>
+          </div>
+        </article>
+      </section>
+
+      <section class="analytics_grid">
+        <article class="panel trend_panel">
+          <header class="panel_header">
+            <div>
+              <h2>Tendencia de ventas</h2>
+
+              <p>Ingresos diarios del período seleccionado</p>
+            </div>
+
+            <span class="panel_badge">
+              {{ tendencia.length }}
+              días
+            </span>
+          </header>
+
+          @if (tendencia.length > 0) {
+            <div class="trend_chart">
+              @for (punto of tendencia; track punto.fecha) {
+                <div class="trend_item">
+                  <span class="trend_value">
+                    {{ punto.total | currency: "USD" : "symbol" : "1.0-2" }}
+                  </span>
+
+                  <div class="trend_bar_area">
+                    <div
+                      class="trend_bar"
+                      [style.height.%]="alturaTendencia(punto.total)"
+                    ></div>
+                  </div>
+
+                  <strong>
+                    {{ formatearFecha(punto.fecha) }}
+                  </strong>
+
+                  <small>
+                    {{ punto.transacciones }}
+                    trans.
+                  </small>
+                </div>
+              }
+            </div>
+          } @else {
+            <div class="empty_state">
+              No existen ventas completadas en este período.
+            </div>
+          }
+        </article>
+
+        <article class="panel channels_panel">
+          <header class="panel_header">
+            <div>
+              <h2>Canales de venta</h2>
+
+              <p>Participación POS y móvil</p>
+            </div>
+          </header>
+
+          <div class="channel_item">
+            <div class="channel_top">
+              <div>
+                <span class="material-symbols-rounded"> point_of_sale </span>
+
+                <strong>POS</strong>
+              </div>
+
+              <span>
+                {{
+                  data.indicadores.pos.total
+                    | currency: "USD" : "symbol" : "1.2-2"
+                }}
+              </span>
+            </div>
+
+            <div class="progress_track">
+              <div
+                class="progress_fill pos_fill"
+                [style.width.%]="porcentajeCanal(data.indicadores.pos.total)"
+              ></div>
+            </div>
+
+            <small>
+              {{ data.indicadores.pos.transacciones }}
+              transacciones
+            </small>
+          </div>
+
+          <div class="channel_item">
+            <div class="channel_top">
+              <div>
+                <span class="material-symbols-rounded"> smartphone </span>
+
+                <strong>Móvil</strong>
+              </div>
+
+              <span>
+                {{
+                  data.indicadores.movil.total
+                    | currency: "USD" : "symbol" : "1.2-2"
+                }}
+              </span>
+            </div>
+
+            <div class="progress_track">
+              <div
+                class="progress_fill mobile_fill"
+                [style.width.%]="porcentajeCanal(data.indicadores.movil.total)"
+              ></div>
+            </div>
+
+            <small>
+              {{ data.indicadores.movil.transacciones }}
+              transacciones
+            </small>
+          </div>
+        </article>
+
+        <article class="panel ranking_panel">
+          <header class="panel_header">
+            <div>
+              <h2>Productos más vendidos</h2>
+
+              <p>Ranking por unidades comercializadas</p>
+            </div>
+          </header>
+
+          @if (productos.length > 0) {
+            <div class="ranking_list">
+              @for (
+                producto of productos;
+                track producto.idProductoOrigen;
+                let indice = $index
+              ) {
+                <div class="ranking_item">
+                  <span class="ranking_position">
+                    {{ indice + 1 }}
+                  </span>
+
+                  <div class="ranking_content">
+                    <div class="ranking_title">
+                      <strong>
+                        {{ producto.nombre }}
+                      </strong>
+
+                      <span>
+                        {{
+                          producto.ingresos
+                            | currency: "USD" : "symbol" : "1.2-2"
+                        }}
+                      </span>
+                    </div>
+
+                    <div class="progress_track">
+                      <div
+                        class="progress_fill"
+                        [style.width.%]="
+                          porcentajeProducto(producto.unidadesVendidas)
+                        "
+                        [style.background]="colores[indice % colores.length]"
+                      ></div>
+                    </div>
+
+                    <small>
+                      {{ producto.unidadesVendidas }}
+                      unidades
+                    </small>
+                  </div>
+                </div>
+              }
+            </div>
+          } @else {
+            <div class="empty_state">No existen productos vendidos.</div>
+          }
+        </article>
+
+        <article class="panel ranking_panel">
+          <header class="panel_header">
+            <div>
+              <h2>Ventas por categoría</h2>
+
+              <p>Categorías con mayores ingresos</p>
+            </div>
+          </header>
+
+          @if (categorias.length > 0) {
+            <div class="ranking_list">
+              @for (
+                categoria of categorias;
+                track categoria.idCategoriaOrigen;
+                let indice = $index
+              ) {
+                <div class="ranking_item">
+                  <span
+                    class="category_marker"
+                    [style.background]="colores[indice % colores.length]"
+                  ></span>
+
+                  <div class="ranking_content">
+                    <div class="ranking_title">
+                      <strong>
+                        {{ categoria.nombre }}
+                      </strong>
+
+                      <span>
+                        {{
+                          categoria.ingresos
+                            | currency: "USD" : "symbol" : "1.2-2"
+                        }}
+                      </span>
+                    </div>
+
+                    <div class="progress_track">
+                      <div
+                        class="progress_fill"
+                        [style.width.%]="
+                          porcentajeCategoria(categoria.ingresos)
+                        "
+                        [style.background]="colores[indice % colores.length]"
+                      ></div>
+                    </div>
+
+                    <small>
+                      {{ categoria.unidadesVendidas }}
+                      unidades
+                    </small>
+                  </div>
+                </div>
+              }
+            </div>
+          } @else {
+            <div class="empty_state">
+              No existen ventas agrupadas por categoría.
+            </div>
+          }
+        </article>
+      </section>
+    }
+  }
+</section>

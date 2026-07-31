@@ -10,9 +10,12 @@ export const sigRoutes: Routes = [
     path: 'resumen-ejecutivo',
     title: 'Resumen ejecutivo SIG',
     loadComponent: () =>
-      import(
-        './pages/resumen-ejecutivo/resumen-ejecutivo.component'
-      ),
+      import('./pages/resumen-ejecutivo/resumen-ejecutivo.component'),
+  },
+  {
+    path: 'ventas',
+    title: 'Analítica de ventas SIG',
+    loadComponent: () => import('./pages/ventas/ventas.component'),
   },
 ];
 

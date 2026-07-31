@@ -67,11 +67,30 @@ export class UiSidebarComponent {
       const opcionSig: IOpcionSidebar = {
         id: -1,
         titulo: 'SIG Gerencial',
-        ruta: 'admin/sig/resumen-ejecutivo',
+        ruta: 'admin/sig',
         icono: 'analytics',
         activo: 'si',
-        hijas: [],
         visible: true,
+        hijas: [
+          {
+            id: -11,
+            titulo: 'Resumen ejecutivo',
+            ruta: 'admin/sig/resumen-ejecutivo',
+            icono: 'dashboard',
+            activo: 'si',
+            hijas: [],
+            visible: true,
+          },
+          {
+            id: -12,
+            titulo: 'Analítica de ventas',
+            ruta: 'admin/sig/ventas',
+            icono: 'monitoring',
+            activo: 'si',
+            hijas: [],
+            visible: true,
+          },
+        ],
       };
 
       const posicionDashboard = rutas.findIndex(
