@@ -84,4 +84,10 @@ export class CuentasService {
       `${this.apiUrl}/listar/combo/estados`,
     );
   }
+
+  public listarComboCambioClave(): Observable<IComboBoxOption[]> {
+    return this.restService.get<IComboBoxOption[]>(
+      `${this.apiUrl}/listar/combo/cambio/clave`,
+    );
+  }
 }

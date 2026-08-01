@@ -60,6 +60,8 @@ export default class ListComponent {
 
   protected opcionesPadres: IComboBoxOption[] = [];
 
+  protected opcionesVisible: IComboBoxOption[] = [];
+
   protected formData!: FilterOpcionFormGroup;
 
   private initialFormValue!: IFiltroOpciones;
@@ -71,6 +73,7 @@ export default class ListComponent {
     this.loadComboRutas();
     this.loadComboNiveles();
     this.loadComboPadres();
+    this.loadComboVisible();
   }
 
   protected configForm(): void {
@@ -80,6 +83,7 @@ export default class ListComponent {
       activoOpci: [''],
       nivelOpci: [''],
       padreOpci: [''],
+      visibleOpci: [''],
     }) as FilterOpcionFormGroup;
 
     this.initialFormValue = this.formData.getRawValue();
@@ -125,6 +129,14 @@ export default class ListComponent {
     });
   }
 
+  private loadComboVisible(): void {
+    this.opcionesService.listarComboVisible().subscribe({
+      next: (response) => {
+        this.opcionesVisible = response ?? [];
+      },
+    });
+  }
+
   protected filtrar(): void {
     this.tableList().filterData(this.getParams());
   }
@@ -157,6 +169,8 @@ export default class ListComponent {
     this.appendParam(params, 'nivelOpci', filtro.nivelOpci);
 
     this.appendParam(params, 'padreOpci', filtro.padreOpci);
+
+    this.appendParam(params, 'visibleOpci', filtro.visibleOpci);
 
     return params;
   }

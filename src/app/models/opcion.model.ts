@@ -88,4 +88,6 @@ export interface IFiltroOpciones {
   nivelOpci: number | '';
 
   padreOpci: number | '';
+
+  visibleOpci: string;
 }

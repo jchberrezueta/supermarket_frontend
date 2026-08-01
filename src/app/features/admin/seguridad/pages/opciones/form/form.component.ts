@@ -82,19 +82,37 @@ export default class FormComponent implements OnInit {
 
   ngOnInit(): void {
     this.initForm();
-
-    const id = Number(this.route.snapshot.paramMap.get('id'));
-
-    if (Number.isInteger(id) && id >= 0) {
-      this.isAdd = false;
-      this.idParam = id;
-    }
-
     this.loadParentOptions();
 
-    if (!this.isAdd) {
-      this.setData(this.idParam);
+    const idParam = this.route.snapshot.paramMap.get('id');
+
+    /*
+     * Si la ruta no contiene ID,
+     * estamos creando una cuenta.
+     */
+    if (idParam === null) {
+      this.isAdd = true;
+      return;
     }
+
+    const id = Number(idParam);
+
+    if (!Number.isInteger(id) || id < 0) {
+      void Swal.fire({
+        icon: 'warning',
+        title: 'Identificador inválido',
+        text: 'El identificador de la opcion no es válido.',
+      }).then(() => {
+        this.location.back();
+      });
+
+      return;
+    }
+
+    this.isAdd = false;
+    this.idParam = id;
+
+    this.setData(this.idParam);
   }
 
   private initForm(): void {

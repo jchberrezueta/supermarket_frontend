@@ -48,6 +48,7 @@ export default class ListComponent {
   protected opcionesPerfiles: IComboBoxOption[] = [];
   protected opcionesCuenUsuarios: IComboBoxOption[] = [];
   protected opcionesCuenEstados: IComboBoxOption[] = [];
+  protected opcionesCambioClave: IComboBoxOption[] = [];
 
   protected formData!: FilterCuentaFormGroup;
 
@@ -59,6 +60,7 @@ export default class ListComponent {
     this.loadComboPerfiles();
     this.loadComboUsuarios();
     this.loadComboEstados();
+    this.loadComboCambioCLave();
   }
 
   protected configForm(): void {
@@ -69,6 +71,7 @@ export default class ListComponent {
       nombreCompletoEmpl: ['', [], []],
       usuarioCuen: ['', [], []],
       estadoCuen: ['', [], []],
+      debeCambiarClave: ['', [], []],
     }) as FilterCuentaFormGroup;
 
     this.initialFormValue = this.formData.getRawValue();
@@ -98,6 +101,12 @@ export default class ListComponent {
     });
   }
 
+  private loadComboCambioCLave(): void {
+    this._cuentasService.listarComboCambioClave().subscribe((res) => {
+      this.opcionesCambioClave = res ?? [];
+    });
+  }
+
   protected filtrar(): void {
     const tableListInstance = this._tableList();
     tableListInstance.filterData(this.getParams());
@@ -120,12 +129,14 @@ export default class ListComponent {
   private getParams(): URLSearchParams {
     const params = new URLSearchParams();
     const filtro = this.formData.value as IFiltroCuenta;
+
     this.appendParam(params, 'ideEmpl', filtro.ideEmpl);
     this.appendParam(params, 'idePerf', filtro.idePerf);
     this.appendParam(params, 'nombrePerf', filtro.nombrePerf);
     this.appendParam(params, 'nombreCompletoEmpl', filtro.nombreCompletoEmpl);
     this.appendParam(params, 'usuarioCuen', filtro.usuarioCuen);
     this.appendParam(params, 'estadoCuen', filtro.estadoCuen);
+    this.appendParam(params, 'debeCambiarClave', filtro.debeCambiarClave);
 
     return params;
   }

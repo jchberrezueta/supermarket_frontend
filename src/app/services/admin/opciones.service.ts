@@ -80,4 +80,10 @@ export class OpcionesService {
       `${this.apiUrl}/listar/combo/estados`,
     );
   }
+
+  public listarComboVisible(): Observable<IComboBoxOption[]> {
+    return this.restService.get<IComboBoxOption[]>(
+      `${this.apiUrl}/listar/combo/visible`,
+    );
+  }
 }
