@@ -236,19 +236,44 @@ export default class FormComponent {
   private procesarRespuesta(response: IResultDataCreate, titulo: string): void {
     const success = Number(response.p_result) === 1;
 
+    const message = this.obtenerMensaje(
+      response.p_response,
+
+      success
+        ? 'Operación completada correctamente.'
+        : 'No se pudo completar la operación.',
+    );
+
     void Swal.fire({
       icon: success ? 'success' : 'error',
+
       title: success ? titulo : 'Operación rechazada',
-      text:
-        response.p_response ||
-        (success
-          ? 'Operación completada.'
-          : 'No se pudo completar la operación.'),
+
+      text: message,
     }).then(() => {
       if (success) {
         this.location.back();
       }
     });
+  }
+
+  private obtenerMensaje(
+    response: string | undefined,
+    fallback: string,
+  ): string {
+    if (!response) {
+      return fallback;
+    }
+
+    try {
+      const parsed = JSON.parse(response) as {
+        message?: string;
+      };
+
+      return parsed.message ?? fallback;
+    } catch {
+      return response;
+    }
   }
 
   private obtenerErrorHttp(error: unknown): string {

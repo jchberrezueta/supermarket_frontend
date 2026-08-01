@@ -98,23 +98,17 @@ export default class PreciosComponent {
     this.initialFormValue = this.formData.getRawValue();
   }
 
-  private setData() {
+  private setData(): void {
     this.formData.patchValue({
       ideEmprProd: this.precioEmp?.ide_empr_prod,
       ideEmpr: this.precioEmp?.ide_empr,
       ideProd: this.precioEmp?.ide_prod,
-      precioCompraProd: this.precioEmp?.precio_compra_prod,
-      dctoCompraProd: this.precioEmp?.dcto_compra_prod,
-      dctoCaducidadProd: this.precioEmp?.dcto_caducidad_prod,
-      ivaProd: this.normalizarIvaFormulario(this.precioEmp?.iva_prod),
+      precioCompraProd: Number(this.precioEmp?.precio_compra_prod ?? 0),
+      dctoCompraProd: Number(this.precioEmp?.dcto_compra_prod ?? 0),
+      dctoCaducidadProd: Number(this.precioEmp?.dcto_caducidad_prod ?? 0),
+      ivaProd: Number(this.precioEmp?.iva_prod ?? 0),
       estadoEmprProd: this.precioEmp?.estado_empr_prod,
     });
-  }
-
-  private normalizarIvaFormulario(value: unknown): number {
-    const iva = Number(value ?? 0);
-
-    return iva > 0 && iva <= 1 ? iva * 100 : iva;
   }
 
   private loadProductos() {

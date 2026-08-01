@@ -91,9 +91,9 @@
             />
           </div>
           <div class="info_row">
-            <ui-text-field
+            <ui-datetime-picker
               [label]="'Fecha de Nacimiento'"
-              [value]="proveedor?.fecha_nacimiento_prov"
+              [value]="proveedor ? proveedor.fecha_nacimiento_prov : null"
               [readonly]="true"
             />
           </div>

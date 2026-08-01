@@ -17,121 +17,122 @@
           />
         </div>
       </div>
+      @if (empresa) {
+        <!-- PERFIL EMPRESA -->
+        <div class="empresa_perfil">
+          <div class="avatar">
+            <span class="material-icons"> business </span>
+          </div>
 
-      <!-- PERFIL EMPRESA -->
-      <div class="empresa_perfil">
-        <div class="avatar">
-          <span class="material-icons"> business </span>
+          <div class="empresa_info_principal">
+            <h3>
+              {{ empresa ? empresa.nombreEmp : "Sin nombre" }}
+            </h3>
+
+            <p class="responsable">
+              <span class="material-icons"> person </span>
+
+              {{ empresa ? empresa.responsableEmp : "Sin responsable" }}
+            </p>
+
+            <p class="telefono">
+              <span class="material-icons"> phone </span>
+
+              {{ empresa ? empresa.telefonoEmp : "Sin teléfono" }}
+            </p>
+
+            <p class="email">
+              <span class="material-icons"> email </span>
+
+              {{ empresa ? empresa.emailEmp : "Sin correo" }}
+            </p>
+          </div>
+
+          <div
+            class="estado_badge"
+            [class.activo]="empresa.estadoEmp === 'activo'"
+            [class.inactivo]="empresa.estadoEmp !== 'activo'"
+          >
+            {{ empresa ? empresa.estadoEmp : "" }}
+          </div>
         </div>
 
-        <div class="empresa_info_principal">
-          <h3>
-            {{ empresa ? empresa.nombreEmp : "Sin nombre" }}
-          </h3>
+        <!-- INFORMACIÓN GENERAL -->
+        <div class="section_title">Información General</div>
 
-          <p class="responsable">
-            <span class="material-icons"> person </span>
+        <div class="info_grid">
+          <div class="info_row">
+            <ui-text-field
+              [label]="'Empresa'"
+              [value]="empresa ? empresa.nombreEmp : null"
+              [readonly]="true"
+            />
 
-            {{ empresa ? empresa.responsableEmp : "Sin responsable" }}
-          </p>
+            <ui-text-field
+              [label]="'Responsable'"
+              [value]="empresa ? empresa.responsableEmp : null"
+              [readonly]="true"
+            />
+          </div>
 
-          <p class="telefono">
-            <span class="material-icons"> phone </span>
+          <div class="info_row">
+            <ui-text-field
+              [label]="'Teléfono'"
+              [value]="empresa ? empresa.telefonoEmp : null"
+              [readonly]="true"
+            />
 
-            {{ empresa ? empresa.telefonoEmp : "Sin teléfono" }}
-          </p>
-
-          <p class="email">
-            <span class="material-icons"> email </span>
-
-            {{ empresa ? empresa.emailEmp : "Sin correo" }}
-          </p>
+            <ui-text-field
+              [label]="'Email'"
+              [value]="empresa ? empresa.emailEmp : null"
+              [readonly]="true"
+            />
+          </div>
         </div>
 
-        <div
-          class="estado_badge"
-          [class.activo]="empresa.estadoEmp === 'activo'"
-          [class.inactivo]="empresa.estadoEmp !== 'activo'"
-        >
-          {{ empresa ? empresa.estadoEmp : "" }}
-        </div>
-      </div>
+        <!-- INFORMACIÓN CONTRACTUAL -->
+        <div class="section_title">Información Contractual</div>
 
-      <!-- INFORMACIÓN GENERAL -->
-      <div class="section_title">Información General</div>
+        <div class="info_grid">
+          <div class="info_row">
+            <ui-datetime-picker
+              [label]="'Fecha Contrato'"
+              [value]="empresa ? empresa.fechaContratoEmp : null"
+              [readonly]="true"
+            />
 
-      <div class="info_grid">
-        <div class="info_row">
-          <ui-text-field
-            [label]="'Empresa'"
-            [value]="empresa ? empresa.nombreEmp : null"
-            [readonly]="true"
-          />
+            <ui-text-field
+              [label]="'Estado'"
+              [value]="empresa ? empresa.estadoEmp : null"
+              [readonly]="true"
+            />
+          </div>
 
-          <ui-text-field
-            [label]="'Responsable'"
-            [value]="empresa ? empresa.responsableEmp : null"
-            [readonly]="true"
-          />
-        </div>
+          <div class="info_row">
+            <ui-text-field
+              [label]="'Dirección'"
+              [value]="empresa ? empresa.direccionEmp : null"
+              [readonly]="true"
+            />
 
-        <div class="info_row">
-          <ui-text-field
-            [label]="'Teléfono'"
-            [value]="empresa ? empresa.telefonoEmp : null"
-            [readonly]="true"
-          />
-
-          <ui-text-field
-            [label]="'Email'"
-            [value]="empresa ? empresa.emailEmp : null"
-            [readonly]="true"
-          />
-        </div>
-      </div>
-
-      <!-- INFORMACIÓN CONTRACTUAL -->
-      <div class="section_title">Información Contractual</div>
-
-      <div class="info_grid">
-        <div class="info_row">
-          <ui-datetime-picker
-            [label]="'Fecha Contrato'"
-            [value]="empresa ? empresa.fechaContratoEmp : null"
-            [readonly]="true"
-          />
-
-          <ui-text-field
-            [label]="'Estado'"
-            [value]="empresa ? empresa.estadoEmp : null"
-            [readonly]="true"
-          />
+            <ui-text-field
+              [label]="'Descripción'"
+              [value]="empresa ? empresa.descripcionEmp : null"
+              [readonly]="true"
+            />
+          </div>
         </div>
 
-        <div class="info_row">
-          <ui-text-field
-            [label]="'Dirección'"
-            [value]="empresa ? empresa.direccionEmp : null"
-            [readonly]="true"
-          />
+        <!-- TABLA PRECIOS -->
+        <div class="section_title">Lista de precios</div>
 
-          <ui-text-field
-            [label]="'Descripción'"
-            [value]="empresa ? empresa.descripcionEmp : null"
-            [readonly]="true"
+        <div class="tabla_container">
+          <ui-table-list
+            [serviceApi]="'empresas/listar/precios/' + idEmpresa"
+            [columns]="config.columns"
           />
         </div>
-      </div>
-
-      <!-- TABLA PRECIOS -->
-      <div class="section_title">Lista de precios</div>
-
-      <div class="tabla_container">
-        <ui-table-list
-          [serviceApi]="'empresas/listar/precios/' + idEmpresa"
-          [columns]="config.columns"
-        />
-      </div>
+      }
     </div>
   </ui-card>
 </div>

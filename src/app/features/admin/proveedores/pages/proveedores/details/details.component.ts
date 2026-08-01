@@ -8,6 +8,7 @@ import { LoadingService } from '@shared/services/loading.service';
 import { UiTextFieldComponent } from '@shared/components/text-field/text-field.component';
 import { UiButtonComponent } from '@shared/components/button/button.component';
 import { UiCardComponent } from '@shared/components/card/card.component';
+import { UiDatetimePickerComponent } from '@shared/components/datetime-picker/datetime-picker.component';
 
 @Component({
   selector: 'app-details',
@@ -18,6 +19,7 @@ import { UiCardComponent } from '@shared/components/card/card.component';
     UiButtonComponent,
     UiCardComponent,
     UiCardComponent,
+    UiDatetimePickerComponent,
   ],
   templateUrl: './details.component.html',
   styleUrl: './details.component.scss',

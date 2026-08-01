@@ -32,7 +32,7 @@ export const PreciosEmpresaConfig: ITableListConfig = {
     {
       label: 'Estado',
       property: 'estado_empr_prod',
-      type: 'text',
+      type: 'boolean',
       sortable: true,
     },
   ],
