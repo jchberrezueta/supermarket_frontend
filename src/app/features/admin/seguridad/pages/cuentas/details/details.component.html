@@ -8,24 +8,22 @@
             <h2>Detalle de la Cuenta #{{ idCuenta }}</h2>
           </div>
           <div class="header_buttons">
-            <div class="header_buttons">
-              <ui-button icon="refresh" (evntClick)="loadCuenta()" />
+            <ui-button icon="refresh" (evntClick)="loadCuenta()" />
 
-              @if (canResetPassword && idCuenta !== 0) {
-                <ui-button
-                  label="Restablecer clave"
-                  icon="lock_reset"
-                  color="primary"
-                  (evntClick)="restablecerClave()"
-                />
-              }
-
+            @if (canResetPassword && idCuenta !== 0) {
               <ui-button
-                label="Volver"
-                icon="arrow_back"
-                (evntClick)="volver()"
+                label="Restablecer clave"
+                icon="lock_reset"
+                color="primary"
+                (evntClick)="restablecerClave()"
               />
-            </div>
+            }
+
+            <ui-button
+              label="Volver"
+              icon="arrow_back"
+              (evntClick)="volver()"
+            />
           </div>
         </div>
 
@@ -34,24 +32,42 @@
           <div class="avatar">
             <span class="material-icons">account_circle</span>
           </div>
+
           <div class="cuenta_info_principal">
-            <h3>{{ cuenta?.usuarioCuen }}</h3>
+            <h3>
+              {{ cuenta?.usuarioCuen || "Sin usuario" }}
+            </h3>
+
             <p class="empleado">
               <span class="material-icons">person</span>
-              {{ cuenta?.nombreEmpleado }}
+
+              {{ cuenta?.nombreEmpleado || "Sin empleado asociado" }}
             </p>
-            <div class="badges">
-              <span class="badge" [ngClass]="getEstadoClass()">
-                <span class="material-icons">{{
-                  cuenta?.estadoCuen === "activo"
-                    ? "check_circle"
-                    : cuenta?.estadoCuen === "bloqueado"
-                      ? "block"
-                      : "cancel"
-                }}</span>
-                {{ cuenta?.estadoCuen | titlecase }}
-              </span>
-            </div>
+
+            <p class="perfil">
+              <span class="material-icons">admin_panel_settings</span>
+
+              {{ cuenta?.nombrePerfil || "Sin perfil asignado" }}
+            </p>
+          </div>
+
+          <div
+            class="estado_badge"
+            [class.activo]="cuenta?.estadoCuen === 'activo'"
+            [class.inactivo]="cuenta?.estadoCuen === 'inactivo'"
+            [class.bloqueado]="cuenta?.estadoCuen === 'bloqueado'"
+          >
+            <span class="material-icons">
+              {{
+                cuenta?.estadoCuen === "activo"
+                  ? "check_circle"
+                  : cuenta?.estadoCuen === "bloqueado"
+                    ? "block"
+                    : "cancel"
+              }}
+            </span>
+
+            {{ cuenta?.estadoCuen | titlecase }}
           </div>
         </div>
 

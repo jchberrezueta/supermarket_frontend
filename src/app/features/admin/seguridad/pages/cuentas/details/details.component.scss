@@ -50,82 +50,100 @@
   display: flex;
   align-items: center;
   gap: 25px;
+
+  position: relative;
+
   background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+
   border-radius: 16px;
   padding: 30px;
   margin-bottom: 30px;
+
   color: white;
 
   .avatar {
-    width: 90px;
-    height: 90px;
+    width: 100px;
+    height: 100px;
+
+    flex-shrink: 0;
+
     background: rgba(255, 255, 255, 0.2);
+
     border-radius: 50%;
+
     display: flex;
     align-items: center;
     justify-content: center;
 
     .material-icons {
-      font-size: 50px;
+      font-size: 55px;
       color: white;
     }
   }
 
   .cuenta_info_principal {
     flex: 1;
+    padding-right: 170px;
 
     h3 {
-      margin: 0 0 8px 0;
-      font-size: 1.5rem;
+      margin: 0 0 10px 0;
+
+      font-size: 1.6rem;
       font-weight: 600;
     }
 
-    .empleado {
+    .empleado,
+    .perfil {
       display: flex;
       align-items: center;
       gap: 8px;
-      margin: 0 0 15px 0;
+
+      margin: 5px 0;
+
       opacity: 0.9;
-      font-size: 1rem;
+
+      font-size: 0.95rem;
 
       .material-icons {
         font-size: 18px;
       }
     }
+  }
 
-    .badges {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
+  .estado_badge {
+    position: absolute;
 
-      .badge {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        padding: 6px 14px;
-        border-radius: 20px;
-        font-size: 0.85rem;
-        font-weight: 500;
+    top: 20px;
+    right: 20px;
 
-        .material-icons {
-          font-size: 16px;
-        }
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
 
-        &.estado-activo {
-          background: #10b981;
-          color: white;
-        }
+    padding: 10px 18px;
 
-        &.estado-inactivo {
-          background: rgba(255, 255, 255, 0.2);
-          color: rgba(255, 255, 255, 0.9);
-        }
+    border-radius: 25px;
 
-        &.estado-bloqueado {
-          background: #ef4444;
-          color: white;
-        }
-      }
+    font-weight: 600;
+    font-size: 0.9rem;
+
+    .material-icons {
+      font-size: 18px;
+    }
+
+    &.activo {
+      background: rgba(255, 255, 255, 0.95);
+      color: #047857;
+    }
+
+    &.inactivo {
+      background: rgba(255, 255, 255, 0.9);
+      color: #525252;
+    }
+
+    &.bloqueado {
+      background: rgba(239, 68, 68, 0.95);
+      color: white;
     }
   }
 }
@@ -237,6 +255,36 @@
       .estado_info .status {
         color: #dc2626;
       }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .div_container {
+    padding: 15px;
+  }
+
+  .header_actions {
+    align-items: flex-start;
+    gap: 20px;
+
+    .header_buttons {
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+  }
+
+  .cuenta_perfil {
+    flex-direction: column;
+    align-items: flex-start;
+
+    .cuenta_info_principal {
+      padding-right: 0;
+    }
+
+    .estado_badge {
+      position: static;
+      margin-top: 15px;
     }
   }
 }

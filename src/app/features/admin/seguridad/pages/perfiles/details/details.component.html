@@ -17,39 +17,57 @@
           </div>
         </div>
 
-        <!-- PERFIL DEL PERFIL -->
+        <!-- PERFIL -->
         <div class="perfil_perfil">
           <div class="avatar">
-            <span class="material-icons">category</span>
+            <span class="material-icons">admin_panel_settings</span>
           </div>
+
           <div class="perfil_info_principal">
-            <h3>{{ perfil?.nombrePerf }}</h3>
-            <p class="id_perfil">
-              <span class="material-icons">tag</span> Descripcion:
-              {{ perfil?.descripcionPerf }}
+            <h3>
+              {{ perfil?.nombrePerf || "Perfil sin nombre" }}
+            </h3>
+
+            <p class="rol">
+              <span class="material-icons">badge</span>
+
+              {{ perfil?.nombreRol || "Sin rol asociado" }}
             </p>
+
+            <p class="descripcion_resumen">
+              <span class="material-icons">description</span>
+
+              {{ perfil?.descripcionPerf || "Sin descripción registrada" }}
+            </p>
+          </div>
+
+          <div class="perfil_badge">
+            Perfil #{{ perfil?.idePerf ?? idPerfil }}
           </div>
         </div>
 
-        <!-- INFO PERFIL -->
+        <!-- INFORMACIÓN DEL PERFIL -->
         <div class="section_title">Información del Perfil</div>
+
         <div class="info_grid">
           <div class="info_row">
             <ui-text-field
-              [label]="'ID'"
+              label="ID del perfil"
               [value]="perfil?.idePerf"
               [readonly]="true"
             />
+
             <ui-text-field
-              [label]="'Rol'"
-              [value]="perfil?.nombreRol"
+              label="Nombre del perfil"
+              [value]="perfil?.nombrePerf"
               [readonly]="true"
             />
           </div>
-          <div class="info_row">
+
+          <div class="info_row full_row">
             <ui-text-field
-              [label]="'Nombre del Perfil'"
-              [value]="perfil?.nombrePerf"
+              label="Rol asociado"
+              [value]="perfil?.nombreRol || 'Sin rol asociado'"
               [readonly]="true"
             />
           </div>
@@ -57,8 +75,13 @@
 
         <!-- DESCRIPCIÓN -->
         <div class="section_title">Descripción</div>
+
         <div class="descripcion_card">
-          <p>{{ perfil?.descripcionPerf || "Sin descripción" }}</p>
+          <span class="material-icons">notes</span>
+
+          <p>
+            {{ perfil?.descripcionPerf || "Sin descripción registrada." }}
+          </p>
         </div>
       </div>
     </div>

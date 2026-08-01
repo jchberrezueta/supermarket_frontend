@@ -1,91 +1,152 @@
-<div class="details-container">
-  <div class="details-header">
-    <h2>Detalles de la Opción</h2>
-    <ui-button label="Volver" icon="arrow_back" (evntClick)="goBack()">
-    </ui-button>
-  </div>
+<div class="div_container">
+  <ui-card [showHeader]="false" class="div_card">
+    <div class="card_form">
+      <!-- CABECERA -->
+      <div class="header_actions">
+        <div class="header_title">
+          <h2>Detalle de la Opción #{{ opcion?.ide_opci ?? "—" }}</h2>
+        </div>
 
-  @if (opcion) {
-    <div class="details-content">
-      <div class="form-row">
-        <ui-text-field
-          label="ID"
-          [value]="opcion.ide_opci.toString()"
-          [readonly]="true"
-        >
-        </ui-text-field>
-
-        <ui-text-field
-          label="Nombre"
-          [value]="opcion.nombre_opci"
-          [readonly]="true"
-        >
-        </ui-text-field>
+        <div class="header_buttons">
+          <ui-button label="Volver" icon="arrow_back" (evntClick)="goBack()" />
+        </div>
       </div>
 
-      <div class="form-row">
-        <ui-text-field
-          label="Ruta"
-          [value]="opcion.ruta_opci"
-          [readonly]="true"
-        >
-        </ui-text-field>
+      @if (opcion) {
+        <!-- RESUMEN PRINCIPAL -->
+        <div class="opcion_perfil">
+          <div class="avatar">
+            <span class="material-icons">
+              {{ opcion.icono_opci || "menu" }}
+            </span>
+          </div>
 
-        <ui-text-field
-          label="Nivel"
-          [value]="opcion.nivel_opci.toString()"
-          [readonly]="true"
-        >
-        </ui-text-field>
-      </div>
+          <div class="opcion_info_principal">
+            <h3>
+              {{ opcion.nombre_opci || "Opción sin nombre" }}
+            </h3>
 
-      <div class="form-row">
-        <ui-text-field
-          label="Padre (ID)"
-          [value]="opcion.padre_opci?.toString() ?? 'Ninguno'"
-          [readonly]="true"
-        >
-        </ui-text-field>
+            <p class="ruta">
+              <span class="material-icons">route</span>
 
-        <ui-text-field
-          label="Icono"
-          [value]="opcion.icono_opci ?? 'Ninguno'"
-          [readonly]="true"
-        >
-        </ui-text-field>
-      </div>
+              {{ opcion.ruta_opci || "Sin ruta configurada" }}
+            </p>
 
-      <div class="form-row">
-        <ui-text-field
-          label="Estado"
-          [value]="opcion.activo_opci === 'si' ? 'Activo' : 'Inactivo'"
-          [readonly]="true"
-        >
-        </ui-text-field>
-      </div>
+            <p class="jerarquia">
+              <span class="material-icons">account_tree</span>
 
-      <div class="form-row">
-        <ui-text-field
-          label="Estado"
-          [value]="opcion.activo_opci === 'si' ? 'Activo' : 'Inactivo'"
-          [readonly]="true"
-        />
+              Nivel {{ opcion.nivel_opci }}
+              ·
+              {{
+                opcion.padre_opci !== null && opcion.padre_opci !== undefined
+                  ? "Opción padre #" + opcion.padre_opci
+                  : "Opción principal"
+              }}
+            </p>
 
-        <ui-text-field
-          label="Visible en menú"
-          [value]="opcion.visible_opci ? 'Sí' : 'No'"
-          [readonly]="true"
-        />
-      </div>
+            <p class="visibilidad">
+              <span class="material-icons">
+                {{ opcion.visible_opci ? "visibility" : "visibility_off" }}
+              </span>
 
-      <div class="form-row full-width">
-        <ui-text-area
-          label="Descripción"
-          [value]="opcion.descripcion_opci"
-          [readonly]="true"
-        >
-        </ui-text-area>
-      </div>
+              {{
+                opcion.visible_opci
+                  ? "Visible en el menú"
+                  : "No visible en el menú"
+              }}
+            </p>
+          </div>
+
+          <div
+            class="estado_badge"
+            [class.activo]="opcion.activo_opci === 'si'"
+            [class.inactivo]="opcion.activo_opci !== 'si'"
+          >
+            <span class="material-icons">
+              {{ opcion.activo_opci === "si" ? "check_circle" : "cancel" }}
+            </span>
+
+            {{ opcion.activo_opci === "si" ? "Activo" : "Inactivo" }}
+          </div>
+        </div>
+
+        <!-- INFORMACIÓN GENERAL -->
+        <div class="section_title">Información General</div>
+
+        <div class="info_grid">
+          <div class="info_row">
+            <ui-text-field
+              label="ID de la opción"
+              [value]="opcion.ide_opci"
+              [readonly]="true"
+            />
+
+            <ui-text-field
+              label="Nombre"
+              [value]="opcion.nombre_opci"
+              [readonly]="true"
+            />
+          </div>
+
+          <div class="info_row">
+            <ui-text-field
+              label="Estado"
+              [value]="opcion.activo_opci === 'si' ? 'Activo' : 'Inactivo'"
+              [readonly]="true"
+            />
+
+            <ui-text-field
+              label="Visible en menú"
+              [value]="opcion.visible_opci ? 'Sí' : 'No'"
+              [readonly]="true"
+            />
+          </div>
+        </div>
+
+        <!-- NAVEGACIÓN Y JERARQUÍA -->
+        <div class="section_title">Navegación y Jerarquía</div>
+
+        <div class="info_grid">
+          <div class="info_row">
+            <ui-text-field
+              label="Ruta"
+              [value]="opcion.ruta_opci || 'Sin ruta configurada'"
+              [readonly]="true"
+            />
+
+            <ui-text-field
+              label="Nivel"
+              [value]="opcion.nivel_opci"
+              [readonly]="true"
+            />
+          </div>
+
+          <div class="info_row">
+            <ui-text-field
+              label="ID de la opción padre"
+              [value]="opcion.padre_opci ?? 'Ninguna'"
+              [readonly]="true"
+            />
+
+            <ui-text-field
+              label="Icono"
+              [value]="opcion.icono_opci || 'Sin icono configurado'"
+              [readonly]="true"
+            />
+          </div>
+        </div>
+
+        <!-- DESCRIPCIÓN -->
+        <div class="section_title">Descripción</div>
+
+        <div class="descripcion_card">
+          <span class="material-icons">notes</span>
+
+          <p>
+            {{ opcion.descripcion_opci || "Sin descripción registrada." }}
+          </p>
+        </div>
+      }
     </div>
-  }
+  </ui-card>
 </div>
