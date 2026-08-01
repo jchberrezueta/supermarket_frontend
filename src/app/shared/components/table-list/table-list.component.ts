@@ -25,6 +25,7 @@ import { DateFormatPipe } from '../../pipes/dateFormat.pipe';
 import { LoadingService } from '@shared/services/loading.service';
 import Swal from 'sweetalert2';
 import { UiButtonComponent } from '../button/button.component';
+import { MatIcon } from '@angular/material/icon';
 
 const IMPORTS = [
   MatPaginatorModule,
@@ -35,6 +36,7 @@ const IMPORTS = [
   DashIfEmptyPipe,
   DateFormatPipe,
   CommonModule,
+  MatIcon,
 ];
 
 @Component({

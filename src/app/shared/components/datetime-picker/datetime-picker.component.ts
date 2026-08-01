@@ -134,8 +134,7 @@ export class UiDatetimePickerComponent implements ControlValueAccessor {
     }
 
     fecha = new Date(fecha.getTime() - fecha.getTimezoneOffset() * 60000);
-
-    const formatted = fecha.toISOString().slice(0, this.isTime() ? 16 : 10);
+    const formatted = fecha.toISOString().slice(0, this.isTime() ? 19 : 10);
     this.innerValue.set(formatted);
   }
 

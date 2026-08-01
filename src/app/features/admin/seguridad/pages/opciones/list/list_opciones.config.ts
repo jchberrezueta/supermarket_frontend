@@ -59,14 +59,14 @@ export const ListOpcionesConfig: ITableListConfig = {
 
     {
       label: 'Estado',
-      property: 'activo_opci',
+      property: 'estado',
       type: 'boolean',
       sortable: true,
     },
 
     {
       label: 'Visible',
-      property: 'visible_opci',
+      property: 'visible',
       type: 'boolean',
       sortable: true,
     },

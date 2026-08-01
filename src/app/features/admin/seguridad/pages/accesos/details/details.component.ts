@@ -4,6 +4,10 @@ import { HttpErrorResponse } from '@angular/common/http';
 
 import { Component, inject } from '@angular/core';
 
+import { ElementRef, OnDestroy, viewChild } from '@angular/core';
+
+import * as L from 'leaflet';
+
 import { ActivatedRoute } from '@angular/router';
 
 import { IAccesoUsuarioResult } from '@models';
@@ -19,6 +23,7 @@ import { UiTextFieldComponent } from '@shared/components/text-field/text-field.c
 import { LoadingService } from '@shared/services/loading.service';
 
 import Swal from 'sweetalert2';
+import { UiDatetimePickerComponent } from '@shared/components/datetime-picker/datetime-picker.component';
 
 @Component({
   selector: 'app-details',
@@ -30,6 +35,7 @@ import Swal from 'sweetalert2';
     UiTextFieldComponent,
     UiButtonComponent,
     UiCardComponent,
+    UiDatetimePickerComponent,
   ],
 
   providers: [DatePipe],
@@ -38,7 +44,7 @@ import Swal from 'sweetalert2';
 
   styleUrl: './details.component.scss',
 })
-export default class DetailsComponent {
+export default class DetailsComponent implements OnDestroy {
   private readonly route = inject(ActivatedRoute);
 
   private readonly accesosService = inject(AccesosService);
@@ -52,6 +58,11 @@ export default class DetailsComponent {
   protected acceso: IAccesoUsuarioResult | null = null;
 
   protected idAcceso = -1;
+
+  private readonly mapaAcceso =
+    viewChild<ElementRef<HTMLDivElement>>('mapaAcceso');
+
+  private mapa: L.Map | null = null;
 
   constructor() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
@@ -88,11 +99,11 @@ export default class DetailsComponent {
 
         if (!acceso) {
           this.acceso = null;
+          this.destruirMapa();
 
           void Swal.fire({
             icon: 'error',
             title: 'Acceso no encontrado',
-
             text: 'No se encontró el evento de autenticación indicado.',
           }).then(() => {
             this.location.back();
@@ -102,6 +113,7 @@ export default class DetailsComponent {
         }
 
         this.acceso = acceso;
+        this.actualizarMapa();
       },
 
       error: (error: HttpErrorResponse) => {
@@ -113,6 +125,7 @@ export default class DetailsComponent {
 
           text: this.extractError(error),
         });
+        this.destruirMapa();
       },
     });
   }
@@ -188,16 +201,16 @@ export default class DetailsComponent {
     return estado.charAt(0).toUpperCase() + estado.slice(1);
   }
 
-  protected hasLocation(): boolean {
+  /*protected hasLocation(): boolean {
     return (
       this.acceso?.latitud_acce !== null &&
       this.acceso?.latitud_acce !== undefined &&
       this.acceso?.longitud_acce !== null &&
       this.acceso?.longitud_acce !== undefined
     );
-  }
+  }*/
 
-  protected mapUrl(): string {
+  /* protected mapUrl(): string {
     if (!this.hasLocation()) {
       return '';
     }
@@ -207,7 +220,7 @@ export default class DetailsComponent {
       `${this.acceso!.latitud_acce},` +
       `${this.acceso!.longitud_acce}`
     );
-  }
+  }*/
 
   private extractError(error: HttpErrorResponse): string {
     const message = error.error?.message;
@@ -221,5 +234,115 @@ export default class DetailsComponent {
     }
 
     return 'No fue posible consultar el evento de autenticación.';
+  }
+
+  protected hasLocation(): boolean {
+    if (!this.acceso) {
+      return false;
+    }
+
+    const latitudOriginal = this.acceso.latitud_acce;
+    const longitudOriginal = this.acceso.longitud_acce;
+
+    if (
+      latitudOriginal === null ||
+      latitudOriginal === undefined ||
+      latitudOriginal + '' === '' ||
+      longitudOriginal === null ||
+      longitudOriginal === undefined ||
+      longitudOriginal + '' === ''
+    ) {
+      return false;
+    }
+
+    const latitud = Number(latitudOriginal);
+    const longitud = Number(longitudOriginal);
+
+    return (
+      Number.isFinite(latitud) &&
+      Number.isFinite(longitud) &&
+      latitud >= -90 &&
+      latitud <= 90 &&
+      longitud >= -180 &&
+      longitud <= 180
+    );
+  }
+
+  private actualizarMapa(): void {
+    this.destruirMapa();
+
+    if (!this.hasLocation()) {
+      return;
+    }
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const elementoMapa = this.mapaAcceso()?.nativeElement;
+
+        if (!elementoMapa || !this.hasLocation()) {
+          return;
+        }
+
+        const latitud = Number(this.acceso!.latitud_acce);
+        const longitud = Number(this.acceso!.longitud_acce);
+
+        this.mapa = L.map(elementoMapa, {
+          center: [latitud, longitud],
+          zoom: 16,
+          scrollWheelZoom: false,
+        });
+
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 19,
+          attribution:
+            '&copy; <a href="https://www.openstreetmap.org/copyright">' +
+            'OpenStreetMap</a> contributors',
+        }).addTo(this.mapa);
+
+        L.circleMarker([latitud, longitud], {
+          radius: 9,
+        })
+          .addTo(this.mapa)
+          .bindPopup(
+            `
+            <strong>Ubicación del acceso</strong><br>
+            Latitud: ${latitud}<br>
+            Longitud: ${longitud}
+          `,
+          )
+          .openPopup();
+
+        this.mapa.invalidateSize();
+      });
+    });
+  }
+
+  private destruirMapa(): void {
+    if (!this.mapa) {
+      return;
+    }
+
+    this.mapa.remove();
+    this.mapa = null;
+  }
+
+  protected mapUrl(): string {
+    if (!this.hasLocation()) {
+      return '';
+    }
+
+    const latitud = Number(this.acceso?.latitud_acce);
+    const longitud = Number(this.acceso?.longitud_acce);
+
+    return (
+      `https://www.openstreetmap.org/` +
+      `?mlat=${latitud}` +
+      `&mlon=${longitud}` +
+      `#map=17/${latitud}/${longitud}`
+    );
+  }
+
+  public ngOnDestroy(): void {
+    this.destruirMapa();
   }
 }

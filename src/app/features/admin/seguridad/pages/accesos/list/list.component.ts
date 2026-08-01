@@ -162,10 +162,18 @@ export default class ListComponent {
 
     this.appendParam(params, 'resultadoAcce', filter.resultadoAcce);
 
-    this.appendParam(params, 'fechaAcceDesde', filter.fechaAcceDesde);
+    const fechaDesde = filter.fechaAcceDesde
+      ? filter.fechaAcceDesde.includes('T')
+        ? filter.fechaAcceDesde
+        : `${filter.fechaAcceDesde}T00:00:00`
+      : '';
+
+    this.appendParam(params, 'fechaAcceDesde', fechaDesde);
 
     const fechaHasta = filter.fechaAcceHasta
-      ? filter.fechaAcceHasta.replace(/T\d{2}:\d{2}(:\d{2})?/, 'T23:59:59')
+      ? filter.fechaAcceHasta.includes('T')
+        ? filter.fechaAcceHasta
+        : `${filter.fechaAcceHasta}T23:59:59`
       : '';
 
     this.appendParam(params, 'fechaAcceHasta', fechaHasta);

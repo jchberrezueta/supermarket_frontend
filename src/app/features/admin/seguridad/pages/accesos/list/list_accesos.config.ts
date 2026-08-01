@@ -48,12 +48,12 @@ export const ListAccesosUsuarioConfig: ITableListConfig = {
     {
       label: 'Resultado',
       property: 'resultado_acce',
-      type: 'text',
+      type: 'boolean',
       sortable: true,
     },
 
     {
-      label: 'Motivo',
+      label: 'Problema',
       property: 'motivo_acce',
       type: 'textTruncate',
       sortable: true,
@@ -62,12 +62,12 @@ export const ListAccesosUsuarioConfig: ITableListConfig = {
     {
       label: 'Estado cuenta',
       property: 'estado_cuen',
-      type: 'text',
+      type: 'boolean',
       sortable: true,
     },
 
     {
-      label: 'Fecha',
+      label: 'Fecha/Acceso',
       property: 'fecha_acce',
       type: 'date',
       sortable: true,
@@ -81,7 +81,7 @@ export const ListAccesosUsuarioConfig: ITableListConfig = {
     },
 
     {
-      label: 'Intentos fallidos',
+      label: 'Intentos/Fallidos',
       property: 'num_int_fall_acce',
       type: 'text',
       sortable: true,

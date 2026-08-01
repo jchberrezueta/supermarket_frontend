@@ -50,14 +50,14 @@ export const ListCuentasConfig: ITableListConfig = {
     {
       label: 'Estado',
       property: 'estado_cuen',
-      type: 'badge',
+      type: 'boolean',
       sortable: true,
     },
 
     {
-      label: 'Cambio Clave',
-      property: 'debe_cambiar_clave',
-      type: 'text',
+      label: 'Cambio/Clave',
+      property: 'cambiar_clave',
+      type: 'boolean',
       sortable: true,
     },
 

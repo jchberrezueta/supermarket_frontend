@@ -120,9 +120,10 @@
             </div>
 
             <div class="info_row">
-              <ui-text-field
+              <ui-datetime-picker
                 label="Fecha del acceso"
-                [value]="formatDate(acceso.fecha_acce)"
+                [value]="acceso.fecha_acce"
+                [isTime]="true"
                 [readonly]="true"
               />
 
@@ -162,16 +163,28 @@
 
           @if (hasLocation()) {
             <div class="mapa_card">
+              <div
+                #mapaAcceso
+                class="mapa_container"
+                aria-label="Mapa de la ubicación geográfica del acceso"
+              ></div>
+
               <a
                 [href]="mapUrl()"
                 target="_blank"
                 rel="noopener noreferrer"
                 class="mapa_link"
               >
-                <span class="material-icons"> location_on </span>
+                <span class="material-icons">location_on</span>
 
-                Ver ubicación en Google Maps
+                Abrir ubicación en OpenStreetMap
               </a>
+            </div>
+          } @else {
+            <div class="mapa_sin_ubicacion">
+              <span class="material-icons">location_off</span>
+
+              No se registraron coordenadas para este acceso.
             </div>
           }
         }

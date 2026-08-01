@@ -147,6 +147,13 @@
                 </div>
               </td>
             }
+            @case ("icon") {
+              <td mat-cell *matCellDef="let element">
+                <mat-icon>
+                  {{ element[column.property] }}
+                </mat-icon>
+              </td>
+            }
             @case ("boolean") {
               <td mat-cell *matCellDef="let element">
                 <span
@@ -154,12 +161,14 @@
                   [class.status-success]="
                     element[column.property] === true ||
                     element[column.property] === 'activo' ||
-                    element[column.property] === 'si'
+                    element[column.property] === 'si' ||
+                    element[column.property] === 'exitoso'
                   "
                   [class.status-danger]="
                     element[column.property] === false ||
                     element[column.property] === 'inactivo' ||
-                    element[column.property] === 'no'
+                    element[column.property] === 'no' ||
+                    element[column.property] === 'fallido'
                   "
                 >
                   {{ element[column.property] | dashIfEmpty }}
