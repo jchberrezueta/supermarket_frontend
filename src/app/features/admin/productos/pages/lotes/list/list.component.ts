@@ -22,7 +22,7 @@ const IMPORTS = [
 ];
 
 interface IFiltroLoteForm {
-  ideProd: number | string;
+  producto: string;
   estadoLote: string;
   fechaCaducidadDesde: string;
   fechaCaducidadHasta: string;
@@ -61,7 +61,7 @@ export default class ListComponent {
 
   protected configForm(): void {
     this.formData = this.formBuilder.group({
-      ideProd: [-1, [], []],
+      producto: ['', [], []],
       estadoLote: ['', [], []],
       fechaCaducidadDesde: ['', [], []],
       fechaCaducidadHasta: ['', [], []],
@@ -105,7 +105,7 @@ export default class ListComponent {
     const params = new URLSearchParams();
     const filtro = this.formData.value as IFiltroLoteForm;
 
-    this.appendParam(params, 'ideProd', filtro.ideProd);
+    this.appendParam(params, 'producto', filtro.producto);
     this.appendParam(params, 'estadoLote', filtro.estadoLote);
 
     if (isValidStringValue(filtro.fechaCaducidadDesde)) {

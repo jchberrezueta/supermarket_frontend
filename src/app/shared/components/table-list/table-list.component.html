@@ -175,6 +175,25 @@
                 </span>
               </td>
             }
+            @case ("multilean") {
+              <td mat-cell *matCellDef="let element">
+                <span
+                  class="status-badge"
+                  [class.status-success]="
+                    element[column.property] === 'correcto'
+                  "
+                  [class.status-middle]="element[column.property] === 'proximo'"
+                  [class.status-danger]="
+                    element[column.property] === 'caducado'
+                  "
+                  [class.status-return]="
+                    element[column.property] === 'devuelto'
+                  "
+                >
+                  {{ element[column.property] | dashIfEmpty }}
+                </span>
+              </td>
+            }
             @default {
               <td mat-cell *matCellDef="let element">
                 <div>

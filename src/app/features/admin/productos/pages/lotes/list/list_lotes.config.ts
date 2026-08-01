@@ -57,7 +57,7 @@ export const ListLotesConfig: ITableListConfig = {
     {
       label: 'Estado',
       property: 'estado_lote',
-      type: 'text',
+      type: 'multilean',
       sortable: true,
     },
   ],

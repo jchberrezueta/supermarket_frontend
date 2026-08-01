@@ -13,7 +13,6 @@ import { FormGroupOf } from '@core/utils/utilities';
 import {
   EnumEstadosProducto,
   ICreateProducto,
-  IProducto,
   IProductoResult,
   IUpdateProducto,
 } from '@models';
@@ -38,7 +37,7 @@ import { IComboBoxOption } from '@shared/models/combo_box_option';
 
 import Swal from 'sweetalert2';
 
-type ProductoFormGroup = FormGroupOf<IProducto>;
+type ProductoFormGroup = FormGroupOf<IUpdateProducto>;
 
 @Component({
   selector: 'app-form',
@@ -74,8 +73,7 @@ export default class FormComponent {
 
   protected formData!: ProductoFormGroup;
 
-  private initialFormValue!: IProducto;
-
+  private initialFormValue!: IUpdateProducto;
   protected categorias: IComboBoxOption[] = [];
 
   protected marcas: IComboBoxOption[] = [];
@@ -84,7 +82,7 @@ export default class FormComponent {
 
   protected isAdd = true;
 
-  private idParam = -1;
+  protected idParam = -1;
 
   ngOnInit(): void {
     this.initForm();
@@ -119,13 +117,7 @@ export default class FormComponent {
 
   private initForm(): void {
     this.formData = this.formBuilder.group({
-      ideProd: [
-        {
-          value: -1,
-          disabled: true,
-        },
-        Validators.required,
-      ],
+      ideProd: [-1, Validators.required],
 
       ideCate: [-1, [Validators.required, Validators.min(1)]],
 
@@ -144,23 +136,7 @@ export default class FormComponent {
 
       dctoPromoProd: [0, [Validators.required, Validators.min(0)]],
 
-      stockProd: [
-        {
-          value: 0,
-          disabled: true,
-        },
-        [Validators.required, Validators.min(0)],
-      ],
-
       stockMinimoProd: [0, [Validators.required, Validators.min(0)]],
-
-      disponibleProd: [
-        {
-          value: 'no',
-          disabled: true,
-        },
-        Validators.required,
-      ],
 
       estadoProd: [EnumEstadosProducto.ACTIVO, Validators.required],
 
@@ -240,15 +216,11 @@ export default class FormComponent {
            *
            * En el formulario siempre mostraremos 15.
            */
-          ivaProd: this.normalizarIvaFormulario(producto.iva_prod),
+          ivaProd: Number(producto.iva_prod ?? 0),
 
           dctoPromoProd: Number(producto.dcto_promo_prod),
 
-          stockProd: Number(producto.stock_prod),
-
           stockMinimoProd: Number(producto.stock_minimo_prod ?? 0),
-
-          disponibleProd: producto.disponible_prod,
 
           estadoProd: producto.estado_prod,
 
@@ -409,22 +381,23 @@ export default class FormComponent {
     this.formData.reset(this.initialFormValue);
   }
 
-  private procesarRespuesta(
-    response: IResultDataCreate,
-    successTitle: string,
-  ): void {
+  private procesarRespuesta(response: IResultDataCreate, titulo: string): void {
     const success = Number(response.p_result) === 1;
+
+    const message = this.obtenerMensaje(
+      response.p_response,
+
+      success
+        ? 'Operación completada correctamente.'
+        : 'No se pudo completar la operación.',
+    );
 
     void Swal.fire({
       icon: success ? 'success' : 'error',
 
-      title: success ? successTitle : 'Operación rechazada',
+      title: success ? titulo : 'Operación rechazada',
 
-      text:
-        response.p_response ||
-        (success
-          ? 'Operación completada correctamente.'
-          : 'No se pudo completar la operación.'),
+      text: message,
     }).then(() => {
       if (success) {
         this.location.back();
@@ -432,10 +405,23 @@ export default class FormComponent {
     });
   }
 
-  private normalizarIvaFormulario(value: number): number {
-    const iva = Number(value ?? 0);
+  private obtenerMensaje(
+    response: string | undefined,
+    fallback: string,
+  ): string {
+    if (!response) {
+      return fallback;
+    }
 
-    return iva > 0 && iva <= 1 ? iva * 100 : iva;
+    try {
+      const parsed = JSON.parse(response) as {
+        message?: string;
+      };
+
+      return parsed.message ?? fallback;
+    } catch {
+      return response;
+    }
   }
 
   private obtenerErrorHttp(error: unknown): string {

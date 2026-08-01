@@ -34,6 +34,7 @@ interface IProductoView {
     UiTextFieldComponent,
     UiButtonComponent,
     QrLabelComponent,
+    UiCardComponent,
   ],
   providers: [CurrencyPipe],
   templateUrl: './details.component.html',

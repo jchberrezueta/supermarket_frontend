@@ -72,8 +72,8 @@ export interface IResultDataProducto {
 }
 
 export interface IFiltroProducto {
-  ideCate: string;
-  ideMarc: string;
+  categoria: string;
+  marca: string;
   codigoBarraProd: string;
   nombreProd: string;
   disponibleProd: string;

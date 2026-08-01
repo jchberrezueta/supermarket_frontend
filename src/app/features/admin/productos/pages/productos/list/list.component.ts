@@ -67,8 +67,8 @@ export default class ListComponent {
 
   protected configForm(): void {
     this.formData = this.formBuilder.group({
-      ideCate: ['', [], []],
-      ideMarc: ['', [], []],
+      categoria: ['', [], []],
+      marca: ['', [], []],
       nombreProd: ['', [], []],
       codigoBarraProd: ['', [], []],
       estadoProd: ['', [], []],
@@ -137,8 +137,8 @@ export default class ListComponent {
     const params = new URLSearchParams();
     const filtro = this.formData.value as IFiltroProducto;
 
-    this.appendParam(params, 'ideCate', filtro.ideCate);
-    this.appendParam(params, 'ideMarc', filtro.ideMarc);
+    this.appendParam(params, 'categoria', filtro.categoria);
+    this.appendParam(params, 'marca', filtro.marca);
     this.appendParam(params, 'nombreProd', filtro.nombreProd);
     this.appendParam(params, 'codigoBarraProd', filtro.codigoBarraProd);
     this.appendParam(params, 'estadoProd', filtro.estadoProd);

@@ -60,10 +60,15 @@ export const ListProductosConfig: ITableListConfig = {
     {
       label: 'Disponible',
       property: 'disponible_prod',
-      type: 'text',
+      type: 'boolean',
       sortable: true,
     },
-    { label: 'Estado', property: 'estado_prod', type: 'text', sortable: true },
+    {
+      label: 'Estado',
+      property: 'estado_prod',
+      type: 'boolean',
+      sortable: true,
+    },
 
     {
       label: 'Descripción',
@@ -71,7 +76,6 @@ export const ListProductosConfig: ITableListConfig = {
       type: 'text',
       sortable: true,
     },
-    /*{ label: 'URL Imagen', property: 'url_img_prod', type: 'text', sortable: false },*/
 
     {
       label: '',
@@ -85,13 +89,6 @@ export const ListProductosConfig: ITableListConfig = {
           router: true,
           key: 'ide_prod',
           color: 'primary',
-        },
-        {
-          action: 'delete',
-          label: 'Eliminar',
-          icon: 'delete',
-          key: 'ide_prod',
-          color: 'red',
         },
       ],
     },

@@ -3,38 +3,70 @@
     <div class="panel_1">
       <div class="card_form">
         <form [formGroup]="formData" class="form">
+          <div class="form_header">
+            <h2>
+              {{ isAdd ? "Registrar Producto" : "Actualizar Producto" }}
+            </h2>
+
+            <p>
+              {{
+                isAdd
+                  ? "Ingrese la información comercial del producto."
+                  : "Modifique los datos comerciales del producto seleccionado."
+              }}
+            </p>
+          </div>
+
           <div class="div_form">
             @if (!isAdd) {
-              <div class="div_id">
-                <ui-text-field label="ID" formControlName="ideProd" />
+              <div class="form_row">
+                <div class="form_div">
+                  <ui-text-field
+                    label="ID"
+                    formControlName="ideProd"
+                    [readonly]="true"
+                  />
+                </div>
 
-                <div class="input_falso"></div>
+                <div class="form_div form_placeholder"></div>
               </div>
             }
 
-            <div class="form_info">
+            <div class="form_row">
               <div class="form_div">
                 <ui-input-box
                   label="Categoría"
                   [options]="categorias"
                   formControlName="ideCate"
                 />
+              </div>
 
+              <div class="form_div">
                 <ui-input-box
                   label="Marca"
                   [options]="marcas"
                   formControlName="ideMarc"
                 />
+              </div>
+            </div>
 
+            <div class="form_row">
+              <div class="form_div">
                 <ui-text-field
                   label="Código de barras"
                   formControlName="codigoBarraProd"
                 />
+              </div>
 
+              <div class="form_div">
                 <ui-text-field label="Nombre" formControlName="nombreProd" />
+              </div>
+            </div>
 
+            <div class="form_row">
+              <div class="form_div">
                 <ui-text-field
-                  label="Precio de venta"
+                  label="Precio de venta (USD)"
                   valueType="number"
                   formControlName="precioVentaProd"
                 />
@@ -42,23 +74,33 @@
 
               <div class="form_div">
                 <ui-text-field
-                  label="IVA (%)"
+                  label="IVA de venta (%)"
                   valueType="number"
                   formControlName="ivaProd"
                 />
+              </div>
+            </div>
 
+            <div class="form_row">
+              <div class="form_div">
                 <ui-text-field
-                  label="Descuento promocional unitario"
+                  label="Descuento promocional unitario (USD)"
                   valueType="number"
                   formControlName="dctoPromoProd"
                 />
+              </div>
 
+              <div class="form_div">
                 <ui-text-field
                   label="Stock mínimo"
                   valueType="number"
                   formControlName="stockMinimoProd"
                 />
+              </div>
+            </div>
 
+            <div class="form_row">
+              <div class="form_div">
                 <ui-combo-box
                   label="Estado"
                   [options]="opcionesProdEstados"
@@ -66,54 +108,91 @@
                 />
               </div>
 
-              <div class="form_div">
-                <ui-text-field
-                  label="Stock actual"
-                  valueType="number"
-                  formControlName="stockProd"
-                />
+              <div class="form_div inventario_info">
+                <span class="material-icons">inventory</span>
 
-                <ui-text-field
-                  label="Disponibilidad automática"
-                  formControlName="disponibleProd"
+                <div>
+                  <strong>Inventario automático</strong>
+
+                  <p>
+                    El stock actual y la disponibilidad cambian mediante
+                    entregas, ventas y anulaciones.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="form_row full_width">
+              <div class="form_div">
+                <ui-text-area
+                  label="Descripción"
+                  formControlName="descripcionProd"
                 />
               </div>
             </div>
 
-            <ui-text-area
-              label="Descripción"
-              formControlName="descripcionProd"
-            />
-
-            <ui-text-field
-              label="URL de imagen (opcional)"
-              formControlName="urlImgProd"
-            />
+            <div class="form_row full_width">
+              <div class="form_div">
+                <ui-text-field
+                  label="URL de imagen (opcional)"
+                  formControlName="urlImgProd"
+                />
+              </div>
+            </div>
           </div>
 
           <div class="form_buttons">
             <ui-button
               [label]="isAdd ? 'Guardar' : 'Actualizar'"
+              icon="save"
+              color="green"
               (evntClick)="guardar()"
             />
 
-            <ui-button label="Cancelar" color="red" (evntClick)="cancelar()" />
+            <ui-button
+              label="Cancelar"
+              icon="close"
+              color="red"
+              (evntClick)="cancelar()"
+            />
           </div>
         </form>
       </div>
     </div>
 
     <div class="panel_2">
-      <div
-        class="panel_2_img"
-        [ngStyle]="{
-          background: formData.get('urlImgProd')?.value
-            ? 'url(' +
-              formData.get('urlImgProd')?.value +
-              ') center / cover no-repeat'
-            : '#f1f5f9',
-        }"
-      ></div>
+      <div class="preview_content">
+        <div
+          class="panel_2_img"
+          [ngStyle]="{
+            background: formData.get('urlImgProd')?.value
+              ? 'url(' +
+                formData.get('urlImgProd')?.value +
+                ') center / cover no-repeat'
+              : '#f1f5f9',
+          }"
+        >
+          @if (!formData.get("urlImgProd")?.value) {
+            <div class="preview_placeholder">
+              <span class="material-icons">inventory_2</span>
+
+              <strong>Vista previa</strong>
+
+              <p>La imagen del producto aparecerá aquí.</p>
+            </div>
+          }
+        </div>
+
+        <div class="preview_product">
+          <strong>
+            {{ formData.get("nombreProd")?.value || "Nombre del producto" }}
+          </strong>
+
+          <span>
+            {{ formData.get("codigoBarraProd")?.value || "Código de barras" }}
+          </span>
+        </div>
+      </div>
     </div>
   </div>
 </div>

@@ -8,14 +8,16 @@
               class="sm-field-md"
               [label]="'Categoría'"
               [options]="opcionesCategorias"
-              formControlName="ideCate"
+              [returnValue]="'label'"
+              formControlName="categoria"
             />
 
             <ui-input-box
               class="sm-field-md"
               [label]="'Marca'"
               [options]="opcionesMarcas"
-              formControlName="ideMarc"
+              [returnValue]="'label'"
+              formControlName="marca"
             />
 
             <ui-input-box
@@ -30,6 +32,7 @@
               class="sm-field-md"
               [label]="'Código barras'"
               [options]="opcionesProdCodBarras"
+              [returnValue]="'label'"
               formControlName="codigoBarraProd"
             />
 

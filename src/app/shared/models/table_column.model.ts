@@ -30,7 +30,9 @@ export interface ITableColumn {
     | 'sendMail'
     | 'actions'
     | 'details'
-    | 'boolean';
+    | 'boolean'
+    | 'trilean'
+    | 'multilean';
   label: string;
   buttonItems?: IButtonItem[];
   visible?: boolean;

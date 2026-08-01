@@ -17,13 +17,19 @@ import { UiTextFieldComponent } from '@shared/components/text-field/text-field.c
 import { LoadingService } from '@shared/services/loading.service';
 
 import Swal from 'sweetalert2';
+import { UiCardComponent } from '../../../../../../shared/components/card/card.component';
 
 @Component({
   selector: 'app-details',
 
   standalone: true,
 
-  imports: [CommonModule, UiTextFieldComponent, UiButtonComponent],
+  imports: [
+    CommonModule,
+    UiTextFieldComponent,
+    UiButtonComponent,
+    UiCardComponent,
+  ],
 
   providers: [DatePipe],
 

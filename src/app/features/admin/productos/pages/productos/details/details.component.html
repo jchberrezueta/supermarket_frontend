@@ -1,105 +1,221 @@
 <div class="div_container">
-  <div class="div_card">
-    <div class="panel_1">
+  <ui-card [showHeader]="false" class="div_card">
+    <div class="card_form">
       <!-- CABECERA -->
-      <div class="card_header">
-        <div class="header_left">
-          <ui-text-field
-            [label]="'ID Producto'"
-            [value]="idProducto"
-            [disabled]="true"
-          />
+      <div class="header_actions">
+        <div class="header_title">
+          <h2>Detalle del Producto #{{ idProducto }}</h2>
         </div>
 
-        <div class="header_right">
+        <div class="header_buttons">
           <ui-button
-            [label]="'Imprimir etiqueta'"
-            [icon]="'print'"
-            [color]="'#16a34a'"
+            label="Imprimir etiqueta"
+            icon="print"
+            color="#16a34a"
             (evntClick)="imprimirEtiqueta()"
           />
 
-          <ui-button [icon]="'refresh'" (evntClick)="loadProducto()" />
+          <ui-button icon="refresh" (evntClick)="loadProducto()" />
 
-          <ui-button
-            [label]="'Volver'"
-            [icon]="'arrow_back'"
-            (evntClick)="volver()"
-          />
+          <ui-button label="Volver" icon="arrow_back" (evntClick)="volver()" />
         </div>
       </div>
 
-      <!-- INFO PRODUCTO -->
-      <div class="card_info">
-        <div class="info_row">
-          <ui-text-field [label]="'Nombre'" [value]="producto?.nombreProd" />
-          <ui-text-field
-            [label]="'Código Barra'"
-            [value]="producto?.codigoBarraProd"
-          />
-          <ui-text-field [label]="'Categoría'" [value]="producto?.nombreCate" />
-          <ui-text-field [label]="'Marca'" [value]="producto?.nombreMarc" />
+      @if (producto) {
+        <!-- PERFIL DEL PRODUCTO -->
+        <div class="producto_perfil">
+          <div
+            class="producto_imagen"
+            [ngStyle]="{
+              background: producto.urlImgProd
+                ? 'url(' + producto.urlImgProd + ') center / cover no-repeat'
+                : 'rgba(255, 255, 255, 0.2)',
+            }"
+          >
+            @if (!producto.urlImgProd) {
+              <span class="material-icons">inventory_2</span>
+            }
+          </div>
+
+          <div class="producto_info_principal">
+            <h3>
+              {{ producto.nombreProd || "Producto sin nombre" }}
+            </h3>
+
+            <p class="codigo">
+              <span class="material-icons">qr_code_2</span>
+
+              {{ producto.codigoBarraProd || "Sin código de barras" }}
+            </p>
+
+            <p class="clasificacion">
+              <span class="material-icons">category</span>
+
+              {{ producto.nombreCate || "Sin categoría" }}
+              ·
+              {{ producto.nombreMarc || "Sin marca" }}
+            </p>
+
+            <p class="disponibilidad">
+              <span class="material-icons">
+                {{
+                  producto.disponibleProd === "si"
+                    ? "check_circle"
+                    : "remove_circle"
+                }}
+              </span>
+
+              {{
+                producto.disponibleProd === "si"
+                  ? "Disponible para la venta"
+                  : "No disponible para la venta"
+              }}
+            </p>
+          </div>
+
+          <div
+            class="estado_badge"
+            [class.activo]="producto.estadoProd === 'activo'"
+            [class.inactivo]="producto.estadoProd !== 'activo'"
+          >
+            <span class="material-icons">
+              {{ producto.estadoProd === "activo" ? "check_circle" : "cancel" }}
+            </span>
+
+            {{ producto.estadoProd | titlecase }}
+          </div>
         </div>
 
-        <div class="info_row">
-          <ui-text-field
-            [label]="'Precio Venta'"
-            [value]="producto?.precioVentaProd | currency: '$'"
-          />
-          <ui-text-field
-            [label]="'IVA'"
-            [value]="
-              ((producto?.ivaProd || 0) <= 1 && (producto?.ivaProd || 0) > 0
-                ? (producto?.ivaProd || 0) * 100
-                : producto?.ivaProd || 0) + ' %'
-            "
-          />
-          <ui-text-field
-            [label]="'Dcto. Promo'"
-            [value]="producto?.dctoPromoProd | currency: '$'"
-          />
-          <ui-text-field [label]="'Stock'" [value]="producto?.stockProd" />
-          <ui-text-field
-            [label]="'Stock mínimo'"
-            [value]="producto?.stockMinimoProd"
-          />
+        <!-- IDENTIFICACIÓN -->
+        <div class="section_title">Identificación del Producto</div>
+
+        <div class="info_grid">
+          <div class="info_row">
+            <ui-text-field
+              label="ID del producto"
+              [value]="producto.ideProd"
+              [readonly]="true"
+            />
+
+            <ui-text-field
+              label="Código de barras"
+              [value]="producto.codigoBarraProd || 'Sin código registrado'"
+              [readonly]="true"
+            />
+          </div>
+
+          <div class="info_row">
+            <ui-text-field
+              label="Nombre"
+              [value]="producto.nombreProd"
+              [readonly]="true"
+            />
+
+            <ui-text-field
+              label="Categoría"
+              [value]="producto.nombreCate"
+              [readonly]="true"
+            />
+          </div>
+
+          <div class="info_row full_row">
+            <ui-text-field
+              label="Marca"
+              [value]="producto.nombreMarc"
+              [readonly]="true"
+            />
+          </div>
         </div>
 
-        <div class="info_row">
-          <ui-text-field
-            [label]="'Disponible'"
-            [value]="producto?.disponibleProd"
-          />
-          <ui-text-field [label]="'Estado'" [value]="producto?.estadoProd" />
+        <!-- INFORMACIÓN COMERCIAL -->
+        <div class="section_title">Información Comercial</div>
+
+        <div class="info_grid">
+          <div class="info_row">
+            <ui-text-field
+              label="Precio de venta"
+              [value]="
+                producto.precioVentaProd | currency: 'USD' : 'symbol' : '1.2-2'
+              "
+              [readonly]="true"
+            />
+
+            <ui-text-field
+              label="IVA de venta"
+              [value]="producto.ivaProd + ' %'"
+              [readonly]="true"
+            />
+          </div>
+
+          <div class="info_row full_row">
+            <ui-text-field
+              label="Descuento promocional por unidad"
+              [value]="
+                producto.dctoPromoProd | currency: 'USD' : 'symbol' : '1.2-2'
+              "
+              [readonly]="true"
+            />
+          </div>
         </div>
 
-        <div class="info_row">
-          <ui-text-field
-            [label]="'Descripción'"
-            [value]="producto?.descripcionProd"
-          />
+        <!-- INVENTARIO -->
+        <div class="section_title">Inventario y Disponibilidad</div>
+
+        <div class="info_grid">
+          <div class="info_row">
+            <ui-text-field
+              label="Stock actual"
+              [value]="producto.stockProd"
+              [readonly]="true"
+            />
+
+            <ui-text-field
+              label="Stock mínimo"
+              [value]="producto.stockMinimoProd"
+              [readonly]="true"
+            />
+          </div>
+
+          <div class="info_row">
+            <ui-text-field
+              label="Disponible para la venta"
+              [value]="producto.disponibleProd === 'si' ? 'Sí' : 'No'"
+              [readonly]="true"
+            />
+
+            <ui-text-field
+              label="Estado"
+              [value]="producto.estadoProd | titlecase"
+              [readonly]="true"
+            />
+          </div>
         </div>
-      </div>
+
+        <!-- DESCRIPCIÓN -->
+        <div class="section_title">Descripción</div>
+
+        <div class="descripcion_card">
+          <span class="material-icons">notes</span>
+
+          <p>
+            {{ producto.descripcionProd || "Sin descripción registrada." }}
+          </p>
+        </div>
+
+        <!-- ETIQUETA -->
+        @if (producto.codigoBarraProd) {
+          <div class="section_title">Etiqueta del Producto</div>
+
+          <div class="etiqueta_card">
+            <app-qr-label
+              title="SuperMarket"
+              [subtitle]="producto.nombreProd || 'Etiqueta de producto'"
+              [code]="producto.codigoBarraProd"
+              footer="Escanee este QR desde el POS"
+            />
+          </div>
+        }
+      }
     </div>
-
-    <div class="panel_2">
-      <div
-        class="panel_2_img"
-        [ngStyle]="{
-          background: producto?.urlImgProd
-            ? 'url(' + producto?.urlImgProd + ') center / cover no-repeat'
-            : '#f1f5f9',
-        }"
-      ></div>
-
-      <div class="product_qr_panel" *ngIf="producto?.codigoBarraProd">
-        <app-qr-label
-          title="SuperMarket"
-          [subtitle]="producto?.nombreProd || 'Etiqueta de producto'"
-          [code]="producto?.codigoBarraProd || ''"
-          footer="Escanee este QR desde el POS"
-        ></app-qr-label>
-      </div>
-    </div>
-  </div>
+  </ui-card>
 </div>
