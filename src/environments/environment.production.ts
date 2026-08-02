@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
-  api_url: '',
+  api_url: '/api',
   sig_api_url: '/api/sig',
-  posScanSocketUrl: '',
-  appBaseUrl: '',
+  posScanSocketUrl: '/pos-scan',
+  appBaseUrl: 'https://192.168.1.111',
 };
