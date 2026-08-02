@@ -19,6 +19,8 @@ import { UiTextFieldComponent } from '@shared/components/text-field/text-field.c
 import { IComboBoxOption } from '@shared/models/combo_box_option';
 import { LoadingService } from '@shared/services/loading.service';
 import { finalize, forkJoin } from 'rxjs';
+import { UiCardComponent } from '@shared/components/card/card.component';
+import { EmpleadosService } from '@services/empleados.service';
 import Swal from 'sweetalert2';
 
 interface IVentaView {
@@ -26,6 +28,7 @@ interface IVentaView {
   ideClie: number;
   nombreCliente: string;
   ideEmpl: number | null;
+  nombreEmpleado: string;
   numFacturaVent: string;
   fechaVent: string;
   cantidadVent: number;
@@ -71,7 +74,12 @@ interface IMovimientoView {
 @Component({
   selector: 'app-details',
   standalone: true,
-  imports: [CommonModule, UiTextFieldComponent, UiButtonComponent],
+  imports: [
+    CommonModule,
+    UiTextFieldComponent,
+    UiButtonComponent,
+    UiCardComponent,
+  ],
   providers: [DatePipe, CurrencyPipe],
   templateUrl: './details.component.html',
   styleUrl: './details.component.scss',
@@ -82,6 +90,7 @@ export default class DetailsComponent {
   private readonly _productosService = inject(ProductosService);
   private readonly _clientesService = inject(ClientesService);
   private readonly _loadingService = inject(LoadingService);
+  private readonly _empleadosService = inject(EmpleadosService);
   private readonly _datePipe = inject(DatePipe);
   private readonly _currencyPipe = inject(CurrencyPipe);
 
@@ -95,6 +104,7 @@ export default class DetailsComponent {
 
   private productos: IComboBoxOption[] = [];
   private clientes: IComboBoxOption[] = [];
+  private empleados: IComboBoxOption[] = [];
 
   constructor() {
     const idParam = Number(this._route.snapshot.params['id']);
@@ -118,12 +128,14 @@ export default class DetailsComponent {
       trazabilidad: this._ventasService.buscarTrazabilidadVenta(this.idVenta),
       productos: this._productosService.listarComboProductos(),
       clientes: this._clientesService.listarComboClientes(),
+      empleados: this._empleadosService.listarComboEmpleados(),
     })
       .pipe(finalize(() => this._loadingService.hide()))
       .subscribe({
         next: (res) => {
           this.productos = res.productos ?? [];
           this.clientes = res.clientes ?? [];
+          this.empleados = res.empleados ?? [];
 
           const data = res.venta.data?.[0] as IVentaResult | undefined;
 
@@ -139,6 +151,14 @@ export default class DetailsComponent {
             ideClie: data.ide_clie,
             nombreCliente: this.nombreCliente(data.ide_clie),
             ideEmpl: data.ide_empl ?? null,
+            nombreEmpleado:
+              String(data.canal_vent ?? '')
+                .trim()
+                .toLowerCase() === 'pos' &&
+              data.ide_empl !== null &&
+              data.ide_empl !== undefined
+                ? this.nombreEmpleado(data.ide_empl)
+                : 'No aplica',
             numFacturaVent: data.num_factura_vent,
             fechaVent: data.fecha_vent,
             cantidadVent: Number(data.cantidad_vent),
@@ -147,7 +167,7 @@ export default class DetailsComponent {
             dctoSocioVent: Number(data.dcto_socio_vent),
             dctoEdadVent: Number(data.dcto_edad_vent),
             estadoVent: data.estado_vent,
-            canalVent: data.canal_vent ?? 'No identificado',
+            canalVent: this.formatearCanal(data.canal_vent),
             tipoPagoVent: this.formatearTipoPago(data.tipo_pago_vent),
           };
 
@@ -198,19 +218,14 @@ export default class DetailsComponent {
   }
 
   protected solicitarCancelacion(): void {
-    if (
-      this.ejecutandoAccion ||
-      !this.venta ||
-      this.venta.estadoVent !== 'completado'
-    ) {
+    if (this.ejecutandoAccion || !this.puedeAnular()) {
       return;
     }
 
     void Swal.fire({
       icon: 'warning',
       title: 'Anular venta',
-      text:
-        'Se restaurarán el producto y los lotes exactos que fueron consumidos.',
+      text: 'Se restaurarán el producto y los lotes exactos que fueron consumidos.',
       input: 'textarea',
       inputLabel: 'Motivo de anulación',
       inputPlaceholder: 'Escriba un motivo de 5 a 250 caracteres.',
@@ -247,13 +262,87 @@ export default class DetailsComponent {
     this.location.back();
   }
 
-  protected formatDate(date: string): string {
+  protected puedeAnular(): boolean {
+    return (
+      this.venta?.estadoVent === 'completado' &&
+      this.movimientos.some(
+        (movimiento) => movimiento.tipoMovi === 'salida_venta',
+      )
+    );
+  }
+
+  protected totalIva(): number {
+    return this.detalles.reduce((total, detalle) => total + detalle.ivaProd, 0);
+  }
+
+  protected totalDescuentoPromocional(): number {
+    return this.detalles.reduce(
+      (total, detalle) => total + detalle.dctoPromoProd,
+      0,
+    );
+  }
+
+  protected totalDescuentos(): number {
+    return (
+      this.totalDescuentoPromocional() +
+      Number(this.venta?.dctoSocioVent ?? 0) +
+      Number(this.venta?.dctoEdadVent ?? 0)
+    );
+  }
+
+  protected totalSubtotalDetalles(): number {
+    return this.detalles.reduce(
+      (total, detalle) => total + detalle.subtotalProd,
+      0,
+    );
+  }
+
+  protected cantidadMovimiento(value: number): string {
+    if (value > 0) {
+      return `+${value}`;
+    }
+
+    return String(value);
+  }
+
+  protected getVentaClass(estado: string): string {
+    switch (estado) {
+      case 'cancelado':
+        return 'venta-cancelada';
+
+      case 'devuelto':
+        return 'venta-devuelta';
+
+      default:
+        return 'venta-completada';
+    }
+  }
+
+  protected iconoCanal(): string {
+    const canal = this.venta?.canalVent.toLowerCase() ?? '';
+
+    if (canal.includes('móvil')) {
+      return 'smartphone';
+    }
+
+    if (canal.includes('punto de venta')) {
+      return 'point_of_sale';
+    }
+
+    return 'storefront';
+  }
+
+  protected formatDate(date: string | null | undefined): string {
+    if (!date) {
+      return 'No disponible';
+    }
+
     return this._datePipe.transform(date, 'dd/MM/yyyy HH:mm') || date;
   }
 
-  protected formatCalendarDate(date: string | null): string {
+  protected formatCalendarDate(date: string | null | undefined): string {
     if (!date) {
-      return '—';
+      return 'No aplica';
     }
 
     return this._datePipe.transform(`${date}T00:00:00`, 'dd/MM/yyyy') || date;
@@ -261,17 +350,26 @@ export default class DetailsComponent {
 
   protected formatCurrency(value: number | string): string {
     const numValue = Number(value ?? 0);
-    return this._currencyPipe.transform(numValue, 'USD', 'symbol', '1.2-2') || '0.00';
+    return (
+      this._currencyPipe.transform(numValue, 'USD', 'symbol', '1.2-2') || '0.00'
+    );
   }
 
   protected formatearMovimiento(value: string): string {
     switch (value) {
       case 'salida_venta':
         return 'Salida por venta';
+
       case 'anulacion_venta':
         return 'Anulación de venta';
+
+      case 'devolucion_venta':
+        return 'Devolución de venta';
+
       default:
-        return value;
+        return value
+          .replaceAll('_', ' ')
+          .replace(/^\w/, (letter) => letter.toUpperCase());
     }
   }
 
@@ -328,8 +426,15 @@ export default class DetailsComponent {
 
   private nombreCliente(ideClie: number): string {
     return (
-      this.clientes.find((cliente) => Number(cliente.value) === ideClie)?.label ??
-      `Cliente #${ideClie}`
+      this.clientes.find((cliente) => Number(cliente.value) === ideClie)
+        ?.label ?? `Cliente #${ideClie}`
+    );
+  }
+
+  private nombreEmpleado(ideEmpl: number): string {
+    return (
+      this.empleados.find((empleado) => Number(empleado.value) === ideEmpl)
+        ?.label ?? `Empleado #${ideEmpl}`
     );
   }
 
@@ -338,6 +443,20 @@ export default class DetailsComponent {
       this.productos.find((producto) => Number(producto.value) === ideProd)
         ?.label ?? `Producto #${ideProd}`
     );
+  }
+
+  private formatearCanal(value: string | null | undefined): string {
+    switch (value) {
+      case 'pos':
+        return 'Punto de venta';
+
+      case 'movil':
+      case 'mobile':
+        return 'Tienda móvil';
+
+      default:
+        return value || 'No identificado';
+    }
   }
 
   private formatearTipoPago(value: string | null | undefined): string {
@@ -355,7 +474,10 @@ export default class DetailsComponent {
     }
   }
 
-  private mensajeRespuesta(response: string | undefined, fallback: string): string {
+  private mensajeRespuesta(
+    response: string | undefined,
+    fallback: string,
+  ): string {
     if (!response) {
       return fallback;
     }

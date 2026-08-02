@@ -1,0 +1,240 @@
+<div class="div_container">
+  <ui-card [showHeader]="false" class="div_card">
+    <div class="card_form">
+      <div class="header_actions">
+        <div class="header_title">
+          <h2>Detalle del Movimiento #{{ idMovimiento }}</h2>
+        </div>
+
+        <div class="header_buttons">
+          <ui-button icon="refresh" (evntClick)="loadData()" />
+
+          <ui-button label="Volver" icon="arrow_back" (evntClick)="volver()" />
+        </div>
+      </div>
+
+      @if (movimiento) {
+        <div
+          class="movimiento_perfil"
+          [class.movimiento_entrada]="esEntrada()"
+          [class.movimiento_salida]="esSalida()"
+          [class.movimiento_neutro]="!esEntrada() && !esSalida()"
+        >
+          <div class="avatar">
+            <span class="material-icons">
+              {{ iconoOperacion() }}
+            </span>
+          </div>
+
+          <div class="movimiento_info_principal">
+            <h3>
+              {{ movimiento.tipo_movi_label }}
+            </h3>
+
+            <p>
+              <span class="material-icons"> inventory_2 </span>
+
+              {{ movimiento.nombre_prod }}
+            </p>
+
+            <p>
+              <span class="material-icons"> description </span>
+
+              {{ movimiento.documento_origen || "Sin documento de origen" }}
+            </p>
+
+            <p>
+              <span class="material-icons"> schedule </span>
+
+              {{ formatFechaIngreso(movimiento.fecha_ingre) }}
+            </p>
+          </div>
+
+          <div class="movimiento_badge">
+            <span>
+              {{ tipoOperacion() }}
+            </span>
+
+            <strong>
+              {{ cantidadMostrada() }}
+            </strong>
+          </div>
+        </div>
+
+        <div class="section_title">Información del Movimiento</div>
+
+        <div class="info_grid">
+          <div class="info_row">
+            <ui-text-field
+              label="ID del movimiento"
+              [value]="movimiento.ide_movi"
+              [readonly]="true"
+            />
+
+            <ui-text-field
+              label="Fecha y hora"
+              [value]="formatFechaIngreso(movimiento.fecha_ingre)"
+              [readonly]="true"
+            />
+          </div>
+
+          <div class="info_row">
+            <ui-text-field
+              label="Tipo de movimiento"
+              [value]="movimiento.tipo_movi_label"
+              [readonly]="true"
+            />
+
+            <ui-text-field
+              label="Cantidad"
+              [value]="cantidadMostrada()"
+              [readonly]="true"
+            />
+          </div>
+
+          <div class="info_row full_row">
+            <ui-text-field
+              label="Código interno del tipo"
+              [value]="movimiento.tipo_movi"
+              [readonly]="true"
+            />
+          </div>
+        </div>
+
+        <div class="section_title">Producto y Lote</div>
+
+        <div class="info_grid">
+          <div class="info_row">
+            <ui-text-field
+              label="ID del producto"
+              [value]="movimiento.ide_prod"
+              [readonly]="true"
+            />
+
+            <ui-text-field
+              label="Producto"
+              [value]="movimiento.nombre_prod"
+              [readonly]="true"
+            />
+          </div>
+
+          <div class="info_row">
+            <ui-text-field
+              label="ID del lote"
+              [value]="movimiento.ide_lote ?? 'No aplica'"
+              [readonly]="true"
+            />
+
+            <ui-text-field
+              label="Fecha de caducidad"
+              [value]="formatFechaCaducidad(movimiento.fecha_caducidad_lote)"
+              [readonly]="true"
+            />
+          </div>
+        </div>
+
+        <div class="section_title">Variación del Inventario</div>
+
+        <div class="stock_grid">
+          <div class="stock_card">
+            <div class="stock_card_header">
+              <span class="material-icons"> inventory </span>
+
+              <strong>Stock general del producto</strong>
+            </div>
+
+            <div class="stock_transition">
+              <div>
+                <span>Anterior</span>
+
+                <strong>
+                  {{ formatNullableNumber(movimiento.stock_prod_anterior) }}
+                </strong>
+              </div>
+
+              <span class="material-icons transition_icon">
+                arrow_forward
+              </span>
+
+              <div>
+                <span>Posterior</span>
+
+                <strong>
+                  {{ formatNullableNumber(movimiento.stock_prod_posterior) }}
+                </strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="stock_card">
+            <div class="stock_card_header">
+              <span class="material-icons"> deployed_code </span>
+
+              <strong>Stock del lote</strong>
+            </div>
+
+            <div class="stock_transition">
+              <div>
+                <span>Anterior</span>
+
+                <strong>
+                  {{ formatNullableNumber(movimiento.stock_lote_anterior) }}
+                </strong>
+              </div>
+
+              <span class="material-icons transition_icon">
+                arrow_forward
+              </span>
+
+              <div>
+                <span>Posterior</span>
+
+                <strong>
+                  {{ formatNullableNumber(movimiento.stock_lote_posterior) }}
+                </strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section_title">Origen y Auditoría</div>
+
+        <div class="info_grid">
+          <div class="info_row">
+            <ui-text-field
+              label="Documento de origen"
+              [value]="movimiento.documento_origen || 'No disponible'"
+              [readonly]="true"
+            />
+
+            <ui-text-field
+              label="Canal u origen"
+              [value]="formatText(movimiento.canal_origen)"
+              [readonly]="true"
+            />
+          </div>
+
+          <div class="info_row full_row">
+            <ui-text-field
+              label="Usuario que registró el movimiento"
+              [value]="movimiento.usua_ingre || 'No disponible'"
+              [readonly]="true"
+            />
+          </div>
+        </div>
+
+        <div class="section_title">Observación</div>
+
+        <div class="observacion_card">
+          <span class="material-icons"> notes </span>
+
+          <p>
+            {{
+              movimiento.observacion_movi || "Sin observaciones registradas."
+            }}
+          </p>
+        </div>
+      }
+    </div>
+  </ui-card>
+</div>

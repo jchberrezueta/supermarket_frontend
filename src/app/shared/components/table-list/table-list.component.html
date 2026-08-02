@@ -180,11 +180,13 @@
                 <span
                   class="status-badge"
                   [class.status-success]="
-                    element[column.property] === 'correcto'
+                    element[column.property] === 'correcto' ||
+                    element[column.property] === 'completado'
                   "
                   [class.status-middle]="element[column.property] === 'proximo'"
                   [class.status-danger]="
-                    element[column.property] === 'caducado'
+                    element[column.property] === 'caducado' ||
+                    element[column.property] === 'cancelado'
                   "
                   [class.status-return]="
                     element[column.property] === 'devuelto'

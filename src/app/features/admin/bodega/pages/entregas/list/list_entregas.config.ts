@@ -56,7 +56,7 @@ export const ListEntregasConfig: ITableListConfig = {
       sortable: true,
     },
     {
-      label: 'Proceso',
+      label: 'Acciones',
       property: 'process_actions',
       type: 'actions',
       buttonItems: [

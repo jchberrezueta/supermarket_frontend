@@ -5,6 +5,23 @@ export const ListMovimientosConfig: ITableListConfig = {
 
   columns: [
     {
+      label: 'Detalles',
+      property: 'view_details',
+      type: 'details',
+
+      buttonItems: [
+        {
+          action: 'details',
+          label: 'Ver detalles',
+          tooltip: 'Consultar trazabilidad del movimiento',
+          icon: 'visibility',
+          router: true,
+          key: 'ide_movi',
+          color: 'purple',
+        },
+      ],
+    },
+    {
       label: 'ID',
       property: 'ide_movi',
       type: 'text',

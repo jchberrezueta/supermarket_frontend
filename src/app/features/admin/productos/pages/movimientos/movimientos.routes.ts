@@ -19,6 +19,14 @@ export const movimientosRoutes: Routes = [
           showAddButton: false,
         },
       },
+      {
+        path: 'details/:id',
+        canMatch: [canMatchPermisoGuard],
+        loadComponent: () => import('./details/details.component'),
+        data: {
+          showAddButton: false,
+        },
+      },
     ],
   },
 ];

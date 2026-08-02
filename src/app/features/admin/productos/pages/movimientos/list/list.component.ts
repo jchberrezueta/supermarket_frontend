@@ -13,7 +13,7 @@ import { IComboBoxOption } from '@shared/models/combo_box_option';
 import { ListMovimientosConfig } from './list_movimientos.config';
 
 interface IFiltroMovimientoForm {
-  ideProd: number | string;
+  producto: string;
   ideLote: number | string;
   tipoMovi: string;
   fechaDesde: string;
@@ -77,7 +77,7 @@ export default class ListComponent {
 
   private configForm(): void {
     this.formData = this.formBuilder.group({
-      ideProd: [-1, [], []],
+      producto: ['', [], []],
       ideLote: ['', [], []],
       tipoMovi: ['', [], []],
       fechaDesde: ['', [], []],
@@ -102,7 +102,7 @@ export default class ListComponent {
     const params = new URLSearchParams();
     const filtro = this.formData.getRawValue();
 
-    this.appendParam(params, 'ideProd', filtro.ideProd);
+    this.appendParam(params, 'producto', filtro.producto);
     this.appendParam(params, 'ideLote', filtro.ideLote);
     this.appendParam(params, 'tipoMovi', filtro.tipoMovi);
     this.appendParam(params, 'usuaIngre', filtro.usuaIngre);

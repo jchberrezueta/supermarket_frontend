@@ -1,221 +1,798 @@
 :host {
+  display: block;
   width: 100%;
   height: 100%;
 }
 
 .div_container {
   width: 100%;
-  height: 100%;
-  overflow-y: auto;
+  min-height: 100%;
+  padding: 20px 40px;
+  box-sizing: border-box;
+}
 
-  .div_card {
-    width: 100%;
-    min-height: 100%;
+.div_card {
+  width: 100%;
+}
+
+.card_form {
+  padding: 20px;
+}
+
+/* =========================
+   CABECERA
+========================= */
+
+.header_actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.header_title {
+  min-width: 0;
+
+  h2 {
+    margin: 0;
+
+    color: #1f2937;
+
+    font-size: 1.6rem;
+    font-weight: 600;
+  }
+}
+
+.header_buttons {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+
+  flex-wrap: wrap;
+}
+
+/* =========================
+   RESUMEN PRINCIPAL
+========================= */
+
+.venta_perfil {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+
+  position: relative;
+
+  min-height: 150px;
+  margin-bottom: 30px;
+  padding: 30px;
+
+  overflow: hidden;
+
+  border-radius: 16px;
+
+  color: #ffffff;
+
+  box-shadow: 0 8px 24px rgb(15 23 42 / 12%);
+
+  &.venta-completada {
+    background: linear-gradient(135deg, #0f766e 0%, #115e59 100%);
+  }
+
+  &.venta-cancelada {
+    background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+  }
+
+  &.venta-devuelta {
+    background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%);
+  }
+}
+
+.avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 105px;
+  height: 105px;
+
+  flex-shrink: 0;
+
+  border: 2px solid rgb(255 255 255 / 25%);
+  border-radius: 50%;
+
+  background: rgb(255 255 255 / 18%);
+
+  .material-icons {
+    color: #ffffff;
+
+    font-size: 56px;
+  }
+}
+
+.venta_info_principal {
+  flex: 1;
+
+  min-width: 0;
+  padding-right: 220px;
+
+  h3 {
+    margin: 0 0 12px;
+
+    overflow: hidden;
+
+    font-size: 1.65rem;
+    font-weight: 700;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  p {
     display: flex;
-    background-color: #fff;
-    border-radius: 10px;
+    align-items: center;
+    gap: 9px;
 
-    .panel_1 {
-      width: 100%;
-      padding: 30px;
+    margin: 7px 0;
 
-      .card_form {
-        background-color: rgba(241, 245, 249);
-        border-radius: 20px;
-        padding: 40px;
+    opacity: 0.94;
 
-        .header_actions {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 30px;
+    font-size: 0.95rem;
 
-          .header_title {
-            display: flex;
-            align-items: center;
-            gap: 15px;
+    .material-icons {
+      flex-shrink: 0;
 
-            h2 {
-              margin: 0;
-              font-size: 24px;
-              color: #333;
-            }
-
-            .estado_badge {
-              padding: 6px 16px;
-              border-radius: 20px;
-              font-size: 14px;
-              font-weight: 500;
-            }
-
-            .estado-completado {
-              background-color: #d4edda;
-              color: #155724;
-            }
-
-            .estado-cancelado {
-              background-color: #f8d7da;
-              color: #721c24;
-            }
-
-            .estado-devuelto {
-              background-color: #fff3cd;
-              color: #856404;
-            }
-          }
-
-          .header_buttons {
-            display: flex;
-            gap: 10px;
-          }
-        }
-
-        .section_title {
-          font-size: 18px;
-          font-weight: 600;
-          color: #333;
-          margin-bottom: 20px;
-          padding-bottom: 10px;
-          border-bottom: 2px solid #e0e0e0;
-        }
-
-        .info_grid {
-          background-color: #fff;
-          border-radius: 10px;
-          padding: 20px;
-          margin-bottom: 30px;
-
-          .info_row {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-
-            &:last-child {
-              margin-bottom: 0;
-            }
-
-            ui-text-field {
-              flex: 1;
-              min-width: 200px;
-            }
-          }
-        }
-
-        .tabla_productos {
-          margin-bottom: 30px;
-          overflow-x: auto;
-
-          table {
-            width: 100%;
-            border-collapse: collapse;
-            background-color: #fff;
-            border-radius: 10px;
-            overflow: hidden;
-
-            th, td {
-              padding: 12px 15px;
-              text-align: left;
-              border-bottom: 1px solid #e0e0e0;
-            }
-
-            th {
-              background-color: #f8f9fa;
-              font-weight: 600;
-              color: #333;
-            }
-
-            tbody tr:hover {
-              background-color: #f5f5f5;
-            }
-
-            .empty_row {
-              text-align: center;
-              color: #999;
-              font-style: italic;
-            }
-
-            tfoot {
-              td {
-                font-weight: 600;
-                background-color: #f8f9fa;
-              }
-
-              .total_label {
-                text-align: right;
-              }
-
-              .total_value {
-                color: #28a745;
-                font-size: 16px;
-              }
-            }
-          }
-        }
-
-        .resumen_card {
-          background-color: #fff;
-          border-radius: 10px;
-          padding: 20px;
-          display: flex;
-          flex-direction: column;
-          gap: 12px;
-
-          .resumen_item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 0;
-            border-bottom: 1px dashed #e0e0e0;
-
-            &:last-child {
-              border-bottom: none;
-            }
-
-            &.total {
-              border-top: 2px solid #333;
-              padding-top: 15px;
-              margin-top: 10px;
-
-              .resumen_label, .resumen_value {
-                font-size: 18px;
-                font-weight: 700;
-              }
-
-              .resumen_value {
-                color: #28a745;
-              }
-            }
-
-            .resumen_label {
-              font-weight: 500;
-              color: #666;
-            }
-
-            .resumen_value {
-              font-weight: 600;
-              color: #333;
-            }
-          }
-        }
-      }
+      font-size: 19px;
     }
   }
 }
 
+.venta_badge {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
+
+  position: absolute;
+  top: 20px;
+  right: 20px;
+
+  min-width: 170px;
+  padding: 13px 17px;
+
+  border: 1px solid rgb(255 255 255 / 35%);
+  border-radius: 14px;
+
+  background: rgb(255 255 255 / 95%);
+
+  box-shadow: 0 4px 15px rgb(15 23 42 / 12%);
+
+  small {
+    margin-top: 3px;
+
+    color: #64748b;
+
+    font-size: 0.75rem;
+  }
+
+  > strong {
+    color: #0f172a;
+
+    font-size: 1.25rem;
+    font-weight: 700;
+  }
+}
+
+.estado_badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 5px 12px;
+
+  border-radius: 20px;
+
+  font-size: 0.76rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.status-success {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status-middle {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.status-danger {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.status-return {
+  background: #e0e7ff;
+  color: #3730a3;
+}
+
+/* =========================
+   TÍTULOS DE SECCIÓN
+========================= */
+
+.section_title {
+  display: inline-block;
+
+  margin: 25px 0 15px;
+  padding-bottom: 8px;
+
+  border-bottom: 2px solid #0f766e;
+
+  color: #475569;
+
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+/* =========================
+   INFORMACIÓN GENERAL
+========================= */
+
+.info_grid {
+  margin-bottom: 20px;
+  padding: 25px;
+
+  border: 1px solid #eef2f7;
+  border-radius: 12px;
+
+  background: #f8fafc;
+}
+
+.info_row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 25px;
+
+  margin-bottom: 20px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  > * {
+    min-width: 0;
+  }
+}
+
+.full_row {
+  grid-template-columns: 1fr;
+}
+
+/* =========================
+   RESUMEN ECONÓMICO
+========================= */
+
+.resumen_economico {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+
+  margin-bottom: 20px;
+}
+
+.resumen_item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+
+  min-height: 88px;
+  padding: 18px;
+
+  border: 1px solid #e2e8f0;
+  border-left: 4px solid #0f766e;
+  border-radius: 12px;
+
+  background: #ffffff;
+
+  box-shadow: 0 3px 10px rgb(15 23 42 / 5%);
+
+  > .material-icons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 45px;
+    height: 45px;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+
+    background: #ccfbf1;
+    color: #0f766e;
+
+    font-size: 24px;
+  }
+
+  div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    min-width: 0;
+  }
+
+  small {
+    color: #64748b;
+
+    font-size: 0.78rem;
+  }
+
+  strong {
+    color: #1e293b;
+
+    font-size: 1.08rem;
+    font-weight: 700;
+  }
+
+  &.total_item {
+    border-left-color: #166534;
+
+    background: #f0fdf4;
+
+    > .material-icons {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    strong {
+      color: #166534;
+
+      font-size: 1.2rem;
+    }
+  }
+}
+
+/* =========================
+   TABLAS
+========================= */
+
+.tabla_container {
+  width: 100%;
+  margin-bottom: 20px;
+
+  overflow-x: auto;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+
+  background: #ffffff;
+}
+
+.tabla_productos,
+.tabla_movimientos {
+  width: 100%;
+
+  border-collapse: collapse;
+
+  color: #334155;
+
+  font-size: 0.88rem;
+
+  th,
+  td {
+    padding: 14px 15px;
+
+    border-bottom: 1px solid #e2e8f0;
+
+    text-align: left;
+    vertical-align: middle;
+  }
+
+  th {
+    background: #f1f5f9;
+    color: #475569;
+
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+
+    white-space: nowrap;
+  }
+
+  tbody tr {
+    transition: background 0.2s ease;
+
+    &:hover {
+      background: #f8fafc;
+    }
+
+    &:last-child td {
+      border-bottom: none;
+    }
+  }
+
+  tfoot {
+    background: #f8fafc;
+
+    td {
+      border-top: 2px solid #cbd5e1;
+      border-bottom: none;
+    }
+  }
+}
+
+.tabla_productos {
+  min-width: 900px;
+}
 
 .tabla_movimientos {
-  table {
-    min-width: 1050px;
+  min-width: 1350px;
+}
+
+.producto_info {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+
+  min-width: 210px;
+
+  > .material-icons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 38px;
+    height: 38px;
+
+    flex-shrink: 0;
+
+    border-radius: 9px;
+
+    background: #ccfbf1;
+    color: #0f766e;
+
+    font-size: 21px;
   }
 
-  .cantidad-salida {
-    color: #b91c1c;
-    font-weight: 700;
+  div {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+
+    min-width: 0;
   }
 
-  .cantidad-entrada {
+  strong {
+    overflow: hidden;
+
+    color: #1e293b;
+
+    font-weight: 600;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  small {
+    color: #64748b;
+
+    font-size: 0.75rem;
+  }
+}
+
+.total_producto {
+  color: #0f766e;
+
+  font-weight: 700;
+}
+
+.total_general {
+  color: #166534;
+
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.empty_row {
+  padding: 35px !important;
+
+  color: #64748b;
+
+  text-align: center !important;
+}
+
+/* =========================
+   TRAZABILIDAD
+========================= */
+
+.trazabilidad_info,
+.trazabilidad_vacia {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+
+  margin-bottom: 18px;
+  padding: 20px;
+
+  border-radius: 11px;
+
+  .material-icons {
+    flex-shrink: 0;
+
+    font-size: 28px;
+  }
+
+  div {
+    min-width: 0;
+  }
+
+  strong {
+    display: block;
+
+    margin-bottom: 5px;
+
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+
+  p {
+    margin: 0;
+
+    font-size: 0.86rem;
+    line-height: 1.5;
+  }
+}
+
+.trazabilidad_info {
+  border: 1px solid #bbf7d0;
+  border-left: 4px solid #16a34a;
+
+  background: #f0fdf4;
+
+  .material-icons,
+  strong {
     color: #166534;
+  }
+
+  p {
+    color: #3f6212;
+  }
+}
+
+.trazabilidad_vacia {
+  border: 1px solid #fde68a;
+  border-left: 4px solid #d97706;
+
+  background: #fffbeb;
+
+  .material-icons,
+  strong {
+    color: #92400e;
+  }
+
+  p {
+    color: #78350f;
+  }
+}
+
+.tipo_movimiento {
+  display: inline-flex;
+  align-items: center;
+
+  padding: 5px 10px;
+
+  border-radius: 18px;
+
+  font-size: 0.74rem;
+  font-weight: 600;
+
+  white-space: nowrap;
+
+  &.movimiento_salida {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+
+  &.movimiento_entrada {
+    background: #dcfce7;
+    color: #166534;
+  }
+}
+
+.cantidad_movimiento {
+  font-weight: 700;
+
+  &.cantidad_salida {
+    color: #b91c1c;
+  }
+
+  &.cantidad_entrada {
+    color: #15803d;
+  }
+}
+
+.stock_transition {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  white-space: nowrap;
+
+  span {
+    color: #64748b;
+  }
+
+  .material-icons {
+    color: #0f766e;
+
+    font-size: 17px;
+  }
+
+  strong {
+    color: #1e293b;
+
     font-weight: 700;
+  }
+}
+
+.observacion {
+  min-width: 220px;
+  max-width: 320px;
+
+  color: #475569;
+
+  line-height: 1.45;
+
+  white-space: normal;
+}
+
+/* =========================
+   VENTA NO ENCONTRADA
+========================= */
+
+.venta_no_encontrada {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 320px;
+  padding: 40px;
+
+  color: #64748b;
+
+  text-align: center;
+
+  .material-icons {
+    margin-bottom: 15px;
+
+    color: #94a3b8;
+
+    font-size: 64px;
+  }
+
+  h3 {
+    margin: 0 0 8px;
+
+    color: #334155;
+
+    font-size: 1.2rem;
+  }
+
+  p {
+    margin: 0;
+
+    font-size: 0.9rem;
+  }
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 1100px) {
+  .resumen_economico {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .venta_info_principal {
+    padding-right: 190px;
+  }
+}
+
+@media (max-width: 768px) {
+  .div_container {
+    padding: 15px;
+  }
+
+  .card_form {
+    padding: 15px;
+  }
+
+  .header_actions {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .header_buttons {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .venta_perfil {
+    align-items: flex-start;
+    flex-direction: column;
+
+    padding: 25px;
+  }
+
+  .avatar {
+    width: 85px;
+    height: 85px;
+
+    .material-icons {
+      font-size: 46px;
+    }
+  }
+
+  .venta_info_principal {
+    width: 100%;
+    padding-right: 0;
+
+    h3 {
+      white-space: normal;
+    }
+  }
+
+  .venta_badge {
+    align-items: flex-start;
+
+    position: static;
+
+    min-width: 0;
+    width: auto;
+  }
+
+  .info_row,
+  .full_row {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .resumen_economico {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .div_container {
+    padding: 10px;
+  }
+
+  .card_form {
+    padding: 10px;
+  }
+
+  .header_title h2 {
+    font-size: 1.3rem;
+  }
+
+  .venta_perfil {
+    padding: 20px;
+  }
+
+  .info_grid {
+    padding: 18px;
+  }
+
+  .resumen_item {
+    padding: 15px;
   }
 }

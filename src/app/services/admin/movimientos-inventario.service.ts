@@ -15,6 +15,12 @@ export class MovimientosInventarioService {
     return this.restService.get<IResultDataMovimientoInventario>(this.apiUrl);
   }
 
+  public buscar(id: number): Observable<IResultDataMovimientoInventario> {
+    return this.restService.get<IResultDataMovimientoInventario>(
+      `${this.apiUrl}/buscar/${id}`,
+    );
+  }
+
   public listarComboProductos(): Observable<IComboBoxOption[]> {
     return this.restService.get<IComboBoxOption[]>(
       `${this.apiUrl}/listar/combo/productos`,

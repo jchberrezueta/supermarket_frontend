@@ -445,11 +445,11 @@ export default class PosComponent implements OnInit, OnDestroy {
   private normalizarTasaIva(value: string | number | null | undefined): number {
     const iva = this.toNumber(value);
 
-    if (iva > 1) {
-      return iva / 100;
+    if (!Number.isFinite(iva) || iva < 0) {
+      return 0;
     }
 
-    return iva;
+    return iva / 100;
   }
 
   private redondear(value: number): number {

@@ -1,226 +1,498 @@
 <div class="div_container">
-  <div class="div_card">
-    <div class="panel_1">
-      <div class="card_form">
-        <div class="header_actions">
-          <div class="header_title">
-            <h2>Detalle de Venta #{{ idVenta }}</h2>
-            <span
-              class="estado_badge"
-              [ngClass]="getEstadoClass(venta?.estadoVent || '')"
-            >
-              {{ venta?.estadoVent | titlecase }}
-            </span>
+  <ui-card [showHeader]="false" class="div_card">
+    <div class="card_form">
+      <div class="header_actions">
+        <div class="header_title">
+          <h2>Detalle de Venta #{{ idVenta }}</h2>
+        </div>
+
+        <div class="header_buttons">
+          @if (puedeAnular()) {
+            <ui-button
+              label="Anular venta"
+              icon="undo"
+              color="red"
+              [disabled]="ejecutandoAccion"
+              (evntClick)="solicitarCancelacion()"
+            />
+          }
+
+          <ui-button
+            icon="refresh"
+            tooltip="Actualizar información"
+            [disabled]="ejecutandoAccion"
+            (evntClick)="loadData()"
+          />
+
+          <ui-button
+            label="Volver"
+            icon="arrow_back"
+            [disabled]="ejecutandoAccion"
+            (evntClick)="volver()"
+          />
+        </div>
+      </div>
+
+      @if (venta) {
+        <div class="venta_perfil" [ngClass]="getVentaClass(venta.estadoVent)">
+          <div class="avatar">
+            <span class="material-icons"> receipt_long </span>
           </div>
 
-          <div class="header_buttons">
-            @if (venta?.estadoVent === 'completado') {
-              <ui-button
-                label="Anular venta"
-                icon="undo"
-                color="red"
-                [disabled]="ejecutandoAccion"
-                (evntClick)="solicitarCancelacion()"
-              />
-            }
+          <div class="venta_info_principal">
+            <h3>
+              {{ venta.numFacturaVent }}
+            </h3>
 
-            <ui-button icon="refresh" (evntClick)="loadData()" />
-            <ui-button
-              label="Volver"
-              icon="arrow_back"
-              (evntClick)="volver()"
-            />
+            <p>
+              <span class="material-icons"> person </span>
+
+              {{ venta.nombreCliente }}
+            </p>
+
+            <p>
+              <span class="material-icons">
+                {{ iconoCanal() }}
+              </span>
+
+              {{ venta.canalVent }}
+            </p>
+
+            <p>
+              <span class="material-icons"> schedule </span>
+
+              {{ formatDate(venta.fechaVent) }}
+            </p>
+          </div>
+
+          <div class="venta_badge">
+            <span
+              class="estado_badge"
+              [ngClass]="getEstadoClass(venta.estadoVent)"
+            >
+              {{ venta.estadoVent | titlecase }}
+            </span>
+
+            <small>Total de la venta</small>
+
+            <strong>
+              {{ formatCurrency(venta.totalVent) }}
+            </strong>
           </div>
         </div>
 
         <div class="section_title">Información de la Venta</div>
+
         <div class="info_grid">
           <div class="info_row">
             <ui-text-field
-              label="Num. Factura"
-              [value]="venta?.numFacturaVent"
-              [disabled]="true"
+              label="ID de la venta"
+              [value]="venta.ideVent"
+              [readonly]="true"
             />
+
             <ui-text-field
-              label="Fecha"
-              [value]="formatDate(venta?.fechaVent || '')"
-              [disabled]="true"
+              label="Número de factura"
+              [value]="venta.numFacturaVent"
+              [readonly]="true"
             />
           </div>
 
           <div class="info_row">
             <ui-text-field
-              label="Cliente"
-              [value]="venta?.nombreCliente"
-              [disabled]="true"
+              label="Fecha y hora"
+              [value]="formatDate(venta.fechaVent)"
+              [readonly]="true"
             />
+
             <ui-text-field
-              label="ID Empleado"
-              [value]="venta?.ideEmpl ?? 'No aplica'"
-              [disabled]="true"
+              label="Cantidad total de unidades"
+              [value]="venta.cantidadVent"
+              [readonly]="true"
             />
           </div>
 
           <div class="info_row">
             <ui-text-field
-              label="Canal"
-              [value]="venta?.canalVent"
-              [disabled]="true"
+              label="Canal de venta"
+              [value]="venta.canalVent"
+              [readonly]="true"
             />
+
             <ui-text-field
               label="Forma de pago"
-              [value]="venta?.tipoPagoVent"
-              [disabled]="true"
-            />
-          </div>
-
-          <div class="info_row">
-            <ui-text-field
-              label="Dcto. Socio"
-              [value]="formatCurrency(venta?.dctoSocioVent || 0)"
-              [disabled]="true"
-            />
-            <ui-text-field
-              label="Dcto. Edad"
-              [value]="formatCurrency(venta?.dctoEdadVent || 0)"
-              [disabled]="true"
+              [value]="venta.tipoPagoVent"
+              [readonly]="true"
             />
           </div>
         </div>
 
-        <div class="section_title">Productos de la Venta</div>
-        <div class="tabla_productos">
-          <table>
+        <div class="section_title">Cliente y Atención</div>
+
+        <div class="info_grid">
+          <div class="info_row">
+            <ui-text-field
+              label="ID del cliente"
+              [value]="venta.ideClie"
+              [readonly]="true"
+            />
+
+            <ui-text-field
+              label="Cliente"
+              [value]="venta.nombreCliente"
+              [readonly]="true"
+            />
+          </div>
+
+          <div class="info_row">
+            <ui-text-field
+              label="ID del empleado"
+              [value]="venta.ideEmpl ?? 'No aplica'"
+              [readonly]="true"
+            />
+
+            <ui-text-field
+              label="Empleado responsable"
+              [value]="venta.nombreEmpleado"
+              [readonly]="true"
+            />
+          </div>
+        </div>
+
+        <div class="section_title">Resumen Económico</div>
+
+        <div class="resumen_economico">
+          <div class="resumen_item">
+            <span class="material-icons"> shopping_cart </span>
+
+            <div>
+              <small>Subtotal</small>
+
+              <strong>
+                {{ formatCurrency(venta.subTotalVent) }}
+              </strong>
+            </div>
+          </div>
+
+          <div class="resumen_item">
+            <span class="material-icons"> account_balance </span>
+
+            <div>
+              <small>IVA</small>
+
+              <strong>
+                {{ formatCurrency(totalIva()) }}
+              </strong>
+            </div>
+          </div>
+
+          <div class="resumen_item">
+            <span class="material-icons"> sell </span>
+
+            <div>
+              <small>Descuento promocional</small>
+
+              <strong>
+                {{ formatCurrency(totalDescuentoPromocional()) }}
+              </strong>
+            </div>
+          </div>
+
+          <div class="resumen_item">
+            <span class="material-icons"> loyalty </span>
+
+            <div>
+              <small>Descuento de socio</small>
+
+              <strong>
+                {{ formatCurrency(venta.dctoSocioVent) }}
+              </strong>
+            </div>
+          </div>
+
+          <div class="resumen_item">
+            <span class="material-icons"> elderly </span>
+
+            <div>
+              <small>Descuento por edad</small>
+
+              <strong>
+                {{ formatCurrency(venta.dctoEdadVent) }}
+              </strong>
+            </div>
+          </div>
+
+          <div class="resumen_item">
+            <span class="material-icons"> discount </span>
+
+            <div>
+              <small>Descuentos totales</small>
+
+              <strong>
+                {{ formatCurrency(totalDescuentos()) }}
+              </strong>
+            </div>
+          </div>
+
+          <div class="resumen_item total_item">
+            <span class="material-icons"> payments </span>
+
+            <div>
+              <small>Total pagado</small>
+
+              <strong>
+                {{ formatCurrency(venta.totalVent) }}
+              </strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="section_title">Productos Vendidos</div>
+
+        <div class="tabla_container">
+          <table class="tabla_productos">
             <thead>
               <tr>
                 <th>Producto</th>
                 <th>Cantidad</th>
-                <th>P. Unit.</th>
+                <th>Precio unitario</th>
                 <th>Subtotal</th>
                 <th>IVA</th>
-                <th>Dcto.</th>
+                <th>Dcto. promocional</th>
                 <th>Total</th>
               </tr>
             </thead>
+
             <tbody>
               @for (detalle of detalles; track detalle.ideDetaVent) {
                 <tr>
-                  <td>{{ detalle.nombreProd }}</td>
-                  <td>{{ detalle.cantidadProd }}</td>
-                  <td>{{ detalle.precioUnitarioProd | number: '1.2-2' }}</td>
-                  <td>{{ detalle.subtotalProd | number: '1.2-2' }}</td>
-                  <td>{{ detalle.ivaProd | number: '1.2-2' }}</td>
-                  <td>{{ detalle.dctoPromoProd | number: '1.2-2' }}</td>
-                  <td>{{ detalle.totalProd | number: '1.2-2' }}</td>
+                  <td>
+                    <div class="producto_info">
+                      <span class="material-icons"> inventory_2 </span>
+
+                      <div>
+                        <strong>
+                          {{ detalle.nombreProd }}
+                        </strong>
+
+                        <small> Producto #{{ detalle.ideProd }} </small>
+                      </div>
+                    </div>
+                  </td>
+
+                  <td>
+                    {{ detalle.cantidadProd }}
+                  </td>
+
+                  <td>
+                    {{ formatCurrency(detalle.precioUnitarioProd) }}
+                  </td>
+
+                  <td>
+                    {{ formatCurrency(detalle.subtotalProd) }}
+                  </td>
+
+                  <td>
+                    {{ formatCurrency(detalle.ivaProd) }}
+                  </td>
+
+                  <td>
+                    {{ formatCurrency(detalle.dctoPromoProd) }}
+                  </td>
+
+                  <td class="total_producto">
+                    {{ formatCurrency(detalle.totalProd) }}
+                  </td>
                 </tr>
               } @empty {
                 <tr>
                   <td colspan="7" class="empty_row">
-                    No hay productos en esta venta.
+                    No hay productos registrados en esta venta.
                   </td>
                 </tr>
               }
             </tbody>
-            <tfoot>
-              <tr>
-                <td colspan="2" class="total_label">TOTALES:</td>
-                <td></td>
-                <td>{{ formatCurrency(venta?.subTotalVent || 0) }}</td>
-                <td colspan="2"></td>
-                <td class="total_value">
-                  {{ formatCurrency(venta?.totalVent || 0) }}
-                </td>
-              </tr>
-            </tfoot>
+
+            @if (detalles.length > 0) {
+              <tfoot>
+                <tr>
+                  <td>
+                    <strong>Totales</strong>
+                  </td>
+
+                  <td>
+                    <strong>
+                      {{ venta.cantidadVent }}
+                    </strong>
+                  </td>
+
+                  <td></td>
+
+                  <td>
+                    <strong>
+                      {{ formatCurrency(totalSubtotalDetalles()) }}
+                    </strong>
+                  </td>
+
+                  <td>
+                    <strong>
+                      {{ formatCurrency(totalIva()) }}
+                    </strong>
+                  </td>
+
+                  <td>
+                    <strong>
+                      {{ formatCurrency(totalDescuentoPromocional()) }}
+                    </strong>
+                  </td>
+
+                  <td class="total_general">
+                    {{ formatCurrency(venta.totalVent) }}
+                  </td>
+                </tr>
+              </tfoot>
+            }
           </table>
         </div>
 
-        <div class="section_title">Trazabilidad de inventario</div>
-        <div class="tabla_productos tabla_movimientos">
-          <table>
-            <thead>
-              <tr>
-                <th>Fecha</th>
-                <th>Movimiento</th>
-                <th>Producto</th>
-                <th>Lote</th>
-                <th>Caducidad</th>
-                <th>Cantidad</th>
-                <th>Stock producto</th>
-                <th>Stock lote</th>
-                <th>Usuario</th>
-              </tr>
-            </thead>
-            <tbody>
-              @for (movimiento of movimientos; track movimiento.ideMovi) {
-                <tr>
-                  <td>{{ formatDate(movimiento.fecha) }}</td>
-                  <td>{{ formatearMovimiento(movimiento.tipoMovi) }}</td>
-                  <td>{{ movimiento.nombreProd }}</td>
-                  <td>
-                    {{ movimiento.ideLote ? '#' + movimiento.ideLote : '—' }}
-                  </td>
-                  <td>{{ formatCalendarDate(movimiento.fechaCaducidadLote) }}</td>
-                  <td
-                    [class.cantidad-salida]="movimiento.cantidadMovi < 0"
-                    [class.cantidad-entrada]="movimiento.cantidadMovi > 0"
-                  >
-                    {{ movimiento.cantidadMovi }}
-                  </td>
-                  <td>
-                    {{ movimiento.stockProdAnterior ?? '—' }}
-                    →
-                    {{ movimiento.stockProdPosterior ?? '—' }}
-                  </td>
-                  <td>
-                    {{ movimiento.stockLoteAnterior ?? '—' }}
-                    →
-                    {{ movimiento.stockLotePosterior ?? '—' }}
-                  </td>
-                  <td>{{ movimiento.usuario }}</td>
-                </tr>
-              } @empty {
-                <tr>
-                  <td colspan="9" class="empty_row">
-                    Esta venta no tiene movimientos FEFO registrados. Se
-                    considera un registro heredado y no puede anularse
-                    automáticamente.
-                  </td>
-                </tr>
-              }
-            </tbody>
-          </table>
-        </div>
+        <div class="section_title">Trazabilidad del Inventario</div>
 
-        <div class="resumen_card">
-          <div class="resumen_item">
-            <span class="resumen_label">Cantidad de productos:</span>
-            <span class="resumen_value">{{ venta?.cantidadVent }}</span>
+        @if (movimientos.length > 0) {
+          <div class="trazabilidad_info">
+            <span class="material-icons"> verified </span>
+
+            <div>
+              <strong> Trazabilidad FEFO registrada </strong>
+
+              <p>
+                Los movimientos muestran los lotes exactos utilizados durante la
+                venta y las variaciones de inventario correspondientes.
+              </p>
+            </div>
           </div>
-          <div class="resumen_item">
-            <span class="resumen_label">Subtotal:</span>
-            <span class="resumen_value">
-              {{ formatCurrency(venta?.subTotalVent || 0) }}
-            </span>
+
+          <div class="tabla_container">
+            <table class="tabla_movimientos">
+              <thead>
+                <tr>
+                  <th>Fecha</th>
+                  <th>Movimiento</th>
+                  <th>Producto</th>
+                  <th>Lote</th>
+                  <th>Caducidad</th>
+                  <th>Cantidad</th>
+                  <th>Stock producto</th>
+                  <th>Stock lote</th>
+                  <th>Usuario</th>
+                  <th>Observación</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                @for (movimiento of movimientos; track movimiento.ideMovi) {
+                  <tr>
+                    <td>
+                      {{ formatDate(movimiento.fecha) }}
+                    </td>
+
+                    <td>
+                      <span
+                        class="tipo_movimiento"
+                        [class.movimiento_salida]="movimiento.cantidadMovi < 0"
+                        [class.movimiento_entrada]="movimiento.cantidadMovi > 0"
+                      >
+                        {{ formatearMovimiento(movimiento.tipoMovi) }}
+                      </span>
+                    </td>
+
+                    <td>
+                      {{ movimiento.nombreProd }}
+                    </td>
+
+                    <td>
+                      {{
+                        movimiento.ideLote !== null
+                          ? "#" + movimiento.ideLote
+                          : "No aplica"
+                      }}
+                    </td>
+
+                    <td>
+                      {{ formatCalendarDate(movimiento.fechaCaducidadLote) }}
+                    </td>
+
+                    <td
+                      class="cantidad_movimiento"
+                      [class.cantidad_salida]="movimiento.cantidadMovi < 0"
+                      [class.cantidad_entrada]="movimiento.cantidadMovi > 0"
+                    >
+                      {{ cantidadMovimiento(movimiento.cantidadMovi) }}
+                    </td>
+
+                    <td>
+                      <div class="stock_transition">
+                        <span>
+                          {{ movimiento.stockProdAnterior ?? "No aplica" }}
+                        </span>
+
+                        <span class="material-icons"> arrow_forward </span>
+
+                        <strong>
+                          {{ movimiento.stockProdPosterior ?? "No aplica" }}
+                        </strong>
+                      </div>
+                    </td>
+
+                    <td>
+                      <div class="stock_transition">
+                        <span>
+                          {{ movimiento.stockLoteAnterior ?? "No aplica" }}
+                        </span>
+
+                        <span class="material-icons"> arrow_forward </span>
+
+                        <strong>
+                          {{ movimiento.stockLotePosterior ?? "No aplica" }}
+                        </strong>
+                      </div>
+                    </td>
+
+                    <td>
+                      {{ movimiento.usuario }}
+                    </td>
+
+                    <td class="observacion">
+                      {{ movimiento.observacionMovi || "Sin observación" }}
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
           </div>
-          <div class="resumen_item">
-            <span class="resumen_label">Descuentos:</span>
-            <span class="resumen_value">
-              {{
-                formatCurrency(
-                  (venta?.dctoSocioVent || 0) + (venta?.dctoEdadVent || 0)
-                )
-              }}
-            </span>
+        } @else {
+          <div class="trazabilidad_vacia">
+            <span class="material-icons"> history_toggle_off </span>
+
+            <div>
+              <strong> Sin movimientos FEFO registrados </strong>
+
+              <p>
+                Esta venta se considera un registro heredado. Al no existir
+                trazabilidad de los lotes consumidos, no puede anularse
+                automáticamente.
+              </p>
+            </div>
           </div>
-          <div class="resumen_item total">
-            <span class="resumen_label">TOTAL:</span>
-            <span class="resumen_value">
-              {{ formatCurrency(venta?.totalVent || 0) }}
-            </span>
-          </div>
+        }
+      } @else {
+        <div class="venta_no_encontrada">
+          <span class="material-icons"> search_off </span>
+
+          <h3>Venta no encontrada</h3>
+
+          <p>No fue posible encontrar la venta solicitada.</p>
         </div>
-      </div>
+      }
     </div>
-  </div>
+  </ui-card>
 </div>

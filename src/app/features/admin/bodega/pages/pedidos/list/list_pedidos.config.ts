@@ -12,6 +12,21 @@ const esParcial = (row: TableRow): boolean => row['estado_pedi'] === 'parcial';
 export const ListPedidoConfig: ITableListConfig = {
   dataKey: 'ide_pedi',
   columns: [
+    {
+      label: 'Detalles',
+      property: 'view_details',
+      type: 'actions',
+      buttonItems: [
+        {
+          action: 'view',
+          label: '',
+          tooltip: 'Ver pedido',
+          icon: 'visibility',
+          color: 'purple',
+          key: 'ide_pedi',
+        },
+      ],
+    },
     { label: 'ID', property: 'ide_pedi', type: 'text', sortable: true },
     { label: 'Empresa', property: 'nombre_empr', type: 'text', sortable: true },
     {
@@ -46,14 +61,6 @@ export const ListPedidoConfig: ITableListConfig = {
       property: 'acciones',
       type: 'actions',
       buttonItems: [
-        {
-          action: 'view',
-          label: 'Ver',
-          tooltip: 'Ver pedido',
-          icon: 'visibility',
-          color: 'purple',
-          key: 'ide_pedi',
-        },
         {
           action: 'edit',
           label: 'Editar',

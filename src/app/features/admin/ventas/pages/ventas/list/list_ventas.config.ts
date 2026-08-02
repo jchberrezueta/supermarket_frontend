@@ -8,26 +8,17 @@ export const ListVentasConfig: ITableListConfig = {
   dataKey: 'ide_vent',
   columns: [
     {
-      label: 'Acciones',
+      label: 'Detalles',
       property: 'acciones',
       type: 'actions',
       buttonItems: [
         {
           action: 'details',
-          label: 'Ver',
+          label: '',
           tooltip: 'Ver venta y trazabilidad',
           icon: 'visibility',
           key: 'ide_vent',
           color: 'purple',
-        },
-        {
-          action: 'cancel',
-          label: 'Anular',
-          tooltip: 'Anular venta y restaurar los lotes consumidos',
-          icon: 'undo',
-          key: 'ide_vent',
-          color: 'red',
-          visible: esCompletada,
         },
       ],
     },
@@ -67,8 +58,24 @@ export const ListVentasConfig: ITableListConfig = {
     {
       label: 'Estado',
       property: 'estado_vent',
-      type: 'text',
+      type: 'multilean',
       sortable: true,
+    },
+    {
+      label: 'Acciones',
+      property: 'process_actions',
+      type: 'actions',
+      buttonItems: [
+        {
+          action: 'cancel',
+          label: 'Anular',
+          tooltip: 'Anular venta y restaurar los lotes consumidos',
+          icon: 'undo',
+          key: 'ide_vent',
+          color: 'red',
+          visible: esCompletada,
+        },
+      ],
     },
   ],
 };
