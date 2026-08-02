@@ -15,6 +15,7 @@ import {
   IUsuario,
   IMfaSetupResponse,
   IMfaStatusResponse,
+  IInicioResponse,
 } from '@core/models';
 
 import { RestService } from './rest.service';
@@ -43,6 +44,10 @@ export class AuthService {
 
   public login(credentials: ILoginCredentials): Observable<IResultLogin> {
     return this.restService.post<IResultLogin>('auth/login', credentials);
+  }
+
+  public obtenerInicio(): Observable<IInicioResponse> {
+    return this.restService.get<IInicioResponse>('auth/inicio');
   }
 
   public verificarMfaLogin(

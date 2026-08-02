@@ -1,484 +1,1018 @@
-<div class="dashboard">
-  <!-- Header -->
-  <div class="dashboard_header">
-    <div class="header_welcome">
-      <h1>¡Bienvenido, {{ username }}!</h1>
-      <p>Panel de control - {{ currentDate | date: "EEEE, d MMMM yyyy" }}</p>
-    </div>
-    <div class="header_actions">
-      <div class="date_badge">
-        <span class="material-symbols-rounded">calendar_today</span>
-        <span>{{ currentDate | date: "HH:mm" }}</span>
+<div class="home_page">
+  <!-- =========================
+       BIENVENIDA GENERAL
+  ========================== -->
+
+  <section class="welcome_hero">
+    <div class="welcome_brand">
+      <div class="logo_container">
+        <img src="/imgs/logo_supermarket.png" alt="Logo de SuperMarket" />
+      </div>
+
+      <div class="welcome_text">
+        <span class="brand_name"> SuperMarket </span>
+
+        <h1>{{ saludo }}, {{ nombreBienvenida }}</h1>
+
+        <p>
+          Bienvenido al sistema de gestión empresarial. Aquí encontrarás las
+          opciones habilitadas para tu perfil.
+        </p>
+
+        <div class="welcome_badges">
+          <span class="profile_badge">
+            <span class="material-symbols-rounded"> badge </span>
+
+            {{ perfilBienvenida }}
+          </span>
+
+          <span class="session_badge">
+            <span class="session_dot"></span>
+
+            Sesión activa
+          </span>
+        </div>
       </div>
     </div>
-  </div>
 
-  @if (_authService.getUserPerfil() === "padmin") {
-    @if (loading) {
-      <div class="loading_container">
-        <div class="loading_spinner"></div>
-        <p>Cargando estadísticas...</p>
+    <div class="welcome_datetime">
+      <div class="date_icon">
+        <span class="material-symbols-rounded"> calendar_month </span>
       </div>
-    } @else {
-      <!-- Stats Cards -->
-      <div class="stats_grid">
-        <div class="stat_card stat_ventas">
-          <div class="stat_icon">
-            <span class="material-symbols-rounded">payments</span>
-          </div>
-          <div class="stat_content">
-            <span class="stat_label">Ventas del Día</span>
-            <span class="stat_value">{{
-              stats?.totalVentas | currency: "$"
-            }}</span>
-            <span class="stat_detail"
-              >{{ stats?.ventasHoy }} transacciones</span
-            >
-          </div>
+
+      <div>
+        <span>
+          {{ currentDate | date: "EEEE, d 'de' MMMM 'de' yyyy" }}
+        </span>
+
+        <strong>
+          {{ currentDate | date: "HH:mm" }}
+        </strong>
+      </div>
+    </div>
+  </section>
+
+  @if (loadingInicio) {
+    <div class="general_loading">
+      <div class="loading_spinner"></div>
+
+      <p>Cargando información de tu sesión...</p>
+    </div>
+  } @else {
+    @if (errorInicio) {
+      <div class="inicio_error">
+        <span class="material-symbols-rounded"> cloud_off </span>
+
+        <div>
+          <strong> No se pudo cargar toda la información </strong>
+
+          <p>
+            {{ errorInicio }}
+          </p>
         </div>
 
-        <div class="stat_card stat_mes">
-          <div class="stat_icon">
-            <span class="material-symbols-rounded">trending_up</span>
-          </div>
-          <div class="stat_content">
-            <span class="stat_label">Ventas del Mes</span>
-            <span class="stat_value">{{
-              stats?.ventasMes | currency: "$"
-            }}</span>
-            <span class="stat_detail">Acumulado mensual</span>
-          </div>
-        </div>
+        <button type="button" class="retry_button" (click)="loadInicio()">
+          <span class="material-symbols-rounded"> refresh </span>
 
-        <div class="stat_card stat_productos">
-          <div class="stat_icon">
-            <span class="material-symbols-rounded">inventory_2</span>
-          </div>
-          <div class="stat_content">
-            <span class="stat_label">Productos Activos</span>
-            <span class="stat_value">{{ stats?.totalProductos }}</span>
-            <span class="stat_detail stat_warning">
-              <span class="material-symbols-rounded">warning</span>
-              {{ stats?.productosStockBajo ?? 0 }} con stock bajo ·
-              {{ stats?.productosSinStock ?? 0 }} agotados
+          Reintentar
+        </button>
+      </div>
+    }
+
+    <!-- =========================
+         INFORMACIÓN PERSONAL
+    ========================== -->
+
+    <div class="general_information_grid">
+      <section class="information_card account_card">
+        <div class="card_header">
+          <div class="card_title">
+            <span class="card_icon">
+              <span class="material-symbols-rounded"> account_circle </span>
             </span>
-          </div>
-        </div>
 
-        <div class="stat_card stat_clientes">
-          <div class="stat_icon">
-            <span class="material-symbols-rounded">group</span>
-          </div>
-          <div class="stat_content">
-            <span class="stat_label">Clientes</span>
-            <span class="stat_value">{{ stats?.totalClientes }}</span>
-            <span class="stat_detail">Registrados</span>
-          </div>
-        </div>
-
-        <div class="stat_card stat_pedidos">
-          <div class="stat_icon">
-            <span class="material-symbols-rounded">local_shipping</span>
-          </div>
-          <div class="stat_content">
-            <span class="stat_label">Pedidos Pendientes</span>
-            <span class="stat_value">{{ stats?.pedidosPendientes }}</span>
-            <span class="stat_detail">En progreso</span>
-          </div>
-        </div>
-
-        <div class="stat_card stat_entregas">
-          <div class="stat_icon">
-            <span class="material-symbols-rounded">package</span>
-          </div>
-          <div class="stat_content">
-            <span class="stat_label">Entregas Pendientes</span>
-            <span class="stat_value">{{ stats?.entregasPendientes }}</span>
-            <span class="stat_detail">Por completar</span>
-          </div>
-        </div>
-
-
-        <div class="stat_card stat_lotes_proximos">
-          <div class="stat_icon">
-            <span class="material-symbols-rounded">event_upcoming</span>
-          </div>
-          <div class="stat_content">
-            <span class="stat_label">Lotes próximos</span>
-            <span class="stat_value">{{ stats?.lotesProximosCaducar ?? 0 }}</span>
-            <span class="stat_detail">Caducan en 30 días</span>
-          </div>
-        </div>
-
-        <div class="stat_card stat_lotes_caducados">
-          <div class="stat_icon">
-            <span class="material-symbols-rounded">event_busy</span>
-          </div>
-          <div class="stat_content">
-            <span class="stat_label">Lotes caducados</span>
-            <span class="stat_value">{{ stats?.lotesCaducadosConStock ?? 0 }}</span>
-            <span class="stat_detail stat_warning">Con stock pendiente de canje</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- IoT Bodega -->
-      <div class="iot_section">
-        <div
-          class="iot_card"
-          [ngClass]="getIotEstadoClass(iotResumen?.estadoAmbiental)"
-        >
-          <div class="iot_header">
             <div>
-              <h3>
-                <span class="material-symbols-rounded">sensors</span>
-                Monitoreo IoT de Bodega
-              </h3>
-              <p>
-                {{
-                  iotResumen?.mensajeEstado ||
-                    "Esperando lecturas del sensor DHT22."
-                }}
-              </p>
-            </div>
+              <h2>Información de la cuenta</h2>
 
-            <span class="iot_status">
-              {{ getIotEstadoLabel(iotResumen?.estadoAmbiental) }}
+              <p>Datos de tu usuario y perfil actual</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="account_profile">
+          <div class="account_avatar">
+            <span class="material-symbols-rounded"> person </span>
+          </div>
+
+          <div class="account_identity">
+            <strong>
+              {{ nombreBienvenida }}
+            </strong>
+
+            <span> &#64;{{ inicio?.usuario?.usuario || username }} </span>
+          </div>
+
+          <span class="account_status">
+            {{
+              inicio?.usuario?.estado
+                ? (inicio?.usuario?.estado | titlecase)
+                : "Activo"
+            }}
+          </span>
+        </div>
+
+        <div class="account_data">
+          <div class="account_data_item">
+            <span class="material-symbols-rounded"> admin_panel_settings </span>
+
+            <div>
+              <small> Perfil asignado </small>
+
+              <strong>
+                {{ perfilBienvenida }}
+              </strong>
+            </div>
+          </div>
+
+          <div class="account_data_item">
+            <span class="material-symbols-rounded"> badge </span>
+
+            <div>
+              <small> ID de cuenta </small>
+
+              <strong>
+                {{ inicio?.usuario?.ideCuen ?? "No disponible" }}
+              </strong>
+            </div>
+          </div>
+
+          <div class="account_data_item">
+            <span class="material-symbols-rounded"> work </span>
+
+            <div>
+              <small> ID de empleado </small>
+
+              <strong>
+                {{ inicio?.usuario?.ideEmpl ?? "No aplica" }}
+              </strong>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="information_card security_card">
+        <div class="card_header">
+          <div class="card_title">
+            <span class="card_icon security_icon">
+              <span class="material-symbols-rounded"> shield </span>
             </span>
+
+            <div>
+              <h2>Seguridad de la sesión</h2>
+
+              <p>Revisa la actividad reciente de tu cuenta</p>
+            </div>
+          </div>
+        </div>
+
+        @if (inicio?.accesoActual) {
+          <div class="access_item current_access">
+            <div class="access_item_icon">
+              <span class="material-symbols-rounded"> login </span>
+            </div>
+
+            <div class="access_item_content">
+              <div class="access_item_header">
+                <strong> Acceso actual </strong>
+
+                <span class="current_label"> Sesión actual </span>
+              </div>
+
+              <div class="access_details">
+                <span>
+                  <span class="material-symbols-rounded"> schedule </span>
+
+                  {{ formatFechaAcceso(inicio?.accesoActual?.fecha) }}
+                </span>
+
+                <span>
+                  <span class="material-symbols-rounded"> language </span>
+
+                  {{ navegadorAmigable(inicio?.accesoActual) }}
+                </span>
+
+                <span>
+                  <span class="material-symbols-rounded"> public </span>
+
+                  {{ inicio?.accesoActual?.ip || "IP no disponible" }}
+                </span>
+              </div>
+            </div>
+          </div>
+        }
+
+        @if (inicio?.primerIngreso) {
+          <div class="first_access_message">
+            <span class="material-symbols-rounded"> celebration </span>
+
+            <div>
+              <strong> Primer ingreso registrado </strong>
+
+              <p>No existen accesos exitosos anteriores para esta cuenta.</p>
+            </div>
+          </div>
+        } @else if (inicio?.accesoAnterior) {
+          <div class="access_item previous_access">
+            <div class="access_item_icon">
+              <span class="material-symbols-rounded"> history </span>
+            </div>
+
+            <div class="access_item_content">
+              <div class="access_item_header">
+                <strong> Acceso anterior </strong>
+              </div>
+
+              <div class="access_details">
+                <span>
+                  <span class="material-symbols-rounded"> schedule </span>
+
+                  {{ formatFechaAcceso(inicio?.accesoAnterior?.fecha) }}
+                </span>
+
+                <span>
+                  <span class="material-symbols-rounded"> language </span>
+
+                  {{ navegadorAmigable(inicio?.accesoAnterior) }}
+                </span>
+
+                <span>
+                  <span class="material-symbols-rounded"> public </span>
+
+                  {{ inicio?.accesoAnterior?.ip || "IP no disponible" }}
+                </span>
+              </div>
+            </div>
+          </div>
+        }
+
+        <div class="security_notice">
+          <span class="material-symbols-rounded"> info </span>
+
+          <p>
+            Si no reconoces alguno de estos accesos, cambia tu contraseña y
+            comunícate con el administrador.
+          </p>
+        </div>
+      </section>
+    </div>
+
+    <!-- =========================
+         ACCESOS RÁPIDOS
+    ========================== -->
+
+    <section class="quick_access_section">
+      <div class="section_header">
+        <div>
+          <span class="section_eyebrow"> Tus herramientas </span>
+
+          <h2>Accesos rápidos</h2>
+
+          <p>Opciones disponibles según los permisos de tu perfil.</p>
+        </div>
+
+        <span class="access_count">
+          {{ accesosRapidos.length }}
+          acceso(s)
+        </span>
+      </div>
+
+      @if (accesosRapidos.length > 0) {
+        <div class="quick_access_grid">
+          @for (acceso of accesosRapidos; track acceso.id) {
+            <button
+              type="button"
+              class="quick_access_card"
+              (click)="navegar(acceso.ruta)"
+            >
+              <span class="quick_access_icon">
+                <span class="material-symbols-rounded">
+                  {{ acceso.icono }}
+                </span>
+              </span>
+
+              <span class="quick_access_content">
+                <strong>
+                  {{ acceso.titulo }}
+                </strong>
+
+                <small> Abrir módulo </small>
+              </span>
+
+              <span class="material-symbols-rounded quick_access_arrow">
+                arrow_forward
+              </span>
+            </button>
+          }
+        </div>
+      } @else {
+        <div class="no_quick_access">
+          <span class="material-symbols-rounded"> apps </span>
+
+          <div>
+            <strong> No hay accesos rápidos disponibles </strong>
+
+            <p>
+              Utiliza el menú lateral para consultar las opciones autorizadas
+              para tu perfil.
+            </p>
+          </div>
+        </div>
+      }
+    </section>
+
+    <!-- =========================
+         RECOMENDACIONES
+    ========================== -->
+
+    <section class="recommendations_section">
+      <div class="recommendation_main">
+        <div class="recommendation_icon">
+          <span class="material-symbols-rounded"> tips_and_updates </span>
+        </div>
+
+        <div>
+          <span class="section_eyebrow"> Recomendaciones </span>
+
+          <h2>Uso seguro del sistema</h2>
+
+          <p>
+            Estas prácticas ayudan a proteger la información empresarial y tu
+            cuenta de usuario.
+          </p>
+        </div>
+      </div>
+
+      <div class="recommendations_grid">
+        <div class="recommendation_item">
+          <span class="material-symbols-rounded"> password </span>
+
+          <div>
+            <strong> Protege tus credenciales </strong>
+
+            <p>
+              No compartas tu usuario, contraseña ni códigos de verificación.
+            </p>
+          </div>
+        </div>
+
+        <div class="recommendation_item">
+          <span class="material-symbols-rounded"> rule </span>
+
+          <div>
+            <strong> Usa solo tus opciones </strong>
+
+            <p>
+              Trabaja únicamente con los módulos habilitados para tu perfil.
+            </p>
+          </div>
+        </div>
+
+        <div class="recommendation_item">
+          <span class="material-symbols-rounded"> logout </span>
+
+          <div>
+            <strong> Cierra tu sesión </strong>
+
+            <p>Finaliza la sesión cuando termines o abandones el equipo.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  }
+
+  <!-- =========================
+       DASHBOARD ADMINISTRATIVO
+  ========================== -->
+
+  @if (esAdministrador) {
+    <section class="admin_dashboard">
+      <div class="admin_section_header">
+        <div>
+          <span class="admin_label"> Administración </span>
+
+          <h2>Resumen general del negocio</h2>
+
+          <p>
+            Indicadores operativos, ventas, inventario y monitoreo de bodega.
+          </p>
+        </div>
+
+        <span class="material-symbols-rounded"> monitoring </span>
+      </div>
+
+      @if (loading) {
+        <div class="loading_container">
+          <div class="loading_spinner"></div>
+
+          <p>Cargando estadísticas...</p>
+        </div>
+      } @else {
+        <!-- Estadísticas principales -->
+
+        <div class="stats_grid">
+          <div class="stat_card stat_ventas">
+            <div class="stat_icon">
+              <span class="material-symbols-rounded"> payments </span>
+            </div>
+
+            <div class="stat_content">
+              <span class="stat_label"> Ventas del Día </span>
+
+              <span class="stat_value">
+                {{ stats?.totalVentas | currency: "$" }}
+              </span>
+
+              <span class="stat_detail">
+                {{ stats?.ventasHoy }}
+                transacciones
+              </span>
+            </div>
           </div>
 
-          <div class="iot_body">
-            <div class="iot_metric">
-              <span class="material-symbols-rounded">device_thermostat</span>
+          <div class="stat_card stat_mes">
+            <div class="stat_icon">
+              <span class="material-symbols-rounded"> trending_up </span>
+            </div>
+
+            <div class="stat_content">
+              <span class="stat_label"> Ventas del Mes </span>
+
+              <span class="stat_value">
+                {{ stats?.ventasMes | currency: "$" }}
+              </span>
+
+              <span class="stat_detail"> Acumulado mensual </span>
+            </div>
+          </div>
+
+          <div class="stat_card stat_productos">
+            <div class="stat_icon">
+              <span class="material-symbols-rounded"> inventory_2 </span>
+            </div>
+
+            <div class="stat_content">
+              <span class="stat_label"> Productos Activos </span>
+
+              <span class="stat_value">
+                {{ stats?.totalProductos }}
+              </span>
+
+              <span class="stat_detail stat_warning">
+                <span class="material-symbols-rounded"> warning </span>
+
+                {{ stats?.productosStockBajo ?? 0 }}
+                con stock bajo ·
+
+                {{ stats?.productosSinStock ?? 0 }}
+                agotados
+              </span>
+            </div>
+          </div>
+
+          <div class="stat_card stat_clientes">
+            <div class="stat_icon">
+              <span class="material-symbols-rounded"> group </span>
+            </div>
+
+            <div class="stat_content">
+              <span class="stat_label"> Clientes </span>
+
+              <span class="stat_value">
+                {{ stats?.totalClientes }}
+              </span>
+
+              <span class="stat_detail"> Registrados </span>
+            </div>
+          </div>
+
+          <div class="stat_card stat_pedidos">
+            <div class="stat_icon">
+              <span class="material-symbols-rounded"> local_shipping </span>
+            </div>
+
+            <div class="stat_content">
+              <span class="stat_label"> Pedidos Pendientes </span>
+
+              <span class="stat_value">
+                {{ stats?.pedidosPendientes }}
+              </span>
+
+              <span class="stat_detail"> En progreso </span>
+            </div>
+          </div>
+
+          <div class="stat_card stat_entregas">
+            <div class="stat_icon">
+              <span class="material-symbols-rounded"> package </span>
+            </div>
+
+            <div class="stat_content">
+              <span class="stat_label"> Entregas Pendientes </span>
+
+              <span class="stat_value">
+                {{ stats?.entregasPendientes }}
+              </span>
+
+              <span class="stat_detail"> Por completar </span>
+            </div>
+          </div>
+
+          <div class="stat_card stat_lotes_proximos">
+            <div class="stat_icon">
+              <span class="material-symbols-rounded"> event_upcoming </span>
+            </div>
+
+            <div class="stat_content">
+              <span class="stat_label"> Lotes próximos </span>
+
+              <span class="stat_value">
+                {{ stats?.lotesProximosCaducar ?? 0 }}
+              </span>
+
+              <span class="stat_detail"> Caducan en 30 días </span>
+            </div>
+          </div>
+
+          <div class="stat_card stat_lotes_caducados">
+            <div class="stat_icon">
+              <span class="material-symbols-rounded"> event_busy </span>
+            </div>
+
+            <div class="stat_content">
+              <span class="stat_label"> Lotes caducados </span>
+
+              <span class="stat_value">
+                {{ stats?.lotesCaducadosConStock ?? 0 }}
+              </span>
+
+              <span class="stat_detail stat_warning">
+                Con stock pendiente de canje
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Monitoreo IoT -->
+
+        <div class="iot_section">
+          <div
+            class="iot_card"
+            [ngClass]="getIotEstadoClass(iotResumen?.estadoAmbiental)"
+          >
+            <div class="iot_header">
               <div>
-                <span class="iot_label">Temperatura</span>
-                <strong>
-                  @if (iotResumen?.ultimaLectura) {
-                    {{
-                      iotResumen?.ultimaLectura?.temperaturaLect
-                        | number: "1.1-1"
-                    }}
+                <h3>
+                  <span class="material-symbols-rounded"> sensors </span>
+
+                  Monitoreo IoT de Bodega
+                </h3>
+
+                <p>
+                  {{
+                    iotResumen?.mensajeEstado ||
+                      "Esperando lecturas del sensor DHT22."
+                  }}
+                </p>
+              </div>
+
+              <span class="iot_status">
+                {{ getIotEstadoLabel(iotResumen?.estadoAmbiental) }}
+              </span>
+            </div>
+
+            <div class="iot_body">
+              <div class="iot_metric">
+                <span class="material-symbols-rounded">
+                  device_thermostat
+                </span>
+
+                <div>
+                  <span class="iot_label"> Temperatura </span>
+
+                  <strong>
+                    @if (iotResumen?.ultimaLectura) {
+                      {{
+                        iotResumen?.ultimaLectura?.temperaturaLect
+                          | number: "1.1-1"
+                      }}
+                      °C
+                    } @else {
+                      --
+                    }
+                  </strong>
+
+                  <small>
+                    Límite:
+                    {{ iotResumen?.limites?.temperaturaMaxima ?? 30 }}
                     °C
-                  } @else {
-                    --
-                  }
-                </strong>
-                <small
-                  >Límite:
-                  {{ iotResumen?.limites?.temperaturaMaxima ?? 30 }} °C</small
-                >
+                  </small>
+                </div>
               </div>
-            </div>
 
-            <div class="iot_metric">
-              <span class="material-symbols-rounded">humidity_percentage</span>
-              <div>
-                <span class="iot_label">Humedad</span>
-                <strong>
-                  @if (iotResumen?.ultimaLectura) {
-                    {{
-                      iotResumen?.ultimaLectura?.humedadLect | number: "1.1-1"
-                    }}
+              <div class="iot_metric">
+                <span class="material-symbols-rounded">
+                  humidity_percentage
+                </span>
+
+                <div>
+                  <span class="iot_label"> Humedad </span>
+
+                  <strong>
+                    @if (iotResumen?.ultimaLectura) {
+                      {{
+                        iotResumen?.ultimaLectura?.humedadLect | number: "1.1-1"
+                      }}
+                      %
+                    } @else {
+                      --
+                    }
+                  </strong>
+
+                  <small>
+                    Límite:
+                    {{ iotResumen?.limites?.humedadMaxima ?? 75 }}
                     %
-                  } @else {
-                    --
-                  }
-                </strong>
-                <small
-                  >Límite:
-                  {{ iotResumen?.limites?.humedadMaxima ?? 75 }} %</small
-                >
+                  </small>
+                </div>
+              </div>
+
+              <div class="iot_metric">
+                <span class="material-symbols-rounded">
+                  notifications_active
+                </span>
+
+                <div>
+                  <span class="iot_label"> Alertas abiertas </span>
+
+                  <strong>
+                    {{ iotResumen?.totalAlertasAbiertas ?? 0 }}
+                  </strong>
+
+                  <small>
+                    {{
+                      iotResumen?.dispositivo?.codigoDisp || "ESP32-BODEGA-01"
+                    }}
+                  </small>
+                </div>
               </div>
             </div>
 
-            <div class="iot_metric">
-              <span class="material-symbols-rounded">notifications_active</span>
-              <div>
-                <span class="iot_label">Alertas abiertas</span>
-                <strong>{{ iotResumen?.totalAlertasAbiertas ?? 0 }}</strong>
-                <small>{{
-                  iotResumen?.dispositivo?.codigoDisp || "ESP32-BODEGA-01"
-                }}</small>
-              </div>
-            </div>
-          </div>
+            @if (iotResumen?.alertasAbiertas?.length) {
+              <div class="iot_alerts">
+                @for (
+                  alerta of iotResumen?.alertasAbiertas;
+                  track alerta.ideAler
+                ) {
+                  <div class="iot_alert_item">
+                    <span class="material-symbols-rounded"> warning </span>
 
-          @if (iotResumen?.alertasAbiertas?.length) {
-            <div class="iot_alerts">
-              @for (
-                alerta of iotResumen?.alertasAbiertas;
-                track alerta.ideAler
-              ) {
-                <div class="iot_alert_item">
-                  <span class="material-symbols-rounded">warning</span>
-                  <div>
-                    <strong>{{ alerta.tipoAler.replace("_", " ") }}</strong>
-                    <p>{{ alerta.mensajeAler }}</p>
+                    <div>
+                      <strong>
+                        {{ alerta.tipoAler.replace("_", " ") }}
+                      </strong>
+
+                      <p>
+                        {{ alerta.mensajeAler }}
+                      </p>
+                    </div>
                   </div>
+                }
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Gráficos -->
+
+        <div class="charts_section">
+          <div class="chart_card">
+            <div class="chart_header">
+              <h3>
+                <span class="material-symbols-rounded"> bar_chart </span>
+
+                Ventas Mensuales
+              </h3>
+            </div>
+
+            <div class="bar_chart">
+              @for (venta of ventasMensuales; track venta.mes) {
+                <div class="bar_item">
+                  <div class="bar_container">
+                    <div
+                      class="bar"
+                      [style.height.%]="getBarHeight(venta.total)"
+                    >
+                      <span class="bar_value">
+                        {{ venta.total | currency: "$" : "symbol" : "1.0-0" }}
+                      </span>
+                    </div>
+                  </div>
+
+                  <span class="bar_label">
+                    {{ venta.mes }}
+                  </span>
+                </div>
+              }
+
+              @if (ventasMensuales.length === 0) {
+                <div class="no_data">
+                  <span class="material-symbols-rounded"> info </span>
+
+                  <p>No hay datos de ventas</p>
                 </div>
               }
             </div>
-          }
-        </div>
-      </div>
-
-      <!-- Charts Section -->
-      <div class="charts_section">
-        <!-- Ventas Mensuales Chart -->
-        <div class="chart_card">
-          <div class="chart_header">
-            <h3>
-              <span class="material-symbols-rounded">bar_chart</span>
-              Ventas Mensuales
-            </h3>
           </div>
-          <div class="bar_chart">
-            @for (venta of ventasMensuales; track venta.mes) {
-              <div class="bar_item">
-                <div class="bar_container">
-                  <div
-                    class="bar"
-                    [style.height.%]="getBarHeight(venta.total)"
-                    [style.background]="
-                      'linear-gradient(180deg, #6366f1 0%, #4f46e5 100%)'
-                    "
-                  >
-                    <span class="bar_value">{{
-                      venta.total | currency: "$" : "symbol" : "1.0-0"
-                    }}</span>
+
+          <div class="chart_card">
+            <div class="chart_header">
+              <h3>
+                <span class="material-symbols-rounded"> star </span>
+
+                Productos Más Vendidos
+              </h3>
+            </div>
+
+            <div class="products_chart">
+              @for (
+                producto of productosTop;
+                track producto.nombre;
+                let i = $index
+              ) {
+                <div class="product_item">
+                  <div class="product_info">
+                    <span class="product_rank">
+                      {{ i + 1 }}
+                    </span>
+
+                    <span class="product_name">
+                      {{ producto.nombre }}
+                    </span>
                   </div>
+
+                  <div class="product_bar_container">
+                    <div
+                      class="product_bar"
+                      [style.width.%]="getProductPercentage(producto.cantidad)"
+                      [style.background]="chartColors[i % chartColors.length]"
+                    ></div>
+                  </div>
+
+                  <span class="product_quantity">
+                    {{ producto.cantidad }} uds
+                  </span>
                 </div>
-                <span class="bar_label">{{ venta.mes }}</span>
-              </div>
-            }
-            @if (ventasMensuales.length === 0) {
-              <div class="no_data">
-                <span class="material-symbols-rounded">info</span>
-                <p>No hay datos de ventas</p>
-              </div>
-            }
+              }
+
+              @if (productosTop.length === 0) {
+                <div class="no_data">
+                  <span class="material-symbols-rounded"> info </span>
+
+                  <p>No hay datos de productos</p>
+                </div>
+              }
+            </div>
           </div>
         </div>
 
-        <!-- Productos Top -->
-        <div class="chart_card">
-          <div class="chart_header">
-            <h3>
-              <span class="material-symbols-rounded">star</span>
-              Productos Más Vendidos
-            </h3>
-          </div>
-          <div class="products_chart">
-            @for (
-              producto of productosTop;
-              track producto.nombre;
-              let i = $index
-            ) {
-              <div class="product_item">
-                <div class="product_info">
-                  <span class="product_rank">{{ i + 1 }}</span>
-                  <span class="product_name">{{ producto.nombre }}</span>
-                </div>
-                <div class="product_bar_container">
+        <div class="charts_section">
+          <div class="chart_card">
+            <div class="chart_header">
+              <h3>
+                <span class="material-symbols-rounded"> donut_large </span>
+
+                Ventas por Categoría
+              </h3>
+            </div>
+
+            <div class="category_chart">
+              @for (
+                categoria of ventasPorCategoria;
+                track categoria.categoria;
+                let i = $index
+              ) {
+                <div class="category_item">
                   <div
-                    class="product_bar"
-                    [style.width.%]="getProductPercentage(producto.cantidad)"
+                    class="category_color"
                     [style.background]="chartColors[i % chartColors.length]"
                   ></div>
+
+                  <div class="category_info">
+                    <span class="category_name">
+                      {{ categoria.categoria }}
+                    </span>
+
+                    <span class="category_percentage">
+                      {{
+                        getCategoriaPercentage(categoria.total)
+                          | number: "1.1-1"
+                      }}%
+                    </span>
+                  </div>
+
+                  <span class="category_total">
+                    {{ categoria.total | currency: "$" : "symbol" : "1.0-0" }}
+                  </span>
                 </div>
-                <span class="product_quantity"
-                  >{{ producto.cantidad }} uds</span
-                >
-              </div>
-            }
-            @if (productosTop.length === 0) {
-              <div class="no_data">
-                <span class="material-symbols-rounded">info</span>
-                <p>No hay datos de productos</p>
-              </div>
-            }
-          </div>
-        </div>
-      </div>
+              }
 
-      <!-- Second Row Charts -->
-      <div class="charts_section">
-        <!-- Ventas por Categoría -->
-        <div class="chart_card">
-          <div class="chart_header">
-            <h3>
-              <span class="material-symbols-rounded">donut_large</span>
-              Ventas por Categoría
-            </h3>
-          </div>
-          <div class="category_chart">
-            @for (
-              cat of ventasPorCategoria;
-              track cat.categoria;
-              let i = $index
-            ) {
-              <div class="category_item">
-                <div
-                  class="category_color"
-                  [style.background]="chartColors[i % chartColors.length]"
-                ></div>
-                <div class="category_info">
-                  <span class="category_name">{{ cat.categoria }}</span>
-                  <span class="category_percentage"
-                    >{{
-                      getCategoriaPercentage(cat.total) | number: "1.1-1"
-                    }}%</span
-                  >
+              @if (ventasPorCategoria.length === 0) {
+                <div class="no_data">
+                  <span class="material-symbols-rounded"> info </span>
+
+                  <p>No hay datos de categorías</p>
                 </div>
-                <span class="category_total">{{
-                  cat.total | currency: "$" : "symbol" : "1.0-0"
-                }}</span>
+              }
+            </div>
+          </div>
+
+          <div class="chart_card">
+            <div class="chart_header">
+              <h3>
+                <span class="material-symbols-rounded"> dashboard </span>
+
+                Resumen del Sistema
+              </h3>
+            </div>
+
+            <div class="summary_grid">
+              <div class="summary_item">
+                <span class="material-symbols-rounded"> badge </span>
+
+                <div class="summary_content">
+                  <span class="summary_value">
+                    {{ stats?.totalEmpleados }}
+                  </span>
+
+                  <span class="summary_label"> Empleados </span>
+                </div>
               </div>
-            }
-            @if (ventasPorCategoria.length === 0) {
-              <div class="no_data">
-                <span class="material-symbols-rounded">info</span>
-                <p>No hay datos de categorías</p>
+
+              <div class="summary_item">
+                <span class="material-symbols-rounded"> handshake </span>
+
+                <div class="summary_content">
+                  <span class="summary_value">
+                    {{ stats?.totalProveedores }}
+                  </span>
+
+                  <span class="summary_label"> Proveedores </span>
+                </div>
               </div>
-            }
+
+              <div class="summary_item">
+                <span class="material-symbols-rounded"> inventory </span>
+
+                <div class="summary_content">
+                  <span class="summary_value">
+                    {{ stats?.totalProductos }}
+                  </span>
+
+                  <span class="summary_label"> Productos </span>
+                </div>
+              </div>
+
+              <div class="summary_item">
+                <span class="material-symbols-rounded"> groups </span>
+
+                <div class="summary_content">
+                  <span class="summary_value">
+                    {{ stats?.totalClientes }}
+                  </span>
+
+                  <span class="summary_label"> Clientes </span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
-        <!-- Resumen Rápido -->
-        <div class="chart_card">
-          <div class="chart_header">
-            <h3>
-              <span class="material-symbols-rounded">dashboard</span>
-              Resumen del Sistema
-            </h3>
-          </div>
-          <div class="summary_grid">
-            <div class="summary_item">
-              <span class="material-symbols-rounded">badge</span>
-              <div class="summary_content">
-                <span class="summary_value">{{ stats?.totalEmpleados }}</span>
-                <span class="summary_label">Empleados</span>
-              </div>
-            </div>
-            <div class="summary_item">
-              <span class="material-symbols-rounded">handshake</span>
-              <div class="summary_content">
-                <span class="summary_value">{{ stats?.totalProveedores }}</span>
-                <span class="summary_label">Proveedores</span>
-              </div>
-            </div>
-            <div class="summary_item">
-              <span class="material-symbols-rounded">inventory</span>
-              <div class="summary_content">
-                <span class="summary_value">{{ stats?.totalProductos }}</span>
-                <span class="summary_label">Productos</span>
-              </div>
-            </div>
-            <div class="summary_item">
-              <span class="material-symbols-rounded">groups</span>
-              <div class="summary_content">
-                <span class="summary_value">{{ stats?.totalClientes }}</span>
-                <span class="summary_label">Clientes</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+        <!-- Tablas -->
 
-      <!-- Tables Section -->
-      <div class="tables_section">
-        <!-- Últimas Ventas -->
-        <div class="table_card">
-          <div class="table_header">
-            <h3>
-              <span class="material-symbols-rounded">receipt_long</span>
-              Últimas Ventas
-            </h3>
-          </div>
-          <div class="table_content">
-            <table>
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Fecha</th>
-                  <th>Total</th>
-                  <th>Estado</th>
-                </tr>
-              </thead>
-              <tbody>
-                @for (venta of ultimasVentas; track venta.id) {
-                  <tr>
-                    <td>#{{ venta.id }}</td>
-                    <td>{{ venta.fecha }}</td>
-                    <td class="td_money">{{ venta.total | currency: "$" }}</td>
-                    <td>
-                      <span
-                        class="estado_badge"
-                        [ngClass]="getEstadoClass(venta.estado)"
-                      >
-                        {{ venta.estado }}
-                      </span>
-                    </td>
-                  </tr>
-                }
-                @if (ultimasVentas.length === 0) {
-                  <tr>
-                    <td colspan="4" class="no_data_table">
-                      No hay ventas recientes
-                    </td>
-                  </tr>
-                }
-              </tbody>
-            </table>
-          </div>
-        </div>
+        <div class="tables_section">
+          <div class="table_card">
+            <div class="table_header">
+              <h3>
+                <span class="material-symbols-rounded"> receipt_long </span>
 
-        <!-- Pedidos Recientes -->
-        <div class="table_card">
-          <div class="table_header">
-            <h3>
-              <span class="material-symbols-rounded">local_shipping</span>
-              Pedidos Recientes
-            </h3>
+                Últimas Ventas
+              </h3>
+            </div>
+
+            <div class="table_content">
+              <table>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Fecha</th>
+                    <th>Total</th>
+                    <th>Estado</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  @for (venta of ultimasVentas; track venta.id) {
+                    <tr>
+                      <td>#{{ venta.id }}</td>
+
+                      <td>
+                        {{ venta.fecha }}
+                      </td>
+
+                      <td class="td_money">
+                        {{ venta.total | currency: "$" }}
+                      </td>
+
+                      <td>
+                        <span
+                          class="estado_badge"
+                          [ngClass]="getEstadoClass(venta.estado)"
+                        >
+                          {{ venta.estado }}
+                        </span>
+                      </td>
+                    </tr>
+                  }
+
+                  @if (ultimasVentas.length === 0) {
+                    <tr>
+                      <td colspan="4" class="no_data_table">
+                        No hay ventas recientes
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
           </div>
-          <div class="table_content">
-            <table>
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Empresa</th>
-                  <th>Total</th>
-                  <th>Estado</th>
-                </tr>
-              </thead>
-              <tbody>
-                @for (pedido of pedidosRecientes; track pedido.id) {
+
+          <div class="table_card">
+            <div class="table_header">
+              <h3>
+                <span class="material-symbols-rounded"> local_shipping </span>
+
+                Pedidos Recientes
+              </h3>
+            </div>
+
+            <div class="table_content">
+              <table>
+                <thead>
                   <tr>
-                    <td>#{{ pedido.id }}</td>
-                    <td>{{ pedido.empresa }}</td>
-                    <td class="td_money">{{ pedido.total | currency: "$" }}</td>
-                    <td>
-                      <span
-                        class="estado_badge"
-                        [ngClass]="getEstadoClass(pedido.estado)"
-                      >
-                        {{ pedido.estado }}
-                      </span>
-                    </td>
+                    <th>ID</th>
+                    <th>Empresa</th>
+                    <th>Total</th>
+                    <th>Estado</th>
                   </tr>
-                }
-                @if (pedidosRecientes.length === 0) {
-                  <tr>
-                    <td colspan="4" class="no_data_table">
-                      No hay pedidos recientes
-                    </td>
-                  </tr>
-                }
-              </tbody>
-            </table>
+                </thead>
+
+                <tbody>
+                  @for (pedido of pedidosRecientes; track pedido.id) {
+                    <tr>
+                      <td>#{{ pedido.id }}</td>
+
+                      <td>
+                        {{ pedido.empresa }}
+                      </td>
+
+                      <td class="td_money">
+                        {{ pedido.total | currency: "$" }}
+                      </td>
+
+                      <td>
+                        <span
+                          class="estado_badge"
+                          [ngClass]="getEstadoClass(pedido.estado)"
+                        >
+                          {{ pedido.estado }}
+                        </span>
+                      </td>
+                    </tr>
+                  }
+
+                  @if (pedidosRecientes.length === 0) {
+                    <tr>
+                      <td colspan="4" class="no_data_table">
+                        No hay pedidos recientes
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
-      </div>
-    }
+      }
+    </section>
   }
 </div>

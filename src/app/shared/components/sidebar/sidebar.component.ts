@@ -46,7 +46,7 @@ export class UiSidebarComponent {
       ...(this._authService.getSidebarOptions() ?? []),
     ];
 
-    const esAdministrador = this._authService.getUserPerfil() === 'padmin';
+    /*const esAdministrador = this._authService.getUserPerfil() === 'padmin';
 
     if (esAdministrador && !this.contieneRuta(rutas, 'admin/home')) {
       rutas.unshift({
@@ -58,7 +58,7 @@ export class UiSidebarComponent {
         hijas: [],
         visible: true,
       });
-    }
+    }*/
 
     this.opciones = rutas;
   }
