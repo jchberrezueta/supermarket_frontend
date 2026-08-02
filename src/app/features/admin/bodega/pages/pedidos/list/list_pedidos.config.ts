@@ -48,8 +48,18 @@ export const ListPedidoConfig: ITableListConfig = {
       sortable: true,
     },
     { label: 'Total', property: 'total_pedi', type: 'text', sortable: true },
-    { label: 'Estado', property: 'estado_pedi', type: 'text', sortable: true },
-    { label: 'Motivo', property: 'motivo_pedi', type: 'text', sortable: true },
+    {
+      label: 'Estado',
+      property: 'estado_pedi',
+      type: 'multilean',
+      sortable: true,
+    },
+    {
+      label: 'Motivo',
+      property: 'motivo_pedi',
+      type: 'boolean',
+      sortable: true,
+    },
     {
       label: 'Observación',
       property: 'observacion_pedi',

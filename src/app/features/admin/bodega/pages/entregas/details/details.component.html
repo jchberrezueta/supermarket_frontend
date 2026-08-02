@@ -1,81 +1,597 @@
 <div class="div_container">
-  <div class="div_card">
-    <div class="panel_1">
-      <div class="card_form">
-        
-        <!-- CABECERA -->
-        <div class="header_actions">
-          <div class="header_title">
-            <h2>Detalle de la Entrega #{{ idEntrega }}</h2>
-          </div>
-          <div class="header_buttons">
-            <ui-button [icon]="'refresh'" (evntClick)="loadEntrega()"/>
-            <ui-button [label]="'Volver'" [icon]="'arrow_back'" (evntClick)="volver()"/>
-          </div>
+  <ui-card [showHeader]="false" class="div_card">
+    <div class="card_form">
+      <div class="header_actions">
+        <div class="header_title">
+          <h2>Detalle de la Entrega #{{ idEntrega }}</h2>
         </div>
 
-        <!-- PERFIL DE LA ENTREGA -->
-        <div class="entrega_perfil">
+        <div class="header_buttons">
+          <ui-button
+            icon="refresh"
+            tooltip="Actualizar información"
+            [disabled]="cargando"
+            (evntClick)="loadEntrega()"
+          />
+
+          <ui-button
+            label="Volver"
+            icon="arrow_back"
+            [disabled]="cargando"
+            (evntClick)="volver()"
+          />
+        </div>
+      </div>
+
+      @if (entrega) {
+        <div class="entrega_perfil" [ngClass]="getEstadoEntregaClass()">
           <div class="avatar">
-            <span class="material-icons">local_shipping</span>
+            <span class="material-icons"> local_shipping </span>
           </div>
+
           <div class="entrega_info_principal">
-            <h3>Entrega #{{ entrega?.ideEntr }}</h3>
-            <p class="pedido"><span class="material-icons">receipt_long</span> Pedido #{{ entrega?.idePedi }}</p>
-            <p class="proveedor"><span class="material-icons">person</span> {{ entrega?.nombreProveedor }}</p>
+            <h3>Entrega #{{ entrega.ide_entr }}</h3>
+
+            <p>
+              <span class="material-icons"> receipt_long </span>
+
+              Pedido #{{ entrega.ide_pedi }}
+            </p>
+
+            <p>
+              <span class="material-icons"> person </span>
+
+              {{ entrega.nombre_proveedor || "Proveedor no identificado" }}
+            </p>
+
+            <p>
+              <span class="material-icons"> event_available </span>
+
+              {{ formatDateTime(entrega.fecha_entr) }}
+            </p>
           </div>
-          <div class="estado_badge" [class.completo]="entrega?.estadoEntr === 'completo'" [class.incompleto]="entrega?.estadoEntr !== 'completo'">
-            {{ entrega?.estadoEntr }}
+
+          <div class="entrega_badge">
+            <span class="estado_badge" [ngClass]="getEstadoBadgeClass()">
+              {{ formatText(entrega.estado_entr) }}
+            </span>
+
+            <small>Total de la entrega</small>
+
+            <strong>
+              {{ formatCurrency(entrega.total_entr) }}
+            </strong>
           </div>
         </div>
 
-        <!-- INFORMACIÓN DE LA ENTREGA -->
         <div class="section_title">Información de la Entrega</div>
+
         <div class="info_grid">
           <div class="info_row">
-            <ui-text-field [label]="'ID Entrega'" [value]="entrega?.ideEntr" [disabled]="true"/>
-            <ui-text-field [label]="'ID Pedido'" [value]="entrega?.idePedi" [disabled]="true"/>
+            <ui-text-field
+              label="ID de la entrega"
+              [value]="entrega.ide_entr"
+              [readonly]="true"
+            />
+
+            <ui-text-field
+              label="Fecha real de recepción"
+              [value]="formatDateTime(entrega.fecha_entr)"
+              [readonly]="true"
+            />
           </div>
+
           <div class="info_row">
-            <ui-text-field [label]="'Proveedor'" [value]="entrega?.nombreProveedor" [disabled]="true"/>
-            <ui-text-field [label]="'Fecha de Entrega'" [value]="formatDate(entrega?.fechaEntr || '')" [disabled]="true"/>
-          </div>
-          <div class="info_row">
-            <ui-text-field [label]="'Cantidad Total'" [value]="entrega?.cantidadTotalEntr" [disabled]="true"/>
-            <ui-text-field [label]="'Estado'" [value]="entrega?.estadoEntr" [disabled]="true"/>
+            <ui-text-field
+              label="Estado de la entrega"
+              [value]="formatText(entrega.estado_entr)"
+              [readonly]="true"
+            />
+
+            <ui-text-field
+              label="Cantidad recibida"
+              [value]="entrega.cantidad_total_entr"
+              [readonly]="true"
+            />
           </div>
         </div>
 
-        <!-- TOTALES -->
-        <div class="section_title">Totales</div>
-        <div class="totales_card">
-          <div class="total_item">
-            <div class="total_icon">
-              <span class="material-icons">shopping_cart</span>
-            </div>
-            <div class="total_info">
-              <span class="total_label">Cantidad Total</span>
-              <span class="total_value">{{ entrega?.cantidadTotalEntr }} items</span>
+        <div class="section_title">Pedido Relacionado</div>
+
+        <div class="info_grid">
+          <div class="info_row">
+            <ui-text-field
+              label="ID del pedido"
+              [value]="entrega.ide_pedi"
+              [readonly]="true"
+            />
+
+            <ui-text-field
+              label="Estado del pedido"
+              [value]="formatText(entrega.estado_pedi)"
+              [readonly]="true"
+            />
+          </div>
+
+          <div class="info_row">
+            <ui-text-field
+              label="Motivo del proceso"
+              [value]="motivoProceso"
+              [readonly]="true"
+            />
+
+            <ui-text-field
+              label="Fecha del pedido"
+              [value]="formatDateTime(entrega.fecha_pedi)"
+              [readonly]="true"
+            />
+          </div>
+        </div>
+
+        <div class="section_title">Empresa y Proveedor</div>
+
+        <div class="info_grid">
+          <div class="info_row">
+            <ui-text-field
+              label="ID de la empresa"
+              [value]="entrega.ide_empr ?? 'No disponible'"
+              [readonly]="true"
+            />
+
+            <ui-text-field
+              label="Empresa proveedora"
+              [value]="entrega.nombre_empr || 'No disponible'"
+              [readonly]="true"
+            />
+          </div>
+
+          <div class="info_row">
+            <ui-text-field
+              label="ID del proveedor"
+              [value]="entrega.ide_prov"
+              [readonly]="true"
+            />
+
+            <ui-text-field
+              label="Proveedor responsable"
+              [value]="entrega.nombre_proveedor || 'No disponible'"
+              [readonly]="true"
+            />
+          </div>
+        </div>
+
+        <div class="section_title">Cumplimiento de la Entrega</div>
+
+        <div class="cumplimiento_grid">
+          <div class="fecha_card">
+            <span class="material-icons"> event </span>
+
+            <div>
+              <small>Fecha esperada</small>
+
+              <strong>
+                {{ formatDateTime(entrega.fecha_entr_pedi) }}
+              </strong>
             </div>
           </div>
-          <div class="total_item principal">
-            <div class="total_icon">
-              <span class="material-icons">payments</span>
+
+          <div class="fecha_card">
+            <span class="material-icons"> local_shipping </span>
+
+            <div>
+              <small>Fecha real</small>
+
+              <strong>
+                {{ formatDateTime(entrega.fecha_entr) }}
+              </strong>
             </div>
-            <div class="total_info">
-              <span class="total_label">Total de la Entrega</span>
-              <span class="total_value">{{ formatCurrency(entrega?.totalEntr || 0) }}</span>
+          </div>
+
+          <div class="puntualidad_card" [ngClass]="puntualidadClass">
+            <span class="material-icons">
+              {{ puntualidadIcon }}
+            </span>
+
+            <div>
+              <small>Resultado</small>
+
+              <strong>
+                {{ puntualidadLabel }}
+              </strong>
             </div>
           </div>
         </div>
 
-        <!-- OBSERVACIÓN -->
+        <div class="section_title">Resumen de Recepción</div>
+
+        <div class="resumen_recepcion">
+          <div class="resumen_item">
+            <span class="material-icons"> production_quantity_limits </span>
+
+            <div>
+              <small>Unidades solicitadas</small>
+
+              <strong>
+                {{ cantidadSolicitadaTotal }}
+              </strong>
+            </div>
+          </div>
+
+          <div class="resumen_item">
+            <span class="material-icons"> inventory </span>
+
+            <div>
+              <small>Unidades recibidas</small>
+
+              <strong>
+                {{ entrega.cantidad_total_entr }}
+              </strong>
+            </div>
+          </div>
+
+          <div class="resumen_item">
+            <span class="material-icons"> deployed_code </span>
+
+            <div>
+              <small>Lotes registrados</small>
+
+              <strong>
+                {{ cantidadLotes }}
+              </strong>
+            </div>
+          </div>
+
+          <div class="resumen_item">
+            <span class="material-icons"> dataset </span>
+
+            <div>
+              <small>Unidades distribuidas en lotes</small>
+
+              <strong>
+                {{ cantidadDistribuidaLotes }}
+              </strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="section_title">Resumen Económico</div>
+
+        <div class="resumen_economico">
+          <div class="resumen_item">
+            <span class="material-icons"> shopping_cart </span>
+
+            <div>
+              <small>Subtotal</small>
+
+              <strong>
+                {{ formatCurrency(subtotalEntrega) }}
+              </strong>
+            </div>
+          </div>
+
+          <div class="resumen_item">
+            <span class="material-icons"> sell </span>
+
+            <div>
+              <small>Descuento de compra</small>
+
+              <strong>
+                {{ formatCurrency(descuentoCompraTotal) }}
+              </strong>
+            </div>
+          </div>
+
+          <div class="resumen_item">
+            <span class="material-icons"> published_with_changes </span>
+
+            <div>
+              <small>Descuento por caducidad</small>
+
+              <strong>
+                {{ formatCurrency(descuentoCaducidadTotal) }}
+              </strong>
+            </div>
+          </div>
+
+          <div class="resumen_item">
+            <span class="material-icons"> account_balance </span>
+
+            <div>
+              <small>IVA</small>
+
+              <strong>
+                {{ formatCurrency(ivaTotal) }}
+              </strong>
+            </div>
+          </div>
+
+          <div class="resumen_item total_item">
+            <span class="material-icons"> payments </span>
+
+            <div>
+              <small>Total de la entrega</small>
+
+              <strong>
+                {{ formatCurrency(entrega.total_entr) }}
+              </strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="section_title">Productos Recibidos</div>
+
+        <div class="tabla_container">
+          <table class="tabla_productos">
+            <thead>
+              <tr>
+                <th>Producto</th>
+                <th>Solicitado</th>
+                <th>Recibido</th>
+                <th>Precio unitario</th>
+                <th>Subtotal</th>
+                <th>Dcto. compra</th>
+                <th>Dcto. caducidad</th>
+                <th>IVA</th>
+                <th>Total</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              @for (detalle of detalles; track detalle.ide_deta_entr) {
+                <tr>
+                  <td>
+                    <div class="producto_info">
+                      <span class="material-icons"> inventory_2 </span>
+
+                      <div>
+                        <strong>
+                          {{ detalle.nombre_prod || "Producto sin nombre" }}
+                        </strong>
+
+                        <small> Producto #{{ detalle.ide_prod }} </small>
+                      </div>
+                    </div>
+                  </td>
+
+                  <td>
+                    {{ detalle.cantidad_pedida ?? "No disponible" }}
+                  </td>
+
+                  <td class="cantidad_recibida">
+                    {{ detalle.cantidad_prod }}
+                  </td>
+
+                  <td>
+                    {{ formatCurrency(detalle.precio_unitario_prod) }}
+                  </td>
+
+                  <td>
+                    {{ formatCurrency(detalle.subtotal_prod) }}
+                  </td>
+
+                  <td>
+                    {{ formatCurrency(detalle.dcto_compra_prod) }}
+                  </td>
+
+                  <td>
+                    {{ formatCurrency(detalle.dcto_caduc_prod) }}
+                  </td>
+
+                  <td>
+                    {{ formatCurrency(detalle.iva_prod) }}
+                  </td>
+
+                  <td class="total_producto">
+                    {{ formatCurrency(detalle.total_prod) }}
+                  </td>
+
+                  <td>
+                    <span
+                      class="estado_detalle"
+                      [ngClass]="
+                        getEstadoDetalleClass(detalle.estado_deta_entr)
+                      "
+                    >
+                      {{ formatText(detalle.estado_deta_entr) }}
+                    </span>
+                  </td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="10" class="empty_row">
+                    No hay productos registrados en esta entrega.
+                  </td>
+                </tr>
+              }
+            </tbody>
+
+            @if (detalles.length > 0) {
+              <tfoot>
+                <tr>
+                  <td>
+                    <strong>Totales</strong>
+                  </td>
+
+                  <td>
+                    <strong>
+                      {{ cantidadSolicitadaTotal }}
+                    </strong>
+                  </td>
+
+                  <td>
+                    <strong>
+                      {{ entrega.cantidad_total_entr }}
+                    </strong>
+                  </td>
+
+                  <td></td>
+
+                  <td>
+                    <strong>
+                      {{ formatCurrency(subtotalEntrega) }}
+                    </strong>
+                  </td>
+
+                  <td>
+                    <strong>
+                      {{ formatCurrency(descuentoCompraTotal) }}
+                    </strong>
+                  </td>
+
+                  <td>
+                    <strong>
+                      {{ formatCurrency(descuentoCaducidadTotal) }}
+                    </strong>
+                  </td>
+
+                  <td>
+                    <strong>
+                      {{ formatCurrency(ivaTotal) }}
+                    </strong>
+                  </td>
+
+                  <td class="total_general">
+                    {{ formatCurrency(entrega.total_entr) }}
+                  </td>
+
+                  <td></td>
+                </tr>
+              </tfoot>
+            }
+          </table>
+        </div>
+
+        <div class="section_title">Lotes y Fechas de Caducidad</div>
+
+        @if (cantidadLotes > 0) {
+          <div class="lotes_info">
+            <span class="material-icons"> verified </span>
+
+            <div>
+              <strong> Distribución de inventario registrada </strong>
+
+              <p>
+                Las unidades recibidas fueron distribuidas según producto, lote
+                y fecha de caducidad.
+              </p>
+            </div>
+          </div>
+
+          <div class="lotes_productos">
+            @for (detalle of detalles; track detalle.ide_deta_entr) {
+              @if (tieneLotes(detalle)) {
+                <div class="lote_producto_card">
+                  <div class="lote_producto_header">
+                    <div>
+                      <span class="material-icons"> inventory_2 </span>
+
+                      <div>
+                        <strong>
+                          {{ detalle.nombre_prod || "Producto sin nombre" }}
+                        </strong>
+
+                        <small>
+                          {{ detalle.cantidad_prod }}
+                          unidades recibidas
+                        </small>
+                      </div>
+                    </div>
+
+                    <span class="cantidad_lotes_badge">
+                      {{ detalle.lotes_recibidos?.length ?? 0 }}
+                      lote(s)
+                    </span>
+                  </div>
+
+                  <div class="tabla_container tabla_lotes_container">
+                    <table class="tabla_lotes">
+                      <thead>
+                        <tr>
+                          <th>ID del lote</th>
+                          <th>Fecha de caducidad</th>
+                          <th>Cantidad</th>
+                          <th>Estado</th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        @for (
+                          lote of detalle.lotes_recibidos;
+                          track lote.ide_deta_entr_lote
+                        ) {
+                          <tr>
+                            <td>
+                              {{
+                                lote.ide_lote !== null
+                                  ? "#" + lote.ide_lote
+                                  : "Pendiente de confirmación"
+                              }}
+                            </td>
+
+                            <td>
+                              <div class="fecha_caducidad">
+                                <span class="material-icons"> event </span>
+
+                                {{ formatDateOnly(lote.fecha_caducidad_lote) }}
+                              </div>
+                            </td>
+
+                            <td class="cantidad_lote">
+                              {{ lote.cantidad_lote }}
+                            </td>
+
+                            <td>
+                              <span
+                                class="estado_lote"
+                                [ngClass]="
+                                  getEstadoLoteClass(lote.estado_deta_entr_lote)
+                                "
+                              >
+                                {{ formatText(lote.estado_deta_entr_lote) }}
+                              </span>
+                            </td>
+                          </tr>
+                        }
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              }
+            }
+          </div>
+        } @else {
+          <div class="lotes_vacios">
+            <span class="material-icons"> inventory </span>
+
+            <div>
+              <strong> Sin lotes registrados </strong>
+
+              <p>
+                Esta entrega no posee distribuciones por fecha de caducidad.
+              </p>
+            </div>
+          </div>
+        }
+
         <div class="section_title">Observación</div>
-        <div class="observacion_card">
-          <p>{{ entrega?.observacionEntr || 'Sin observaciones' }}</p>
-        </div>
 
-      </div>
+        <div class="observacion_card">
+          <span class="material-icons"> notes </span>
+
+          <p>
+            {{ entrega.observacion_entr || "Sin observaciones registradas." }}
+          </p>
+        </div>
+      } @else {
+        <div class="entrega_no_encontrada">
+          <span class="material-icons"> search_off </span>
+
+          <h3>Entrega no encontrada</h3>
+
+          <p>No fue posible encontrar la entrega solicitada.</p>
+        </div>
+      }
     </div>
-  </div>
+  </ui-card>
 </div>

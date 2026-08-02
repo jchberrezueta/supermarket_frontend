@@ -32,6 +32,7 @@ export interface IPedido {
 export interface IPedidoResult {
   ide_pedi: number;
   ide_empr: number;
+  nombre_empr?: string | null;
   fecha_pedi: string;
   fecha_entr_pedi: string | null;
   cantidad_total_pedi: number;

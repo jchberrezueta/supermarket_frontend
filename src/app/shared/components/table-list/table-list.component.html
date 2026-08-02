@@ -162,13 +162,15 @@
                     element[column.property] === true ||
                     element[column.property] === 'activo' ||
                     element[column.property] === 'si' ||
-                    element[column.property] === 'exitoso'
+                    element[column.property] === 'exitoso' ||
+                    element[column.property] === 'peticion'
                   "
                   [class.status-danger]="
                     element[column.property] === false ||
                     element[column.property] === 'inactivo' ||
                     element[column.property] === 'no' ||
-                    element[column.property] === 'fallido'
+                    element[column.property] === 'fallido' ||
+                    element[column.property] === 'devolucion'
                   "
                 >
                   {{ element[column.property] | dashIfEmpty }}
@@ -181,15 +183,27 @@
                   class="status-badge"
                   [class.status-success]="
                     element[column.property] === 'correcto' ||
-                    element[column.property] === 'completado'
+                    element[column.property] === 'completado' ||
+                    element[column.property] === 'completa'
                   "
-                  [class.status-middle]="element[column.property] === 'proximo'"
+                  [class.status-middle]="
+                    element[column.property] === 'proximo' ||
+                    element[column.property] === 'parcial'
+                  "
+                  [class.status-middle2]="
+                    element[column.property] === 'emitido'
+                  "
+                  [class.status-middle3]="
+                    element[column.property] === 'cerrado_incompleto'
+                  "
                   [class.status-danger]="
                     element[column.property] === 'caducado' ||
-                    element[column.property] === 'cancelado'
+                    element[column.property] === 'cancelado' ||
+                    element[column.property] === 'anulada'
                   "
                   [class.status-return]="
-                    element[column.property] === 'devuelto'
+                    element[column.property] === 'devuelto' ||
+                    element[column.property] === 'borrador'
                   "
                 >
                   {{ element[column.property] | dashIfEmpty }}

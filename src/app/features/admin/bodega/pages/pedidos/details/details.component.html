@@ -1,112 +1,589 @@
 <div class="div_container">
-  <ui-card [showHeader]="true" class="div_card">
-    <!-- CABECERA -->
-    <div card-header class="card_header">
-      <div class="header_left">
-        <ui-text-field
-          [label]="'ID Pedido'"
-          [value]="idPedido"
-          [readonly]="true"
-        />
+  <ui-card [showHeader]="false" class="div_card">
+    <div class="card_form">
+      <div class="header_actions">
+        <div class="header_title">
+          <h2>Detalle del Pedido #{{ idPedido }}</h2>
+        </div>
+
+        <div class="header_buttons">
+          <ui-button
+            icon="refresh"
+            tooltip="Actualizar información"
+            [disabled]="cargando"
+            (evntClick)="loadPedido()"
+          />
+
+          <ui-button
+            label="Volver"
+            icon="arrow_back"
+            [disabled]="cargando"
+            (evntClick)="volver()"
+          />
+        </div>
       </div>
 
-      <div class="header_right">
-        <ui-button [icon]="'refresh'" (evntClick)="loadPedido()" />
-        <ui-button
-          [label]="'Volver'"
-          [icon]="'arrow_back'"
-          (evntClick)="volver()"
-        />
-      </div>
-    </div>
+      @if (pedido) {
+        <div class="pedido_perfil" [ngClass]="getEstadoPedidoClass()">
+          <div class="avatar">
+            <span class="material-icons">
+              {{ motivoIcon }}
+            </span>
+          </div>
 
-    <!-- INFO PEDIDO -->
-    <div class="card_info">
-      <div class="info_row">
-        <ui-text-field
-          [label]="'Empresa'"
-          [value]="pedido?.nombreEmpr"
-          [readonly]="true"
-        />
-        <ui-text-field
-          [label]="'Fecha del pedido'"
-          [value]="pedido?.fechaPedi"
-          [readonly]="true"
-        />
-        <ui-text-field
-          [label]="'Fecha esperada de entrega'"
-          [value]="pedido?.fechaEntrPedi || 'Sin fecha esperada'"
-          [readonly]="true"
-        />
-        <ui-text-field
-          [label]="'Estado'"
-          [value]="pedido?.estadoPedi"
-          [readonly]="true"
-        />
-      </div>
+          <div class="pedido_info_principal">
+            <h3>Pedido #{{ pedido.ide_pedi }}</h3>
 
-      <div class="info_row">
-        <ui-text-field
-          [label]="'Motivo'"
-          [value]="pedido?.motivoPedi"
-          [readonly]="true"
-        />
-        <ui-text-field
-          [label]="'Cantidad Total'"
-          [value]="pedido?.cantidadTotalPedi"
-          [readonly]="true"
-        />
-        <ui-text-field
-          [label]="'Total'"
-          [value]="pedido?.totalPedi | currency: '$'"
-          [readonly]="true"
-        />
-        <ui-text-field
-          [label]="'Observación'"
-          [value]="pedido?.observacionPedi"
-          [readonly]="true"
-        />
-      </div>
-    </div>
+            <p>
+              <span class="material-icons"> business </span>
 
-    <!-- TABLA PRODUCTOS -->
-    <div class="card_table">
-      <h3 class="table_title">Productos del Pedido</h3>
-      <table class="productos_table">
-        <thead>
-          <tr>
-            <th>Producto</th>
-            <th>Cantidad</th>
-            <th>Precio Unit.</th>
-            <th>Subtotal bruto</th>
-            <th>IVA</th>
-            <th>Dcto. Compra</th>
-            <th>Dcto. Caduc.</th>
-            <th>Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          @if (detalles.length === 0) {
-            <tr>
-              <td colspan="8" class="empty_row">
-                No hay productos en este pedido
-              </td>
-            </tr>
+              {{ pedido.nombre_empr || "Empresa no identificada" }}
+            </p>
+
+            <p>
+              <span class="material-icons"> category </span>
+
+              {{ motivoLabel }}
+            </p>
+
+            <p>
+              <span class="material-icons"> schedule </span>
+
+              {{ formatDateTime(pedido.fecha_pedi) }}
+            </p>
+          </div>
+
+          <div class="pedido_badge">
+            <span class="estado_badge" [ngClass]="getEstadoBadgeClass()">
+              {{ formatText(pedido.estado_pedi) }}
+            </span>
+
+            <small>Total del pedido</small>
+
+            <strong>
+              {{ formatCurrency(pedido.total_pedi) }}
+            </strong>
+          </div>
+        </div>
+
+        <div class="section_title">Información del Pedido</div>
+
+        <div class="info_grid">
+          <div class="info_row">
+            <ui-text-field
+              label="ID del pedido"
+              [value]="pedido.ide_pedi"
+              [readonly]="true"
+            />
+
+            <ui-text-field
+              label="Estado"
+              [value]="formatText(pedido.estado_pedi)"
+              [readonly]="true"
+            />
+          </div>
+
+          <div class="info_row">
+            <ui-text-field
+              label="Fecha del pedido"
+              [value]="formatDateTime(pedido.fecha_pedi)"
+              [readonly]="true"
+            />
+
+            <ui-text-field
+              label="Fecha esperada de entrega"
+              [value]="formatDateTime(pedido.fecha_entr_pedi)"
+              [readonly]="true"
+            />
+          </div>
+
+          <div class="info_row">
+            <ui-text-field
+              label="Motivo"
+              [value]="motivoLabel"
+              [readonly]="true"
+            />
+
+            <ui-text-field
+              label="Cantidad total solicitada"
+              [value]="pedido.cantidad_total_pedi"
+              [readonly]="true"
+            />
+          </div>
+        </div>
+
+        <div class="section_title">Empresa Proveedora</div>
+
+        <div class="info_grid">
+          <div class="info_row">
+            <ui-text-field
+              label="ID de la empresa"
+              [value]="pedido.ide_empr"
+              [readonly]="true"
+            />
+
+            <ui-text-field
+              label="Empresa"
+              [value]="pedido.nombre_empr || 'No disponible'"
+              [readonly]="true"
+            />
+          </div>
+        </div>
+
+        <div class="section_title">Estado del Proceso</div>
+
+        <div class="proceso_card" [ngClass]="getEstadoPedidoClass()">
+          <div class="proceso_icon">
+            <span class="material-icons">
+              {{ procesoIcon }}
+            </span>
+          </div>
+
+          <div class="proceso_info">
+            <strong>
+              {{ procesoTitulo }}
+            </strong>
+
+            <p>
+              {{ procesoDescripcion }}
+            </p>
+          </div>
+
+          <span class="estado_badge" [ngClass]="getEstadoBadgeClass()">
+            {{ formatText(pedido.estado_pedi) }}
+          </span>
+        </div>
+
+        <div class="section_title">Resumen del Pedido</div>
+
+        <div class="resumen_pedido">
+          <div class="resumen_item">
+            <span class="material-icons"> inventory_2 </span>
+
+            <div>
+              <small>Productos diferentes</small>
+
+              <strong>
+                {{ cantidadProductos }}
+              </strong>
+            </div>
+          </div>
+
+          <div class="resumen_item">
+            <span class="material-icons"> production_quantity_limits </span>
+
+            <div>
+              <small>Unidades solicitadas</small>
+
+              <strong>
+                {{ pedido.cantidad_total_pedi }}
+              </strong>
+            </div>
+          </div>
+
+          <div class="resumen_item">
+            <span class="material-icons"> task_alt </span>
+
+            <div>
+              <small>Productos completados</small>
+
+              <strong>
+                {{ detallesCompletos }}
+              </strong>
+            </div>
+          </div>
+
+          <div class="resumen_item">
+            <span class="material-icons"> pending_actions </span>
+
+            <div>
+              <small>Productos pendientes</small>
+
+              <strong>
+                {{ detallesPendientes }}
+              </strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="section_title">Resumen Económico</div>
+
+        <div class="resumen_economico">
+          <div class="resumen_item">
+            <span class="material-icons"> shopping_cart </span>
+
+            <div>
+              <small>Subtotal bruto</small>
+
+              <strong>
+                {{ formatCurrency(subtotalTotal) }}
+              </strong>
+            </div>
+          </div>
+
+          <div class="resumen_item">
+            <span class="material-icons"> sell </span>
+
+            <div>
+              <small>Descuento de compra</small>
+
+              <strong>
+                {{ formatCurrency(descuentoCompraTotal) }}
+              </strong>
+            </div>
+          </div>
+
+          <div class="resumen_item">
+            <span class="material-icons"> published_with_changes </span>
+
+            <div>
+              <small>Descuento por caducidad</small>
+
+              <strong>
+                {{ formatCurrency(descuentoCaducidadTotal) }}
+              </strong>
+            </div>
+          </div>
+
+          <div class="resumen_item">
+            <span class="material-icons"> account_balance </span>
+
+            <div>
+              <small>IVA</small>
+
+              <strong>
+                {{ formatCurrency(ivaTotal) }}
+              </strong>
+            </div>
+          </div>
+
+          <div class="resumen_item total_item">
+            <span class="material-icons"> payments </span>
+
+            <div>
+              <small>Total del pedido</small>
+
+              <strong>
+                {{ formatCurrency(pedido.total_pedi) }}
+              </strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="section_title">Productos Solicitados</div>
+
+        <div class="tabla_container">
+          <table class="tabla_productos">
+            <thead>
+              <tr>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Precio unitario</th>
+                <th>Subtotal bruto</th>
+                <th>Dcto. compra</th>
+                <th>Dcto. caducidad</th>
+                <th>IVA</th>
+                <th>Total</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              @for (detalle of detalles; track detalle.ide_deta_pedi) {
+                <tr>
+                  <td>
+                    <div class="producto_info">
+                      <span class="material-icons"> inventory_2 </span>
+
+                      <div>
+                        <strong>
+                          {{ detalle.nombre_prod || "Producto sin nombre" }}
+                        </strong>
+
+                        <small> Producto #{{ detalle.ide_prod }} </small>
+                      </div>
+                    </div>
+                  </td>
+
+                  <td class="cantidad_producto">
+                    {{ detalle.cantidad_prod }}
+                  </td>
+
+                  <td>
+                    {{ formatCurrency(detalle.precio_unitario_prod) }}
+                  </td>
+
+                  <td>
+                    {{ formatCurrency(detalle.subtotal_prod) }}
+                  </td>
+
+                  <td>
+                    {{ formatCurrency(detalle.dcto_compra_prod) }}
+                  </td>
+
+                  <td>
+                    {{ formatCurrency(detalle.dcto_caduc_prod) }}
+                  </td>
+
+                  <td>
+                    {{ formatCurrency(detalle.iva_prod) }}
+                  </td>
+
+                  <td class="total_producto">
+                    {{ formatCurrency(detalle.total_prod) }}
+                  </td>
+
+                  <td>
+                    <span
+                      class="estado_detalle"
+                      [ngClass]="
+                        getEstadoDetalleClass(detalle.estado_deta_pedi)
+                      "
+                    >
+                      {{ formatText(detalle.estado_deta_pedi) }}
+                    </span>
+                  </td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="9" class="empty_row">
+                    No hay productos registrados en este pedido.
+                  </td>
+                </tr>
+              }
+            </tbody>
+
+            @if (detalles.length > 0) {
+              <tfoot>
+                <tr>
+                  <td>
+                    <strong>Totales</strong>
+                  </td>
+
+                  <td>
+                    <strong>
+                      {{ pedido.cantidad_total_pedi }}
+                    </strong>
+                  </td>
+
+                  <td></td>
+
+                  <td>
+                    <strong>
+                      {{ formatCurrency(subtotalTotal) }}
+                    </strong>
+                  </td>
+
+                  <td>
+                    <strong>
+                      {{ formatCurrency(descuentoCompraTotal) }}
+                    </strong>
+                  </td>
+
+                  <td>
+                    <strong>
+                      {{ formatCurrency(descuentoCaducidadTotal) }}
+                    </strong>
+                  </td>
+
+                  <td>
+                    <strong>
+                      {{ formatCurrency(ivaTotal) }}
+                    </strong>
+                  </td>
+
+                  <td class="total_general">
+                    {{ formatCurrency(pedido.total_pedi) }}
+                  </td>
+
+                  <td></td>
+                </tr>
+              </tfoot>
+            }
+          </table>
+        </div>
+
+        @if (esDevolucion) {
+          <div class="section_title">Lotes Seleccionados para Canje</div>
+
+          <div class="canje_info">
+            <span class="material-icons"> published_with_changes </span>
+
+            <div>
+              <strong> Pedido de devolución o canje </strong>
+
+              <p>
+                Estos son los lotes caducados o próximos a caducar que fueron
+                asociados al pedido para su procesamiento.
+              </p>
+            </div>
+          </div>
+
+          <div class="resumen_canje">
+            <div class="resumen_item">
+              <span class="material-icons"> deployed_code </span>
+
+              <div>
+                <small>Lotes asociados</small>
+
+                <strong>
+                  {{ cantidadLotesDevolucion }}
+                </strong>
+              </div>
+            </div>
+
+            <div class="resumen_item">
+              <span class="material-icons"> assignment_return </span>
+
+              <div>
+                <small>Unidades solicitadas para canje</small>
+
+                <strong>
+                  {{ cantidadDevolucionTotal }}
+                </strong>
+              </div>
+            </div>
+
+            <div class="resumen_item">
+              <span class="material-icons"> task_alt </span>
+
+              <div>
+                <small>Unidades procesadas</small>
+
+                <strong>
+                  {{ cantidadProcesadaTotal }}
+                </strong>
+              </div>
+            </div>
+          </div>
+
+          @if (cantidadLotesDevolucion > 0) {
+            <div class="lotes_productos">
+              @for (detalle of detalles; track detalle.ide_deta_pedi) {
+                @if (tieneLotesDevolucion(detalle)) {
+                  <div class="lote_producto_card">
+                    <div class="lote_producto_header">
+                      <div>
+                        <span class="material-icons"> inventory_2 </span>
+
+                        <div>
+                          <strong>
+                            {{ detalle.nombre_prod || "Producto sin nombre" }}
+                          </strong>
+
+                          <small> Producto #{{ detalle.ide_prod }} </small>
+                        </div>
+                      </div>
+
+                      <span class="cantidad_lotes_badge">
+                        {{ detalle.lotes_devolucion?.length ?? 0 }}
+                        lote(s)
+                      </span>
+                    </div>
+
+                    <div class="tabla_container tabla_lotes_container">
+                      <table class="tabla_lotes">
+                        <thead>
+                          <tr>
+                            <th>ID del lote</th>
+                            <th>Fecha de caducidad</th>
+                            <th>Stock registrado</th>
+                            <th>Cantidad para canje</th>
+                            <th>Cantidad procesada</th>
+                            <th>Estado</th>
+                          </tr>
+                        </thead>
+
+                        <tbody>
+                          @for (
+                            lote of detalle.lotes_devolucion;
+                            track lote.ide_deta_pedi_lote_devo
+                          ) {
+                            <tr>
+                              <td>#{{ lote.ide_lote }}</td>
+
+                              <td>
+                                <div class="fecha_caducidad">
+                                  <span class="material-icons"> event </span>
+
+                                  {{
+                                    formatDateOnly(lote.fecha_caducidad_lote)
+                                  }}
+                                </div>
+                              </td>
+
+                              <td>
+                                {{ lote.stock_lote ?? "No disponible" }}
+                              </td>
+
+                              <td class="cantidad_devolucion">
+                                {{ lote.cantidad_devolucion }}
+                              </td>
+
+                              <td class="cantidad_procesada">
+                                {{ lote.cantidad_procesada }}
+                              </td>
+
+                              <td>
+                                <span
+                                  class="estado_lote"
+                                  [ngClass]="
+                                    getEstadoProcesamientoClass(
+                                      lote.cantidad_devolucion,
+                                      lote.cantidad_procesada
+                                    )
+                                  "
+                                >
+                                  {{
+                                    getEstadoProcesamientoLabel(
+                                      lote.cantidad_devolucion,
+                                      lote.cantidad_procesada
+                                    )
+                                  }}
+                                </span>
+                              </td>
+                            </tr>
+                          }
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                }
+              }
+            </div>
+          } @else {
+            <div class="canje_vacio">
+              <span class="material-icons"> inventory </span>
+
+              <div>
+                <strong> Sin lotes asociados </strong>
+
+                <p>
+                  No existen lotes de devolución registrados en este pedido.
+                </p>
+              </div>
+            </div>
           }
-          @for (detalle of detalles; track detalle.ideProd) {
-            <tr>
-              <td>{{ detalle.nombreProd }}</td>
-              <td>{{ detalle.cantidadProd }}</td>
-              <td>{{ detalle.precioUnitarioProd | currency: "$" }}</td>
-              <td>{{ detalle.subtotalProd | currency: "$" }}</td>
-              <td>{{ detalle.ivaProd | currency: "$" }}</td>
-              <td>{{ detalle.dctoCompraProd | currency: "$" }}</td>
-              <td>{{ detalle.dctoCaducProd | currency: "$" }}</td>
-              <td>{{ detalle.totalProd | currency: "$" }}</td>
-            </tr>
-          }
-        </tbody>
-      </table>
+        }
+
+        <div class="section_title">Observación</div>
+
+        <div class="observacion_card">
+          <span class="material-icons"> notes </span>
+
+          <p>
+            {{ pedido.observacion_pedi || "Sin observaciones registradas." }}
+          </p>
+        </div>
+      } @else {
+        <div class="pedido_no_encontrado">
+          <span class="material-icons"> search_off </span>
+
+          <h3>Pedido no encontrado</h3>
+
+          <p>No fue posible encontrar el pedido solicitado.</p>
+        </div>
+      }
     </div>
   </ui-card>
 </div>

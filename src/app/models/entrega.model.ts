@@ -1,4 +1,8 @@
-import { IDetalleEntrega, IDetalleEntregaResult, ILineaPedidoPendiente } from './detalle_entrega.model';
+import {
+  IDetalleEntrega,
+  IDetalleEntregaResult,
+  ILineaPedidoPendiente,
+} from './detalle_entrega.model';
 
 export enum EnumEstadoEntrega {
   BORRADOR = 'borrador',
@@ -28,6 +32,8 @@ export interface IEntregaResult {
   nombre_empr?: string | null;
   fecha_pedi?: string | null;
   fecha_entr_pedi?: string | null;
+  estado_pedi?: string | null;
+  motivo_pedi?: string | null;
   fecha_entr: string;
   cantidad_total_entr: number;
   total_entr: number;
@@ -36,7 +42,10 @@ export interface IEntregaResult {
   detalles?: IDetalleEntregaResult[];
 }
 
-export interface IResultDataEntrega { data: IEntregaResult[]; response: string; }
+export interface IResultDataEntrega {
+  data: IEntregaResult[];
+  response: string;
+}
 
 export interface IPedidoEntregaDisponible {
   ide_pedi: number;

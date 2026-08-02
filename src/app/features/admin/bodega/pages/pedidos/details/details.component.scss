@@ -1,98 +1,1132 @@
 :host {
+  display: block;
   width: 100%;
   height: 100%;
 }
 
 .div_container {
   width: 100%;
-  height: 100%;
+  min-height: 100%;
+  padding: 20px 40px;
+  box-sizing: border-box;
+}
 
-  .div_card {
-    width: 100%;
-    height: 100%;
-    padding: 10px;
+.div_card {
+  width: 100%;
+}
 
-    .card_header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px;
+.card_form {
+  padding: 20px;
+}
 
-      .header_right {
-        display: flex;
-        gap: 10px;
-      }
+/* =========================
+   CABECERA
+========================= */
+
+.header_actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.header_title {
+  min-width: 0;
+
+  h2 {
+    margin: 0;
+
+    color: #1f2937;
+
+    font-size: 1.6rem;
+    font-weight: 600;
+  }
+}
+
+.header_buttons {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+
+  flex-wrap: wrap;
+}
+
+/* =========================
+   RESUMEN PRINCIPAL
+========================= */
+
+.pedido_perfil {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+
+  position: relative;
+
+  min-height: 150px;
+  margin-bottom: 30px;
+  padding: 30px;
+
+  overflow: hidden;
+
+  border-radius: 16px;
+
+  color: #ffffff;
+
+  box-shadow: 0 8px 24px rgb(15 23 42 / 12%);
+
+  &.pedido-emitido {
+    background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+  }
+
+  &.pedido-parcial {
+    background: linear-gradient(135deg, #d97706 0%, #92400e 100%);
+  }
+
+  &.pedido-completado {
+    background: linear-gradient(135deg, #0f766e 0%, #115e59 100%);
+  }
+
+  &.pedido-cerrado {
+    background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%);
+  }
+
+  &.pedido-cancelado {
+    background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+  }
+
+  &.pedido-borrador {
+    background: linear-gradient(135deg, #64748b 0%, #334155 100%);
+  }
+}
+
+.avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 105px;
+  height: 105px;
+
+  flex-shrink: 0;
+
+  border: 2px solid rgb(255 255 255 / 25%);
+  border-radius: 50%;
+
+  background: rgb(255 255 255 / 18%);
+
+  .material-icons {
+    color: #ffffff;
+
+    font-size: 56px;
+  }
+}
+
+.pedido_info_principal {
+  flex: 1;
+
+  min-width: 0;
+  padding-right: 220px;
+
+  h3 {
+    margin: 0 0 12px;
+
+    overflow: hidden;
+
+    font-size: 1.65rem;
+    font-weight: 700;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  p {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+
+    margin: 7px 0;
+
+    opacity: 0.94;
+
+    font-size: 0.95rem;
+
+    .material-icons {
+      flex-shrink: 0;
+
+      font-size: 19px;
+    }
+  }
+}
+
+.pedido_badge {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
+
+  position: absolute;
+  top: 20px;
+  right: 20px;
+
+  min-width: 170px;
+  padding: 13px 17px;
+
+  border: 1px solid rgb(255 255 255 / 35%);
+  border-radius: 14px;
+
+  background: rgb(255 255 255 / 95%);
+
+  box-shadow: 0 4px 15px rgb(15 23 42 / 12%);
+
+  small {
+    margin-top: 3px;
+
+    color: #64748b;
+
+    font-size: 0.75rem;
+  }
+
+  > strong {
+    color: #0f172a;
+
+    font-size: 1.25rem;
+    font-weight: 700;
+  }
+}
+
+/* =========================
+   ESTADOS
+========================= */
+
+.estado_badge,
+.estado_detalle,
+.estado_lote {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 5px 12px;
+
+  border-radius: 20px;
+
+  font-size: 0.76rem;
+  font-weight: 600;
+  line-height: 1;
+
+  white-space: nowrap;
+}
+
+.status-success {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status-info {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.status-middle {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.status-return {
+  background: #e0e7ff;
+  color: #3730a3;
+}
+
+.status-danger {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.status-draft {
+  background: #e2e8f0;
+  color: #334155;
+}
+
+/* =========================
+   TÍTULOS DE SECCIÓN
+========================= */
+
+.section_title {
+  display: inline-block;
+
+  margin: 25px 0 15px;
+  padding-bottom: 8px;
+
+  border-bottom: 2px solid #0f766e;
+
+  color: #475569;
+
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+/* =========================
+   INFORMACIÓN GENERAL
+========================= */
+
+.info_grid {
+  margin-bottom: 20px;
+  padding: 25px;
+
+  border: 1px solid #eef2f7;
+  border-radius: 12px;
+
+  background: #f8fafc;
+}
+
+.info_row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 25px;
+
+  margin-bottom: 20px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  > * {
+    min-width: 0;
+  }
+}
+
+/* =========================
+   ESTADO DEL PROCESO
+========================= */
+
+.proceso_card {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+
+  margin-bottom: 20px;
+  padding: 22px;
+
+  border: 1px solid #e2e8f0;
+  border-left: 5px solid #64748b;
+  border-radius: 12px;
+
+  background: #f8fafc;
+
+  box-shadow: 0 3px 10px rgb(15 23 42 / 5%);
+
+  &.pedido-emitido {
+    border-left-color: #2563eb;
+
+    background: #eff6ff;
+
+    .proceso_icon {
+      background: #dbeafe;
+      color: #1e40af;
     }
 
-    .card_info {
-      background-color: rgba(241, 245, 249);
-      border-radius: 12px;
-      padding: 20px;
-      margin-bottom: 15px;
+    .proceso_info strong {
+      color: #1e40af;
+    }
+  }
 
+  &.pedido-parcial {
+    border-left-color: #d97706;
+
+    background: #fffbeb;
+
+    .proceso_icon {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .proceso_info strong {
+      color: #92400e;
+    }
+  }
+
+  &.pedido-completado {
+    border-left-color: #16a34a;
+
+    background: #f0fdf4;
+
+    .proceso_icon {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .proceso_info strong {
+      color: #166534;
+    }
+  }
+
+  &.pedido-cerrado {
+    border-left-color: #4f46e5;
+
+    background: #eef2ff;
+
+    .proceso_icon {
+      background: #e0e7ff;
+      color: #3730a3;
+    }
+
+    .proceso_info strong {
+      color: #3730a3;
+    }
+  }
+
+  &.pedido-cancelado {
+    border-left-color: #dc2626;
+
+    background: #fef2f2;
+
+    .proceso_icon {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .proceso_info strong {
+      color: #991b1b;
+    }
+  }
+
+  &.pedido-borrador {
+    border-left-color: #64748b;
+
+    .proceso_icon {
+      background: #e2e8f0;
+      color: #475569;
+    }
+
+    .proceso_info strong {
+      color: #475569;
+    }
+  }
+
+  > .estado_badge {
+    flex-shrink: 0;
+
+    margin-left: auto;
+  }
+}
+
+.proceso_icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 52px;
+  height: 52px;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background: #e2e8f0;
+  color: #475569;
+
+  .material-icons {
+    font-size: 28px;
+  }
+}
+
+.proceso_info {
+  flex: 1;
+
+  min-width: 0;
+
+  strong {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: #334155;
+
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  p {
+    margin: 0;
+
+    color: #64748b;
+
+    font-size: 0.88rem;
+    line-height: 1.5;
+  }
+}
+
+/* =========================
+   RESÚMENES
+========================= */
+
+.resumen_pedido,
+.resumen_economico,
+.resumen_canje {
+  display: grid;
+  gap: 18px;
+
+  margin-bottom: 20px;
+}
+
+.resumen_pedido {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.resumen_economico {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.resumen_canje {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.resumen_item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+
+  min-height: 88px;
+  padding: 18px;
+
+  border: 1px solid #e2e8f0;
+  border-left: 4px solid #0f766e;
+  border-radius: 12px;
+
+  background: #ffffff;
+
+  box-shadow: 0 3px 10px rgb(15 23 42 / 5%);
+
+  > .material-icons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 45px;
+    height: 45px;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+
+    background: #ccfbf1;
+    color: #0f766e;
+
+    font-size: 24px;
+  }
+
+  div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    min-width: 0;
+  }
+
+  small {
+    color: #64748b;
+
+    font-size: 0.78rem;
+  }
+
+  strong {
+    color: #1e293b;
+
+    font-size: 1.08rem;
+    font-weight: 700;
+  }
+
+  &.total_item {
+    border-left-color: #166534;
+
+    background: #f0fdf4;
+
+    > .material-icons {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    strong {
+      color: #166534;
+
+      font-size: 1.2rem;
+    }
+  }
+}
+
+/* =========================
+   TABLAS
+========================= */
+
+.tabla_container {
+  width: 100%;
+  margin-bottom: 20px;
+
+  overflow-x: auto;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+
+  background: #ffffff;
+}
+
+.tabla_productos,
+.tabla_lotes {
+  width: 100%;
+
+  border-collapse: collapse;
+
+  color: #334155;
+
+  font-size: 0.88rem;
+
+  th,
+  td {
+    padding: 14px 15px;
+
+    border-bottom: 1px solid #e2e8f0;
+
+    text-align: left;
+    vertical-align: middle;
+  }
+
+  th {
+    background: #f1f5f9;
+    color: #475569;
+
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+
+    white-space: nowrap;
+  }
+
+  tbody tr {
+    transition: background 0.2s ease;
+
+    &:hover {
+      background: #f8fafc;
+    }
+
+    &:last-child td {
+      border-bottom: none;
+    }
+  }
+
+  tfoot {
+    background: #f8fafc;
+
+    td {
+      border-top: 2px solid #cbd5e1;
+      border-bottom: none;
+    }
+  }
+}
+
+.tabla_productos {
+  min-width: 1150px;
+}
+
+.tabla_lotes {
+  min-width: 900px;
+}
+
+.producto_info {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+
+  min-width: 220px;
+
+  > .material-icons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 38px;
+    height: 38px;
+
+    flex-shrink: 0;
+
+    border-radius: 9px;
+
+    background: #ccfbf1;
+    color: #0f766e;
+
+    font-size: 21px;
+  }
+
+  div {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+
+    min-width: 0;
+  }
+
+  strong {
+    overflow: hidden;
+
+    color: #1e293b;
+
+    font-weight: 600;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  small {
+    color: #64748b;
+
+    font-size: 0.75rem;
+  }
+}
+
+.cantidad_producto,
+.cantidad_devolucion {
+  color: #0f766e;
+
+  font-weight: 700;
+}
+
+.cantidad_procesada {
+  color: #166534;
+
+  font-weight: 700;
+}
+
+.total_producto {
+  color: #0f766e;
+
+  font-weight: 700;
+}
+
+.total_general {
+  color: #166534;
+
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.empty_row {
+  padding: 35px !important;
+
+  color: #64748b;
+
+  text-align: center !important;
+}
+
+/* =========================
+   DEVOLUCIÓN Y CANJE
+========================= */
+
+.canje_info,
+.canje_vacio {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+
+  margin-bottom: 18px;
+  padding: 20px;
+
+  border-radius: 11px;
+
+  .material-icons {
+    flex-shrink: 0;
+
+    font-size: 28px;
+  }
+
+  div {
+    min-width: 0;
+  }
+
+  strong {
+    display: block;
+
+    margin-bottom: 5px;
+
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+
+  p {
+    margin: 0;
+
+    font-size: 0.86rem;
+    line-height: 1.5;
+  }
+}
+
+.canje_info {
+  border: 1px solid #c7d2fe;
+  border-left: 4px solid #4f46e5;
+
+  background: #eef2ff;
+
+  .material-icons,
+  strong {
+    color: #3730a3;
+  }
+
+  p {
+    color: #4338ca;
+  }
+}
+
+.canje_vacio {
+  border: 1px solid #cbd5e1;
+  border-left: 4px solid #64748b;
+
+  background: #f8fafc;
+
+  .material-icons,
+  strong {
+    color: #475569;
+  }
+
+  p {
+    color: #64748b;
+  }
+}
+
+.lotes_productos {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  margin-bottom: 20px;
+}
+
+.lote_producto_card {
+  overflow: hidden;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 13px;
+
+  background: #ffffff;
+
+  box-shadow: 0 3px 10px rgb(15 23 42 / 5%);
+}
+
+.lote_producto_header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+
+  padding: 18px 20px;
+
+  border-bottom: 1px solid #e2e8f0;
+
+  background: #f8fafc;
+
+  > div {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    min-width: 0;
+
+    > .material-icons {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      width: 40px;
+      height: 40px;
+
+      flex-shrink: 0;
+
+      border-radius: 9px;
+
+      background: #e0e7ff;
+      color: #3730a3;
+
+      font-size: 22px;
+    }
+
+    > div {
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 3px;
 
-      .info_row {
-        display: flex;
-        gap: 15px;
-        flex-wrap: wrap;
-      }
+      min-width: 0;
     }
+  }
 
-    .card_table {
-      padding: 10px;
+  strong {
+    overflow: hidden;
 
-      .table_title {
-        font-size: 1.1rem;
-        font-weight: 600;
-        color: #1e293b;
-        margin-bottom: 15px;
-      }
+    color: #1e293b;
 
-      .productos_table {
-        width: 100%;
-        border-collapse: collapse;
-        background-color: #fff;
-        border-radius: 8px;
-        overflow: hidden;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    font-size: 0.95rem;
+    font-weight: 600;
 
-        th, td {
-          padding: 12px 15px;
-          text-align: left;
-          border-bottom: 1px solid #e2e8f0;
-        }
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 
-        th {
-          background-color: #f8fafc;
-          font-weight: 600;
-          color: #475569;
-          font-size: 0.85rem;
-          text-transform: uppercase;
-        }
+  small {
+    color: #64748b;
 
-        td {
-          color: #334155;
-          font-size: 0.9rem;
-        }
+    font-size: 0.78rem;
+  }
+}
 
-        tbody tr:hover {
-          background-color: #f1f5f9;
-        }
+.cantidad_lotes_badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 
-        tbody tr:last-child td {
-          border-bottom: none;
-        }
+  flex-shrink: 0;
 
-        .empty_row {
-          text-align: center;
-          color: #94a3b8;
-          padding: 30px;
-          font-style: italic;
-        }
-      }
+  padding: 6px 12px;
+
+  border-radius: 20px;
+
+  background: #e0e7ff;
+  color: #3730a3;
+
+  font-size: 0.76rem;
+  font-weight: 600;
+
+  white-space: nowrap;
+}
+
+.tabla_lotes_container {
+  margin: 0;
+
+  border: none;
+  border-radius: 0;
+}
+
+.fecha_caducidad {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  white-space: nowrap;
+
+  .material-icons {
+    color: #4f46e5;
+
+    font-size: 18px;
+  }
+}
+
+/* =========================
+   OBSERVACIÓN
+========================= */
+
+.observacion_card {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+
+  margin-bottom: 20px;
+  padding: 25px;
+
+  border: 1px solid #e2e8f0;
+  border-left: 4px solid #0f766e;
+  border-radius: 10px;
+
+  background: #f8fafc;
+
+  .material-icons {
+    flex-shrink: 0;
+
+    color: #0f766e;
+
+    font-size: 26px;
+  }
+
+  p {
+    margin: 0;
+
+    color: #475569;
+
+    font-size: 0.95rem;
+    line-height: 1.6;
+
+    white-space: pre-line;
+  }
+}
+
+/* =========================
+   NO ENCONTRADO
+========================= */
+
+.pedido_no_encontrado {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 320px;
+  padding: 40px;
+
+  color: #64748b;
+
+  text-align: center;
+
+  .material-icons {
+    margin-bottom: 15px;
+
+    color: #94a3b8;
+
+    font-size: 64px;
+  }
+
+  h3 {
+    margin: 0 0 8px;
+
+    color: #334155;
+
+    font-size: 1.2rem;
+  }
+
+  p {
+    margin: 0;
+
+    font-size: 0.9rem;
+  }
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 1200px) {
+  .resumen_pedido {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .resumen_economico {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1000px) {
+  .resumen_canje {
+    grid-template-columns: 1fr;
+  }
+
+  .pedido_info_principal {
+    padding-right: 190px;
+  }
+}
+
+@media (max-width: 768px) {
+  .div_container {
+    padding: 15px;
+  }
+
+  .card_form {
+    padding: 15px;
+  }
+
+  .header_actions {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .header_buttons {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .pedido_perfil {
+    align-items: flex-start;
+    flex-direction: column;
+
+    padding: 25px;
+  }
+
+  .avatar {
+    width: 85px;
+    height: 85px;
+
+    .material-icons {
+      font-size: 46px;
     }
+  }
+
+  .pedido_info_principal {
+    width: 100%;
+    padding-right: 0;
+
+    h3 {
+      white-space: normal;
+    }
+  }
+
+  .pedido_badge {
+    align-items: flex-start;
+
+    position: static;
+
+    min-width: 0;
+    width: auto;
+  }
+
+  .info_row {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .proceso_card {
+    align-items: flex-start;
+    flex-direction: column;
+
+    > .estado_badge {
+      margin-left: 0;
+    }
+  }
+
+  .resumen_pedido,
+  .resumen_economico {
+    grid-template-columns: 1fr;
+  }
+
+  .lote_producto_header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .div_container {
+    padding: 10px;
+  }
+
+  .card_form {
+    padding: 10px;
+  }
+
+  .header_title h2 {
+    font-size: 1.3rem;
+  }
+
+  .pedido_perfil {
+    padding: 20px;
+  }
+
+  .info_grid {
+    padding: 18px;
+  }
+
+  .resumen_item {
+    padding: 15px;
+  }
+
+  .proceso_card,
+  .observacion_card {
+    padding: 20px;
   }
 }

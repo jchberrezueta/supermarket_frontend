@@ -37,7 +37,7 @@ export const ListEntregasConfig: ITableListConfig = {
     {
       label: 'Fecha Entrega',
       property: 'fecha_entr',
-      type: 'text',
+      type: 'date',
       sortable: true,
     },
 
@@ -48,7 +48,12 @@ export const ListEntregasConfig: ITableListConfig = {
       sortable: true,
     },
     { label: 'Total', property: 'total_entr', type: 'text', sortable: true },
-    { label: 'Estado', property: 'estado_entr', type: 'text', sortable: true },
+    {
+      label: 'Estado',
+      property: 'estado_entr',
+      type: 'multilean',
+      sortable: true,
+    },
     {
       label: 'Observación',
       property: 'observacion_entr',
