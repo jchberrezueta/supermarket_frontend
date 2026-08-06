@@ -3,5 +3,5 @@ export const environment = {
   api_url: '/api',
   sig_api_url: '/api/sig',
   posScanSocketUrl: '/pos-scan',
-  appBaseUrl: 'https://192.168.1.111',
+  appBaseUrl: 'https://192.168.205.190',
 };
